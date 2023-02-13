@@ -8,6 +8,8 @@
 - 
 ### In Progress
 
+### Rules for Updating Repo
+- Make sure to delete all folders except for src and bash scripts. This will keep it so we can build on local machines without issues.
 ### Bash Scripts Guide
 - **explore_launch.sh = In prgoress. Supposed to launch a hardware crazyflie with exploration and navigation algorithms**
 - **hardware_simple_mapper_keyboard.sh**
@@ -41,12 +43,15 @@
 ```
 sudo apt-get install ros-<ros_distro>-tf-transformations
 sudo apt install ros-<distro>-navigation2 ros-<distro>-nav2-bringup '~ros-<distro>-turtlebot3-.*'
+sudo apt-get install ros-$ROS_DISTRO-webots-ros2
 
 ```
 **Python**
 Should be installed via python3 and pip3 commands
 ```
 pip3 install xacro
+sudo pip3 install transforms3d
+pip3 install bresenham
 
 ```
 ## Needed Editing for each native machine.
