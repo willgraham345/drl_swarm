@@ -14,6 +14,8 @@
   - Launches a crazyflie with SLAM mapping, driven through twist commands (typically a teleop twist keyboard)
 - **webots_simple_mapper_keyboard.sh**
   - Same thing as hardware mapper, but in WeBots simulator
+- **webots_navigation.sh**
+  - Launches a Nav2 system using slam (according to file in /crazyflie_ros2_experimental/cr)
 
 ### Guide to crazyflie_ros2_experimental (from Dr. Kimberly McGuire)
 - **crazyflie_ros2_simulation**
@@ -24,7 +26,7 @@
 - **crazyflie_ros2_slam**
   - Package responsible for all SLAM capabilities. This will deal with both real and simulated launches. 
   - Has mapper parameters for asynchronous mapping.
-- **crazyflie_ros2_navigation**
+- **crazyflie_ros2_navigation**eE
   - The nav2-capable package that we'll be using. This has two launch files which handle real and simulated tests, respectively. 
   - Important file is the nav2_params.yaml. This has the configuration files nav2 will draw from in order to create our environment. 
 - crazyflie_ros2_simple_mapper
