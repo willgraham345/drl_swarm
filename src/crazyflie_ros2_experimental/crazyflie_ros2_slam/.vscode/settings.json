@@ -5,7 +5,7 @@
         "/home/drewlab/cf2webots_ws2/install/crazyflie_ros2_scan/lib/python3.8/site-packages",
         "/home/drewlab/cf2webots_ws2/install/crazyflie_ros2_interfaces/lib/python3.8/site-packages",
         "/home/drewlab/cf2webots_ws2/install/crazyflie_ros2/lib/python3.8/site-packages",
-        "/opt/ros/galactic/lib/python3.8/site-packages"
+        "/opt/ros/foxy/lib/python3.8/site-packages"
     ],
     "python.analysis.extraPaths": [
         "/home/drewlab/cf2webots_ws2/install/crazyflie_ros2_simulation/lib/python3.8/site-packages",
@@ -13,6 +13,6 @@
         "/home/drewlab/cf2webots_ws2/install/crazyflie_ros2_scan/lib/python3.8/site-packages",
         "/home/drewlab/cf2webots_ws2/install/crazyflie_ros2_interfaces/lib/python3.8/site-packages",
         "/home/drewlab/cf2webots_ws2/install/crazyflie_ros2/lib/python3.8/site-packages",
-        "/opt/ros/galactic/lib/python3.8/site-packages"
+        "/opt/ros/foxy/lib/python3.8/site-packages"
     ]
 }

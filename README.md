@@ -3,15 +3,13 @@
 
 # Project Management on Repo
 ### TODO
-- Give GitHub access for everyone
-- Run Nav2 within WeBots
-- 
+- Flip lighthouse within crazyflie-firmware 
 ### In Progress
 
 ### Rules for Updating Repo
 - Make sure to delete all folders except for src and bash scripts. This will keep it so we can build on local machines without issues.
 ### Bash Scripts Guide
-- **explore_launch.sh = In prgoress. Supposed to launch a hardware crazyflie with exploration and navigation algorithms**
+- **explore_launch.sh** = In progress. Supposed to launch a hardware crazyflie with exploration and navigation algorithms
 - **hardware_simple_mapper_keyboard.sh**
   - Launches a crazyflie with SLAM mapping, driven through twist commands (typically a teleop twist keyboard)
 - **webots_simple_mapper_keyboard.sh**
@@ -41,8 +39,8 @@
 ## Dependencies needed for the program
 **ROS 2**
 ```
-sudo apt-get install ros-<ros_distro>-tf-transformations
-sudo apt install ros-<distro>-navigation2 ros-<distro>-nav2-bringup '~ros-<distro>-turtlebot3-.*'
+sudo apt-get install ros-$ROS_DISTRO-tf-transformations
+sudo apt install ros-$ROS_DISTRO-navigation2 ros-$ROS_DISTRO-nav2-bringup '~ros-$ROS_DISTRO-turtlebot3-.*'
 sudo apt-get install ros-$ROS_DISTRO-webots-ros2
 
 ```
@@ -59,7 +57,7 @@ In crazyflie_webots_driver.py, there is a necessary line to be edited to:
 ```
 sys.path.append('/home/$USER_NAME$/crazyflie-firmware')
 ```
-where $USER_NAME$ is the name of the user (the important thing here is making sure your crazyflie-firmware directory is sourced correctly. Make sure to have the python bindings set up. (see Crazyflie firmware repository for instructions on how to create python bindings)
+where ``$USER_NAME$`` is the name of the user (the important thing here is making sure your crazyflie-firmware directory is sourced correctly. Make sure to have the python bindings set up. (see Crazyflie firmware repository for instructions on how to create python bindings)
 
 ## Dependency hyperlinks
 1. Installation of Nav2: https://navigation.ros.org/build_instructions/index.html
@@ -78,6 +76,7 @@ where $USER_NAME$ is the name of the user (the important thing here is making su
 2. How to set up a Crazyflie: https://www.bitcraze.io/documentation/tutorials/getting-started-with-crazyflie-2-x/#config-client
 3. Flashing to a crazyflie: https://www.bitcraze.io/documentation/repository/crazyflie-firmware/master/building-and-flashing/build/
 4. Crazyflie Toolbelt Repo: https://github.com/bitcraze/toolbelt
+5. Crazyflie cfclient GUI: https://www.bitcraze.io/documentation/repository/crazyflie-clients-python/master/userguides/userguide_client/
 ## Repositories of Note
 1. Bitcraze Researcher Repository: https://github.com/knmcguire/crazyflie_ros2_experimental
 
@@ -89,4 +88,7 @@ where $USER_NAME$ is the name of the user (the important thing here is making su
 
 ## Future Work
 1. Potential Repo we can model our RRT after: https://github.com/robo-friends/m-explore-ros2
-2. 
+2. Modifying Lighthouse Configuration
+
+  a. https://github.com/bitcraze/crazyflie-firmware/blob/master/src/utils/src/lighthouse/lighthouse_geometry.c#L169-L201
+  b. https://github.com/bitcraze/crazyflie-firmware/blob/9e7e697906eced761d5fd27be4f5d866654da250/src/modules/src/lighthouse/lighthouse_position_est.c#L207-L214

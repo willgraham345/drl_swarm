@@ -8,7 +8,7 @@
       "includePath": [
         "/home/drewlab/cf2webots_ws2/install/crazyflie_ros2_interfaces/include/**",
         "/home/drewlab/cf2webots_ws/install/crazyflie_ros2_interfaces/include/**",
-        "/opt/ros/galactic/include/**",
+        "/opt/ros/foxy/include/**",
         "/usr/include/**"
       ],
       "name": "ROS",
