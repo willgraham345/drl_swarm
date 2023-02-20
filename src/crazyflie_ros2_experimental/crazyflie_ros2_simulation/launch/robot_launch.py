@@ -76,8 +76,8 @@ def generate_launch_description():
         my_robot_driver,
         robot_state_publisher,
         ros2_supervisor,
-        # my_robot_driver2,
-        # robot_state_publisher2,
+        my_robot_driver2,
+        robot_state_publisher2,
         launch.actions.RegisterEventHandler(
             event_handler=launch.event_handlers.OnProcessExit(
                 target_action=webots,
