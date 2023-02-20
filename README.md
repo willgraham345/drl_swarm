@@ -8,6 +8,8 @@
 
 ### Rules for Updating Repo
 - Make sure to delete all folders except for src and bash scripts. This will keep it so we can build on local machines without issues.
+- **Branches naming scheme**:
+  - name_description
 ### Bash Scripts Guide
 - **explore_launch.sh** = In progress. Supposed to launch a hardware crazyflie with exploration and navigation algorithms
 - **hardware_simple_mapper_keyboard.sh**
@@ -55,7 +57,8 @@ pip3 install bresenham
 
 ```
 ## Needed Editing for each native machine.
-In crazyflie_webots_driver.py, there is a necessary line to be edited to: 
+We need to source a local installation of the crazyflie firmware on each machine. See instructions here: https://github.com/bitcraze/crazyflie-firmware
+In crazyflie_webots_driver.py (/src/crazyflie_ros2_simulation/crazyflie_ros2_simulation), there is a necessary line to be edited to: 
 ```
 sys.path.append('/home/$USER_NAME$/crazyflie-firmware')
 ```
