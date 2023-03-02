@@ -13,7 +13,7 @@ from tf2_ros import TransformBroadcaster
 from geometry_msgs.msg import TransformStamped
 
 # Change this path to your crazyflie-firmware folder
-sys.path.append('/home/drewlab/crazyflie-firmware')
+sys.path.append('/home/will/crazyflie-firmware/build')
 import cffirmware
 
 
