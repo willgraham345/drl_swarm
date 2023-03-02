@@ -32,6 +32,10 @@ EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/project
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/objects/paintings/protos/PortraitPainting.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/objects/paintings/protos/LandscapePainting.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/objects/television/protos/Television.proto"
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/robots/robotis/turtlebot/protos/TurtleBot3Burger.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/devices/robotis/protos/RobotisLds01.proto"
+
 WorldInfo {
   info [
     "Sample of how the indoor objects can be placed"
@@ -39,8 +43,8 @@ WorldInfo {
   basicTimeStep 16
 }
 Viewpoint {
-  orientation -0.42771745788929055 0.3247600314935339 0.8435571694681054 2.197882768297313
-  position -1.4604592451351859 -6.641647109807285 6.065198632540694
+  orientation -0.558184972277331 0.594016697810283 0.5792872339749272 2.1659708469363537
+  position -2.755992957758793 -2.797133938889515 16.90509606121996
   exposure 0.5
 }
 TexturedBackground {
@@ -727,4 +731,26 @@ Robot {
     mass 0.05
   }
   controller "<extern>"
+}
+
+TurtleBot3Burger {
+  controller "turtlebot3_ostacle_avoidance"
+  translation -2.39 -1.54 0.002
+  name "turtle1"
+  #controller "<extern>"
+  controllerArgs [
+    ""
+  ]
+  extensionSlot [
+    Solid {
+      name "imu_link"
+    }
+    GPS {
+    }
+    InertialUnit {
+      name "inertial_unit"
+    }
+    RobotisLds01 {
+    }
+  ]
 }
