@@ -8,6 +8,10 @@ from webots_ros2_driver.webots_launcher import Ros2SupervisorLauncher
 from launch_ros.actions import LoadComposableNodes, Node
 
 
+# TODO: Add dependence for swarm_classes.py
+from swarm_classes import Swarm
+
+
 def generate_launch_description():
     package_dir = get_package_share_directory('webots_pkg')
     robot_description = pathlib.Path(os.path.join(package_dir, 'resource', 'crazyflie.urdf')).read_text() # THIS is for the robot_driver (unnecessary for webots_pkg)
@@ -15,12 +19,12 @@ def generate_launch_description():
     webots = WebotsLauncher(
         world=os.path.join(package_dir, 'worlds', 'crazyflie_apartment.wbt')
     )
-
+    # Robot_state_publisher is a ros2 package that interacts with the Crazyflie urdf to publish the Crazyflie's state
     robot_state_publisher = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
         output='screen',
-        namespace='robot1',
+        namespace='robot1', # TODO: Change this to interact with swarm_classes.py
         parameters=[{
             'robot_description': '<robot name=""><link name=""/></robot>'
         }],
