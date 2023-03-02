@@ -734,10 +734,12 @@ Robot {
 }
 
 TurtleBot3Burger {
-  controller "turtlebot3_ostacle_avoidance"
-  translation -2.39 -1.54 0.002
+    translation -2.39 -1.54 0.002
+  selfCollision FALSE
+  synchronization TRUE
   name "turtle1"
-  #controller "<extern>"
+  #controller "turtlebot3_ostacle_avoidance"
+  controller "<extern>"
   controllerArgs [
     ""
   ]
@@ -754,3 +756,4 @@ TurtleBot3Burger {
     }
   ]
 }
+
