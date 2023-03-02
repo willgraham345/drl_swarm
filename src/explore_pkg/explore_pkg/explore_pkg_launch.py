@@ -1,12 +1,20 @@
 # Launch files are abnormal python files
 from launch import LaunchDescription
 import os
+import sys
+import importlib.util
 from ament_index_python.packages import get_package_share_directory
 from webots_ros2_driver.webots_launcher import Ros2SupervisorLauncher
 from webots_ros2_driver.webots_launcher import WebotsLauncher
 from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from swarm_classes import Swarm, Turtlebot, Crazyflie
+
+
+# Weird crap we have to do to make swarm_classes import properly
+file_path  = os.path.dirname(__file__)
+sys.path.insert(0, os.path.join(os.path.dirname(__file__))) 
+from swarm_classes import *
+
 
 """
 Notes/TODO:

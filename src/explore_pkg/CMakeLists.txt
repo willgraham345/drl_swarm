@@ -32,4 +32,20 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
-ament_package()
+# Install Python package
+# ament_python_install_package(${PROJECT_NAME})
+
+install(DIRECTORY
+  explore_pkg
+  DESTINATION share/${PROJECT_NAME}
+)
+
+# Install Python scripts
+# install(PROGRAMS
+#   /explore_pkg/explore_pkg_launch.py
+#   DESTINATION share/${PROJECT_NAME}
+# )
+
+  ament_package()
+
+
