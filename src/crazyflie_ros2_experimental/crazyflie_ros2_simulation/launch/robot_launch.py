@@ -69,10 +69,32 @@ def generate_launch_description():
     #        'robot_description': '<robot name=""><link name=""/></robot>'
     #    }],
     #)
+    controller_manager_timeout = ['--controller-manager-timeout', '50']
+    controller_manager_prefix = 'python.exe' if os.name == 'nt' else ''
 
-    #mappings = [('/diffdrive_controller/cmd_vel_unstamped', '/cmd_vel')]
-    #if 'ROS_DISTRO' in os.environ and os.environ['ROS_DISTRO'] in ['humble', 'rolling']:
-    #    mappings.append(('/diffdrive_controller/odom', '/odom'))
+    use_deprecated_spawner_py = 'ROS_DISTRO' in os.environ and os.environ['ROS_DISTRO'] == 'foxy'
+
+
+
+    diffdrive_controller_spawner = Node(
+        package='controller_manager',
+        executable='spawner' if not use_deprecated_spawner_py else 'spawner.py',
+        output='screen',
+        prefix=controller_manager_prefix,
+        arguments=['diffdrive_controller'] + controller_manager_timeout,
+    )
+
+    joint_state_broadcaster_spawner = Node(
+        package='controller_manager',
+        executable='spawner' if not use_deprecated_spawner_py else 'spawner.py',
+        output='screen',
+        prefix=controller_manager_prefix,
+        arguments=['joint_state_broadcaster'] + controller_manager_timeout,
+    )
+
+    mappings = [('/diffdrive_controller/cmd_vel_unstamped', '/cmd_vel')]
+    if 'ROS_DISTRO' in os.environ and os.environ['ROS_DISTRO'] in ['humble', 'rolling']:
+        mappings.append(('/diffdrive_controller/odom', '/odom'))
 
     turtlebot_driver = Node(
         package='webots_ros2_driver',
@@ -86,7 +108,25 @@ def generate_launch_description():
              'set_robot_state_publisher': True},
             ros2_control_params
         ],
-        #remappings=mappings
+        remappings=mappings
+    )
+
+    robot_state_publisher_tb = Node(
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        output='screen',
+        namespace='turtle1',
+        parameters=[{
+            'robot_description': '<robot name=""><link name=""/></robot>'
+        }],
+    )
+    
+
+    footprint_publisher = Node(
+        package='tf2_ros',
+        executable='static_transform_publisher',
+        output='screen',
+        arguments=['0', '0', '0', '0', '0', '0', 'base_link', 'base_footprint'],
     )
 
 
@@ -98,7 +138,12 @@ def generate_launch_description():
         ros2_supervisor,
         #my_robot_driver2,
         #robot_state_publisher2,
+        diffdrive_controller_spawner,
+        joint_state_broadcaster_spawner,
+        robot_state_publisher_tb,
         turtlebot_driver,
+        footprint_publisher,
+
         launch.actions.RegisterEventHandler(
             event_handler=launch.event_handlers.OnProcessExit(
                 target_action=webots,
