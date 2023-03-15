@@ -1,13 +1,11 @@
 import os
 import pathlib
 import launch
-from launch_ros.actions import Node
 from launch import LaunchDescription
 from ament_index_python.packages import get_package_share_directory
 from webots_ros2_driver.webots_launcher import WebotsLauncher
 from webots_ros2_driver.webots_launcher import Ros2SupervisorLauncher
 from launch_ros.actions import LoadComposableNodes, Node
-from launch_ros.descriptions import ComposableNode
 
 
 def generate_launch_description():
@@ -76,8 +74,8 @@ def generate_launch_description():
         my_robot_driver,
         robot_state_publisher,
         ros2_supervisor,
-        my_robot_driver2,
-        robot_state_publisher2,
+        # my_robot_driver2,
+        # robot_state_publisher2,
         launch.actions.RegisterEventHandler(
             event_handler=launch.event_handlers.OnProcessExit(
                 target_action=webots,
