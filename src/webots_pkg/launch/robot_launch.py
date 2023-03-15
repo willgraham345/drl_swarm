@@ -5,26 +5,10 @@ from launch import LaunchDescription
 from ament_index_python.packages import get_package_share_directory
 from webots_ros2_driver.webots_launcher import WebotsLauncher
 from webots_ros2_driver.webots_launcher import Ros2SupervisorLauncher
+import launch_ros
 from launch_ros.actions import LoadComposableNodes, Node
-
-# import importlib.util
-# # specify the full path of the file containing the class definition
-# current_file_path= os.getcwd()
-# directory_path = os.path.dirname(current_file_path)
-# swarm_path = os.path.join(directory_path, 'resource')
-# sys.path.insert(0, directory_path)
-# print("Current File Path: ", current_file_path)
-# print("Directory Path: ", os.path.dirname(current_file_path))
-# print("Swarm Path: ", swarm_path)
-
-# spec = importlib.util.spec_from_file_location("swarm_classes", os.path.join(swarm_path, 'swarm_classes.py'))
-# swarm_classes = importlib.util.module_from_spec(spec)
-# print("Swarm Classes: ", swarm_classes)
-# from resource import * # This imports swarm classes to the file
-# import swarm_classes
 package_dir = get_package_share_directory('webots_pkg')
 swarm_classes = pathlib.Path(os.path.join(package_dir, 'resource', 'swarm_classes.py'))
-print("Swarm Classes: ", swarm_classes)
 import importlib.util
 spec = importlib.util.spec_from_file_location("swarm_classes", swarm_classes)
 swarm_module = importlib.util.module_from_spec(spec)
@@ -43,36 +27,31 @@ def generate_launch_description():
     robot_description = pathlib.Path(os.path.join(package_dir, 'resource', 'crazyflie.urdf')).read_text() # THIS is for the robot_driver (unnecessary for webots_pkg)
     ros2_supervisor = Ros2SupervisorLauncher()
     webots = WebotsLauncher(
-        world=os.path.join(package_dir, 'worlds', 'crazyflie_apartment.wbt')
+        world=os.path.join(package_dir, 'worlds', 'swarm_crazyflie_apartment.wbt')
     )
-    # Robot_state_publisher is a ros2 package that interacts with the Crazyflie urdf to publish the Crazyflie's state
+    my_robot_driver = Node(
+        package='webots_ros2_driver',
+        executable='driver',
+        output='screen',
+        additional_env={'WEBOTS_CONTROLLER_URL': 'cf1'},
+        parameters=[
+            {'robot_description': robot_description,
+             'use_sim_time': True,
+             'set_robot_state_publisher': True},
+        ]
+    )
 
-    for cf in swarm.crazyflies:
-        print("cf = ", cf)
-        robot_state_publisher = Node(
-            package='robot_state_publisher',
-            executable='robot_state_publisher',
-            output='screen',
-            namespace=cf.name,
-            parameters=[{
-                'robot_description': '<robot name=""><link name=""/></robot>'
-            }],
-        )
-    for tb in swarm.turtlebots:
-        robot_state_publisher = Node(
-            package='robot_state_publisher',
-            executable='robot_state_publisher',
-            output='screen',
-            namespace=tb.name,
-            parameters=[{
-                'robot_description': '<robot name=""><link name=""/></robot>'
-            }],
-        )
-
-
-
+    robot_state_publisher = Node(
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        output='screen',
+        parameters=[{
+            'robot_description': '<robot name="cf1"><link name=""/></robot>'
+        }],
+    )
     return LaunchDescription([
         webots,
+        my_robot_driver,
         robot_state_publisher,
         ros2_supervisor,
         launch.actions.RegisterEventHandler(
