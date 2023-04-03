@@ -25,8 +25,8 @@ swarm = swarm_module.Swarm([tb1], [cf1, cf2])
 # print(swarm.crazyflies['cf1'].URI_address)
 
 def get_cf_driver(cf_name):
-    launch_description = []
-    robot_description = pathlib.Path(os.path.join(package_dir, 'crazyflie_fpqr.urdf')).read_text()
+    crazychoir_package_dir = get_package_share_directory('crazychoir')
+    robot_description = pathlib.Path(os.path.join(crazychoir_package_dir, 'crazyflie_fpqr.urdf')).read_text()
 
     crazyflie_driver = Node(
         package = 'webots_ros2_driver',
@@ -40,6 +40,7 @@ def get_cf_driver(cf_name):
             {'robot_description': robot_description},
         ]
     )
+    return crazyflie_driver
 
 def generate_launch_description():
     webots_package_dir = get_package_share_directory('webots_pkg')
