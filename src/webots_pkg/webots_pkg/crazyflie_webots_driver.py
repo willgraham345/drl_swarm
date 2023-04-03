@@ -1,6 +1,7 @@
 import rclpy
 from rclpy.node import Node
 from rclpy.time import Time
+from std_msgs.msg import String
 
 from geometry_msgs.msg import Twist
 from sensor_msgs.msg import LaserScan
@@ -17,7 +18,7 @@ sys.path.append('/home/will/crazyflie-firmware/build')
 import cffirmware
 
 
-class CrazyflieWebotsDriver:
+class CrazyflieWebotsDriver():
     def init(self, webots_node, properties):
         self.robot = webots_node.robot
         timestep = int(self.robot.getBasicTimeStep())
@@ -71,6 +72,8 @@ class CrazyflieWebotsDriver:
         cffirmware.controllerPidInit()
 
         rclpy.init(args=None)
+        print('STARTING  NODE HERE ------------------------')
+        # self.node = rclpy.create_node('crazyflie_webots_driver', namespace=self.namespace)
         self.node = rclpy.create_node('crazyflie_webots_driver')
         self.node.create_subscription(Twist, 'cmd_vel', self.cmd_vel_callback, 1)
         self.laser_publisher = self.node.create_publisher(LaserScan, 'scan', 10)

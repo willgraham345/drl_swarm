@@ -42,7 +42,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'webots_pkg_driver = webots_pkg.webots_pkg_driver:main'
+            'webots_pkg_driver = webots_pkg.webots_pkg_driver:main',
+            'cf_supervisor = webots_pkg.crazyflie_publisher:main',
         ],
     },
 )

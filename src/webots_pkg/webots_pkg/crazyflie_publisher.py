@@ -29,15 +29,15 @@ def radians(degrees):
 
 
 class CrazyfliePublisher(Node):
-
     def __init__(self, link_uri):
-        super().__init__('crazyflie_publisher')
-        #self.pose_publisher = self.create_publisher(Pose, 'pose', 10)
-        self.range_publisher = self.create_publisher(Range, 'zrange', 10)
-        self.laser_publisher = self.create_publisher(LaserScan, 'scan', 10)
-        self.odom_publisher = self.create_publisher(Odometry, 'odom', 10)
+        print("Initializing CrazyfliePublisher")
+        print("URI: " + link_uri)
+        super().__init__()
+        self.range_publisher = self.create_publisher(Range, "/zrange", 10)
+        self.laser_publisher = self.create_publisher(LaserScan, "/scan", 10)
+        self.odom_publisher = self.create_publisher(Odometry,  "/odom", 10)
     
-        self.create_subscription(Twist, 'cmd_vel', self.cmd_vel_callback, 1)
+        self.create_subscription(Twist,  "/cmd_vel", self.cmd_vel_callback, 1)
 
         self.tfbr = TransformBroadcaster(self)
 
@@ -265,13 +265,9 @@ class CrazyfliePublisher(Node):
 def main(args=None):
 
     cflib.crtp.init_drivers()
-
     rclpy.init(args=args)
-
     crazyflie_publisher = CrazyfliePublisher(URI)
-
     rclpy.spin(crazyflie_publisher)
-
     crazyflie_publisher.destroy_node()
     rclpy.shutdown()
     
