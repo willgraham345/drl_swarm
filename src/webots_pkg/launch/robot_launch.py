@@ -4,8 +4,8 @@ import launch
 from launch import LaunchDescription
 from launch_ros.actions import Node
 from ament_index_python.packages import get_package_share_directory
-from webots_ros2_driver.webots_launcher import WebotsLauncher
-from webots_ros2_driver.webots_launcher import Ros2SupervisorLauncher
+from webots_ros2_driver.webots_launcher import WebotsLauncher, Ros2SupervisorLauncher
+
 # from webots_ros2_driver.utils import controller_url_prefix
 from urdf_parser_py.urdf import URDF
 
@@ -18,16 +18,16 @@ spec.loader.exec_module(swarm_module)
 
 
 cf1 = swarm_module.Crazyflie('cf1', 'radio://0/80/2M/E7E7E7E7E7', [0, 0, 0])
-cf2 = swarm_module.Crazyflie('cf2', 'radio://0/80/2M/E7E7E7E7E8', [1, 1, 0])
+# cf2 = swarm_module.Crazyflie('cf2', 'radio://0/80/2M/E7E7E7E7E8', [1, 1, 0])
 
-tb1 = swarm_module.Turtlebot('tb1', 'ROS2_address', [2, 2, 0])
-swarm = swarm_module.Swarm([tb1], [cf1, cf2])
+tb1 = swarm_module.Turtlebot('tb1', 'ROS2_address', [-1, -1, 0])
+tb2 = swarm_module.Turtlebot('tb2', 'ROS2_address', [-2, -2, 0])
+swarm = swarm_module.Swarm([tb1, tb2], [cf1])
 # print(swarm.crazyflies['cf1'].URI_address)
 
 def get_cf_driver(cf_name):
-    crazychoir_package_dir = get_package_share_directory('crazychoir')
-    robot_description = pathlib.Path(os.path.join(crazychoir_package_dir, 'crazyflie_fpqr.urdf')).read_text()
-
+    cf_ros2_simulation_pkg = get_package_share_directory('crazyflie_ros2_simulation')
+    robot_description = pathlib.Path(os.path.join(cf_ros2_simulation_pkg, 'resource', 'crazyflie.urdf')).read_text()
     crazyflie_driver = Node(
         package = 'webots_ros2_driver',
         executable = 'driver',
@@ -41,6 +41,9 @@ def get_cf_driver(cf_name):
         ]
     )
     return crazyflie_driver
+
+def get_tb_driver(tb_name):
+    robot_description = pathlib.Path(os.path.join(package_dir, 'resource', 'turtlebot3_burger.urdf')).read_text()
 
 def generate_launch_description():
     webots_package_dir = get_package_share_directory('webots_pkg')
@@ -65,6 +68,17 @@ def generate_launch_description():
             executable = 'robot_state_publisher',
             additional_env = {'WEBOTS_ROBOT_NAME': cf.name},
             namespace=cf.name,
+            output = 'screen',
+            parameters = [
+                {'robot_description': '<robot name=""><link name=""/></robot>',}
+                ]
+            ))
+    for tb in swarm.turtlebots:
+        launch_description.append(Node(
+            package = 'robot_state_publisher',
+            executable = 'robot_state_publisher',
+            additional_env = {'WEBOTS_ROBOT_NAME': tb.name},
+            namespace=tb.name,
             output = 'screen',
             parameters = [
                 {'robot_description': '<robot name=""><link name=""/></robot>',}
