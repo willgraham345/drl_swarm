@@ -20,9 +20,21 @@ import cffirmware
 
 class CrazyflieWebotsDriver():
     def init(self, webots_node, properties):
+        
+        # Declare the robot name and fix the timestep
         self.robot = webots_node.robot
-        timestep = int(self.robot.getBasicTimeStep())
+        self.timestep = int(self.robot.getBasicTimeStep())
+        self.robot_name = self.robot.getName()
 
+        # initialize webots driver node
+        rclpy.init(args=None)
+        self.namespace = str(self.robot_name)
+        self.cf_driver = rclpy.create_node(
+                            'cf_driver',
+                            namespace=self.namespace,
+                            allow_undeclared_parameters=True,
+                            automatically_declare_parameters_from_overrides=True)
+        
         ## Initialize motors
         self.m1_motor = self.robot.getDevice("m1_motor")
         self.m1_motor.setPosition(float('inf'))
@@ -55,9 +67,6 @@ class CrazyflieWebotsDriver():
         self.range_right = self.robot.getDevice("range_right")
         self.range_right.enable(timestep)
 
-        #self.lidar = self.robot.getDevice("lidar")
-        #self.lidar.enable(timestep)
-
         ## Intialize Variables
         self.past_x_global = 0
         self.past_y_global = 0
@@ -73,11 +82,11 @@ class CrazyflieWebotsDriver():
 
         rclpy.init(args=None)
         print('STARTING  NODE HERE ------------------------')
-        # self.node = rclpy.create_node('crazyflie_webots_driver', namespace=self.namespace)
-        self.node = rclpy.create_node('crazyflie_webots_driver')
-        self.node.create_subscription(Twist, 'cmd_vel', self.cmd_vel_callback, 1)
-        self.laser_publisher = self.node.create_publisher(LaserScan, 'scan', 10)
-        self.odom_publisher = self.node.create_publisher(Odometry, 'odom', 10)
+        msg_type = Twist()
+        self.target_cmd_vel = msg_type
+        self.cf_driver.create_subscription(Twist(),  '/{}/cmd_vel'.format(self.namespace), self.setpoint_callback, 1)
+        self.laser_publisher = self.cf_driver.create_publisher(LaserScan, 'scan', 10)
+        self.odom_publisher = self.cf_driver.create_publisher(Odometry, '/{}/odom'.format(self.namespace), 10)
 
         self.tfbr = TransformBroadcaster(self.node)
 
@@ -116,7 +125,7 @@ class CrazyflieWebotsDriver():
         self.target_twist = twist
     
     def step(self):
-        rclpy.spin_once(self.node, timeout_sec=0)
+        rclpy.spin_once(self.cf_driver, timeout_sec=0)
 
         dt = self.robot.getTime() - self.past_time
 
@@ -138,29 +147,6 @@ class CrazyflieWebotsDriver():
         vy_global = (y_global - self.past_y_global)/dt
         z_global = self.gps.getValues()[2]
         vz_global = (z_global - self.past_z_global)/dt
-
-
-
-
-
-
-
-        '''
-        ranges = self.lidar.getLayerRangeImage(0)
-        if ranges:
-            msg = LaserScan()
-            msg.header.stamp = self.node.get_clock().now().to_msg()
-            msg.header.frame_id = 'base_link_rotated'
-            msg.angle_min = -0.5 * pi
-            msg.angle_max = 0.5 * pi
-            msg.angle_increment = pi / (self.lidar.getHorizontalResolution() - 1)
-            #msg.scan_time = self.lidar.getSamplingPeriod() / 1000.0
-            msg.range_min = self.lidar.getMinRange() 
-            msg.range_max = self.lidar.getMaxRange()
-            msg.ranges = ranges
-           # self.laser_publisher.publish(msg)
-            ##print(self.lidar.getFov())
-            #print(ranges)'''
 
 
         q_base = tf_transformations.quaternion_from_euler(0, 0, yaw)
