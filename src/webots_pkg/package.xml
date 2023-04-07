@@ -9,12 +9,20 @@
 
 
   <depend>rclpy</depend>
+  <exec_depend>builtin_interfaces</exec_depend>
   <depend>geometry_msgs</depend>
+  <depend>webots_ros2_driver</depend>
+  <exec_depend>webots_ros2_control</exec_depend>
   <depend>sensor_msgs</depend>
   <depend>nav_msgs</depend>
-  <depend>webots_ros2_driver</depend>
+  <exec_depend>diff_drive_controller</exec_depend>
+  <exec_depend>controller_manager</exec_depend>
+  <exec_depend>tf2_ros</exec_depend>
   <depend>launch</depend>
-  <depend>robot_state_publisher</depend>
+  <depend>robot_state_p ublisher</depend>
+  
+  <exec_depend>joint_state_broadcaster</exec_depend>
+  <exec_depend>rviz2</exec_depend>
 
 
   <test_depend>ament_copyright</test_depend>
