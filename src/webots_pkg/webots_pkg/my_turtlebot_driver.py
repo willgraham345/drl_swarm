@@ -3,11 +3,13 @@ from geometry_msgs.msg import Twist
 
 HALF_DISTANCE_BETWEEN_WHEELS = 0.045
 WHEEL_RADIUS = 0.025
-
+# USE THIS!!!!
+# https://cyberbotics.com/doc/reference/lidar?tab-language=python
 class MyTurtlebotDriver:
     def init(self, webots_node, properties):
         self.__robot = webots_node.robot
-
+        self.timestep = int(self.__robot.getBasicTimeStep())
+        self._robot_name = self.__robot.getName()
         self.__left_motor = self.__robot.getDevice('left wheel motor')
         self.__right_motor = self.__robot.getDevice('right wheel motor')
 
@@ -20,14 +22,18 @@ class MyTurtlebotDriver:
         self.__target_twist = Twist()
 
         rclpy.init(args=None)
-        self.__node = rclpy.create_node('my_turtlebot_driver')
-        self.__node.create_subscription(Twist, 'cmd_vel', self.__cmd_vel_callback, 1)
+        self.__namespace = str(self._robot_name)
+        self.tb_driver = rclpy.create_node('my_turtlebot_driver',
+                                namespace=self.__namespace,
+                                allow_undeclared_parameters=True,
+                                automatically_declare_parameters_from_overrides=True)
+        self.tb_driver.create_subscription(Twist, '/{}/cmd_vel'.format(self.__namespace), self.__cmd_vel_callback, 1)
 
     def __cmd_vel_callback(self, twist):
         self.__target_twist = twist
 
     def step(self):
-        rclpy.spin_once(self.__node, timeout_sec=0)
+        rclpy.spin_once(self.tb_driver, timeout_sec=0)
 
         forward_speed = self.__target_twist.linear.x
         angular_speed = self.__target_twist.angular.z

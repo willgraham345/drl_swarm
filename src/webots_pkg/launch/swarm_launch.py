@@ -78,7 +78,7 @@ def generate_launch_description():
     
     launch_description = [ros2_supervisor, webots]
 
-    '''for cf in swarm.crazyflies:
+    for cf in swarm.crazyflies:
         print("cf = ", cf)
         robot_state_publisher = Node(
             package='robot_state_publisher',
@@ -90,7 +90,7 @@ def generate_launch_description():
             }],
         )
         launch_description.append(robot_state_publisher)
-        launch_description.append(get_cf_driver(cf))'''
+        launch_description.append(get_cf_driver(cf))
     
     for tb in swarm.turtlebots:
         print("tb = ", tb)

@@ -1,15 +1,6 @@
 <?xml version="1.0" ?>
-<robot name="Turtlebot">
+<robot name="TurtlebotBurger3">
     <webots>
-        <plugin type="crazyflie_ros2_simulation.turtlebot_webots_driver.TurtlebotWebotsDriver" />
-        <!--device reference="lidar" type="Lidar">
-            <ros>
-                <enabled>true</enabled>
-                <updateRate>10</updateRate>
-                <topicName>/scan</topicName>
-                <alwaysOn>true</alwaysOn>
-                <frameName>base_link</frameName>
-            </ros>
-        </device-->
+        <plugin type="webots_pkg.my_turtlebot_driver.MyTurtlebotDriver" />
     </webots>
 </robot>

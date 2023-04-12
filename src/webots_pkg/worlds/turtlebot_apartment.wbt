@@ -470,3 +470,24 @@ TurtleBot3Burger {
     }
   ]
 }
+
+TurtleBot3Burger {
+  translation -2 -2 0
+  name "tb2"
+  controller "<extern>"
+  controllerArgs [
+    ""
+  ]
+  extensionSlot [
+    Solid {
+      name "imu_link"
+    }
+    GPS {
+    }
+    InertialUnit {
+      name "inertial_unit"
+    }
+    RobotisLds01 {
+    }
+  ]
+}

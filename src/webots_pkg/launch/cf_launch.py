@@ -6,6 +6,8 @@ from ament_index_python.packages import get_package_share_directory
 from webots_ros2_driver.webots_launcher import WebotsLauncher
 from webots_ros2_driver.webots_launcher import Ros2SupervisorLauncher
 from launch_ros.actions import LoadComposableNodes, Node
+from webots_ros2_driver.utils import controller_url_prefix
+
 
 
 package_dir = get_package_share_directory('webots_pkg')
@@ -23,7 +25,7 @@ cf2 = swarm_module.Crazyflie('cf2', 'radio://0/80/2M/E7E7E7E7E8', [1, 1, 0])
 tb1 = swarm_module.Turtlebot('tb1', 'ROS2_address', [-1, -1, 0])
 tb2 = swarm_module.Turtlebot('tb2', 'ROS2_address', [-2, -2, 0])
 
-swarm = swarm_module.Swarm([tb1, tb2], [cf1])
+swarm = swarm_module.Swarm([], [cf1])
 
 
 # Define helper functions
@@ -36,6 +38,7 @@ def get_cf_driver(cf):
         output='screen',
         additional_env={
             'WEBOTS_ROBOT_NAME':cf.name,
+            'WEBOTS_CONTROLLER_URL': controller_url_prefix() + cf.name,
             },
         parameters=[
             {'robot_description': robot_description,
