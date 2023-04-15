@@ -21,13 +21,13 @@ swarm_module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(swarm_module)
 
 
-cf1 = swarm_module.Crazyflie('cf1', 'radio://0/80/2M/E7E7E7E7E7', [0, 0, 0])
+cf1 = swarm_module.Crazyflie('cf1', 'radio://0/80/2M/E7E7E7E7E7', [-1.5, -1.5, 0.015])
 cf2 = swarm_module.Crazyflie('cf2', 'radio://0/80/2M/E7E7E7E7E8', [1, 1, 0])
 
 tb1 = swarm_module.Turtlebot('tb1', 'ROS2_address', [-1, -1, 0])
 tb2 = swarm_module.Turtlebot('tb2', 'ROS2_address', [-2, -2, 0])
 
-swarm = swarm_module.Swarm([tb1, tb2], [])
+swarm = swarm_module.Swarm([tb1, tb2], [cf1])
 
 
 # Define helper functions
@@ -72,7 +72,7 @@ def generate_launch_description():
      # THIS is for the robot_driver (unnecessary for webots_pkg)
     ros2_supervisor = Ros2SupervisorLauncher()
     webots = WebotsLauncher(
-        world=os.path.join(package_dir, 'worlds', 'turtlebot_apartment.wbt')
+        world=os.path.join(package_dir, 'worlds', 'swarm_apartment.wbt')
     )
     # Robot_state_publisher is a ros2 package that interacts with the Crazyflie urdf to publish the Crazyflie's state
     

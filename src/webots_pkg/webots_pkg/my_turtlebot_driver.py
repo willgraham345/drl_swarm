@@ -1,6 +1,7 @@
 import rclpy
 from geometry_msgs.msg import Twist
 from sensor_msgs.msg import LaserScan
+from nav_msgs.msg import Odometry
 from math import cos, sin, degrees, radians, pi
 
 HALF_DISTANCE_BETWEEN_WHEELS = 0.045
@@ -14,11 +15,18 @@ class MyTurtlebotDriver:
         self._robot_name = self.__robot.getName()
         self.__left_motor = self.__robot.getDevice('left wheel motor')
         self.__right_motor = self.__robot.getDevice('right wheel motor')
+        self.__gps = self.__robot.getGPS('gps')
+        self.__gps.enable(self.timestep)
+        # self.__gps.enable(self.timestep)
+        # self.__imu = self.__robot.getDevice('inertial unit')
+        # self.__imu.enable(self.timestep)
+        # self.__gyro = self.__robot.getDevice('gyro')
+        # self.__gyro.enable(self.timestep)
+        # self.__compass = self.__robot.getDevice('compass')
+        # self.__compass.enable(self.timestep)
 
-        self.lidar = self.__robot.getDevice("LDS-01")
+        self.lidar = self.__robot.getLidar("LDS-01")
         self.lidar.enable(self.timestep)
-        self.laser_publisher = self.node.create_publisher(LaserScan, 'scan', 10)
-
 
         self.__left_motor.setPosition(float('inf'))
         self.__left_motor.setVelocity(0)
@@ -27,7 +35,6 @@ class MyTurtlebotDriver:
         self.__right_motor.setVelocity(0)
 
         self.__target_twist = Twist()
-
         rclpy.init(args=None)
         self.__namespace = str(self._robot_name)
         self.tb_driver = rclpy.create_node('my_turtlebot_driver',
@@ -35,9 +42,46 @@ class MyTurtlebotDriver:
                                 allow_undeclared_parameters=True,
                                 automatically_declare_parameters_from_overrides=True)
         self.tb_driver.create_subscription(Twist, '/{}/cmd_vel'.format(self.__namespace), self.__cmd_vel_callback, 1)
+        self.laser_publisher = self.tb_driver.create_publisher(LaserScan, 'scan', 10)
+        self.odom_publisher = self.tb_driver.create_publisher(Odometry, '/{}/odom'.format(self.__namespace), 10)
+
+
 
     def __cmd_vel_callback(self, twist):
         self.__target_twist = twist
+
+
+    def publish_lidar(self):
+        ranges = self.lidar.getLayerRangeImage(0)
+        msg = LaserScan()
+        msg.header.stamp = self.tb_driver.get_clock().now().to_msg()
+        msg.header.frame_id = 'base_link_rotated' #THIS IS PROBABLY NOT RIGHT!!!! ACTUALLY A LOT OF THESE MAY BE INACURATE IDK
+        msg.angle_min = -0.5 * pi
+        msg.angle_max = 0.5 * pi
+        msg.angle_increment = pi / (self.lidar.getHorizontalResolution() - 1)
+        #msg.scan_time = self.lidar.getSamplingPeriod() / 1000.0
+        msg.range_min = self.lidar.getMinRange() 
+        msg.range_max = self.lidar.getMaxRange()
+        msg.ranges = ranges
+        self.laser_publisher.publish(msg)
+        #self.__node.get_logger().info(str(ranges))
+    def _publish_gps(self, gps_vals):
+        # Get position and orientation from the robot
+        # position = self.__robot.getPosition()
+        # orientation = self.__robot.getOrientation()
+        # Create and publish the Odometry message
+        odom = Odometry()
+        odom.header.stamp = self.tb_driver.get_clock().now().to_msg()
+        odom.header.frame_id = '/{}/odom'.format(self.__namespace)
+        odom.child_frame_id = '/{}base_link'.format(self.__namespace)
+        odom.pose.pose.position.x = gps_vals[0]
+        odom.pose.pose.position.y = gps_vals[1]
+        odom.pose.pose.position.z = gps_vals[2]
+        # odom.pose.pose.orientation.x = orientation[0]
+        # odom.pose.pose.orientation.y = orientation[1]
+        # odom.pose.pose.orientation.z = orientation[2]
+        # odom.pose.pose.orientation.w = orientation[3]
+        self.odom_publisher.publish(odom)
 
     def step(self):
         rclpy.spin_once(self.tb_driver, timeout_sec=0)
@@ -50,20 +94,34 @@ class MyTurtlebotDriver:
 
         self.__left_motor.setVelocity(command_motor_left)
         self.__right_motor.setVelocity(command_motor_right)
+        # self._publish_gps(self.__gps.getValues())
+        
+        # print(gps_values)
+        # wasn't working, so I comented this out.
+        # self.publish_lidar()
+        # self.__publish_odom()
 
-        self.publish_lidar()
 
-    def publish_lidar(self):
-        ranges = self.lidar.getLayerRangeImage(0)
-        msg = LaserScan()
-        msg.header.stamp = self.__node.get_clock().now().to_msg()
-        msg.header.frame_id = 'base_link_rotated' #THIS IS PROBABLY NOT RIGHT!!!! ACTUALLY A LOT OF THESE MAY BE INACURATE IDK
-        msg.angle_min = -0.5 * pi
-        msg.angle_max = 0.5 * pi
-        msg.angle_increment = pi / (self.lidar.getHorizontalResolution() - 1)
-        #msg.scan_time = self.lidar.getSamplingPeriod() / 1000.0
-        msg.range_min = self.lidar.getMinRange() 
-        msg.range_max = self.lidar.getMaxRange()
-        msg.ranges = ranges
-        self.laser_publisher.publish(msg)
-        #self.__node.get_logger().info(str(ranges))
+    # def pose_callback(self, msg):
+    #     # Get position and orientation from the message
+    #     x = msg.pose.pose.position.x
+    #     y = msg.pose.pose.position.y
+    #     z = msg.pose.pose.position.z
+    #     qx = msg.pose.pose.orientation.x
+    #     qy = msg.pose.pose.orientation.y
+    #     qz = msg.pose.pose.orientation.z
+    #     qw = msg.pose.pose.orientation.w
+
+    #     # Create and publish the Odometry message
+    #     odom = Odometry()
+    #     odom.header.stamp = self.get_clock().now().to_msg()
+    #     odom.header.frame_id = '/{}/odom'.format(self.__namespace)
+    #     odom.child_frame_id = '/{}base_link'.format(self.__namespace)
+    #     odom.pose.pose.position.x = x
+    #     odom.pose.pose.position.y = y
+    #     odom.pose.pose.position.z = z
+    #     odom.pose.pose.orientation.x = qx
+    #     odom.pose.pose.orientation.y = qy
+    #     odom.pose.pose.orientation.z = qz
+    #     odom.pose.pose.orientation.w = qw
+    #     self.odom_publisher.publish(odom)
