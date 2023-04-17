@@ -42,7 +42,7 @@ class MyTurtlebotDriver:
                                 allow_undeclared_parameters=True,
                                 automatically_declare_parameters_from_overrides=True)
         self.tb_driver.create_subscription(Twist, '/{}/cmd_vel'.format(self.__namespace), self.__cmd_vel_callback, 1)
-        self.laser_publisher = self.tb_driver.create_publisher(LaserScan, 'scan', 10)
+        self.laser_publisher = self.tb_driver.create_publisher(LaserScan, '/{}/scan'.format(self.__namespace), 10)
         self.odom_publisher = self.tb_driver.create_publisher(Odometry, '/{}/odom'.format(self.__namespace), 10)
 
 
