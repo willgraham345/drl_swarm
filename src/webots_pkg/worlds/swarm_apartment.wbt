@@ -468,6 +468,8 @@ TurtleBot3Burger {
     }
     RobotisLds01 {
     }
+    Compass {
+    }
   ]
 }
 
@@ -488,6 +490,8 @@ TurtleBot3Burger {
       name "inertial_unit"
     }
     RobotisLds01 {
+    }
+    Compass {
     }
   ]
 }
