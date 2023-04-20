@@ -3,7 +3,8 @@ from geometry_msgs.msg import Twist
 from sensor_msgs.msg import LaserScan
 from nav_msgs.msg import Odometry
 from math import cos, sin, degrees, radians, pi, atan2
-import tf2_ros
+from geometry_msgs.msg import TransformStamped
+from tf2_ros import StaticTransformBroadcaster, TransformBroadcaster
 
 HALF_DISTANCE_BETWEEN_WHEELS = 0.045
 WHEEL_RADIUS = 0.025
@@ -29,7 +30,7 @@ class MyTurtlebotDriver:
 
         self.lidar = self.__robot.getLidar("LDS-01")
         self.lidar.enable(self.timestep)
-
+        
         self.__left_motor.setPosition(float('inf'))
         self.__left_motor.setVelocity(0)
 
@@ -47,6 +48,8 @@ class MyTurtlebotDriver:
         self.laser_publisher = self.tb_driver.create_publisher(LaserScan, '/{}/scan'.format(self.__namespace), 10)
         self.odom_publisher = self.tb_driver.create_publisher(Odometry, '/{}/odom'.format(self.__namespace), 10)
 
+        self.tfbr = TransformBroadcaster(self.tb_driver)
+
 
 
     def __cmd_vel_callback(self, twist):
@@ -57,7 +60,7 @@ class MyTurtlebotDriver:
         ranges = self.lidar.getLayerRangeImage(0)
         msg = LaserScan()
         msg.header.stamp = self.tb_driver.get_clock().now().to_msg()
-        msg.header.frame_id = 'base_link_rotated' #THIS IS PROBABLY NOT RIGHT!!!! ACTUALLY A LOT OF THESE MAY BE INACURATE IDK
+        msg.header.frame_id = '{}/base_link'.format(self.__namespace)
         msg.angle_min = -0.5 * pi
         msg.angle_max = 0.5 * pi
         msg.angle_increment = pi / (self.lidar.getHorizontalResolution() - 1)
@@ -67,6 +70,7 @@ class MyTurtlebotDriver:
         msg.ranges = ranges
         self.laser_publisher.publish(msg)
         #self.__node.get_logger().info(str(ranges))
+
     def _publish_gps(self, gps_vals,heading):
         # Get position and orientation from the robot
         # position = self.__robot.getPosition()
@@ -74,17 +78,17 @@ class MyTurtlebotDriver:
         # Create and publish the Odometry message
         odom = Odometry()
         odom.header.stamp = self.tb_driver.get_clock().now().to_msg()
-        odom.header.frame_id = '/{}/odom'.format(self.__namespace)
-        odom.child_frame_id = '/{}base_link'.format(self.__namespace)
+        odom.header.frame_id = '/odom'
+        odom.child_frame_id = '{}/base_link'.format(self.__namespace)
         odom.pose.pose.position.x = gps_vals[0]
         odom.pose.pose.position.y = gps_vals[1]
         odom.pose.pose.position.z = gps_vals[2]
 
         #quaternion = tf2_ros.transformations.quaternion_from_euler(0.0, 0.0, yaw)
         yaw = atan2(heading[1],heading[0])
-        if self.__namespace =="tb1":
+        #if self.__namespace =="tb1":
             #print(self.__compass.getValues())
-            print(yaw*180/pi)
+            #print(yaw*180/pi)
         odom.pose.pose.orientation.z = sin(yaw / 2.0)
         odom.pose.pose.orientation.w = cos(yaw / 2.0)
         # odom.pose.pose.orientation.x = orientation[0]
@@ -92,6 +96,23 @@ class MyTurtlebotDriver:
         # odom.pose.pose.orientation.z = orientation[2]
         # odom.pose.pose.orientation.w = orientation[3]
         self.odom_publisher.publish(odom)
+
+        # Create a transform message
+        transform = TransformStamped()
+        transform.header.stamp = self.tb_driver.get_clock().now().to_msg()
+        transform.header.frame_id = 'odom'
+        transform.child_frame_id = '{}/base_link'.format(self.__namespace)
+        transform.transform.translation.x = gps_vals[0]
+        transform.transform.translation.y = gps_vals[1]
+        transform.transform.translation.z = gps_vals[2]
+        transform.transform.rotation.x = 0.0
+        transform.transform.rotation.y = 0.0
+        transform.transform.rotation.z = sin(yaw / 2.0)
+        transform.transform.rotation.w = cos(yaw / 2.0)
+
+        # Publish the transform message
+        #self.tf_publisher.publish(transform)
+        self.tfbr.sendTransform(transform)
 
     def step(self):
         rclpy.spin_once(self.tb_driver, timeout_sec=0)
@@ -109,7 +130,7 @@ class MyTurtlebotDriver:
         
         # print(gps_values)
         # wasn't working, so I comented this out.
-        # self.publish_lidar()
+        self.publish_lidar()
         # self.__publish_odom()
 
 

@@ -113,7 +113,7 @@ class CrazyflieWebotsDriver():
 
         self.msg_laser = LaserScan()
         self.msg_laser.header.stamp = Time(seconds=self.robot.getTime()).to_msg()
-        self.msg_laser.header.frame_id = 'base_link'
+        self.msg_laser.header.frame_id = '{}/base_link'.format(self.namespace)
         self.msg_laser.range_min = 0.1
         self.msg_laser.range_max = max_range
         self.msg_laser.ranges = [back_range, left_range, front_range, right_range, back_range]
@@ -195,7 +195,7 @@ class CrazyflieWebotsDriver():
         odom_msg = Odometry()
         odom_msg.header.stamp = Time(seconds=self.robot.getTime()).to_msg()
         odom_msg.header.frame_id = 'odom'
-        odom_msg.child_frame_id = 'base_link'
+        odom_msg.child_frame_id = '{}/base_link'.format(self.namespace)
         odom_msg.pose.pose.position.x = x_global
         odom_msg.pose.pose.position.y = y_global
         odom_msg.pose.pose.position.z = z_global
@@ -214,11 +214,11 @@ class CrazyflieWebotsDriver():
 
         t_base = TransformStamped()
         t_base.header.stamp = Time(seconds=self.robot.getTime()).to_msg()
-        t_base.header.frame_id = '/{}/odom'.format(self.namespace)
-        t_base.child_frame_id = 'base_link'
+        t_base.header.frame_id = 'odom'
+        t_base.child_frame_id = '{}/base_link'.format(self.namespace)
         t_base.transform.translation.x = x_global
         t_base.transform.translation.y = y_global
-        t_base.transform.translation.z = 0.0
+        t_base.transform.translation.z = z_global
         #t_base.transform.rotation.x = q_base[0]
         #t_base.transform.rotation.y = q_base[1]
         #t_base.transform.rotation.z = q_base[2]
