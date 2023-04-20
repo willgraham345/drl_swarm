@@ -61,15 +61,13 @@ class MyTurtlebotDriver:
         msg = LaserScan()
         msg.header.stamp = self.tb_driver.get_clock().now().to_msg()
         msg.header.frame_id = '{}/base_link'.format(self.__namespace)
-        msg.angle_min = -0.5 * pi
-        msg.angle_max = 0.5 * pi
-        msg.angle_increment = pi / (self.lidar.getHorizontalResolution() - 1)
-        #msg.scan_time = self.lidar.getSamplingPeriod() / 1000.0
+        msg.angle_min = -self.lidar.getFov()/2
+        msg.angle_max = self.lidar.getFov()/2
+        msg.angle_increment = 2*pi / (self.lidar.getHorizontalResolution() - 1)
         msg.range_min = self.lidar.getMinRange() 
         msg.range_max = self.lidar.getMaxRange()
         msg.ranges = ranges
         self.laser_publisher.publish(msg)
-        #self.__node.get_logger().info(str(ranges))
 
     def _publish_gps(self, gps_vals,heading):
         # Get position and orientation from the robot

@@ -181,9 +181,9 @@ class CrazyflieWebotsDriver():
         roll_rate = self.gyro.getValues()[0]
         pitch_rate = self.gyro.getValues()[1]
         yaw_rate = self.gyro.getValues()[2]
-        x_global = self.gps.getValues()[0]- self.first_x_global
+        x_global = self.gps.getValues()[0]#- self.first_x_global
         vx_global = (x_global - self.past_x_global)/dt
-        y_global = self.gps.getValues()[1] - self.first_y_global
+        y_global = self.gps.getValues()[1]# - self.first_y_global
         vy_global = (y_global - self.past_y_global)/dt
         z_global = self.gps.getValues()[2]
         vz_global = (z_global - self.past_z_global)/dt
