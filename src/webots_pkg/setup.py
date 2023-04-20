@@ -45,6 +45,7 @@ setup(
             'webots_pkg_driver = webots_pkg.webots_pkg_driver:main',
             'cf_supervisor = webots_pkg.crazyflie_publisher:main',
             'potential_field = webots_pkg.potential_field_node:main',
+            'simple_mapper = webots_pkg.simple_mapper:main',
         ],
     },
 )
