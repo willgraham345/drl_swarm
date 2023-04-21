@@ -27,6 +27,7 @@ class potentialField(Node): # MODIFY NAME
         self.create_subscription(Odometry,  "cf1/odom", self.cf1_odom_callback, 1)
         
         self.tb1_control_publisher = self.create_publisher(Twist, '/tb1/cmd_vel', 10)
+        self.tb2_control_publisher = self.create_publisher(Twist, '/tb2/cmd_vel', 10)
         #print("hello")
         self.odom_tb1 = Odometry()
         self.odom_tb2 = Odometry()
@@ -76,73 +77,70 @@ class potentialField(Node): # MODIFY NAME
             # tb_dirc = atan2(ty_rel,tx_rel)
             #print(cf_dirc*180/pi,tb_dirc*180/pi,self.pose_tb1[2]*180/pi)
             
-            epsilon = 5.0
-            tsig = .3
-            cGain = 10
-            #Gradient field movment
-            x = self.pose_tb1[0]
-            y = self.pose_tb1[1]
-            tx = self.pose_tb2[0]
-            ty = self.pose_tb2[1]
-            cx = self.pose_cf1[0]
-            cy = self.pose_cf1[1]
-            #print(sqrt((x-cx)**2+(y-cy)**2))
-            gradt_const = 10/tsig**2*exp(-1/2*((x-tx)**2+(y-ty)**2)/tsig**2)
-            if x-cx == 0 and y-cy == 0:
-                gradc_const = 0
-            else:
-                gradc_const = -cGain/sqrt((x-cx)**2+(y-cy)**2)
-            grad_x = gradc_const*(x-cx)+gradt_const*(x-tx)
-            grad_y = gradc_const*(y-cy)+gradt_const*(y-ty)
-            #print(grad_x,grad_y)
-            grad_dirc = atan2(grad_y,grad_x)
-            grad_mag = sqrt(grad_x**2+grad_y**2)
-            surf = 10*exp(-1/2*((x-tx)**2+(y-ty)**2)/tsig**2)+sqrt((x-cx)**2+(y-cy)**2)
-            print(surf,grad_mag,grad_dirc*180/pi)
-
-
-
-
-            interval = 5*pi/180
-            #print(interval)
-            twist = Twist()
-            if grad_mag < 1:
-                twist.linear.x = 0.0
-                twist.angular.z = 0.0
-            elif grad_dirc +interval > self.pose_tb1[2] and grad_dirc -interval < self.pose_tb1[2]:
-                twist.linear.x = 1.0
-                twist.angular.z = 0.0
-            else:
-                #print(cf_dirc-self.pose_tb1[2])
-                if grad_dirc < self.pose_tb1[2] - 5*pi/6 or (grad_dirc > self.pose_tb1[2] and grad_dirc < self.pose_tb1[2] + 7*pi/6):
-                    correctionDirection = 1
-                else:
-                    correctionDirection = -1
-                twist.angular.z = epsilon * correctionDirection
-                twist.angular.x = 0.0
-            #printdes*180/pi,self.pose_tb1[2]*180/pi)
+            
+            twist = self.gradientDecent(self.pose_tb1,self.pose_tb2,self.pose_cf1)
             self.tb1_control_publisher.publish(twist)
-            #self.dispGrad()
 
-
-
-
+            twist = self.gradientDecent(self.pose_tb2,self.pose_tb1,self.pose_cf1)
+            self.tb2_control_publisher.publish(twist)
 
 
             rclpy.spin_once(self)
 
-    def dispGrad(self):
+    def gradientDecent(self, tb1, tb2, cf):
         epsilon = 5.0
+        tsig = .3
+        cGain = 10
+        interval = 5*pi/180
+
+        #Gradient field movment for TB1
+        x = tb1[0]
+        y = tb1[1]
+        tx = tb2[0]
+        ty = tb2[1]
+        cx = cf[0]
+        cy = cf[1]
+        #print(sqrt((x-cx)**2+(y-cy)**2))
+        gradt_const = 10/tsig**2*exp(-1/2*((x-tx)**2+(y-ty)**2)/tsig**2)
+        if sqrt((x-cx)**2+(y-cy)**2)<.2:#abs(x-cx) < .5 and abs(y-cy) < .5:
+            gradc_const = 0
+        else:
+            gradc_const = -cGain/sqrt((x-cx)**2+(y-cy)**2)
+        grad_x = gradc_const*(x-cx)+gradt_const*(x-tx)
+        grad_y = gradc_const*(y-cy)+gradt_const*(y-ty)
+        #print(grad_x,grad_y)
+        grad_dirc = atan2(grad_y,grad_x)
+        grad_mag = sqrt(grad_x**2+grad_y**2)
+        surf = 10*exp(-1/2*((x-tx)**2+(y-ty)**2)/tsig**2)+sqrt((x-cx)**2+(y-cy)**2)
+        print(surf,grad_mag,grad_dirc*180/pi,sqrt((x-cx)**2+(y-cy)**2))
+
+        #print(interval)
+        twist = Twist()
+        if grad_mag < 2: #or sqrt((x-cx)**2+(y-cy)**2)<.2:
+            twist.linear.x = 0.0
+            twist.angular.z = 0.0
+        elif grad_dirc +interval > tb1[2] and grad_dirc -interval < tb1[2]:
+            twist.linear.x = 1.0
+            twist.angular.z = 0.0
+        else:
+            #print(cf_dirc-self.pose_tb1[2])
+            if grad_dirc < tb1[2] - 5*pi/6 or (grad_dirc > tb1[2] and grad_dirc < tb1[2] + 7*pi/6):
+                correctionDirection = 1
+            else:
+                correctionDirection = -1
+            twist.angular.z = epsilon * correctionDirection
+            twist.angular.x = 0.0
+        #printdes*180/pi,self.pose_tb1[2]*180/pi)
+        return twist
+        #self.dispGrad()
+
+    def dispGrad(self):
         tsig = .4
-        cGain = 1
         #Gradient field movment
-        # x = self.pose_tb1[0]
-        # y = self.pose_tb1[1]
         tx = self.pose_tb2[0]
         ty = self.pose_tb2[1]
         cx = self.pose_cf1[0]
         cy = self.pose_cf1[1]
-        #print(sqrt((x-cx)**2+(y-cy)**2))
         print(cx,cy)
         print("\t",end="")
         for i in range(20):
@@ -153,40 +151,9 @@ class potentialField(Node): # MODIFY NAME
             x = -i/4
             for j in range(20):
                 y = -j/4
-                # if x==0:
-                #     print("\t",y,":", end="")
-                # gradt_const = -10/tsig**2*exp(-1/2*((x-tx)**2+(y-ty)**2)/tsig**2)
-                # if x-cx == 0 and y-cy == 0:
-                #     gradc_const = 0
-                # else:
-                #     gradc_const = -cGain/sqrt((x-cx)**2+(y-cy)**2)
-                # grad_x = gradc_const*(x-cx)#+gradt_const*(x-tx)
-                # grad_y = gradc_const*(y-cy)#+gradt_const*(y-ty)
-                # #print(grad_x,grad_y)
-                # grad_dirc = atan2(grad_x,grad_y)
-                # grad_mag = sqrt(grad_x**2+grad_y**2)
-                # print("\t",int(grad_dirc*180/pi), end="")
                 surf = 10*exp(-1/2*((x-tx)**2+(y-ty)**2)/tsig**2)+sqrt((x-cx)**2+(y-cy)**2)
                 print("\t",int(10*surf), end="")
-            print(" endln")
-                # interval = 5*pi/180
-                # #print(interval)
-                # twist = Twist()
-                # if grad_dirc +interval > self.pose_tb1[2] and grad_dirc -interval < self.pose_tb1[2]:
-                #     twist.linear.x = 1.0
-                #     twist.angular.z = 0.0
-                # else:
-                #     #print(cf_dirc-self.pose_tb1[2])
-                #     if grad_dirc < self.pose_tb1[2] - 5*pi/6 or (grad_dirc > self.pose_tb1[2] and grad_dirc < self.pose_tb1[2] + 7*pi/6):
-                #         correctionDirection = 1
-                #     else:
-                #         correctionDirection = -1
-                #     twist.angular.z = epsilon * correctionDirection
-                #     twist.angular.x = 0.0
-                # #printdes*180/pi,self.pose_tb1[2]*180/pi)
-                #self.tb1_control_publisher.publish(twist)
-
-    
+            print(" endln")    
 
 def main(args=None):
     rclpy.init(args=None)
