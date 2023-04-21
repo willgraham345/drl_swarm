@@ -81,7 +81,7 @@ class MyTurtlebotDriver:
         odom.pose.pose.position.z = gps_vals[2]
 
         #quaternion = tf2_ros.transformations.quaternion_from_euler(0.0, 0.0, yaw)
-        yaw = atan2(heading[1],heading[0])
+        yaw = -atan2(heading[1],heading[0])+pi/2
         if self.__namespace =="tb1":
             #print(self.__compass.getValues())
             print(yaw*180/pi)
