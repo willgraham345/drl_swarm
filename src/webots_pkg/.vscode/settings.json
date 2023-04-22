@@ -4,6 +4,6 @@
     ],
     "python.analysis.extraPaths": [
         "/opt/ros/foxy/lib/python3.8/site-packages"
-        "/home/will/drl_swarm/install/explore_pkg/share"
+        "/home/luke/drl_swarm/install/explore_pkg/share"
     ]
 }

@@ -92,7 +92,7 @@ def generate_launch_description():
     webots = WebotsLauncher(
         world=os.path.join(package_dir, 'worlds', 'swarm_apartment.wbt')
     )
-    launch_description = [ros2_supervisor, webots]
+    launch_description = [webots]
     
     # Handle transforms between map and odom for all robots
 
@@ -138,10 +138,8 @@ def generate_launch_description():
                 on_exit=[launch.actions.EmitEvent(event=launch.events.Shutdown())],
             )
         )
+    
     launch_description.append(event_handler)
-
-
-
 
     return LaunchDescription(launch_description)
 
