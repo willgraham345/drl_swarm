@@ -32,7 +32,7 @@ setup(
     name=package_name,
     version='0.0.0',
     packages=[package_name],
-    data_files=package_files(data_files, ['resource/', 'launch/', 'worlds/']),
+    data_files=package_files(data_files, ['resource/', 'launch/', 'worlds/', 'params/']),
     install_requires=['setuptools'],
     zip_safe=True,
     maintainer='will',
@@ -46,6 +46,7 @@ setup(
             'cf_supervisor = webots_pkg.crazyflie_publisher:main',
             'potential_field = webots_pkg.potential_field_node:main',
             'simple_mapper = webots_pkg.simple_mapper:main',
+            'crazyflie_controller = webots_pkg.crazyflie_controller:main'
         ],
     },
 )

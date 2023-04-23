@@ -23,10 +23,10 @@ spec.loader.exec_module(swarm_module)
 
 
 cf1 = swarm_module.Crazyflie('cf1', 'radio://0/80/2M/E7E7E7E7E7', [-1.5, -1.5, 0.015], [0, 0, 0])
-cf2 = swarm_module.Crazyflie('cf2', 'radio://0/80/2M/E7E7E7E7E8', [1, 1, 0], [0, 0, 0])
+cf2 = swarm_module.Crazyflie('cf2', 'radio://0/80/2M/E7E7E7E7E8', [0, 0, 0], [0, 0, 0])
 
-tb1 = swarm_module.Turtlebot('tb1', 'ROS2_address', [-1, -1, 0], [0, 0, 0])
-tb2 = swarm_module.Turtlebot('tb2', 'ROS2_address', [-2, -2, 0], [0, 0, 0])
+tb1 = swarm_module.Turtlebot('tb1', 'ROS2_address', [0, 0, 0], [0, 0, 0])
+tb2 = swarm_module.Turtlebot('tb2', 'ROS2_address', [0, 0, 0], [0, 0, 0])
 
 swarm = swarm_module.Swarm([tb1, tb2], [cf1])
 
@@ -92,7 +92,7 @@ def generate_launch_description():
     webots = WebotsLauncher(
         world=os.path.join(package_dir, 'worlds', 'swarm_apartment.wbt')
     )
-    launch_description = [ros2_supervisor, webots]
+    launch_description = [webots]
     
     # Handle transforms between map and odom for all robots
 
@@ -138,10 +138,8 @@ def generate_launch_description():
                 on_exit=[launch.actions.EmitEvent(event=launch.events.Shutdown())],
             )
         )
+    
     launch_description.append(event_handler)
-
-
-
 
     return LaunchDescription(launch_description)
 
