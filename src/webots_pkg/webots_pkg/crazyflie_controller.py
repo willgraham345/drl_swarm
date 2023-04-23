@@ -4,6 +4,7 @@ import sys
 import math
 
 from std_msgs.msg import String
+import time
 from geometry_msgs.msg import Pose
 import tf_transformations
 from tf2_ros import TransformBroadcaster
@@ -33,7 +34,7 @@ class CrazyflieControllerNode(Node):
         self.marker_publisher_ = self.create_publisher(
             Marker, '/vizualization_marker', 1)
         # self.timer_ = self.create_timer(0.25, self.publish_array)
-        self.timer2_ = self.create_timer(4, self.update_planner)
+        # self.timer2_ = self.create_timer(20, self.update_planner)
         self.get_logger().info("Crazyflie Controller has been created")
 
         # controller variables
@@ -49,11 +50,18 @@ class CrazyflieControllerNode(Node):
         self.yaw = 0.0
         self.vr = 0.25
         self.wr = 0.0
-        self.kx = 0.5
-        self.ky = 0.8 * 10**-3
-        self.kt = 0.2
+        self.kx = 1.5
+        self.ky = 1.5
+        self.kt = 1.0
         self.iters = 0
         self.yaw_init = 0.0
+        self.xlim = 0.5
+        self.ylim = 0.5
+        self.tlim = 2.0
+        self.theta_err_old = 0.0
+        self.x_err_old = 0.0
+        self.y_err_old = 0.0
+        self.past_time = 0.0
 
         # path planning variables
         self.goal = [-2,-2]
@@ -73,6 +81,9 @@ class CrazyflieControllerNode(Node):
         q[2] = odom.pose.pose.orientation.z
         q[3] = odom.pose.pose.orientation.w
         self.roll, self.pitch, self.yaw = tf_transformations.euler_from_quaternion(q)
+        # self.get_logger().info('yaw: ' + str(self.yaw))
+
+        # self.get_logger().info(str([self.x, self.y]))
 
         # help init orientation for controller 
         if self.iters == 0:
@@ -89,33 +100,68 @@ class CrazyflieControllerNode(Node):
             goal_dist = 100
 
         # generate the command
-        if len(self.path) > 1 and goal_dist > 0.1:
+        if len(self.path) > 1 and goal_dist > 0.3:
 
-            distance = self.check_distance([self.x,self.y],self.path[0])
+            dt =  time.time() - self.past_time
+
+            distance = self.check_distance([self.y,self.x],self.path[0])
+
+            xlimit = self.xlim
+            ylimit = self.ylim
+            tlimit = self.tlim
 
             if distance < self.resolution:
                 # move along the path 
                 self.path = self.path[1:]
                 self.get_logger().info('moving')
                 self.get_logger().info(str(len(self.path)))
+                if len(self.path) < 12:
+                    ratio = 1/(12-len(self.path))
+                    xlimit = ratio * self.xlim
+                    ylimit = ratio * self.ylim
+                    # tlimit = ratio * self.tlim
                 
             # get error states
-            x_err = self.path[0][0]
-            y_err = self.path[0][1]
-            theta_des = math.atan2((self.path[1][1]-self.path[0][1]),(self.path[1][0]-self.path[0][0])) + self.yaw_init
-            theta_err = theta_des - self.yaw
+            x_err = self.path[0][1] - self.x
+            y_err = self.path[0][0] - self.y
+            if len(self.path) > 1:
+                theta_des = math.atan2((self.path[1][1]-self.path[0][1]),(self.path[1][0]-self.path[0][0]))
+                # theta_des = math.atan2(y_err, x_err)
+                theta_err = theta_des - self.yaw
+            else:
+                theta_err = 0.0
+
+            if np.abs(theta_err - 2*np.pi) < theta_err:
+                theta_err = theta_err - 2*np.pi
+
+            # self.get_logger().info(str(theta_err))
+
+            if np.abs(theta_err) > 0.3:
+                xlimit = 0.0
+                ylimit = 0.0
+
+            # self.get_logger().info(str([self.x, self.y]))
 
             # simple controller
-            x_cmd = self.kx * (x_err)
-            y_cmd = self.ky * (y_err)
-            z_rot_cmd = self.kt * (theta_err)
+            x_cmd = self.kx * (x_err) + self.kx/5 * (x_err - self.x_err_old)/dt
+            y_cmd = self.ky * (y_err) + self.ky/5 * (y_err - self.y_err_old)/dt
+            z_rot_cmd = self.kt * (theta_err) + self.kt/5 * (theta_err - self.theta_err_old)/dt
+
+            self.past_time = time.time()
+            # update 
+            self.x_err_old = x_err
+            self.y_err_old = y_err
+            self.theta_err_old = theta_err
 
             # # transform into robot frame
-            # rot_array = np.array([np.cos(self.yaw), np.sin(self.yaw), 0, -np.sin(self.yaw), np.cos(self.yaw), 0, 0, 0, 1])
-            # rot_matrix = rot_array.reshape((3,3))
-            # state_array = np.array([x_err, y_err, theta_err])
-            # state_matrix = state_array.reshape((3,1))
-            # err_transform = rot_matrix @ state_matrix
+            rot_array = np.array([np.cos(self.yaw), np.sin(self.yaw), 0, -np.sin(self.yaw), np.cos(self.yaw), 0, 0, 0, 1])
+            rot_matrix = rot_array.reshape((3,3))
+            state_array = np.array([x_err, y_err, theta_err])
+            state_matrix = state_array.reshape((3,1))
+            err_transform = rot_matrix @ state_matrix
+            x_cmd = self.kt*err_transform[0]
+            y_cmd = self.ky*err_transform[1]
+            # z_rot_cmd = self.kt*err_transform[2]
             # # self.get_logger().info(str(err_transform))
 
             # # determine commands
@@ -127,9 +173,9 @@ class CrazyflieControllerNode(Node):
             # convert = np.linalg.inv(rot_matrix) @ np.array([x_cmd, y_cmd, z_rot_cmd]).reshape(3,1)
 
             # limit the velocities
-            x_cmd = self.limit_velocity(x_cmd,0.5)
-            y_cmd = self.limit_velocity(y_cmd,0.5)
-            z_rot_cmd = self.limit_velocity(z_rot_cmd,0.5)
+            x_cmd = self.limit_velocity(x_cmd,xlimit)
+            y_cmd = self.limit_velocity(y_cmd,ylimit)
+            z_rot_cmd = self.limit_velocity(z_rot_cmd,tlimit)
 
             # self.get_logger().info(str(x_cmd))
             # self.get_logger().info(str(y_cmd))
@@ -138,7 +184,7 @@ class CrazyflieControllerNode(Node):
         else:
             x_cmd = 0.0
             y_cmd = 0.0
-            z_rot_cmd = 1.0
+            z_rot_cmd = 0.0
 
             # path complete
             self.path_complete = True
@@ -163,6 +209,7 @@ class CrazyflieControllerNode(Node):
             self.path_complete = False
             break_flag = False
             rows,cols = np.shape(self.occ_grid)
+            self.get_logger().info(str([rows,cols]))
             for row in range(0,rows):
                 for col in range(0,cols):
                     check = self.occ_grid[row,col]
@@ -172,8 +219,9 @@ class CrazyflieControllerNode(Node):
                         for n in neighbors:
                             if n == 0:
                                 counts += 1
-                        distance = self.check_distance([self.x,self.y],np.array([row,col])/self.occ_grid_cpm + self.occ_grid_origin)
-                        if all(np.array([row,col]) != self.old_goal) and counts > 1 and distance > 0.5:
+                        distance = self.check_distance([self.y,self.x],np.array([row,col])/self.occ_grid_cpm + self.occ_grid_origin)
+                        self.get_logger().info(str(distance))
+                        if all(np.array([row,col]) != self.old_goal) and counts > 2 and distance > 2.0:
                             break_flag = True
                             self.goal = np.array([row,col])
                             # self.get_logger().info('found one')
@@ -194,16 +242,24 @@ class CrazyflieControllerNode(Node):
     def find_path(self):
 
         # self.get_logger().info('origin: ' + str(self.occ_grid_origin))
-        start = np.rint((np.array([self.x, self.y]) - self.occ_grid_origin) * self.occ_grid_cpm)
+
+        start = np.rint((np.array([self.y, self.x]) - self.occ_grid_origin) * self.occ_grid_cpm)
 
         # self.get_logger().info(str(self.check_distance(self.goal,start)))
         
-        g = graph_search.GridMap(start, self.goal, self.occ_grid)
+        g = graph_search.GridMap(start, self.goal, -50, 150, self.occ_grid)
         res = graph_search.bfs(g.init_pos, g.transition, g.is_goal, graph_search._ACTIONS_2)
 
         self.old_goal = self.goal
 
-        g.display_map()
+        # if len(res[0][0]) < 2:
+        cmd = Twist()
+        cmd.linear.x=0.0
+        cmd.linear.y=0.0
+        cmd.angular.z=0.25
+        self.cmd_vel_publisher_.publish(cmd)
+        self.get_logger().info(str(res[0][0]))
+        g.display_map(res[0][0])
 
         return res[0][0]
     
@@ -213,7 +269,7 @@ class CrazyflieControllerNode(Node):
     
     def check_near(self, coords):
 
-        if coords[0] > 0 and coords[1] > 0 and coords[0] < 199 and coords[1] < 199:
+        if coords[0] > 0 and coords[1] > 0 and coords[0] < 99 and coords[1] < 99:
             neighbors = []
             neighbors.append(self.occ_grid[coords[0]+1,coords[1]+1])
             neighbors.append(self.occ_grid[coords[0]+1,coords[1]+0])
@@ -243,6 +299,14 @@ class CrazyflieControllerNode(Node):
                 self.marker_publisher_.publish(msg)
 
     def update_planner(self):
+
+        # send command to the drone
+        cmd = Twist()
+        cmd.linear.x=0.0
+        cmd.linear.y=0.0
+        cmd.angular.z=1.0
+        self.cmd_vel_publisher_.publish(cmd)
+
         self.path_complete = True
 
     def limit_velocity(self, vel, limit):
