@@ -262,7 +262,7 @@ class CrazyflieControllerNode(Node):
         # self.get_logger().info(str(self.check_distance(self.goal,start)))
         
         g = graph_search.GridMap(start, self.goal, -50, 150, self.occ_grid)
-        res = graph_search.bfs(g.init_pos, g.transition, g.is_goal, graph_search._ACTIONS_2)
+        res = graph_search.bfs(g.init_pos, g.transition, g.is_goal, graph_search._ACTIONS)
 
         self.old_goal = self.goal
 
@@ -359,18 +359,18 @@ class CrazyflieControllerNode(Node):
     
     def range_callback(self, msg: Range):
 
-        if msg.range < 0.15:
+        if msg.range < 0.2:
 
             cmd = Twist()
             cmd.linear.x=0.0
-            cmd.linear.y=-0.05
+            cmd.linear.y=0.05
             cmd.angular.z=0.0
             self.cmd_vel_publisher_.publish(cmd)
             
 
     def range_callback_right(self, msg: Range):
 
-        if msg.range < 0.15:
+        if msg.range < 0.2:
 
             cmd = Twist()
             cmd.linear.x=-0.05
@@ -381,7 +381,7 @@ class CrazyflieControllerNode(Node):
     
     def range_callback_left(self, msg: Range):
 
-        if msg.range < 0.15:
+        if msg.range < 0.2:
 
             cmd = Twist()
             cmd.linear.x=0.05
@@ -392,11 +392,11 @@ class CrazyflieControllerNode(Node):
 
     def range_callback_back(self, msg: Range):
 
-        if msg.range < 0.15:
+        if msg.range < 0.2:
 
             cmd = Twist()
             cmd.linear.x=0.0
-            cmd.linear.y=0.05
+            cmd.linear.y=-0.05
             cmd.angular.z=0.0
             self.cmd_vel_publisher_.publish(cmd)
             
