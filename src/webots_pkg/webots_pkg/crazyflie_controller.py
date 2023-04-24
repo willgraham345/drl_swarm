@@ -228,7 +228,7 @@ class CrazyflieControllerNode(Node):
                             if n == 0:
                                 counts += 1
                         # distance = self.check_distance([self.x,self.y],np.array([row,col])/self.occ_grid_cpm + self.occ_grid_origin)
-                        if all(np.array([row,col]) != self.old_goal) and counts > 1 and distance > 0.75:
+                        if all(np.array([row,col]) != self.old_goal) and counts > 2 and distance > 1.2:
                             self.get_logger().info(str(distance))
                             break_flag = True
                             self.goal = np.array([row,col])
@@ -236,6 +236,12 @@ class CrazyflieControllerNode(Node):
                         break
                 if break_flag:
                     break
+                else:
+                    cmd = Twist()
+                    cmd.linear.x=0.0
+                    cmd.linear.y=0.0
+                    cmd.angular.z=0.25
+                    self.cmd_vel_publisher_.publish(cmd)
 
             marker = self.get_marker()
             self.marker_publisher_.publish(marker)
