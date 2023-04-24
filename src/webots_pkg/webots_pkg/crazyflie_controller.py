@@ -18,7 +18,7 @@ from visualization_msgs.msg import MarkerArray, Marker
 import numpy as np
 
 # Change this path to your crazyflie-firmware folder
-sys.path.append('/home/luke/graph-search')
+sys.path.append('/home/luke/drl_swarm/src/webots_pkg/resource')
 import graph_search
 
 class CrazyflieControllerNode(Node):
