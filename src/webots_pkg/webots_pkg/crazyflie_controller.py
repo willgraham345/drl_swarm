@@ -33,7 +33,14 @@ class CrazyflieControllerNode(Node):
             OccupancyGrid, '/cf1/map', self.map_callback, 10)
         self.marker_publisher_ = self.create_publisher(
             Marker, '/vizualization_marker', 1)
-        self.
+        self.range_subscriber_ = self.create_subscription(
+            Range, '/cf1/range_front', self.range_callback, 10)
+        self.range_right_subscriber_ = self.create_subscription(
+            Range, '/cf1/range_right', self.range_callback_right, 10)
+        self.range_back_subscriber_ = self.create_subscription(
+            Range, '/cf1/range_back', self.range_callback_back, 10)
+        self.range_left_subscriber_ = self.create_subscription(
+            Range, '/cf1/range_left', self.range_callback_left, 10)
         self.get_logger().info("Crazyflie Controller has been created")
 
         # controller variables
@@ -343,6 +350,50 @@ class CrazyflieControllerNode(Node):
         marker.color.a = 1.0
 
         return marker
+    
+    def range_callback(self, msg: Range):
+
+        if msg.range < 0.15:
+
+            cmd = Twist()
+            cmd.linear.x=0.0
+            cmd.linear.y=-0.05
+            cmd.angular.z=0.0
+            self.cmd_vel_publisher_.publish(cmd)
+            
+
+    def range_callback_right(self, msg: Range):
+
+        if msg.range < 0.15:
+
+            cmd = Twist()
+            cmd.linear.x=-0.05
+            cmd.linear.y=0.0
+            cmd.angular.z=0.0
+            self.cmd_vel_publisher_.publish(cmd)
+            
+    
+    def range_callback_left(self, msg: Range):
+
+        if msg.range < 0.15:
+
+            cmd = Twist()
+            cmd.linear.x=0.05
+            cmd.linear.y=0.0
+            cmd.angular.z=0.0
+            self.cmd_vel_publisher_.publish(cmd)
+            
+
+    def range_callback_back(self, msg: Range):
+
+        if msg.range < 0.15:
+
+            cmd = Twist()
+            cmd.linear.x=0.0
+            cmd.linear.y=0.05
+            cmd.angular.z=0.0
+            self.cmd_vel_publisher_.publish(cmd)
+            
 
 def main(args=None):
     rclpy.init(args=args)
