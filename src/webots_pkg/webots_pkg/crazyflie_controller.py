@@ -33,8 +33,7 @@ class CrazyflieControllerNode(Node):
             OccupancyGrid, '/cf1/map', self.map_callback, 10)
         self.marker_publisher_ = self.create_publisher(
             Marker, '/vizualization_marker', 1)
-        # self.timer_ = self.create_timer(0.25, self.publish_array)
-        # self.timer2_ = self.create_timer(20, self.update_planner)
+        self.
         self.get_logger().info("Crazyflie Controller has been created")
 
         # controller variables
@@ -113,8 +112,8 @@ class CrazyflieControllerNode(Node):
             if distance < self.resolution:
                 # move along the path 
                 self.path = self.path[1:]
-                self.get_logger().info('moving')
-                self.get_logger().info(str(len(self.path)))
+                # self.get_logger().info('moving')
+                # self.get_logger().info(str(len(self.path)))
                 if len(self.path) < 12:
                     ratio = 1/(12-len(self.path))
                     xlimit = ratio * self.xlim
@@ -209,22 +208,24 @@ class CrazyflieControllerNode(Node):
             self.path_complete = False
             break_flag = False
             rows,cols = np.shape(self.occ_grid)
-            self.get_logger().info(str([rows,cols]))
+            # print(self.occ_grid)
+            # self.get_logger().info(str([rows,cols]))
             for row in range(0,rows):
                 for col in range(0,cols):
                     check = self.occ_grid[row,col]
                     neighbors = self.check_near([row,col])
                     if check == -1 and 0 in neighbors:
                         counts = 0
+                        distance = self.check_distance([self.x,self.y],np.array([row,col])/self.occ_grid_cpm + self.occ_grid_origin)
                         for n in neighbors:
                             if n == 0:
                                 counts += 1
-                        distance = self.check_distance([self.y,self.x],np.array([row,col])/self.occ_grid_cpm + self.occ_grid_origin)
-                        self.get_logger().info(str(distance))
-                        if all(np.array([row,col]) != self.old_goal) and counts > 2 and distance > 2.0:
+                        # distance = self.check_distance([self.x,self.y],np.array([row,col])/self.occ_grid_cpm + self.occ_grid_origin)
+                        if all(np.array([row,col]) != self.old_goal) and counts > 1 and distance > 0.75:
+                            self.get_logger().info(str(distance))
                             break_flag = True
                             self.goal = np.array([row,col])
-                            # self.get_logger().info('found one')
+                            self.get_logger().info('found one')
                         break
                 if break_flag:
                     break
@@ -256,9 +257,9 @@ class CrazyflieControllerNode(Node):
         cmd = Twist()
         cmd.linear.x=0.0
         cmd.linear.y=0.0
-        cmd.angular.z=0.25
+        cmd.angular.z=0.0
         self.cmd_vel_publisher_.publish(cmd)
-        self.get_logger().info(str(res[0][0]))
+        # self.get_logger().info(str(res[0][0]))
         g.display_map(res[0][0])
 
         return res[0][0]
@@ -269,7 +270,7 @@ class CrazyflieControllerNode(Node):
     
     def check_near(self, coords):
 
-        if coords[0] > 0 and coords[1] > 0 and coords[0] < 99 and coords[1] < 99:
+        if coords[0] > 0 and coords[1] > 0 and coords[0] < 199 and coords[1] < 199:
             neighbors = []
             neighbors.append(self.occ_grid[coords[0]+1,coords[1]+1])
             neighbors.append(self.occ_grid[coords[0]+1,coords[1]+0])
