@@ -22,21 +22,21 @@ class potentialField(Node): # MODIFY NAME
         #self.cf_frame = self.declare_parameter('cf_frame', 'cf1').get_parameter_value().string_value
         #self.tf_buffer = Buffer()
         #self.tf_listener = TransformListener(self.tf_buffer, self)
-        self.create_subscription(Odometry,  "tb1/odom", self.tb1_odom_callback, 1)
+        self.create_subscription(Odometry,  "tb1/odom", self.tb1_odom_callback, 1) #a subscriber needs to be created for every robot
         self.create_subscription(Odometry,  "tb2/odom", self.tb2_odom_callback, 1)
         self.create_subscription(Odometry,  "cf1/odom", self.cf1_odom_callback, 1)
         
-        self.tb1_control_publisher = self.create_publisher(Twist, '/tb1/cmd_vel', 10)
+        self.tb1_control_publisher = self.create_publisher(Twist, '/tb1/cmd_vel', 10) # a publisher needs to be created for every robot that will be controlled by the potential field.
         self.tb2_control_publisher = self.create_publisher(Twist, '/tb2/cmd_vel', 10)
         #print("hello")
         self.odom_tb1 = Odometry()
         self.odom_tb2 = Odometry()
         self.odom_cf1 = Odometry()
-        self.pose_tb1 = [0,0,0]
+        self.pose_tb1 = [0,0,0]  # this just makes the programming easier to read rather than calling an entire odometry structure.
         self.pose_tb2 = [0,0,0]
         self.pose_cf1 = [0,0,0]
 
-    def tb1_odom_callback(self, odom):
+    def tb1_odom_callback(self, odom): # a callback is required for each subscriber
         self.odom_tb1 = odom
         th = 2 * atan2(odom.pose.pose.orientation.z,odom.pose.pose.orientation.w)
         if th > pi:
@@ -62,7 +62,7 @@ class potentialField(Node): # MODIFY NAME
     #     #self.get_logger().info('MyPlugin is running')
     #     # self.get_logger().info('MyPlugin initialized')
 
-    def run(self):
+    def run(self): #this function runs indefinitly and is the "Main()" of the Node
         while rclpy.ok():
             #print("running", self.odom_tb1.pose.pose.orientation.z,self.odom_tb1.pose.pose.orientation.w)
             #print(self.pose_tb1)
@@ -78,7 +78,7 @@ class potentialField(Node): # MODIFY NAME
             #print(cf_dirc*180/pi,tb_dirc*180/pi,self.pose_tb1[2]*180/pi)
             
             
-            twist = self.gradientDecent(self.pose_tb1,self.pose_tb2,self.pose_cf1)
+            twist = self.gradientDecent(self.pose_tb1,self.pose_tb2,self.pose_cf1) # do for every controlled robot.
             self.tb1_control_publisher.publish(twist)
 
             twist = self.gradientDecent(self.pose_tb2,self.pose_tb1,self.pose_cf1)
@@ -88,30 +88,30 @@ class potentialField(Node): # MODIFY NAME
             rclpy.spin_once(self)
 
     def gradientDecent(self, tb1, tb2, cf):
-        epsilon = 5.0
-        tsig = .3
-        cGain = 10
-        interval = 5*pi/180
+        epsilon = 5.0 # speed constant Multiplier
+        tsig = .3 # sigma of all turtlebot gaussian distributions.
+        cGain = 10 # crazyflie radial distribution multiplier to scale with number of gausians
+        interval = 5*pi/180 #unused but was going to be used for adjusting straight vs turn range of angles
 
         #Gradient field movment for TB1
-        x = tb1[0]
+        x = tb1[0] # position of self
         y = tb1[1]
-        tx = tb2[0]
+        tx = tb2[0] #position of other turtlebot (this will need to be modified to an array for scalability)
         ty = tb2[1]
-        cx = cf[0]
+        cx = cf[0] # position of Crazyflie (also make array for scalability)
         cy = cf[1]
         #print(sqrt((x-cx)**2+(y-cy)**2))
-        gradt_const = 10/tsig**2*exp(-1/2*((x-tx)**2+(y-ty)**2)/tsig**2)
-        if sqrt((x-cx)**2+(y-cy)**2)<.2:#abs(x-cx) < .5 and abs(y-cy) < .5:
+        gradt_const = 10/tsig**2*exp(-1/2*((x-tx)**2+(y-ty)**2)/tsig**2) #Negative Gradient multiplier for turtlebot's distribution
+        if sqrt((x-cx)**2+(y-cy)**2)<.2:#abs(x-cx) < .5 and abs(y-cy) < .5: # make Crazyflie multiplier zero if directly underneith to avoid chattering effect.
             gradc_const = 0
         else:
-            gradc_const = -cGain/sqrt((x-cx)**2+(y-cy)**2)
-        grad_x = gradc_const*(x-cx)+gradt_const*(x-tx)
-        grad_y = gradc_const*(y-cy)+gradt_const*(y-ty)
+            gradc_const = -cGain/sqrt((x-cx)**2+(y-cy)**2) #Negative Gradient multiplier for crazyflie's distribution
+        grad_x = gradc_const*(x-cx)+gradt_const*(x-tx) #Negative gradient in x
+        grad_y = gradc_const*(y-cy)+gradt_const*(y-ty) #Negative gadient in y
         #print(grad_x,grad_y)
-        grad_dirc = atan2(grad_y,grad_x)
-        grad_mag = sqrt(grad_x**2+grad_y**2)
-        surf = 10*exp(-1/2*((x-tx)**2+(y-ty)**2)/tsig**2)+sqrt((x-cx)**2+(y-cy)**2)
+        grad_dirc = atan2(grad_y,grad_x) #Negative gadient direction
+        grad_mag = sqrt(grad_x**2+grad_y**2) # #Negative gadient magnatude (only used for movment decisions but would like to upgrade to affecting speed)
+        surf = 10*exp(-1/2*((x-tx)**2+(y-ty)**2)/tsig**2)+sqrt((x-cx)**2+(y-cy)**2) # hight of surface (used for debugging)
         print(surf,grad_mag,grad_dirc*180/pi,sqrt((x-cx)**2+(y-cy)**2))
 
         #print(interval)
@@ -134,7 +134,7 @@ class potentialField(Node): # MODIFY NAME
         return twist
         #self.dispGrad()
 
-    def dispGrad(self):
+    def dispGrad(self): #displays the potential field hieghts to cmd line for debugging (unsused in normal use)
         tsig = .4
         #Gradient field movment
         tx = self.pose_tb2[0]
