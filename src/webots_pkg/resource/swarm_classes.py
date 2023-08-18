@@ -1,5 +1,5 @@
 class Crazyflie():
-    def __init__(self, name, URI_address, start_position, start_orientation):
+    def __init__(self, name, URI_address, start_position, start_orientation=None):
         self.name = name
         self.URI_address = URI_address
         self.start_position = start_position
@@ -7,7 +7,7 @@ class Crazyflie():
 
 
 class Turtlebot():
-    def __init__(self, name, ROS2_address, start_position, start_orientation):
+    def __init__(self, name, ROS2_address, start_position, start_orientation=None):
         self.name = name
         self.ROS2_address = ROS2_address
         self.start_position = start_position
