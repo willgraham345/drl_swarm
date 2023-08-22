@@ -1,5 +1,4 @@
 import os
-import sys
 class Crazyflie():
     def __init__(self, name, start_position, URI_address=None, start_orientation=None):
         self.name = name
@@ -16,13 +15,18 @@ class Turtlebot():
         self.start_orientation = start_orientation
 
 class Swarm():
-    def __init__(self, turtlebots, crazyflies):
+    def __init__(self, turtlebots, crazyflies, world_file = None):
         self.turtlebots = []
         self.crazyflies = []
         for tb in turtlebots:
             self.turtlebots.append(tb)
         for cf in crazyflies:
             self.crazyflies.append(cf)
+        if world_file is None:
+            self.world_file = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+             "worlds/apartment.wbt")
+        else:
+            self.world_file = world_file
 
     def swarm_writer(self, existing_world_file, new_world_file="new_world.wbt"):
         # Write swarm into webots world file
