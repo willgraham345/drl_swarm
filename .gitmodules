@@ -1,3 +1,6 @@
 [submodule "src/crazychoir"]
 	path = src/crazychoir
 	url = https://github.com/OPT4SMART/crazychoir.git
+[submodule "src/crazyswarm2"]
+	path = src/crazyswarm2
+	url = https://github.com/IMRCLab/crazyswarm2
