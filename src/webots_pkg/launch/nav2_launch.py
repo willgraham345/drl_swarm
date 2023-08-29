@@ -166,7 +166,7 @@ def generate_launch_description():
             }],
         )
         launch_description.append(robot_state_publisher)
-        # launch_description.append(handle_initial_frame_tf(cf))
+        launch_description.append(handle_initial_frame_tf(cf))
         for node in get_cf_driver(cf):
             launch_description.append(node)
     for tb in swarm.turtlebots:
@@ -182,11 +182,17 @@ def generate_launch_description():
             }],
         )
         launch_description.append(robot_state_publisher)
-        # launch_description.append(handle_initial_frame_tf(tb))
+        launch_description.append(handle_initial_frame_tf(tb))
 
         tb_nodes = tb_launcher(tb)
         launch_description.append(tb_nodes) #Temporary fix, go back to for loop commented below
     
+
+    rviz_cmd = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(nav2_launch_dir, 'rviz_launch.py')),
+        launch_arguments={
+                          'rviz_config': os.path.join(nav2_bringup_dir, 'rviz', 'nav2_default_view.rviz')}.items())
     # Add event handler so everything shuts down on Webots exit
     event_handler = launch.actions.RegisterEventHandler(
             event_handler=launch.event_handlers.OnProcessExit(
