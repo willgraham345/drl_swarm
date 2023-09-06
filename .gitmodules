@@ -1,3 +1,9 @@
-[submodule "src/crazychoir"]
-	path = src/crazychoir
-	url = https://github.com/OPT4SMART/crazychoir.git
+[submodule "src/crazyswarm2"]
+	path = src/crazyswarm2
+	url = https://github.com/IMRCLab/crazyswarm2
+	recursive = true
+[submodule "src/motion_capture_tracking"]
+	path = src/motion_capture_tracking
+	url = https://github.com/IMRCLab/motion_capture_tracking.git
+	branch = ros2
+	recursive = true
