@@ -46,18 +46,20 @@ swarm.swarm_writer(world_path, new_world_filepath)
 
 # Define helper functions
 def get_cf_driver(cf):
-    ''' UNFINISHED
-    Description:
-    This function will return different ROS nodes used to simulate the crazyflie in Webots.
+    """
+    Returns a Node object that launches the webots_ros2_driver for a given Crazyflie
+    :param cf: Crazyflie object
+    :type cf: Crazyflie
+    
+    :return crazyflie_driver: crazyflie_driver node object
+    :rtype: launch_ros.actions.Node
+    :return simple_mapper_node: simple_mapper_node object
+    :rtype: launch_ros.actions.Node
+    :return bringup_cmd: bringup_cmd object
+    :rtype: launch.actions.IncludeLaunchDescription
 
-    Dependencies:
-    webots_ros2_driver
-    robot_state_publisher
-    webots_pkg
-    resource/crazyflie.urdf
-    nav2_params
-    I think there are m
-    '''
+    :todo:: Make sure bringup_cmd is correctly called, and simulation doesn't break
+    """
     robot_description = pathlib.Path(os.path.join(package_dir, 'resource', 'crazyflie.urdf')).read_text()
     crazyflie_driver = Node(
         package='webots_ros2_driver',
@@ -95,17 +97,16 @@ def get_cf_driver(cf):
     return crazyflie_driver, simple_mapper_node, bringup_cmd
 
 def tb_launcher(tb):
-    ''' UNFINISHED
-    Description:
-    This function will return different ROS nodes used to simulate the turtlebot in Webots.
-    Dependencies:
-    webots_ros2_driver
-    robot_state_publisher
-    webots_pkg
-    resource/crazyflie.urdf
-    nav2_params
-    I think there are m
-    '''
+    """
+    Returns a Node object that launches the webots_ros2_driver for a given Turtlebot
+    :param tb: Turtlebot object
+    :type tb: Turtlebot
+    
+    :return: turtlebot_driver node object
+    :rtype: launch_ros.actions.Node
+
+    :todo:: Add a controller to turtlebot for experimentation.
+    """
     robot_description = pathlib.Path(os.path.join(package_dir, 'resource', 'turtlebot.urdf')).read_text()
     print("robot_description = ", robot_description)
     print("tb.name = ", tb.name)
@@ -124,13 +125,14 @@ def tb_launcher(tb):
     return turtlebot_driver
 
 def handle_initial_frame_tf(agent):
-    ''' UNFINISHED
-    Description:
-    This function will return a ROS node that will publish a static transform between the map and the agent's initial position
-    Reads in the swarm's configuration as defined in swarm_classes.py
-    Dependencies:
-    tf2_ros
-    '''
+    """
+    Returns a Node object that publishes the initial transform of a given agent. In our examples, agents refer to Crazyflies and Turtlebots.
+    :param agent: Agent object
+    :type agent: Agent
+
+    :return static_tf_publisher: static_tf_publisher node object
+    :rtype: launch_ros.actions.Node
+    """
     # Get initial position and orientation
     pos = agent.start_position
     ori = agent.start_orientation
@@ -146,8 +148,7 @@ def handle_initial_frame_tf(agent):
     return static_tf_publisher
 
 def generate_launch_description():
-    package_dir = get_package_share_directory('webots_pkg')
-     # THIS is for the robot_driver (unnecessary for webots_pkg)
+    # THIS is for the robot_driver (unnecessary for webots_pkg)
     ros2_supervisor = Ros2SupervisorLauncher()
     webots = WebotsLauncher(
         world=new_world_filepath,
