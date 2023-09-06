@@ -27,6 +27,13 @@ MAP_RES = 0.1
 Simple_mapper is working, but only if the crazyflie is named /cf1'''
 
 class SimpleMapper(Node):
+    """
+    This class is a driver for the Turtlebot3 robot.
+    :param webots_node: the instance of the WebotsNode class
+    :type webots_node: WebotsNode
+    :param properties: the properties of the robot
+    :type properties: dict
+    """
     def __init__(self):
         super().__init__('simple_mapper')
 
