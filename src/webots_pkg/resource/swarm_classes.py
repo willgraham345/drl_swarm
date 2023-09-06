@@ -1,5 +1,19 @@
 import os
+
+
 class Crazyflie():
+    """
+    Class that represents a crazyflie in both webots and experiments
+    :param name: Name of crazyflie
+    :type name: str
+    :param start_position: Starting position of crazyflie
+    :type start_position: list
+    :param URI_address: URI address of crazyflie
+    :type URI_address: str
+    :param start_orientation: Starting orientation of crazyflie
+    :type start_orientation: list
+
+    """
     def __init__(self, name, start_position, URI_address=None, start_orientation=None):
         self.name = name
         self.URI_address = URI_address
@@ -8,6 +22,17 @@ class Crazyflie():
 
 
 class Turtlebot():
+    """
+    Class that represents a turtlebot in both webots and experiments
+    :param name: Name of turtlebot
+    :type name: str
+    :param start_position: Starting position of turtlebot
+    :type start_position: list
+    :param ROS2_address: ROS2 address of turtlebot
+    :type ROS2_address: str
+    :param start_orientation: Starting orientation of turtlebot
+    :type start_orientation: list
+    """
     def __init__(self, name, start_position, ROS2_address=None, start_orientation=None):
         self.name = name
         self.ROS2_address = ROS2_address
@@ -15,6 +40,18 @@ class Turtlebot():
         self.start_orientation = start_orientation
 
 class Swarm():
+    """
+    Swarm class, represents a swarm of turtlebots and crazyflies in both webots and experiments
+    
+    :param turtlebots: List of Turtlebot objects
+    :type turtlebots: Turtlebot()
+    :param crazyflies: List of Crazyflie objects
+    :type crazyflies: Crazyflie()
+    :param world_file: Path to webots world file
+    :type world_file: str
+    
+
+    """
     def __init__(self, turtlebots, crazyflies, world_file = None):
         self.turtlebots = []
         self.crazyflies = []
@@ -29,9 +66,15 @@ class Swarm():
             self.world_file = world_file
 
     def swarm_writer(self, existing_world_file, new_world_file="new_world.wbt"):
-        # Write swarm into webots world file
-        # Note: Does not support orientation yet
-        # Open world file
+        """
+        Writes a new Webots world file with the swarm of turtlebots and crazyflies
+        :param existing_world_file: Path to existing world file
+        :type existing_world_file: str
+        :param new_world_file: Path to new world file
+        :type new_world_file: str
+
+        :returns: None
+        """
         with open(existing_world_file, 'r') as file:
             filedata = file.read()
         with open(new_world_file, 'w') as file:
