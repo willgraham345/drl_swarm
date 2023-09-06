@@ -29,6 +29,11 @@ def radians(degrees):
 
 
 class CrazyfliePublisher(Node):
+    """
+    This class is a ROS2 node that publishes the position of the Crazyflie
+    :param link_uri: The URI of the Crazyflie to connect to
+    :type link_uri: str
+    """
     def __init__(self, link_uri):
         print("Initializing CrazyfliePublisher")
         print("URI: " + link_uri)
