@@ -89,10 +89,14 @@ class CrazyflieWebotsDriver():
         self.cf_driver.create_timer(1.0/30.0, self.publish_laserscan_data)
         
         self.target_cmd_vel = msg_type
-        self.cf_driver.create_subscription(Twist(),  '/{}/cmd_vel'.format(self.namespace), self.cmd_vel_callback, 1)
-        self.laser_publisher = self.cf_driver.create_publisher(LaserScan, '/{}/scan'.format(self.namespace), 10)
-        self.odom_publisher = self.cf_driver.create_publisher(Odometry, '/{}/odom'.format(self.namespace), 10)
-
+        try:
+            self.cf_driver.create_subscription(Twist(),  '/{}/cmd_vel'.format(self.namespace), self.cmd_vel_callback, 1)
+            self.laser_publisher = self.cf_driver.create_publisher(LaserScan, '/{}/scan'.format(self.namespace), 10)
+            self.odom_publisher = self.cf_driver.create_publisher(Odometry, '/{}/odom'.format(self.namespace), 10)
+            print("Created subscriber and publisher on Crazyflie")
+        except Exception as e:
+            print(e)
+            print("Failed to create subscriber or publisher on Crazyflie")
 
     def publish_laserscan_data(self):
 
