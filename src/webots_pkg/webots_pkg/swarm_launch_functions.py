@@ -21,7 +21,8 @@ def get_cf_driver(cf):
     :return bringup_cmd: bringup_cmd object
     :rtype: launch.actions.IncludeLaunchDescription
 
-    :todo:: Make sure bringup_cmd is correctly called, and simulation doesn't break
+    :todo:: Figure out why the crazyflie isn't launching
+    :todo:: Look into implementing Crazyswarm2 into simulation
     """
     package_dir = get_package_share_directory('webots_pkg')
     nav2_bringup_dir = get_package_share_directory('nav2_bringup')
