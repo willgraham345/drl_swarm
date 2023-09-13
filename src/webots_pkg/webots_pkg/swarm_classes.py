@@ -91,6 +91,7 @@ class Swarm():
             # Add the target string
             my_str = tb_webots_formatted_string.replace("<NAME>", tb.name)
             my_str = my_str.replace("<TRANSLATION>", str(tb.start_position[0]) + " " + str(tb.start_position[1]) + " " + str(tb.start_position[2]))
+            my_str = my_str.replace("<COMPASS_NAME", tb.name + "_compass")
             if tb.start_orientation is not None:
                 my_str = my_str.replace("0 0 0 1", str(tb.start_orientation[0]) + " " + str(tb.start_orientation[1]) + " " + str(tb.start_orientation[2]) + " " + str(tb.start_orientation[3]))
             with open(new_world_file, 'a') as file:
@@ -353,6 +354,7 @@ TurtleBot3Burger {
     RobotisLds01 {
     }
     Compass {
+      name "<COMPASS_NAME>"
     }
   ]
 }

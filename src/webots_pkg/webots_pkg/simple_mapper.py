@@ -27,15 +27,9 @@ MAP_RES = 0.1
 Simple_mapper is working, but only if the crazyflie is named /cf1'''
 
 class SimpleMapper(Node):
-    """
-    This class is a driver for the Turtlebot3 robot.
-    :param webots_node: the instance of the WebotsNode class
-    :type webots_node: WebotsNode
-    :param properties: the properties of the robot
-    :type properties: dict
-    """
     def __init__(self):
         super().__init__('simple_mapper')
+        print("Simple mapper initializing")
 
         # self.declare_parameter('crazyflie_name')
         # name = self.get_parameter('crazyflie_name')
@@ -65,6 +59,7 @@ class SimpleMapper(Node):
         self.map = [-1] * int(GLOBAL_SIZE_X / MAP_RES) * int(GLOBAL_SIZE_Y / MAP_RES)
         self.map_publisher = self.create_publisher(OccupancyGrid, '/cf1/map',
             qos_profile=QoSProfile( depth=1, durability=DurabilityPolicy.TRANSIENT_LOCAL, history=HistoryPolicy.KEEP_LAST,))
+        print("Simple mapper initialized")
 
     def odom_subcribe_callback(self, msg):
         self.position[0] = msg.pose.pose.position.x
