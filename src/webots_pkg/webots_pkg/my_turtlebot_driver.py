@@ -1,10 +1,10 @@
+from math import cos, sin, pi, atan2
 import rclpy
 from geometry_msgs.msg import Twist
+from geometry_msgs.msg import TransformStamped
 from sensor_msgs.msg import LaserScan
 from nav_msgs.msg import Odometry
-from math import cos, sin, degrees, radians, pi, atan2
-from geometry_msgs.msg import TransformStamped
-from tf2_ros import StaticTransformBroadcaster, TransformBroadcaster
+from tf2_ros import TransformBroadcaster
 
 HALF_DISTANCE_BETWEEN_WHEELS = 0.045
 WHEEL_RADIUS = 0.025
@@ -17,7 +17,28 @@ class MyTurtlebotDriver:
     :type webots_node: WebotsNode
     :param properties: the properties of the robot
     :type properties: dict
+    :return: the instance of the MyTurtlebotDriver class
+    :rtype: MyTurtlebotDriver
     """
+    def __init__(self):
+        self.__robot = None
+        self.timestep = None
+        self._robot_name = None
+        self.__left_motor = None
+        self.__right_motor = None
+        self.__gps = None
+        self.__imu = None
+        self.__gyro = None
+        self.__compass = None
+        self.__target_twist = None
+        self.__namespace = None
+        self.tb_driver = None
+        self.laser_publisher = None
+        self.odom_publisher = None
+        self.tfbr = None
+        self.lidar = None
+
+
     def init(self, webots_node, properties):
         self.__robot = webots_node.robot
         self.timestep = int(self.__robot.getBasicTimeStep())
@@ -37,7 +58,7 @@ class MyTurtlebotDriver:
 
         self.lidar = self.__robot.getLidar("LDS-01")
         self.lidar.enable(self.timestep)
-        
+
         self.__left_motor.setPosition(float('inf'))
         self.__left_motor.setVelocity(0)
 
@@ -51,9 +72,13 @@ class MyTurtlebotDriver:
                                 namespace=self.__namespace,
                                 allow_undeclared_parameters=True,
                                 automatically_declare_parameters_from_overrides=True)
-        self.tb_driver.create_subscription(Twist, '/{}/cmd_vel'.format(self.__namespace), self.__cmd_vel_callback, 1)
-        self.laser_publisher = self.tb_driver.create_publisher(LaserScan, '/{}/scan'.format(self.__namespace), 10)
-        self.odom_publisher = self.tb_driver.create_publisher(Odometry, '/{}/odom'.format(self.__namespace), 10)
+        self.tb_driver.create_subscription(Twist,
+                                '/{}/cmd_vel'.format(self.__namespace),
+                                self.__cmd_vel_callback, 1)
+        self.laser_publisher = self.tb_driver.create_publisher(LaserScan,
+                                '/{}/scan'.format(self.__namespace), 10)
+        self.odom_publisher = self.tb_driver.create_publisher(Odometry, 
+                                '/{}/odom'.format(self.__namespace), 10)
 
         self.tfbr = TransformBroadcaster(self.tb_driver)
 
@@ -64,6 +89,11 @@ class MyTurtlebotDriver:
 
 
     def publish_lidar(self):
+        """
+        Publishes the lidar data to the /scan topic
+        :return: None
+        :rtype: None
+        """
         ranges = self.lidar.getLayerRangeImage(0)
         msg = LaserScan()
         msg.header.stamp = self.tb_driver.get_clock().now().to_msg()
