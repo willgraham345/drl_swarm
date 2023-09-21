@@ -75,18 +75,25 @@ class Swarm():
 
         :returns: None
         """
-        with open(existing_world_file, 'r') as file:
-            filedata = file.read()
-        with open(new_world_file, 'w') as file:
-            file.write(filedata)
+        if self.crazyflies == [] and self.turtlebots == []:
+          with open(existing_world_file, 'r') as file:
+              filedata = file.read()
+          with open(new_world_file, 'w') as file:
+              file.write(filedata)
+              self.write_objects_to_world(new_world_file)
+          print("Swarm written to " + new_world_file)
+
+    def write_objects_to_world(self, new_world_file):
+      if self.crazyflies != []:
         for cf in self.crazyflies:
             my_str = cf_webots_formatted_string.replace("<NAME>", cf.name)
             my_str = my_str.replace("<TRANSLATION>", str(cf.start_position[0]) + " " + str(cf.start_position[1]) + " " + str(cf.start_position[2]))
             if cf.start_orientation is not None:
                 my_str = my_str.replace("0 0 0 1", str(cf.start_orientation[0]) + " " + str(cf.start_orientation[1]) + " " + str(cf.start_orientation[2]) + " " + str(cf.start_orientation[3]))
             with open(new_world_file, 'a') as file:
-            # Add the target string
+              # Add the target string
                 file.write(my_str)
+      if self.turtlebots != []:
         for tb in self.turtlebots:
             # Add the target string
             my_str = tb_webots_formatted_string.replace("<NAME>", tb.name)
@@ -95,9 +102,8 @@ class Swarm():
             if tb.start_orientation is not None:
                 my_str = my_str.replace("0 0 0 1", str(tb.start_orientation[0]) + " " + str(tb.start_orientation[1]) + " " + str(tb.start_orientation[2]) + " " + str(tb.start_orientation[3]))
             with open(new_world_file, 'a') as file:
-                # Add the target string
+                  # Add the target string
                 file.write(my_str)
-        print("Swarm written to " + new_world_file)
 
 
 cf_webots_formatted_string = """Robot {
