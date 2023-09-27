@@ -45,9 +45,16 @@ def generate_launch_description():
             'robot_description': robot_description_cf,
         }],
     )
+    
+    webots_simulation = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(package_dir, 'launch', 'webots_world_launch.py')
+        )
+    )
 
 
     return LaunchDescription([
+        # webots_simulation, # This is the webots world launch
         spawn_URDF_cf,
         launch.actions.RegisterEventHandler(
             event_handler = launch.event_handlers.OnProcessIO(
