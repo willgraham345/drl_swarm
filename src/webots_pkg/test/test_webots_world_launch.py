@@ -28,7 +28,7 @@ def launch_description():
     ])
 
 
-# @pytest.mark.launch_test
-# def test_case():
-#     # Wait for the processes to start
-#     # process_tools.assert_output()
+@pytest.mark.launch_test
+def test_case():
+    # Wait for the processes to start
+    # process_tools.assert_output()
