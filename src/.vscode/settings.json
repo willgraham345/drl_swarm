@@ -7,5 +7,6 @@
         "/opt/ros/foxy/lib/python3.8/site-packages"
         "/home/will/drl_swarm/install/explore_pkg/share"
         "/home/will/crazyflie-firmware/build"
+        "/home/will/drl/swarm/install/webots_pkg/share"
     ]
 }
