@@ -6,4 +6,4 @@ colcon build --symlink-install
 source install/local_setup.zsh
 
 # Launch ROS 2 Instance
-ros2 launch webots_pkg webots_world_launch.py
+ros2 launch webots_pkg webots_world_launch.py -d
