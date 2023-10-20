@@ -44,6 +44,7 @@ where ``$USER_NAME$`` is the name of the user (the important thing here is makin
 7. Crazyflie Python Client: https://github.com/bitcraze/crazyflie-clients-python
 8. Crazyflie Python Library: https://github.com/bitcraze/crazyflie-lib-python
 9. WeBots Installation: https://www.cyberbotics.com/doc/guide/installation-procedure
+    Install using "Installing the Debian Package with the Advanced Packaging Tool (APT)". Not Snap!
 ## WeBots
 1. How to use WeBots in ROS2: https://www.cyberbotics.com/doc/guide/using-ros
 
