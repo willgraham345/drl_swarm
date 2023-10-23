@@ -31,45 +31,47 @@ def generate_launch_description():
     robot_description_cf = pathlib.Path(urdf_path_cf).read_text()
     robot_description_tb = pathlib.Path(urdf_path_tb).read_text()
     
-    
-    urdf_success = spawn_URDF_robot = URDFSpawner(
-        name='cf1',
-        urdf_path=urdf_path_cf,
-        translation='0 0 1',
-        rotation='0 0 1 -1.5708',
-    )
+    # TODO: Add Protospawner feature rather than urdf spawner
+
+
+    # urdf_success = spawn_URDF_robot = URDFSpawner(
+    #     name='cf1',
+    #     urdf_path=urdf_path_cf,
+    #     translation='0 0 1',
+    #     rotation='0 0 1 -1.5708',
+    # )
 
     # TODO: Add namespace capability to cf nodes
-    cf_publisher = Node(
-        package = 'webots_pkg',
-        executable = 'cf_publisher',
-        name = 'cf1_publisher',
-        output = 'screen',
-        parameters=[{
-            'link_uri': 'radio://0/80/2M/E7E7E7E7E7',
-        }]
-        # namespace='cf1',
-    ) # TODO: Test that it's working with a Crazyflie Dongle
+    # cf_publisher = Node(
+    #     package = 'webots_pkg',
+    #     executable = 'cf_publisher',
+    #     name = 'cf1_publisher',
+    #     output = 'screen',
+    #     parameters=[{
+    #         'link_uri': 'radio://0/80/2M/E7E7E7E7E7',
+    #     }]
+    #     # namespace='cf1',
+    # ) # TODO: Test that it's working with a Crazyflie Dongle
 
-    cf_driver = Node(
-        package = 'webots_pkg',
-        executable = 'driver',
-        name = 'cf1_driver',
-        output = 'screen',
-        parameters=[{}],
-        # namespace='cf1',
-    )
+    # cf_driver = Node(
+    #     package = 'webots_pkg',
+    #     executable = 'driver',
+    #     name = 'cf1_driver',
+    #     output = 'screen',
+    #     parameters=[{}],
+    #     # namespace='cf1',
+    # )
 
-    cf_mapper = Node(
-        package = 'webots_pkg',
-        executable = 'simple_mapper',
-        name = 'cf1_mapper',
-        # namespace = 'cf1',
-    )
+    # cf_mapper = Node(
+    #     package = 'webots_pkg',
+    #     executable = 'simple_mapper',
+    #     name = 'cf1_mapper',
+    #     # namespace = 'cf1',
+    # )
 
     ld = LaunchDescription()
     ld.add_action(world_node)
-    ld.add_action(cf_publisher)
-    ld.add_action(cf_driver)
-    ld.add_action(cf_mapper)
+    # ld.add_action(cf_publisher)
+    # ld.add_action(cf_driver)
+    # ld.add_action(cf_mapper)
     return ld
