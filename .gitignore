@@ -3,3 +3,5 @@ log/
 install/
 **/__pycache__/
 **/*.pyc
+venv/
+.vscode

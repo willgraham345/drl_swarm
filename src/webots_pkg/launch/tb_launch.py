@@ -32,6 +32,14 @@ swarm = swarm_module.Swarm([tb1, tb2], [])
 
 # Define helper functions
 def get_cf_driver(cf):
+    """
+    Returns a Node object that launches the webots_ros2_driver for a given Crazyflie
+    :param cf: Crazyflie object
+    :type cf: Crazyflie
+    
+    :return: crazyflie_driver node object
+    :rtype: launch_ros.actions.Node
+    """
     robot_description = pathlib.Path(os.path.join(package_dir, 'resource', 'crazyflie.urdf')).read_text()
 
     crazyflie_driver = Node(
@@ -49,6 +57,14 @@ def get_cf_driver(cf):
     return crazyflie_driver
 
 def tb_launcher(tb):
+    """
+    Returns a Node object that launches the webots_ros2_driver for a given Turtlebot
+    :param tb: Turtlebot object
+    :type tb: Turtlebot
+    
+    :return: turtlebot_driver node object
+    :rtype: launch_ros.actions.Node
+    """
     robot_description = pathlib.Path(os.path.join(package_dir, 'resource', 'turtlebot.urdf')).read_text()
     print("robot_description = ", robot_description)
     print("tb.name = ", tb.name)

@@ -29,10 +29,17 @@ def radians(degrees):
 
 
 class CrazyfliePublisher(Node):
+    """
+    This class is a ROS2 node that publishes the position of the Crazyflie
+    :param link_uri: The URI of the Crazyflie to connect to
+    :type link_uri: str
+    """
+
+    # TODO: Add capability for URI to be passed in as a parameter
     def __init__(self, link_uri):
         print("Initializing CrazyfliePublisher")
         print("URI: " + link_uri)
-        super().__init__()
+        super().__init__("crazyflie_publisher")
         self.range_publisher = self.create_publisher(Range, "/zrange", 10)
         self.laser_publisher = self.create_publisher(LaserScan, "/scan", 10)
         self.odom_publisher = self.create_publisher(Odometry,  "/odom", 10)

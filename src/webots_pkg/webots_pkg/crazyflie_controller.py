@@ -22,6 +22,12 @@ sys.path.append('/home/will/drl_swarm/src/webots_pkg/resource')
 import graph_search
 
 class CrazyflieControllerNode(Node):
+    """
+    This class is a ROS2 node that controls the crazyflie in the webots simulation
+    :param Node: ROS2 node
+    :type Node: class:'rclpy.node.Node'
+
+    """
 
     def __init__(self):
         super().__init__("crazyflie_controller")
