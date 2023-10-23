@@ -1,8 +1,9 @@
 name: Humble Source Build
 on: [push]
+
 jobs:
-  humble_source:
-    runs_on: ubuntu-22.04
+  build:
+    runs-on: ubuntu-22.04
     steps:
       - uses: ros-tooling/setup-ros@v0.6
         with:
