@@ -13,22 +13,23 @@ from webots_ros2_driver.utils import controller_url_prefix
 import xacro
 from nav2_common.launch import ReplaceString
 
+
+# Import swarm functions and swarm classes
+from webots_pkg.swarm_classes import Crazyflie, Turtlebot, Swarm
+from webots_pkg.swarm_launch_functions import get_cf_driver, tb_launcher
+
 package_dir = get_package_share_directory('webots_pkg')
-swarm_classes = pathlib.Path(os.path.join(package_dir, 'resource', 'swarm_classes.py'))
-print("Swarm Classes: ", swarm_classes)
-import importlib.util
-spec = importlib.util.spec_from_file_location("swarm_classes", swarm_classes)
-swarm_module = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(swarm_module)
+nav2_bringup_dir = get_package_share_directory('nav2_bringup')
+nav2_launch_dir = os.path.join(nav2_bringup_dir, 'launch')
 
 
-cf1 = swarm_module.Crazyflie('cf1', 'radio://0/80/2M/E7E7E7E7E7', [-1.5, -1.5, 0.015], [0, 0, 0])
-cf2 = swarm_module.Crazyflie('cf2', 'radio://0/80/2M/E7E7E7E7E8', [0, 0, 0], [0, 0, 0])
+cf1 = Crazyflie('cf1', 'radio://0/80/2M/E7E7E7E7E7', [-1.5, -1.5, 0.015], [0, 0, 0])
+cf2 = Crazyflie('cf2', 'radio://0/80/2M/E7E7E7E7E8', [0, 0, 0], [0, 0, 0])
 
-tb1 = swarm_module.Turtlebot('tb1', 'ROS2_address', [-1.0, -1.5, 0], [0, 0, 0])
-tb2 = swarm_module.Turtlebot('tb2', 'ROS2_address', [-2.0, -2.0, 0], [0, 0, 0])
+tb1 = Turtlebot('tb1', 'ROS2_address', [-1.0, -1.5, 0], [0, 0, 0])
+tb2 = Turtlebot('tb2', 'ROS2_address', [-2.0, -2.0, 0], [0, 0, 0])
 
-swarm = swarm_module.Swarm([tb1, tb2], [cf1])
+swarm = Swarm([tb1, tb2], [cf1])
 
 
 # Define helper functions
@@ -92,7 +93,7 @@ def generate_launch_description():
     webots = WebotsLauncher(
         world=os.path.join(package_dir, 'worlds', 'test_env.wbt')
     )
-    launch_description = [webots]
+    launch_description = [ros2_supervisor, webots]
     
     # Handle transforms between map and odom for all robots
 
