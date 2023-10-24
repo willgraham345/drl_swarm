@@ -37,8 +37,8 @@ setup(
     zip_safe=True,
     maintainer='will',
     maintainer_email='willgraham345@gmail.com',
-    description='TODO: Package description',
-    license='TODO: License declaration',
+    description='Controlling package to launch heterogeneous multi-robo ROS2 system in both simulation and experimentation',
+    license='Apache License 2.0',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [

@@ -32,6 +32,7 @@ def generate_launch_description():
     robot_description_tb = pathlib.Path(urdf_path_tb).read_text()
     
     # TODO: Add Protospawner feature rather than urdf spawner
+    # WAITING: Github discussion response on ProtoSpawner
 
 
     # urdf_success = spawn_URDF_robot = URDFSpawner(
