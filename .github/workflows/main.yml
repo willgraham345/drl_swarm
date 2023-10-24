@@ -4,9 +4,6 @@ on:
 jobs:
   build-and-test-workspace:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      continue-on-error: true
     steps:
       - name: Checkout this repository
         uses: actions/checkout@v2.3.4
@@ -16,3 +13,6 @@ jobs:
         uses: ichiro-its/ros2-build-and-test-action@main
         with:
           ros2-distro: humble
+      - name: Continue on error
+        if: ${{ failure() }}
+        run: echo "A step failed, but the job will continue"
