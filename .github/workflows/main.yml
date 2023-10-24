@@ -1,34 +1,18 @@
-name: ROS2 CI
-
-on: [pull_request, push]
-
+name: Build and Test Workspace
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
 jobs:
-  test_environment:
-    runs-on: [ubuntu-latest]
-    strategy:
-      fail-fast: false
-      matrix:
-        ros_distribution:
-          - humble
-        include:
-          # Humble Hawksbill (May 2022 - May 2027)
-          - docker_image: rostooling/setup-ros-docker:ubuntu-jammy-ros-humble-ros-base-latest
-            ros_distribution: humble
-            ros_version: 2
-
-    container:
-      image: ${{ matrix.docker_image }}
+  build-and-test-workspace:
+    runs-on: ubuntu-latest
     steps:
-      - name: setup directories
-        run: mkdir -p ros_ws/src
-      - name: checkout
-        uses: actions/checkout@v2
+      - name: Checkout this repository
+        uses: actions/checkout@v2.3.4
         with:
-          path: ros_ws/src
-      - name: build and test
-        continue-on-error: true
-        uses: ros-tooling/action-ros-ci@0.2.2
+          path: repository
+      - name: Build and test workspace
+        uses: ichiro-its/ros2-build-and-test-action@main
         with:
-          package-name: udp_driver serial_driver
-          target-ros2-distro: ${{ matrix.ros_distribution }}
-          vcs-repo-file-url: ""
+          ros2-distro: humble
