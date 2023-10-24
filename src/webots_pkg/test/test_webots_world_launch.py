@@ -12,23 +12,22 @@ from launch_pytest.tools import process as process_tools
 from ament_index_python.packages import get_package_share_directory
 from webots_ros2_driver.webots_launcher import Ros2SupervisorLauncher,WebotsLauncher
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-
-@launch_pytest.fixture
-def launch_description():
-    # define a launch process
-    package_dir = get_package_share_directory('webots_pkg')
-    ld = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(package_dir, 'launch', 'webots_world_launch.py')
-        ),
-        # launch_arguments={}.items(),
-    )
-    return LaunchDescription([
-        ld,
-    ])
+from launch.substitutions import PathJoinSubstitution
 
 
-@pytest.mark.launch_test
-def test_case():
+#TODO: Implement https://github.com/cyberbotics/webots_ros2/blob/master/webots_ros2_tests/webots_ros2_tests/utils.py as an additional class/function
+
+def test_webots_world_launch():
     # Wait for the processes to start
     # process_tools.assert_output()
+    package_dir = get_package_share_directory('webots_pkg')
+
+    world_node = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            PathJoinSubstitution([package_dir, 'launch', 'webots_world_launch.py']),
+        ),
+        launch_arguments={
+            'world': 'apartment.wbt'
+        }.items(),
+    )
+    assert world_node.__condition_context__.is_active()
