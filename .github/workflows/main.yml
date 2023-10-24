@@ -1,16 +1,36 @@
-name: Humble Source Build
-on: [push]
+name: ROS2 CI
+
+on: [pull_request, push]
 
 jobs:
-  build:
-    runs-on: ubuntu-22.04
+  test_environment:
+    runs-on: [ubuntu-latest]
+    strategy:
+      fail-fast: false
+      matrix:
+        ros_distribution:
+          - foxy
+          - humble
+          - rolling
+        include:
+          # Humble Hawksbill (May 2022 - May 2027)
+          - docker_image: rostooling/setup-ros-docker:ubuntu-jammy-ros-humble-ros-base-latest
+            ros_distribution: humble
+            ros_version: 2
+
+    container:
+      image: ${{ matrix.docker_image }}
     steps:
-      - uses: ros-tooling/setup-ros@v0.6
+      - name: setup directories
+        run: mkdir -p ros_ws/src
+      - name: checkout
+        uses: actions/checkout@v2
         with:
-          required-ros-distributions: humble
-      - uses: ros-tooling/action-ros-ci@v0.3
+          path: ros_ws/src
+      - name: build and test
+        continue-on-error: true
+        uses: ros-tooling/action-ros-ci@0.2.2
         with:
-          package-name: webots_pkg
-          ref: humble
-          target-ros2-distro: humble
-          vcs-repo-file-url: https://raw.githubusercontent.com/ros2/ros2/humble/ros2.repos
+          package-name: udp_driver serial_driver
+          target-ros2-distro: ${{ matrix.ros_distribution }}
+          vcs-repo-file-url: ""
