@@ -4,6 +4,9 @@ on:
 jobs:
   build-and-test-workspace:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      continue-on-error: true
     steps:
       - name: Checkout this repository
         uses: actions/checkout@v2.3.4
