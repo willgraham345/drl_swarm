@@ -26,13 +26,16 @@ def generate_launch_description():
         }.items(),
     )
 
-    urdf_path_cf = os.path.join(package_dir, 'resource', 'crazyflie.urdf')
-    urdf_path_tb = os.path.join(package_dir, 'resource', 'turtlebot.urdf')
-    robot_description_cf = pathlib.Path(urdf_path_cf).read_text()
-    robot_description_tb = pathlib.Path(urdf_path_tb).read_text()
+    # New attempt is to spawn with an IMPORTABLE EXTERNPROTO defined within the resource file, found on github
+    # urdf_path_cf = os.path.join(package_dir, 'resource', 'crazyflie.urdf')
+    # urdf_path_tb = os.path.join(package_dir, 'resource', 'turtlebot.urdf')
+    # robot_description_cf = pathlib.Path(urdf_path_cf).read_text()
+    # robot_description_tb = pathlib.Path(urdf_path_tb).read_text()
     
     # TODO: Add Protospawner feature rather than urdf spawner
     # WAITING: Github discussion response on ProtoSpawner
+
+    # Try 1 with ProtoSpawner
 
 
     # urdf_success = spawn_URDF_robot = URDFSpawner(
