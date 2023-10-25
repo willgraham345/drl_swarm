@@ -35,8 +35,12 @@ def generate_launch_description():
     # TODO: Add Protospawner feature rather than urdf spawner
     # WAITING: Github discussion response on ProtoSpawner
 
-    # Try 1 with ProtoSpawner
 
+    ##### CLI COMMAND: ros2 service call /Ros2Supervisor/spawn_node_from_string webots_ros2_msgs/srv/SpawnNodeFromString "data: Crazyflie {name \"cf1\"} "   #####
+    ### Need to learn how to set the IMPORTABLE EXTERNPROTO list in the webots worlds.
+    # Fields can be rewritten, but need to be within the brackets above i.e. {name = \"cf1\" translation -2.0 -2.0 0.15}
+
+    #TODO: Add PROTO node to the repostory with the multiranger as well as the the 
 
     # urdf_success = spawn_URDF_robot = URDFSpawner(
     #     name='cf1',
