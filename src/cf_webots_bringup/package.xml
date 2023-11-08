@@ -3,9 +3,9 @@
 <package format="3">
   <name>cf_webots_bringup</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
+  <description>Package for handling the nav2 stack of a crazyflie</description>
   <maintainer email="willgraham345@gmail.com">drewlab</maintainer>
-  <license>TODO: License declaration</license>
+  <license>Apache License 2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 

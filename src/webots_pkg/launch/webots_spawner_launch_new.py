@@ -26,50 +26,58 @@ def generate_launch_description():
         }.items(),
     )
 
-    urdf_path_cf = os.path.join(package_dir, 'resource', 'crazyflie.urdf')
-    urdf_path_tb = os.path.join(package_dir, 'resource', 'turtlebot.urdf')
-    robot_description_cf = pathlib.Path(urdf_path_cf).read_text()
-    robot_description_tb = pathlib.Path(urdf_path_tb).read_text()
-    
-    
-    urdf_success = spawn_URDF_robot = URDFSpawner(
-        name='cf1',
-        urdf_path=urdf_path_cf,
-        translation='0 0 1',
-        rotation='0 0 1 -1.5708',
-    )
+    # New attempt is to spawn with an IMPORTABLE EXTERNPROTO defined within the resource file, found on github
+    # urdf_path_cf = os.path.join(package_dir, 'resource', 'crazyflie.urdf')
+    # urdf_path_tb = os.path.join(package_dir, 'resource', 'turtlebot.urdf')
+    # robot_description_cf = pathlib.Path(urdf_path_cf).read_text()
+    # robot_description_tb = pathlib.Path(urdf_path_tb).read_text()
+
+    ##### CLI COMMAND: ros2 service call /Ros2Supervisor/spawn_node_from_string webots_ros2_msgs/srv/SpawnNodeFromString "data: Crazyflie {name \"cf1\"} "   #####
+    ### Need to learn how to set the IMPORTABLE EXTERNPROTO list in the webots worlds.
+    # Fields can be rewritten, but need to be within the brackets above i.e. {name = \"cf1\" translation -2.0 -2.0 0.15}
+
+    #TODO: Add CF PROTO node to the repostory with the multiranger as well as the the 
+    #TODO: Add TB Proto node to repository and test launching it
+
+
+    # urdf_success = spawn_URDF_robot = URDFSpawner(
+    #     name='cf1',
+    #     urdf_path=urdf_path_cf,
+    #     translation='0 0 1',
+    #     rotation='0 0 1 -1.5708',
+    # )
 
     # TODO: Add namespace capability to cf nodes
-    cf_publisher = Node(
-        package = 'webots_pkg',
-        executable = 'cf_publisher',
-        name = 'cf1_publisher',
-        output = 'screen',
-        parameters=[{
-            'link_uri': 'radio://0/80/2M/E7E7E7E7E7',
-        }]
-        # namespace='cf1',
-    ) # TODO: Test that it's working with a Crazyflie Dongle
+    # cf_publisher = Node(
+    #     package = 'webots_pkg',
+    #     executable = 'cf_publisher',
+    #     name = 'cf1_publisher',
+    #     output = 'screen',
+    #     parameters=[{
+    #         'link_uri': 'radio://0/80/2M/E7E7E7E7E7',
+    #     }]
+    #     # namespace='cf1',
+    # ) # TODO: Test that it's working with a Crazyflie Dongle
 
-    cf_driver = Node(
-        package = 'webots_pkg',
-        executable = 'driver',
-        name = 'cf1_driver',
-        output = 'screen',
-        parameters=[{}],
-        # namespace='cf1',
-    )
+    # cf_driver = Node(
+    #     package = 'webots_pkg',
+    #     executable = 'driver',
+    #     name = 'cf1_driver',
+    #     output = 'screen',
+    #     parameters=[{}],
+    #     # namespace='cf1',
+    # )
 
-    cf_mapper = Node(
-        package = 'webots_pkg',
-        executable = 'simple_mapper',
-        name = 'cf1_mapper',
-        # namespace = 'cf1',
-    )
+    # cf_mapper = Node(
+    #     package = 'webots_pkg',
+    #     executable = 'simple_mapper',
+    #     name = 'cf1_mapper',
+    #     # namespace = 'cf1',
+    # )
 
     ld = LaunchDescription()
     ld.add_action(world_node)
-    ld.add_action(cf_publisher)
-    ld.add_action(cf_driver)
-    ld.add_action(cf_mapper)
+    # ld.add_action(cf_publisher)
+    # ld.add_action(cf_driver)
+    # ld.add_action(cf_mapper)
     return ld

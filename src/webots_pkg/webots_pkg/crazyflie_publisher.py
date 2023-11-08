@@ -35,7 +35,7 @@ class CrazyfliePublisher(Node):
     :type link_uri: str
     """
 
-    # TODO: Add capability for URI to be passed in as a parameter
+    # TODOO: Add capability for URI to be passed in as a parameter
     def __init__(self, link_uri):
         print("Initializing CrazyfliePublisher")
         print("URI: " + link_uri)

@@ -232,7 +232,7 @@ class CrazyflieWebotsDriver():
         self.tfbr.sendTransform(t_base)
 
         ## Put measurement in state estimate
-        # TODO replace these with a EKF python binding
+        # TODOO replace these with a EKF python binding
         state = cffirmware.state_t()
         state.attitude.roll = degrees(roll)
         state.attitude.pitch = -degrees(pitch)
@@ -256,7 +256,7 @@ class CrazyflieWebotsDriver():
         setpoint.mode.z = cffirmware.modeAbs
         setpoint.position.z = 1.0
         setpoint.mode.yaw = cffirmware.modeVelocity
-        # TODO: find out why this multipication is necessary...
+        # TODOO: find out why this multipication is necessary...
         setpoint.attitudeRate.yaw = degrees(self.target_twist.angular.z)*5
         setpoint.mode.x = cffirmware.modeVelocity
         setpoint.mode.y = cffirmware.modeVelocity
