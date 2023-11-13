@@ -1,17 +1,21 @@
 # Project Manager
 ## Long Term Tests We Want To Run
-### Next up
-- Hover CF without lighthouse (today)
-    - Center of mass stuff (balancing the battery)
+### Today
+- [ ] Hover CF without lighthouse (today)
+    - [x] Build cfclient locally in linux (Will's computer, ~/cfclient)
     - Modify cffirmware to enable extra config
-### Future
-- Hover CF, and use lighthouse basestation as reference
+    - [ ] Build new PCB :(
+- [x] Dive into writing lighthouse configuration in crazyflie. 
+  - [ ] See if I can get the crazyflie to use the lighthouse for localization
+  - [ ] 3d print a testing stand for lighthouse testing
+- [ ] Use lighthouse basestation as reference
     - Just hover, write lh config once and no more
+- [ ] Start looking into Vicon Config
 
+
+### Future
 - Test moving tb linearly writing lh config once at end
-
 - Test moving tb linearly with 1 Hz update to cf
-
 - Test moving tb radially with 1 Hz update to cf
 
 
