@@ -36,6 +36,9 @@ from cflib.utils import uri_helper
 
 
 from cflib.crazyflie.mem import LighthouseMemory
+import read_lighthouse_mem
+
+
 
 # Only output errors from the logging framework
 logging.basicConfig(level=logging.ERROR)
@@ -89,7 +92,20 @@ class WriteGeoMem:
 
         self._event.set()
 
-import read_lighthouse_mem
+
+
+
+
+# This Python file is used to write a new origin and rotation matrix for the lighthouse.
+
+# The WriteGeoMem class is used to write only the geometry memory.
+# It takes a URI of the Crazyflie to connect to and a dictionary of base station geometries to write.
+# It uses the LighthouseMemHelper to write the geometries and waits for the data to be written.
+
+# In the main function, it first initializes the low-level drivers.
+# Then it reads the current values from the lighthouse memory.
+# It creates a LighthouseBsGeometry object and modifies the origin and rotation_matrix fields.
+# The new origin and rotation matrix are then written to the lighthouse.
 if __name__ == '__main__':
     # URI to the Crazyflie to connect to
     uri = uri_helper.uri_from_env(default='radio://0/80/2M/E7E7E7E7E7')
@@ -115,26 +131,3 @@ if __name__ == '__main__':
     # Write geo memory to crazyflie
     geo_dict = {0: bs1geo}
     WriteGeoMem(uri, geo_dict)
-    # bs1geo.valid = True
-    # Reupload the object
-    # Assuming there's a function called `upload` in `read_lighthouse_mem` module
-
-
-
-    # Original Code
-
-    # bs2geo = LighthouseBsGeometry()
-    # bs2geo.origin = [21.0, 22.0, 23.0]
-    # bs2geo.rotation_matrix = [
-    #     [24.0, 25.0, 26.0],
-    #     [27.0, 28.0, 29.0],
-    #     [30.0, 31.0, 32.0],
-    # ]
-    # bs2geo.valid = True
-
-
-    # Note: base station ids (channels) are 0-indexed
-    # geo_dict = {0: bs1geo, 1: bs2geo}
-    # calib_dict = {0: bs1calib, 1: bs2calib}
-
-    # WriteMem(uri, geo_dict, )
