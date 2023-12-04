@@ -6,4 +6,4 @@ colcon build --symlink-install
 source install/local_setup.zsh
 
 # Launch webots_spawner
-ros2 launch webots_pkg webots_spawner_launch.py
+ros2 launch webots_pkg webots_spawner_launch.py -d
