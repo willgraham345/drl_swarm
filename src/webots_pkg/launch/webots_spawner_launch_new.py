@@ -5,12 +5,19 @@ from ament_index_python.packages import get_package_share_directory
 import launch
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
-from launch.substitutions import LaunchConfiguration
+from launch.actions import ExecuteProcess, RegisterEventHandler, LogInfo
+
+from launch.substitutions import LaunchConfiguration, FindExecutable
 from launch.substitutions.path_join_substitution import PathJoinSubstitution
+from launch.event_handlers import OnProcessStart
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
 from launch.actions import IncludeLaunchDescription
 from webots_ros2_driver.urdf_spawner import URDFSpawner
+from webots_ros2_driver.utils import controller_url_prefix
+
+from webots_pkg.swarm_classes import Crazyflie, Turtlebot, Swarm
+from webots_pkg.spawning_functions import get_cf_driver # TODO: Add tb_driver function
 
 def generate_launch_description():
     package_dir = get_package_share_directory('webots_pkg')
@@ -25,6 +32,48 @@ def generate_launch_description():
             'world': 'apartment.wbt'
         }.items(),
     )
+
+    # Get subentities from world_node for event handler. 
+    webots_node = world_node.get_sub_entities()[0] 
+
+    
+    
+
+    # Define a crazyflie
+    cf1 = Crazyflie('cf1', 'radio://0/80/2M/E7E7E7E7E7', [-2.0, -2.0, 2.0], [0, 0, 0])
+
+    # Define Crazylie driver and simple mapper
+    cf_driver, cf_mapper = get_cf_driver(cf1, package_dir)
+
+    spawn_cf = ExecuteProcess(
+        cmd=[[
+            FindExecutable(name='ros2'), 
+            ' service call "' 
+            '/Ros2Supervisor/spawn_node_from_string ',
+            'webots_ros2_msgs/srv/SpawnNodeFromString ',
+            """{data: Crazyflie { name 'cf1' controller '<extern>' translation -2.0 -2.0 2.0}}"""
+            # '"{data: Crazyflie {name "cf1" controller "<extern>" translation -2.0 -2.0 2.0 }}"',
+        ]],
+        shell=True, # command will fail with "file not found error" if not true
+    )
+
+    spawn_cf_event_handler = RegisterEventHandler(
+        event_handler=OnProcessIO(
+            target_action=spawn_cf,
+            on_stdout=lambda event: LogInfo(
+                msg=
+            )
+    robot_state_publisher = Node(
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        output='screen',
+        namespace=cf1.name,
+        parameters=[{
+            'robot_description': '<robot name=""><link name=""/></robot>'
+        }],
+    )
+
+    crazyflie_driver, simple_mapper_node = get_cf_driver(cf1, package_dir)
 
     # New attempt is to spawn with an IMPORTABLE EXTERNPROTO defined within the resource file, found on github
     # urdf_path_cf = os.path.join(package_dir, 'resource', 'crazyflie.urdf')
@@ -77,7 +126,12 @@ def generate_launch_description():
 
     ld = LaunchDescription()
     ld.add_action(world_node)
-    # ld.add_action(cf_publisher)
-    # ld.add_action(cf_driver)
+
+    
+    ld.add_action(cf_driver)
     # ld.add_action(cf_mapper)
+    # TODO add following nodes to the launch description once crazyflie is spawned
+    # ld.add_action(robot_state_publisher)
+    # ld.add_action(simple_mapper_node)
+    # ld.add_action(crazyflie_driver)
     return ld

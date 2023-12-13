@@ -4,7 +4,7 @@ import launch
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.substitutions import LaunchConfiguration
-from launch.actions import DeclareLaunchArgument 
+from launch.actions import DeclareLaunchArgument, LogInfo
 
 from webots_ros2_driver.webots_launcher import WebotsLauncher
 from webots_ros2_driver.webots_controller import WebotsController
@@ -23,13 +23,22 @@ def generate_launch_description():
         ros2_supervisor=True
     )
 
+    launch_handler = launch.actions.RegisterEventHandler(
+        event_handler=launch.event_handlers.OnProcessStart(
+            target_action=webots,
+            on_start=[
+                LogInfo(msg='Webots sim has started, spawning can now be performed!')
+            ]
+        )
+    )
+
     # Add event handler so everything shuts down on Webots exit
     event_handler = launch.actions.RegisterEventHandler(
-            event_handler=launch.event_handlers.OnProcessExit(
-                target_action=webots,
-                on_exit=[launch.actions.EmitEvent(event=launch.events.Shutdown())],
-            )
+        event_handler=launch.event_handlers.OnProcessExit(
+            target_action=webots,
+            on_exit=[launch.actions.EmitEvent(event=launch.events.Shutdown())],
         )
+    )
 
     return LaunchDescription([
         DeclareLaunchArgument(
@@ -39,5 +48,6 @@ def generate_launch_description():
         ),
         webots,
         webots._supervisor,
+        launch_handler,
         event_handler,
     ])
