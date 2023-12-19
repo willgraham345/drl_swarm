@@ -8,6 +8,8 @@ class WebotsAppender:
         self.world_filepath = world_filepath
         self.new_world_filename = new_world_filename
     def generate_tb_string(self, name, translation_unit):
+        imu_link = "imu_link"
+        inertial_unit = "inertial_unit"
         tb_string = '''
         TurtleBot3Burger { '''
         + f'''
@@ -18,25 +20,25 @@ class WebotsAppender:
                 ""
             ]
             extensionSlot [
-                Solid {{
+                Solid {
                     name "imu_link"
-                }}
-                GPS {{
-                }}
-                InertialUnit {{
-                    name "inertial_unit"
-                }}
-                RobotisLds01 {{
-                }}
-                Compass {{
-                }}
+                }
+                GPS {
+                }
+                InertialUnit {
+                    name "{inertial_unit}"
+                }
+                RobotisLds01 {
+                }
+                Compass {
+                }
             ]
-        }}
+        }
         '''
         return tb_string
     def generate_cf_string(self, name, translation_unit):
         cf_string = '''
-        Robot {{
+        Robot {
         ''' + \
         f'''
             translation {translation_unit}
@@ -44,61 +46,61 @@ class WebotsAppender:
         ''' + \
         '''    
             children [
-                DEF Multiranger Transform {{
+                DEF Multiranger Transform {
                     translation 0 0 0.02
                     children [
-                        DistanceSensor {{
+                        DistanceSensor {
                             rotation 0 0 1 -1.57
                             name "range_right"
                             lookupTable [
                                 0 0 0
                                 3.5 3500 0
                             ]
-                        }}
-                        DistanceSensor {{
+                        }
+                        DistanceSensor {
                             rotation 0 0 1 3.14
                             name "range_back"
                             lookupTable [
                                 0 0 0
                                 3.5 3500 0
                             ]
-                        }}
-                        DistanceSensor {{
+                        }
+                        DistanceSensor {
                             rotation 0 0 1 1.57
                             name "range_left"
                             lookupTable [
                                 0 0 0
                                 3.5 3500 0
                             ]
-                        }}
-                        DistanceSensor {{
+                        }
+                        DistanceSensor {
                             name "range_front"
                             lookupTable [
                                 0 0 0
                                 3.5 3500 0
                             ]
-                        }}
+                        }
                     ]
-                }}
-                Solid {{
+                }
+                Solid {
                     translation 0 0 -0.015
                     children [
-                        DEF battery Shape {{
-                            appearance PBRAppearance {{
+                        DEF battery Shape {
+                            appearance PBRAppearance {
                                 baseColor 0.5 0.5 0.6
                                 metalness 0.1
                                 emissiveIntensity 0
-                            }}
-                            geometry Mesh {{
+                            }
+                            geometry Mesh {
                                 url [
                                     "meshes/battery.stl"
                                 ]
-                            }}
-                        }}
+                            }
+                        }
                     ]
-                }}
+                }
             ]
-        }}
+        }
         '''
         return cf_string
 
@@ -130,7 +132,7 @@ class WebotsAppender:
                 world_data = file.read()
 
             # Write the updated world data to a new world file
-            with open(self.new_world_filepath, 'w') as file:
+            with open(self.new_world_filename, 'w') as file:
                 file.write(world_data)
         
         except FileNotFoundError as e:

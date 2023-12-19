@@ -55,10 +55,12 @@ class Swarm():
     def __init__(self, turtlebots, crazyflies, world_file = None):
         self.turtlebots = []
         self.crazyflies = []
-        for tb in turtlebots:
-            self.turtlebots.append(tb)
-        for cf in crazyflies:
-            self.crazyflies.append(cf)
+        if turtlebots is not None:
+          for tb in turtlebots:
+              self.turtlebots.append(tb)
+        if crazyflies is not None:
+          for cf in crazyflies:
+              self.crazyflies.append(cf)
         if world_file is None:
             self.world_file = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
              "worlds/apartment.wbt")
