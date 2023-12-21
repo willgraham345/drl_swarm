@@ -1,12 +1,73 @@
 import os
 
+tb_dict = {
+    "Turtlebot3Burger": {
+        "translation": translation_unit,
+        "name": name_unit,
+        "controller": controller_unit
+        "controllerArgs": {
+            "extensionSlot": {
+                "Solid": {
+                    "name": imu_link
+                }
+                "GPS": {
+                }
+                "InertialUnit": {
+                    "name": inertial_unit
+                }
+                "RobotisLds01": {
+                }
+                "Commpass": {
+                }
+            }
+        }
+}
+
+cf_dict = {
+    "Robot": {
+        "translation": translation_unit,
+        "name": name_unit,
+        "children": {
+            "Multiranger": {
+                "translation": translation_unit,
+                "children": {
+                    "DistanceSensor": {
+                        "rotation": rotation_unit,
+                        "name": name_unit,
+                        "lookupTable": {
+                            "0": 0,
+                            "3.5": 3500
+                        }
+                    }
+                }
+            }
+            "Solid": {
+                "translation": translation_unit,
+                "children": {
+                    "battery": {
+                        "appearance": {
+                            "baseColor": baseColor_unit,
+                            "metalness": metalness_unit,
+                            "emissiveIntensity": emissiveIntensity_unit
+                        }
+                        "geometry": {
+                            "url": url_unit
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 
 # Create a Webots Appending Class
 class WebotsAppender:
+
     def __init__(self, swarm_instance, world_filepath, new_world_filename):
         self.swarm = swarm_instance
         self.world_filepath = world_filepath
         self.new_world_filename = new_world_filename
+
     def generate_tb_string(self, name, translation_unit):
         imu_link = "imu_link"
         inertial_unit = "inertial_unit"
@@ -36,6 +97,7 @@ class WebotsAppender:
         }
         '''
         return tb_string
+
     def generate_cf_string(self, name, translation_unit):
         cf_string = '''
         Robot {
