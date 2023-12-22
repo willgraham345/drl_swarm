@@ -1,64 +1,354 @@
 import os
+import json
 
-tb_dict = {
-    "Turtlebot3Burger": {
-        "translation": translation_unit,
-        "name": name_unit,
-        "controller": controller_unit
-        "controllerArgs": {
-            "extensionSlot": {
-                "Solid": {
-                    "name": imu_link
-                }
-                "GPS": {
-                }
-                "InertialUnit": {
-                    "name": inertial_unit
-                }
-                "RobotisLds01": {
-                }
-                "Commpass": {
-                }
-            }
-        }
-}
 
-cf_dict = {
-    "Robot": {
-        "translation": translation_unit,
-        "name": name_unit,
-        "children": {
-            "Multiranger": {
-                "translation": translation_unit,
-                "children": {
+
+
+class cf_dict():
+    def __init__(self, name, translation_unit):
+        self.cf_dict = {}
+        self.create_cf_dict(name, translation_unit, rotation_unit)
+
+    def create_cf_dict(self, name_unit, translation_unit, rotation_unit):
+        self.cf_dict = {
+        "Robot": {
+            "name": name_unit,
+            "controller": "<extern>",
+            "translation": translation_unit,
+            "children": [
+            {
+                "DEF": "Multiranger",
+                "Transform": {
+                "translation": [0, 0, 0.02],
+                "children": [
+                    {
                     "DistanceSensor": {
-                        "rotation": rotation_unit,
-                        "name": name_unit,
-                        "lookupTable": {
-                            "0": 0,
-                            "3.5": 3500
-                        }
+                        "rotation": [0, 0, 1, -1.57],
+                        "name": "range_right",
+                        "lookupTable": [
+                        [0, 0, 0],
+                        [3.5, 3500, 0]
+                        ]
                     }
+                    },
+                    {
+                    "DistanceSensor": {
+                        "rotation": [0, 0, 1, 3.14],
+                        "name": "range_back",
+                        "lookupTable": [
+                        [0, 0, 0],
+                        [3.5, 3500, 0]
+                        ]
+                    }
+                    },
+                    {
+                    "DistanceSensor": {
+                        "rotation": [0, 0, 1, 1.57],
+                        "name": "range_left",
+                        "lookupTable": [
+                        [0, 0, 0],
+                        [3.5, 3500, 0]
+                        ]
+                    }
+                    },
+                    {
+                    "DistanceSensor": {
+                        "name": "range_front",
+                        "lookupTable": [
+                        [0, 0, 0],
+                        [3.5, 3500, 0]
+                        ]
+                    }
+                    }
+                ]
                 }
-            }
-            "Solid": {
-                "translation": translation_unit,
-                "children": {
-                    "battery": {
+            },
+            {
+                "Solid": {
+                "translation": [0, 0, -0.015],
+                "children": [
+                    {
+                    "DEF": "battery",
+                    "Shape": {
                         "appearance": {
-                            "baseColor": baseColor_unit,
-                            "metalness": metalness_unit,
-                            "emissiveIntensity": emissiveIntensity_unit
+                        "PBRAppearance": {
+                            "baseColor": [0.5, 0.5, 0.6],
+                            "metalness": 0.1,
+                            "emissiveIntensity": 0
                         }
+                        },
                         "geometry": {
-                            "url": url_unit
+                        "Mesh": {
+                            "url": ["meshes/battery.stl"]
+                        }
                         }
                     }
+                    },
+                    {
+                    "DEF": "battery_holder",
+                    "Shape": {
+                        "appearance": {
+                        "PBRAppearance": {
+                            "baseColor": [0, 0, 0],
+                            "metalness": 0.2
+                        }
+                        },
+                        "geometry": {
+                        "Mesh": {
+                            "url": ["meshes/battery_holder.stl"]
+                        }
+                        }
+                    }
+                    },
+                    {
+                    "DEF": "motors",
+                    "Shape": {
+                        "appearance": {
+                        "PBRAppearance": {
+                            "baseColor": [0.5, 0.5, 0.5],
+                            "emissiveColor": [0.4, 0.4, 0.4]
+                        }
+                        },
+                        "geometry": {
+                        "Mesh": {
+                            "url": ["meshes/4_motors.stl"]
+                        }
+                        }
+                    }
+                    },
+                    {
+                    "DEF": "motormounts",
+                    "Shape": {
+                        "appearance": {
+                        "PBRAppearance": {
+                            "transparency": 0.1,
+                            "metalness": 0.2,
+                            "emissiveColor": [0.5, 0.5, 0.5]
+                        }
+                        },
+                        "geometry": {
+                        "Mesh": {
+                            "url": ["meshes/4_motormounts.stl"]
+                        }
+                        }
+                    }
+                    },
+                    {
+                    "DEF": "pinheader",
+                    "Shape": {
+                        "appearance": {
+                        "DEF": "metal",
+                        "PBRAppearance": {
+                            "baseColor": [0.5, 0.5, 0.5],
+                            "metalness": 0.8,
+                            "emissiveColor": [0.4, 0.4, 0.4]
+                        }
+                        },
+                        "geometry": {
+                        "Mesh": {
+                            "url": ["meshes/2_pinheaders.stl"]
+                        }
+                        }
+                    }
+                    },
+                    {
+                    "DEF": "body",
+                    "Shape": {
+                        "appearance": {
+                        "DEF": "PCB",
+                        "PBRAppearance": {
+                            "baseColor": [0, 0, 0],
+                            "roughness": 0.3,
+                            "metalness": 0.5
+                        }
+                        },
+                        "geometry": {
+                        "Mesh": {
+                            "url": ["meshes/cf_body.stl"]
+                        }
+                        }
+                    }
+                    }
+                ],
+                "name": "body"
+                }
+            },
+            {
+                "GPS": {}
+            },
+            {
+                "Gyro": {}
+            },
+            {
+                "InertialUnit": {}
+            },
+            {
+                "DEF": "m1",
+                "Propeller": {
+                "shaftAxis": [0, 0, 1],
+                "centerOfThrust": [0.031, -0.031, 0.008],
+                "thrustConstants": [-4e-05, 0],
+                "torqueConstants": [2.4e-06, 0],
+                "device": {
+                    "RotationalMotor": {
+                    "name": "m1_motor",
+                    "maxVelocity": 600,
+                    "maxTorque": 30
+                    }
+                },
+                "slowHelix": {
+                    "Solid": {
+                    "translation": [0.031, -0.031, 0.008],
+                    "children": [
+                        {
+                        "Shape": {
+                            "appearance": {
+                            "DEF": "plastic",
+                            "PBRAppearance": {
+                                "baseColor": [0, 0, 0],
+                                "metalness": 0.3
+                            }
+                            },
+                            "geometry": {
+                            "Mesh": {
+                                "url": ["meshes/ccw_prop.stl"]
+                            }
+                            }
+                        }
+                        }
+                    ]
+                    }
+                }
+                }
+            },
+            {
+                "DEF": "m2",
+                "Propeller": {
+                "shaftAxis": [0, 0, 1],
+                "centerOfThrust": [-0.031, -0.031, 0.008],
+                "thrustConstants": [4e-05, 0],
+                "torqueConstants": [2.4e-06, 0],
+                "device": {
+                    "RotationalMotor": {
+                    "name": "m2_motor",
+                    "maxVelocity": 600,
+                    "maxTorque": 30
+                    }
+                },
+                "slowHelix": {
+                    "Solid": {
+                    "translation": [-0.031, -0.031, 0.008],
+                    "children": [
+                        {
+                        "Shape": {
+                            "appearance": {
+                            "USE": "plastic"
+                            },
+                            "geometry": {
+                            "Mesh": {
+                                "url": ["meshes/cw_prop.stl"]
+                            }
+                            }
+                        }
+                        }
+                    ]
+                    }
+                }
+                }
+            },
+            {
+                "DEF": "m3",
+                "Propeller": {
+                "shaftAxis": [0, 0, 1],
+                "centerOfThrust": [-0.031, 0.031, 0.008],
+                "thrustConstants": [-4e-05, 0],
+                "torqueConstants": [2.4e-06, 0],
+                "device": {
+                    "RotationalMotor": {
+                    "name": "m3_motor",
+                    "maxVelocity": 600,
+                    "maxTorque": 30
+                    }
+                },
+                "slowHelix": {
+                    "Solid": {
+                    "translation": [-0.031, 0.031, 0.008],
+                    "children": [
+                        {
+                        "Shape": {
+                            "appearance": {
+                            "USE": "plastic"
+                            },
+                            "geometry": {
+                            "Mesh": {
+                                "url": ["meshes/ccw_prop.stl"]
+                            }
+                            }
+                        }
+                        }
+                    ]
+                    }
+                }
+                }
+            },
+            {
+                "DEF": "m4",
+                "Propeller": {
+                "shaftAxis": [0, 0, 1],
+                "centerOfThrust": [0.031, 0.031, 0.008],
+                "thrustConstants": [4e-05, 0],
+                "torqueConstants": [2.4e-06, 0],
+                "device": {
+                    "RotationalMotor": {
+                    "name": "m4_motor",
+                    "maxVelocity": 600,
+                    "maxTorque": 30
+                    }
+                },
+                "slowHelix": {
+                    "DEF": "prop",
+                    "Solid": {
+                    "translation": [0.031, 0.031, 0.008],
+                    "children": [
+                        {
+                        "DEF": "prop",
+                        "Shape": {
+                            "appearance": {
+                            "USE": "plastic"
+                            },
+                            "geometry": {
+                            "Mesh": {
+                                "url": ["meshes/cw_prop.stl"]
+                            }
+                            }
+                        }
+                        }
+                    ]
+                    }
+                }
                 }
             }
+            ],
+            "boundingObject": {
+            "Cylinder": {
+                "height": 0.03,
+                "radius": 0.05
+            }
+            },
+            "physics": {
+            "Physics": {
+                "density": -1,
+                "mass": 0.05
+            }
+            },
         }
-    }
-}
+        }
+
+
+    def write_dict_to_json(self):
+        with open('cf_dict.json', 'w') as json_file:
+            json.dump(self.cf_dict, json_file, indent=4)
+
 
 # Create a Webots Appending Class
 class WebotsAppender:
@@ -68,102 +358,8 @@ class WebotsAppender:
         self.world_filepath = world_filepath
         self.new_world_filename = new_world_filename
 
-    def generate_tb_string(self, name, translation_unit):
-        imu_link = "imu_link"
-        inertial_unit = "inertial_unit"
-        tb_string = '''
-        TurtleBot3Burger { '''
-        + f'''
-            translation {translation_unit}
-            name "{name}"
-            controller "<extern>"
-            controllerArgs [
-                ""
-            ]
-            extensionSlot [
-                Solid {
-                    name "imu_link"
-                }
-                GPS {
-                }
-                InertialUnit {
-                    name "{inertial_unit}"
-                }
-                RobotisLds01 {
-                }
-                Compass {
-                }
-            ]
-        }
-        '''
-        return tb_string
-
     def generate_cf_string(self, name, translation_unit):
-        cf_string = '''
-        Robot {
-        ''' + \
-        f'''
-            translation {translation_unit}
-            name "{name}" 
-        ''' + \
-        '''    
-            children [
-                DEF Multiranger Transform {
-                    translation 0 0 0.02
-                    children [
-                        DistanceSensor {
-                            rotation 0 0 1 -1.57
-                            name "range_right"
-                            lookupTable [
-                                0 0 0
-                                3.5 3500 0
-                            ]
-                        }
-                        DistanceSensor {
-                            rotation 0 0 1 3.14
-                            name "range_back"
-                            lookupTable [
-                                0 0 0
-                                3.5 3500 0
-                            ]
-                        }
-                        DistanceSensor {
-                            rotation 0 0 1 1.57
-                            name "range_left"
-                            lookupTable [
-                                0 0 0
-                                3.5 3500 0
-                            ]
-                        }
-                        DistanceSensor {
-                            name "range_front"
-                            lookupTable [
-                                0 0 0
-                                3.5 3500 0
-                            ]
-                        }
-                    ]
-                }
-                Solid {
-                    translation 0 0 -0.015
-                    children [
-                        DEF battery Shape {
-                            appearance PBRAppearance {
-                                baseColor 0.5 0.5 0.6
-                                metalness 0.1
-                                emissiveIntensity 0
-                            }
-                            geometry Mesh {
-                                url [
-                                    "meshes/battery.stl"
-                                ]
-                            }
-                        }
-                    ]
-                }
-            ]
-        }
-        '''
+
         return cf_string
 
     def generate_swarm_string(self):
@@ -202,5 +398,3 @@ class WebotsAppender:
         
         except Exception as e:
             print(f"Error: {e}")
-        
-
