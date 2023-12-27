@@ -41,59 +41,6 @@ class Turtlebot():
         self.start_position = start_position
         self.start_orientation = start_orientation
 
-class Swarm():
-    """
-    Swarm class, represents a swarm of turtlebots and crazyflies in both webots and experiments
-    
-    :param turtlebots: List of Turtlebot objects
-    :type turtlebots: Turtlebot()
-    :param crazyflies: List of Crazyflie objects
-    :type crazyflies: Crazyflie()
-    :param world_file: Path to webots world file we want to edit
-    :type world_file: str
-    
-
-    """
-    def __init__(self, turtlebots, crazyflies, world_file = None):
-        self.turtlebots = []
-        self.crazyflies = []
-        if turtlebots is not None:
-          for tb in turtlebots:
-            self.turtlebots.append(tb)
-        if crazyflies is not None:
-          for cf in crazyflies:
-            self.crazyflies.append(cf)
-        if world_file is None:
-          self.world_file = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-             "worlds/apartment.wbt")
-        else:
-            self.world_file = world_file
-
-    def write_swarm_to_json(self, json_file_path):
-            """
-            Write the swarm information to a JSON file.
-
-            Parameters:
-            - json_file_path (str): The path to the JSON file.
-
-            Returns:
-            None
-            """
-            cf_dict2json_list = []
-            tb_dict2json_list = []
-            # raise("Not yet tested")
-            for cf in self.crazyflies:
-                cf_dict2json_list.append([cf.name, cf.start_position, json_file_path])
-            for tb in self.turtlebots:
-                tb_dict2json_list.append([tb.name, tb.start_position, json_file_path])
-            # TODO: Write to json files individually
-            # for cf_dict2json in cf_dict2json_list:
-            #     cf_dict2json.write_dict_to_json()
-            # for tb_dict2json in tb_dict2json_list:
-            #     tb_dict2json.write_dict_to_json()
-
-
-
 
 class cf_dict2json(Crazyflie):
     def __init__(self, cf_name, start_position, json_file_path: str=None):
@@ -101,6 +48,8 @@ class cf_dict2json(Crazyflie):
         self.json_file_path = json_file_path
         self.cf_dict = {}
         self.create_cf_dict(cf_name, start_position)
+        if json_file_path is None:
+          self.json_file_path = 'test_cf.json'
         self.json_file_path = json_file_path
 
     def create_cf_dict(self, cf_name, start_position):
@@ -439,12 +388,12 @@ class cf_dict2json(Crazyflie):
       }
 
     def write_dict_to_json(self):
-      if self.json_file_path is None:
-        json_file_path = 'test_cf.json'
-      cf_robot = self.cf_dict["Robot"]
-      with open(json_file_path, 'w') as f:
-        f.write("Robot ")
-        f.write(json.dumps(cf_robot, indent=1))
+        if self.json_file_path is None:
+            self.json_file_path = 'test_cf.json'
+        cf_robot = self.cf_dict["Robot"]
+        with open(self.json_file_path, 'w') as f:
+            f.write("Robot ")
+            f.write(json.dumps(cf_robot, indent=1))
 
 class tb_dict2json(Turtlebot):
     def __init__(self, tb_name, tb_start_position, json_file_path=None):
@@ -452,6 +401,8 @@ class tb_dict2json(Turtlebot):
         self.json_file_path = json_file_path
         self.tb_dict = {}
         self.create_tb_dict(tb_name, tb_start_position)
+        if json_file_path is None:
+          self.json_file_path = 'test_tb.json'
         self.json_file_path = json_file_path
      
     def create_tb_dict(self, name_unit, translation_unit):
@@ -484,13 +435,67 @@ class tb_dict2json(Turtlebot):
 
     def write_dict_to_json(self):
         if self.json_file_path is None:
-            json_file_path = 'test_tb.json'
+            self.json_file_path = 'test_tb.json'
 
         tb_robot = self.tb_dict["TurtleBot3Burger"]
 
-        with open(json_file_path, 'w') as f:
+        with open(self.json_file_path, 'w') as f:
             f.write("TurtleBot3Burger ")
             f.write(json.dumps(tb_robot, indent=1))
+
+class Swarm():
+    """
+    Swarm class, represents a swarm of turtlebots and crazyflies in both webots and experiments
+    
+    :param turtlebots: List of Turtlebot objects
+    :type turtlebots: Turtlebot()
+    :param crazyflies: List of Crazyflie objects
+    :type crazyflies: Crazyflie()
+    :param world_file: Path to webots world file we want to edit
+    :type world_file: str
+    
+
+    """
+    def __init__(self, turtlebots, crazyflies, world_file = None):
+        self.turtlebots = []
+        self.crazyflies = []
+        if turtlebots is not None:
+          for tb in turtlebots:
+            self.turtlebots.append(tb)
+        if crazyflies is not None:
+          for cf in crazyflies:
+            self.crazyflies.append(cf)
+        if world_file is None:
+          self.world_file = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+             "worlds/apartment.wbt")
+        else:
+            self.world_file = world_file
+
+    def write_swarm_to_json(self, json_file_path):
+            """
+            Write the swarm information to a JSON file.
+
+            Parameters:
+            - json_file_path (str): The path to the JSON file.
+
+            Returns:
+            None
+            """
+            cf_dict2json_instances = []
+            tb_dict2json_instances = []
+            # raise("Not yet tested")
+            for cf in self.crazyflies:
+                cf_instance = cf_dict2json(cf.name, cf.start_position, json_file_path)
+                cf_dict2json_instances.append(cf_instance)
+            for tb in self.turtlebots:
+                tb_instance = tb_dict2json(tb.name, tb.start_position, json_file_path)
+                tb_dict2json_instances.append(tb_instance)
+
+            for cf in cf_dict2json_instances:
+                cf.write_dict_to_json() # TODO: Fix this
+            for tb in tb_dict2json_instances:
+                tb.write_dict_to_json()
+
 
 if __name__ == "__main__":
     # Create a swarm of turtlebots and crazyflies

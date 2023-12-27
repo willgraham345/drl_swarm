@@ -1,0 +1,30 @@
+TurtleBot3Burger {
+ "name": "tb2",
+ "translation": [
+  -2.5,
+  -2.5,
+  0.015
+ ],
+ "controller": "<extern>",
+ "controllerArgs": [
+  ""
+ ],
+ "extensionSlot": [
+  {
+   "Solid": {
+    "name": "imu_link"
+   }
+  },
+  {
+   "GPS": {}
+  },
+  {
+   "InertialUnit": {
+    "name": "inertial_unit"
+   }
+  },
+  {
+   "RobotisLds01": {}
+  }
+ ]
+}
