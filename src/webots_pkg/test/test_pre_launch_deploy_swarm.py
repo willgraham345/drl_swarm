@@ -22,7 +22,6 @@ def test_read_cf_dict_json_file():
         first_line = f.readline()
         rest= f.read()
         assert first_line == 'Robot {\n'
-        #TODO: Figure out why I can't write "Robot {" to the file
 
     with open('test_cf.json', 'w') as f:
         f.write("{")
