@@ -43,6 +43,36 @@ import read_lighthouse_mem
 # Only output errors from the logging framework
 logging.basicConfig(level=logging.ERROR)
 
+class ReadMem:
+    def __init__(self, uri):
+        self._event = Event()
+
+        with SyncCrazyflie(uri, cf=Crazyflie(rw_cache='./cache')) as scf:
+            helper = LighthouseMemHelper(scf.cf)
+
+            helper.read_all_geos(self._geo_read_ready)
+            self._event.wait()
+
+            self._event.clear()
+
+            helper.read_all_calibs(self._calib_read_ready)
+            self._event.wait()
+
+    def _geo_read_ready(self, geo_data):
+        for id, data in geo_data.items():
+            print('---- Geometry for base station', id + 1)
+            data.dump()
+            print()
+        self._event.set()
+
+    def _calib_read_ready(self, calib_data):
+        for id, data in calib_data.items():
+            print('---- Calibration data for base station', id + 1)
+            data.dump()
+            print()
+        self._event.set()
+
+
 
 class WriteMem:
     def __init__(self, uri, geo_dict, calib_dict):
