@@ -36,13 +36,11 @@ from cflib.utils import uri_helper
 
 
 from cflib.crazyflie.mem import LighthouseMemory
-import read_lighthouse_mem
 
 
 
 # Only output errors from the logging framework
 logging.basicConfig(level=logging.ERROR)
-
 class ReadMem:
     def __init__(self, uri):
         self._event = Event()
@@ -144,7 +142,7 @@ if __name__ == '__main__':
     cflib.crtp.init_drivers()
 
     # Read the current values
-    temp_memory = read_lighthouse_mem.ReadMem(uri)
+    temp_memory = ReadMem(uri)
 
     # Create a LighthouseBsGeometry object
     bs1geo = LighthouseBsGeometry()
