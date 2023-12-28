@@ -1,7 +1,7 @@
 import os
 import sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from webots_pkg.lighthouse_classes import ReadMem, WriteGeoMem, WriteMem
+from webots_pkg.lighthouse_classes import ReadLHMem, WriteLHGeoMem, WriteLHMem
 from cflib.crazyflie import Crazyflie
 
 
@@ -25,6 +25,7 @@ def is_stm_connected(radio_uri = "radio://0/80/2M/E7E7E7E7E7"):
         pk_ack = link.receive_packet(0.1)
         print(pk_ack)
         if pk_ack is not None and pk.data == pk_ack.data:
+            print("stm connected")
             result = True
             link.close()
     link.close()
@@ -33,7 +34,6 @@ def is_stm_connected(radio_uri = "radio://0/80/2M/E7E7E7E7E7"):
 
 def test_cf_connection():
     result = is_stm_connected()
-
     assert result == True
 
 
