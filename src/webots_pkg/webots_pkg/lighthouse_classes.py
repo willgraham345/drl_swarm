@@ -41,7 +41,7 @@ from cflib.crazyflie.mem import LighthouseMemory
 
 # Only output errors from the logging framework
 logging.basicConfig(level=logging.ERROR)
-class ReadMem:
+class ReadLHMem:
     def __init__(self, uri):
         self._event = Event()
 
@@ -55,6 +55,8 @@ class ReadMem:
 
             helper.read_all_calibs(self._calib_read_ready)
             self._event.wait()
+
+            self._event.clear()
 
     def _geo_read_ready(self, geo_data):
         for id, data in geo_data.items():
@@ -72,7 +74,7 @@ class ReadMem:
 
 
 
-class WriteMem:
+class WriteLHMem:
     def __init__(self, uri, geo_dict, calib_dict):
         self._event = Event()
 
@@ -95,7 +97,7 @@ class WriteMem:
 
         self._event.set()
 
-class WriteGeoMem:
+class WriteLHGeoMem:
     """ 
     Write only the geometry memory
     :param uri: URI of the Crazyflie to connect to
@@ -142,7 +144,7 @@ if __name__ == '__main__':
     cflib.crtp.init_drivers()
 
     # Read the current values
-    temp_memory = ReadMem(uri)
+    temp_memory = ReadLHMem(uri)
 
     # Create a LighthouseBsGeometry object
     bs1geo = LighthouseBsGeometry()
@@ -158,4 +160,4 @@ if __name__ == '__main__':
 
     # Write geo memory to crazyflie
     geo_dict = {0: bs1geo}
-    WriteGeoMem(uri, geo_dict)
+    WriteLHGeoMem(uri, geo_dict)
