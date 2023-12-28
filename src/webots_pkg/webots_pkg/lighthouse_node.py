@@ -1,7 +1,6 @@
 import os
 import tf_transformations
 import rclpy
-import rclpy
 from rclpy.node import Node
 from rclpy.qos import DurabilityPolicy, HistoryPolicy, QoSProfile
 
