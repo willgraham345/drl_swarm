@@ -20,10 +20,9 @@ def test_ReadLHMem(radio_uri = "radio://0/80/2M/E7E7E7E7E7"):
     cflib.crtp.init_drivers()
 
     temp_LHMem = ReadLHMem(radio_uri)
-    # TODO: Finish writing assertions to prove it's being read (requires cf and radios that are working)
+    # FIXME: Finish writing assertions to prove it's being read (requires cf and radios that are working)
 
 
-# TODO: Write WriteMem test
 def test_WriteLHMem(uri = "radio://0/80/2M/E7E7E7E7E7"):
 
     # Read the current values
@@ -47,7 +46,7 @@ def test_WriteLHMem(uri = "radio://0/80/2M/E7E7E7E7E7"):
 
     # Read new values
     new_memory = ReadLHMem(uri)
-    #TODO: Test this with a crazyflie that isn't throwing a fit. 
+    #FIXME: Test this with a crazyflie that isn't throwing a fit. 
     assert 1 == 1
 
 

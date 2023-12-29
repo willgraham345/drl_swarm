@@ -492,7 +492,7 @@ class Swarm():
                 tb_dict2json_instances.append(tb_instance)
 
             for cf in cf_dict2json_instances:
-                cf.write_dict_to_json() # TODO: Fix this
+                cf.write_dict_to_json() # FIXME: This is not writing to the json file
             for tb in tb_dict2json_instances:
                 tb.write_dict_to_json()
 
