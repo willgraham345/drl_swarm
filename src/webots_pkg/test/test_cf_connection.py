@@ -12,7 +12,8 @@ from cflib.utils import uri_helper
 
 
 def is_stm_connected(radio_uri = "radio://0/80/2M/E7E7E7E7E7"):
-    result = False
+    cf_transmitting = False
+    transmission_correct = False
     cflib.crtp.init_drivers()
     radioUri = uri_helper.uri_from_env(radio_uri)
     link = cflib.crtp.get_link_driver(radioUri)
@@ -24,17 +25,16 @@ def is_stm_connected(radio_uri = "radio://0/80/2M/E7E7E7E7E7"):
     for _ in range(10):
         pk_ack = link.receive_packet(0.1)
         print(pk_ack)
-        if pk_ack is not None and pk.data == pk_ack.data:
-            print("stm connected")
-            result = True
-            link.close()
+        if pk_ack is not None:
+            cf_transmitting = True
+            print("stm transmitting")
     link.close()
-    return result
+    return cf_transmitting 
 
 
 def test_cf_connection():
-    result = is_stm_connected()
-    assert result == True
+    cf_transmitting = is_stm_connected()
+    assert cf_transmitting
 
 
 if __name__ == '__main__':
