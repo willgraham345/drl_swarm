@@ -20,7 +20,8 @@ def test_ReadLHMem(radio_uri = "radio://0/80/2M/E7E7E7E7E7"):
     cflib.crtp.init_drivers()
 
     temp_LHMem = ReadLHMem(radio_uri)
-    # FIXME: Finish writing assertions to prove it's being read (requires cf and radios that are working)
+    assert temp_LHMem.geo_data[0] is not None
+    assert temp_LHMem.calib_data[0] is not None
 
 
 def test_WriteLHMem(uri = "radio://0/80/2M/E7E7E7E7E7"):
@@ -67,3 +68,8 @@ def test_WriteLHMem(uri = "radio://0/80/2M/E7E7E7E7E7"):
 
 #     # Disconnect from the Crazyflie
 #     cf.close_link()
+
+if __name__ == "__main__":
+    test_ReadLHMem()
+    # test_WriteLHMem()
+    # test_cf_lh_config()

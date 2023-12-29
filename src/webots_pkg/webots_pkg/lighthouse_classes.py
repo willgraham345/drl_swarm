@@ -59,17 +59,21 @@ class ReadLHMem:
             self._event.clear()
 
     def _geo_read_ready(self, geo_data):
+        self.geo_data = {}
         for id, data in geo_data.items():
             print('---- Geometry for base station', id + 1)
             data.dump()
             print()
+            self.geo_data[id] = data
         self._event.set()
 
     def _calib_read_ready(self, calib_data):
+        self.calib_data = {}
         for id, data in calib_data.items():
             print('---- Calibration data for base station', id + 1)
             data.dump()
             print()
+            self.calib_data[id] = data
         self._event.set()
 
 
