@@ -4,19 +4,22 @@ import pytest
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from webots_pkg.lighthouse_classes import ReadLHMem, WriteLHGeoMem, WriteLHMem
+from webots_pkg.lighthouse_functions import get_cf_pose_according_to_lh, get_cf_pose
 from cflib.crazyflie import Crazyflie
 
 import cflib.crtp  # noqa
+from cflib.crazyflie import Crazyflie
+from cflib.crazyflie.log import LogConfig
+from cflib.crazyflie.syncCrazyflie import SyncCrazyflie
+from cflib.crazyflie.syncLogger import SyncLogger
 from cflib.crazyflie.mem import LighthouseBsGeometry
 from cflib.crazyflie.mem import LighthouseMemHelper
 from cflib.crazyflie.syncCrazyflie import SyncCrazyflie
 from cflib.utils import uri_helper
 
-def test_ReadLHMem(radio_uri = "radio://0/80/2M/E7E7E7E7E7"):
-    # 
-    uri = uri_helper.uri_from_env(radio_uri)
 
-    # Initialize the low-level drivers
+def test_ReadLHMem(radio_uri = "radio://0/80/2M/E7E7E7E7E7"):
+    uri = uri_helper.uri_from_env(radio_uri)
     cflib.crtp.init_drivers()
 
     print()
@@ -30,9 +33,8 @@ def test_ReadLHMem(radio_uri = "radio://0/80/2M/E7E7E7E7E7"):
 
 def test_WriteLHMem(radio_uri = "radio://0/80/2M/E7E7E7E7E7"):    # 
     uri = uri_helper.uri_from_env(radio_uri)
-
-    # Initialize the low-level drivers
     cflib.crtp.init_drivers()
+
     # Create a LighthouseBsGeometry object
     bs1geo = LighthouseBsGeometry()
     bs1geo.origin = [0.0, 0.0, 1.0] # Best guess on wheere the base station is on tb
@@ -65,25 +67,17 @@ def test_WriteLHMem(radio_uri = "radio://0/80/2M/E7E7E7E7E7"):    #
     assert new_memory.geo_data[0].origin == bs1geo.origin
 
 
+def test_get_cf_pose():
+    get_cf_pose()
+    
 
-# TODO: Write WriteGeoMem test
+def test_get_cf_pose_according_to_lh():
+    get_cf_pose_according_to_lh()
 
 
-#TODO: Test written lh configuration to crazyflie
-# def test_cf_lh_config(radio_uri = "radio://0/80/2M"):
-#     # Create a Crazyflie object
-#     cf = Crazyflie()
-
-#     # Connect to the Crazyflie
-#     cf.open_link(radio_uri)
-
-#     # Check if the connection is successful
-#     assert cf.is_connected()
-
-#     # Disconnect from the Crazyflie
-#     cf.close_link()
 
 if __name__ == "__main__":
     # test_ReadLHMem()
-    test_WriteLHMem()
-    # test_cf_lh_config()
+    # test_WriteLHMem()
+    # test_get_cf_pose()
+    test_get_cf_pose_according_to_lh()
