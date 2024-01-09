@@ -1,6 +1,16 @@
-#!/usr/bin/env python
-# Launch the test locally: python3 -m pytest webots_pkg/test/test_webots_world_launch.py
-# Apparently this can work, havent had much luck: colcon test --packages-select webots_pkg --event-handlers console_cohesion+
+#                     ____  _            __          __                                            
+#    ____ ___  __  __/ / /_(_)________  / /_  ____  / /_   ______      ______ __________ ___  _____
+#   / __ `__ \/ / / / / __/ / ___/ __ \/ __ \/ __ \/ __/  / ___/ | /| / / __ `/ ___/ __ `__ \/ ___/
+#  / / / / / / /_/ / / /_/ / /  / /_/ / /_/ / /_/ / /_   (__  )| |/ |/ / /_/ / /  / / / / / (__  ) 
+# /_/ /_/ /_/\__,_/_/\__/_/_/   \____/_.___/\____/\__/  /____/ |__/|__/\__,_/_/  /_/ /_/ /_/____/  
+
+
+"""
+This file is used to test the viability of webots_world_launch.py. 
+
+Author: Will Graham
+"""
+
 import os
 import pytest
 import launch

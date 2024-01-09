@@ -1,3 +1,19 @@
+#                     ____  _            __          __                                            
+#    ____ ___  __  __/ / /_(_)________  / /_  ____  / /_   ______      ______ __________ ___  _____
+#   / __ `__ \/ / / / / __/ / ___/ __ \/ __ \/ __ \/ __/  / ___/ | /| / / __ `/ ___/ __ `__ \/ ___/
+#  / / / / / / /_/ / / /_/ / /  / /_/ / /_/ / /_/ / /_   (__  )| |/ |/ / /_/ / /  / / / / / (__  ) 
+# /_/ /_/ /_/\__,_/_/\__/_/_/   \____/_.___/\____/\__/  /____/ |__/|__/\__,_/_/  /_/ /_/ /_/____/  
+
+
+"""
+This file launches a single instance of a webots_world file specified in the launch configuration
+
+Usage: ros2 launch webots_pkg webots_world_launch.py world:=<world_name>
+
+Author: Will Graham
+"""
+
+
 import os
 
 import launch
