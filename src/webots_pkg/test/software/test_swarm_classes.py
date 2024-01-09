@@ -17,7 +17,7 @@ import sys
 import pytest
 import json
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from webots_pkg.swarm_classes import cf_dict2json, tb_dict2json, Swarm, Crazyflie, Turtlebot
+from webots_pkg.swarm_classes import cf_dict2json, tb_dict2json, Swarm, cf, tb
 
 name = "Robot3"
 translation_unit = [1, 2, 3]
@@ -79,10 +79,10 @@ def test_read_tb_dict_json_file():
 
 
 # Define Swarm
-cf1 = Crazyflie("cf1", [-1, -1, 0.015])
-cf2 = Crazyflie("cf2", [-2, -2, 0.015])
-tb1 = Turtlebot("tb1", [-1.5, -1.5, 0.015])
-tb2 = Turtlebot("tb2", [-2.5, -2.5, 0.015])
+cf1 = cf("cf1", [-1, -1, 0.015])
+cf2 = cf("cf2", [-2, -2, 0.015])
+tb1 = tb("tb1", [-1.5, -1.5, 0.015])
+tb2 = tb("tb2", [-2.5, -2.5, 0.015])
 swarm = Swarm([tb1, tb2], [cf1, cf2])
 
 def test_swarm_dict_json_file():

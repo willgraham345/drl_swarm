@@ -15,7 +15,7 @@ from nav2_common.launch import ReplaceString
 
 
 # Import swarm functions and swarm classes
-from webots_pkg.swarm_classes import Crazyflie, Turtlebot, Swarm
+from webots_pkg.swarm_classes import cf, tb, Swarm
 from webots_pkg.swarm_launch_functions import get_cf_driver, tb_launcher
 
 package_dir = get_package_share_directory('webots_pkg')
@@ -23,11 +23,11 @@ nav2_bringup_dir = get_package_share_directory('nav2_bringup')
 nav2_launch_dir = os.path.join(nav2_bringup_dir, 'launch')
 
 
-cf1 = Crazyflie('cf1', 'radio://0/80/2M/E7E7E7E7E7', [-1.5, -1.5, 0.015], [0, 0, 0])
-cf2 = Crazyflie('cf2', 'radio://0/80/2M/E7E7E7E7E8', [0, 0, 0], [0, 0, 0])
+cf1 = cf('cf1', 'radio://0/80/2M/E7E7E7E7E7', [-1.5, -1.5, 0.015], [0, 0, 0])
+cf2 = cf('cf2', 'radio://0/80/2M/E7E7E7E7E8', [0, 0, 0], [0, 0, 0])
 
-tb1 = Turtlebot('tb1', 'ROS2_address', [-1.0, -1.5, 0], [0, 0, 0])
-tb2 = Turtlebot('tb2', 'ROS2_address', [-2.0, -2.0, 0], [0, 0, 0])
+tb1 = tb('tb1', 'ROS2_address', [-1.0, -1.5, 0], [0, 0, 0])
+tb2 = tb('tb2', 'ROS2_address', [-2.0, -2.0, 0], [0, 0, 0])
 
 swarm = Swarm([tb1, tb2], [cf1])
 

@@ -16,7 +16,7 @@ import json
 import typing
 
 
-class Crazyflie(): #TODO: Rename this into cf class
+class cf():
     """
     Class that represents a crazyflie in both webots and experiments
     :param name: Name of crazyflie
@@ -36,7 +36,7 @@ class Crazyflie(): #TODO: Rename this into cf class
         self.start_orientation = start_orientation
 
 
-class Turtlebot(): #TODO: Rename this into tb class
+class tb(): 
     """
     Class that represents a turtlebot in both webots and experiments
     :param name: Name of turtlebot
@@ -55,7 +55,7 @@ class Turtlebot(): #TODO: Rename this into tb class
         self.start_orientation = start_orientation
 
 
-class cf_dict2json(Crazyflie): #TODO: Refactor into cf class
+class cf_dict2json(cf): #TODO: Refactor into cf class
     def __init__(self, cf_name, start_position, json_file_path: str=None):
         super().__init__(cf_name, start_position)
         self.json_file_path = json_file_path
@@ -408,7 +408,7 @@ class cf_dict2json(Crazyflie): #TODO: Refactor into cf class
             f.write("Robot ")
             f.write(json.dumps(cf_robot, indent=1))
 
-class tb_dict2json(Turtlebot):
+class tb_dict2json(tb):
     def __init__(self, tb_name, tb_start_position, json_file_path=None):
         super().__init__(tb_name, tb_start_position)
         self.json_file_path = json_file_path
@@ -512,9 +512,9 @@ class Swarm():
 
 if __name__ == "__main__":
     # Create a swarm of turtlebots and crazyflies
-    tb1 = Turtlebot("tb1", start_position=[-1.5, -1.5, 0])
-    tb2 = Turtlebot("tb2", start_position=[-1.5, -2.5, 0])
-    cf1 = Crazyflie("cf1", start_position=[-2, -3, 0.015])
-    cf2 = Crazyflie("cf2", start_position=[-2, -2, 0.015])
+    tb1 = tb("tb1", start_position=[-1.5, -1.5, 0])
+    tb2 = tb("tb2", start_position=[-1.5, -2.5, 0])
+    cf1 = cf("cf1", start_position=[-2, -3, 0.015])
+    cf2 = cf("cf2", start_position=[-2, -2, 0.015])
     # Create swarm
     swarm1 = Swarm([tb1, tb2], [cf1, cf2])
