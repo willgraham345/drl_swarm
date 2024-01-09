@@ -1,3 +1,18 @@
+#                     ____  _            __          __                                            
+#    ____ ___  __  __/ / /_(_)________  / /_  ____  / /_   ______      ______ __________ ___  _____
+#   / __ `__ \/ / / / / __/ / ___/ __ \/ __ \/ __ \/ __/  / ___/ | /| / / __ `/ ___/ __ `__ \/ ___/
+#  / / / / / / /_/ / / /_/ / /  / /_/ / /_/ / /_/ / /_   (__  )| |/ |/ / /_/ / /  / / / / / (__  ) 
+# /_/ /_/ /_/\__,_/_/\__/_/_/   \____/_.___/\____/\__/  /____/ |__/|__/\__,_/_/  /_/ /_/ /_/____/  
+
+"""
+This file is used to test the functions in webots_pkg/lighthouse_classes.py
+Usage: pytest -v test_pre_launch_cf_lighthouse_configuration.py
+
+Author: Will Graham
+"""
+
+
+
 import os
 import sys
 import pytest

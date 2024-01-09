@@ -1,9 +1,22 @@
+
+#                     ____  _            __          __                                            
+#    ____ ___  __  __/ / /_(_)________  / /_  ____  / /_   ______      ______ __________ ___  _____
+#   / __ `__ \/ / / / / __/ / ___/ __ \/ __ \/ __ \/ __/  / ___/ | /| / / __ `/ ___/ __ `__ \/ ___/
+#  / / / / / / /_/ / / /_/ / /  / /_/ / /_/ / /_/ / /_   (__  )| |/ |/ / /_/ / /  / / / / / (__  ) 
+# /_/ /_/ /_/\__,_/_/\__/_/_/   \____/_.___/\____/\__/  /____/ |__/|__/\__,_/_/  /_/ /_/ /_/____/  
+"""
+This file defines the classes used to represent a swarm in ros2 and webots.
+
+Author: Will Graham
+"""
+
+
 import os
 import json
 import typing
 
 
-class Crazyflie():
+class Crazyflie(): #TODO: Rename this into cf class
     """
     Class that represents a crazyflie in both webots and experiments
     :param name: Name of crazyflie
@@ -23,7 +36,7 @@ class Crazyflie():
         self.start_orientation = start_orientation
 
 
-class Turtlebot():
+class Turtlebot(): #TODO: Rename this into tb class
     """
     Class that represents a turtlebot in both webots and experiments
     :param name: Name of turtlebot
@@ -42,7 +55,7 @@ class Turtlebot():
         self.start_orientation = start_orientation
 
 
-class cf_dict2json(Crazyflie):
+class cf_dict2json(Crazyflie): #TODO: Refactor into cf class
     def __init__(self, cf_name, start_position, json_file_path: str=None):
         super().__init__(cf_name, start_position)
         self.json_file_path = json_file_path
