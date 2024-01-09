@@ -24,9 +24,6 @@ from webots_ros2_driver.webots_launcher import Ros2SupervisorLauncher,WebotsLaun
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import PathJoinSubstitution
 
-
-#TODO: Implement https://github.com/cyberbotics/webots_ros2/blob/master/webots_ros2_tests/webots_ros2_tests/utils.py as an additional class/function
-
 def test_webots_world_launch():
     # Wait for the processes to start
     # process_tools.assert_output()

@@ -16,7 +16,7 @@ import os
 import sys
 import pytest
 import json
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 from webots_pkg.swarm_classes import cf_dict2json, tb_dict2json, Swarm, cf, tb
 
 name = "Robot3"
@@ -93,8 +93,8 @@ def test_swarm_dict_json_file():
         print("json file opened")
         file_contents = f.read()
         print(file_contents)
-    # TODO: add tests to confirm that we're getting the right output
-    # TODO: Remove the testing files from the test directory
+    # TODO_tests: add tests to confirm that we're getting the right output
+    # TODO_tests: Remove the testing files from the test directory
     # os.remove(json_file_path)
         
 if __name__ == "__main__":

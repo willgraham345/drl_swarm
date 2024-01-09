@@ -55,7 +55,7 @@ class tb():
         self.start_orientation = start_orientation
 
 
-class cf_dict2json(cf): #TODO: Refactor into cf class
+class cf_dict2json(cf): 
     def __init__(self, cf_name, start_position, json_file_path: str=None):
         super().__init__(cf_name, start_position)
         self.json_file_path = json_file_path

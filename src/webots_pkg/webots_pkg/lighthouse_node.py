@@ -9,7 +9,6 @@ Defines a node that publishes the pose of a lighthouse in the world frame for us
 Author: Will Graham
 """
 
-
 import os
 import tf_transformations
 import rclpy
