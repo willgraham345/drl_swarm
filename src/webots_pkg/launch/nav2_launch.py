@@ -17,7 +17,7 @@ from webots_ros2_driver.webots_launcher import (Ros2SupervisorLauncher,
                                                 WebotsLauncher)
 
 # Import swarm functions and swarm classes
-from webots_pkg.swarm_classes import Crazyflie, Turtlebot, Swarm
+from webots_pkg.swarm_classes import cf, tb, Swarm
 from webots_pkg.swarm_launch_functions import get_cf_driver, tb_launcher
 
 
@@ -29,10 +29,10 @@ nav2_launch_dir = os.path.join(nav2_bringup_dir, 'launch')
 ####################### DEFINE SWARM AND WORLD ##########################
 
 # Define swarm here:
-cf1 = Crazyflie('cf1', [-1.5, -1.5, 0.015])
+cf1 = cf('cf1', [-1.5, -1.5, 0.015])
 # cf2 = Crazyflie('cf2', [-2.5, -2.5, 0.015])
-tb1 = Turtlebot('tb1', [-1.0, -1.5, 0])
-tb2 = Turtlebot('tb2', [-2.0, -2.0, 0])
+tb1 = tb('tb1', [-1.0, -1.5, 0])
+tb2 = tb('tb2', [-2.0, -2.0, 0])
 
 swarm = Swarm([tb1, tb2], [cf1])
 # Write swarm into world file

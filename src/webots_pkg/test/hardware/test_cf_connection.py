@@ -10,7 +10,8 @@ Test to confirm computer is correctly connected to Crazyflie
 Author: Will Graham"""
 
 import sys
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 from webots_pkg.lighthouse_classes import ReadLHMem, WriteLHGeoMem, WriteLHMem
 from cflib.crazyflie import Crazyflie
 
