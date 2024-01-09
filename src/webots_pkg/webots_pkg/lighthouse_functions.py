@@ -76,3 +76,8 @@ def get_cf_pose_according_to_lh(radio_uri = "radio://0/80/2M/E7E7E7E7E7"):
 
     with SyncCrazyflie(uri, cf=Crazyflie(rw_cache='./cache')) as scf:
         simple_log_async(scf, ext_pose_config) #TODO: Confirm this is working
+
+
+if __name__ == '__main__':
+    # get_cf_pose()
+    # get_cf_pose_according_to_lh()
