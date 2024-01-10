@@ -16,18 +16,25 @@ Author: Will Graham
 import os
 import sys
 import pytest
+import time
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from webots_pkg.lighthouse_functions import get_cf_pose_according_to_lh, get_cf_pose
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
+from webots_pkg.lighthouse_functions import get_cf_pose_according_to_lh, get_only_cf_kalman_pos, compare_kalman_to_lh_pos
 
-def test_get_cf_pose():
-    get_cf_pose()
-    
+def test_get_only_cf_kalman_pos():
+    start_time = time.time()
+    while time.time() - start_time < 3:
+        get_only_cf_kalman_pos()
 
-def test_get_cf_pose_according_to_lh():
-    get_cf_pose_according_to_lh()
+def test_kalm_vs_lh():
+    start_time = time.time()
+    while time.time() - start_time < 10:
+        compare_kalman_to_lh_pos()
 
-
+def test_get_cf_pose_according_to_lh(): #FIXME: cf_pose_according to lh isn't consistent with logging framework
+    start_time = time.time()
+    while time.time() - start_time < 3:
+        get_cf_pose_according_to_lh()
 
 if __name__ == "__main__":
     # test_ReadLHMem()
