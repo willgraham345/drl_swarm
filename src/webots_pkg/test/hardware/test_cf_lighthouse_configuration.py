@@ -19,7 +19,7 @@ import pytest
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from webots_pkg.lighthouse_classes import ReadLHMem, WriteLHGeoMem, WriteLHMem
-from webots_pkg.lighthouse_functions import get_cf_pose_according_to_lh, get_cf_pose
+from webots_pkg.lighthouse_functions import get_cf_pose_according_to_lh, get_only_cf_kalman_pos
 from cflib.crazyflie import Crazyflie
 
 import cflib.crtp  # noqa
