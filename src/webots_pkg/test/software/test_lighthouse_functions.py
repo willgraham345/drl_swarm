@@ -11,7 +11,7 @@ Usage: pytest -v test_lighthouse_functions.py
 Author: Will Graham
 """
 
-#TODO_tests: Confirm that the functions in webots_pkg/lighthouse_functions.py work as expected
+#RUN_TESTS: Confirm that the functions in webots_pkg/lighthouse_functions.py work as expected
 
 import os
 import sys
