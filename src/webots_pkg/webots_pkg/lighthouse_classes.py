@@ -106,9 +106,9 @@ class WriteLHGeoMem:
 
     def _data_written(self, success):
         if success:
-            print('Data written')
+            print('Lighthouse geometry write success')
         else:
-            print('Write failed')
+            print('Lighthouse geometry write failure')
 
         self._event.set()
 
