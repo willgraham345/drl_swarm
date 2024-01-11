@@ -21,14 +21,8 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..',
 from webots_pkg.lighthouse_classes import ReadLHMem, WriteLHGeoMem, WriteLHMem
 from cflib.crazyflie import Crazyflie
 
-import cflib.crtp  # noqa
-from cflib.crazyflie import Crazyflie
-from cflib.crazyflie.log import LogConfig
-from cflib.crazyflie.syncCrazyflie import SyncCrazyflie
-from cflib.crazyflie.syncLogger import SyncLogger
+import cflib.crtp
 from cflib.crazyflie.mem import LighthouseBsGeometry
-from cflib.crazyflie.mem import LighthouseMemHelper
-from cflib.crazyflie.syncCrazyflie import SyncCrazyflie
 from cflib.utils import uri_helper
 
 def test_ReadLHMem(radio_uri = "radio://0/80/2M/E7E7E7E7E7"):
@@ -54,7 +48,7 @@ def test_WriteLHGeoMem(radio_uri = "radio://0/80/2M/E7E7E7E7E7"):    #
     bs1geo.rotation_matrix = [
         [0.0, -1.0, 0.0],
         [1.0, 0.0, 0.0],
-        [0.0, 0.0, 7.0],
+        [0.0, 0.0, 1.0],
     ]
     bs1geo.valid = True
 

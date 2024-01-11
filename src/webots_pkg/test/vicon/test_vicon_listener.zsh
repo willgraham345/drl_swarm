@@ -1,6 +1,6 @@
 #!/bin/bash
-# TODO: Test and make sure this stuff is working. 
-
+# RUNME: 
+# RUN_TESTS: Run test to make sure this actually listens to the vicon cameras.
 
 
 # Specify the path to the workspace you want to source

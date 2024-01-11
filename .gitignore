@@ -5,3 +5,5 @@ install/
 **/*.pyc
 venv/
 .vscode
+__pycache__/
+*.pyc
