@@ -93,8 +93,8 @@ def test_swarm_dict_json_file():
         print("json file opened")
         file_contents = f.read()
         print(file_contents)
-    # TODO_tests: add tests to confirm that we're getting the right output
-    # TODO_tests: Remove the testing files from the test directory
+    # TODO: add tests to confirm that we're getting the right output
+    # TODO: Remove the testing files from the test directory
     # os.remove(json_file_path)
         
 if __name__ == "__main__":

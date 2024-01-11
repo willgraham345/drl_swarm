@@ -117,7 +117,7 @@ def get_cf_pose_according_to_lh(radio_uri = "radio://0/80/2M/E7E7E7E7E7"):
     # ext_pose_config.add_variable('ext_pos.Z', 'float')
 
     with SyncCrazyflie(uri, cf=Crazyflie(rw_cache='./cache')) as scf:
-        simple_log_async(scf, lg_pos) #FIXME: lg_pos is not in the TOC
+        simple_log_async(scf, lg_pos) #FIXME: Determine if this is necessary. We want position from LH, not kalman
 
 def compare_kalman_to_lh_pos(radio_uri = "radio://0/80/2M/E7E7E7E7E7"):
     uri = uri_helper.uri_from_env(radio_uri)
@@ -129,8 +129,16 @@ def compare_kalman_to_lh_pos(radio_uri = "radio://0/80/2M/E7E7E7E7E7"):
     log_config_kal_and_lh.add_variable('lighthouse.x', 'float')
     log_config_kal_and_lh.add_variable('lighthouse.y', 'float')
     log_config_kal_and_lh.add_variable('lighthouse.z', 'float')
+    log_config_lh_bs_delta.add_variable('lighthouse.bs_delta', 'float')
     with SyncCrazyflie(uri, cf=Crazyflie(rw_cache='./cache')) as scf:
         simple_log_async(scf, log_config_kal_and_lh)
+
+def get_lh_bs_delta(radio_uri = "radio://0/80/2M/E7E7E7E7E7"):
+    uri = uri_helper.uri_from_env(radio_uri)
+    cflib.crtp.init_drivers()
+    log_config_lh_bs_delta = LogConfig(name='lh_bs_delta', period_in_ms=100)
+    with SyncCrazyflie(uri, cf=Crazyflie(rw_cache='./cache')) as scf:
+        simple_log_async(scf, log_config_lh_bs_delta)
 
 if __name__ == '__main__':
     get_only_cf_kalman_pos()
