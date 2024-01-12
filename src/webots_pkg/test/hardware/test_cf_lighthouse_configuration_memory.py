@@ -30,6 +30,10 @@ from cflib.crazyflie.syncCrazyflie import SyncCrazyflie
 from cflib.utils import uri_helper
 import pytest
 
+ROTATION_MATRIX = [
+    [0.0, 0.0, -1.0],
+    [0.0, 1.0, 0.0],
+    [1.0, 0.0, 0.0],]
 
 class TestCfLighthouseConfiguration:
     """
@@ -63,26 +67,10 @@ class TestCfLighthouseConfiguration:
 
         
         # Tests for basestation 1
-        assert temp_LHMem.geo_data[0].rotation_matrix == [
-                [0.0, -1.0, 0.0],
-                [1.0, 0.0, 0.0],
-                [0.0, 0.0, 1.0],
-            ]
+        assert temp_LHMem.geo_data[0].rotation_matrix == ROTATION_MATRIX
 
-        assert temp_LHMem.geo_data[1].rotation_matrix ==[
-                [0.0, -1.0, 0.0],
-                [1.0, 0.0, 0.0],
-                [0.0, 0.0, 1.0],
-            ] 
+        assert temp_LHMem.geo_data[1].rotation_matrix == ROTATION_MATRIX
 
-
-        assert temp_LHMem.geo_data[2].rotation_matrix ==[
-                [0.0, -1.0, 0.0],
-                [1.0, 0.0, 0.0],
-                [0.0, 0.0, 1.0],
-            ] 
-        assert temp_LHMem.geo_data[3].rotation_matrix ==[
-                [0.0, -1.0, 0.0],
-                [1.0, 0.0, 0.0],
-                [0.0, 0.0, 1.0],
-            ] 
+        assert temp_LHMem.geo_data[2].rotation_matrix == ROTATION_MATRIX
+        
+        assert temp_LHMem.geo_data[3].rotation_matrix == ROTATION_MATRIX

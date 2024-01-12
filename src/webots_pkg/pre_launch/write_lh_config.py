@@ -31,9 +31,14 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 from webots_pkg.lighthouse_node import LighthousePose
 
 # ...
+# Define the z offset value here
+Z_OFFSET = 0.09  #TODO: Confirm that this is in meters
 
-Z_OFFSET = 1.0  # Define the z offset value here
 
+ROTATION_MATRIX = [
+    [0.0, 0.0, -1.0],
+    [0.0, 1.0, 0.0],
+    [1.0, 0.0, 0.0],]
 # ...
 
 
@@ -41,22 +46,21 @@ Z_OFFSET = 1.0  # Define the z offset value here
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Process integer pairs and save them into lists.')
-    
-    parser.add_argument('-uri', type=str, help='URI of the Crazyflie to connect to', required=True)
-    parser.add_argument('-0', '--bs0', nargs=2, type=int, required=True, help='First pair of integers')
-    parser.add_argument('-1', '--bs1', nargs=2, type=int, required=True, help='Second pair of integers')
-    parser.add_argument('-2', '--bs2', nargs=2, type=int, required=False, help='Third pair of integers', default=None)
-    parser.add_argument('-3', '--bs3', nargs=2, type=int, required=False, help='Fourth pair of integers', default=None)
+    parser.add_argument('-uri', type=str, help='URI of the Crazyflie to connect to', required=False, default="radio://0/80/2M/E7E7E7E7E7")
+    parser.add_argument('--bs0', nargs=2, type=float, required=True, help='First pair of integers')
+    parser.add_argument('--bs1', nargs=2, type=float, required=True, help='Second pair of integers')
+    parser.add_argument('--bs2', nargs=2, type=float, required=False, help='Third pair of integers', default=None)
+    parser.add_argument('--bs3', nargs=2, type=float, required=False, help='Fourth pair of integers', default=None)
 
     args = parser.parse_args()
 
-    # Convert ints to floats
-    args.bs0 = [float(x) for x in args.bs0]
-    args.bs1 = [float(x) for x in args.bs1]
-    if args.bs2 is not None:
-        args.bs2 = [float(x) for x in args.bs2]
-    if args.bs3 is not None:
-        args.bs3 = [float(x) for x in args.bs3]
+    # # Convert ints to floats
+    # args.bs0 = [float(x) for x in args.bs0]
+    # args.bs1 = [float(x) for x in args.bs1]
+    # if args.bs2 is not None:
+    #     args.bs2 = [float(x) for x in args.bs2]
+    # if args.bs3 is not None:
+    #     args.bs3 = [float(x) for x in args.bs3]
     
     # Append z offset to all existing lists in args variable
     args.bs0.append(Z_OFFSET)
@@ -80,10 +84,7 @@ def main():
             continue
         bs_geo = LighthouseBsGeometry()
         bs_geo.origin = bs
-        bs_geo.rotation_matrix = [
-            [0.0, -1.0, 0.0],
-            [1.0, 0.0, 0.0],
-            [0.0, 0.0, 1.0],]
+        bs_geo.rotation_matrix = ROTATION_MATRIX
         bs_geo.valid = True
         geo_dict = {i: bs_geo}
         WriteLHGeoMem(args.uri, geo_dict)

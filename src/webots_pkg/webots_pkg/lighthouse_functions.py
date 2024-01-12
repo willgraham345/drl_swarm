@@ -19,7 +19,6 @@ from cflib.crazyflie.syncLogger import SyncLogger
 from cflib.utils import uri_helper
 
 
-
 def log_stab_callback(timestamp, data, logconf):
     """
     Callback function for logging stabilization data. Works in conjunction with the simple_log_async function.
@@ -94,7 +93,7 @@ def get_only_cf_kalman_pos(radio_uri = "radio://0/80/2M/E7E7E7E7E7"):
 
     uri = uri_helper.uri_from_env(radio_uri)
     cflib.crtp.init_drivers()   
-    lg_pos = LogConfig(name='Pose', period_in_ms=100)
+    lg_pos = LogConfig(name='Stabilizer', period_in_ms=100)
     lg_pos.add_variable('kalman.stateX', 'float')
     lg_pos.add_variable('kalman.stateY', 'float')
     lg_pos.add_variable('kalman.stateZ', 'float')
@@ -102,7 +101,7 @@ def get_only_cf_kalman_pos(radio_uri = "radio://0/80/2M/E7E7E7E7E7"):
     with SyncCrazyflie(uri, cf=Crazyflie(rw_cache='./cache')) as scf:
         simple_log_async(scf, lg_pos)
 
-def get_cf_pose_according_to_lh(radio_uri = "radio://0/80/2M/E7E7E7E7E7"):
+def get_cf_pose_according_to_lh(radio_uri = "radio://0/80/2M/E7E7E7E7E7"): #FIXME: Determine if this is necessary. We want position from LH, not kalman
     uri = uri_helper.uri_from_env(radio_uri)
     cflib.crtp.init_drivers()   
     lg_pos = LogConfig(name='Lighthouse Position', period_in_ms=100)
@@ -117,12 +116,12 @@ def get_cf_pose_according_to_lh(radio_uri = "radio://0/80/2M/E7E7E7E7E7"):
     # ext_pose_config.add_variable('ext_pos.Z', 'float')
 
     with SyncCrazyflie(uri, cf=Crazyflie(rw_cache='./cache')) as scf:
-        simple_log_async(scf, lg_pos) #FIXME: Determine if this is necessary. We want position from LH, not kalman
+        simple_log_async(scf, lg_pos) 
 
 def compare_kalman_to_lh_pos(radio_uri = "radio://0/80/2M/E7E7E7E7E7"):
     uri = uri_helper.uri_from_env(radio_uri)
     cflib.crtp.init_drivers()
-    log_config_kal_and_lh = LogConfig(name='kalman_vs_lh', period_in_ms=100)
+    log_config_kal_and_lh = LogConfig(name='Stabilizer', period_in_ms=100)
     log_config_kal_and_lh.add_variable('kalman.stateX', 'float')
     log_config_kal_and_lh.add_variable('kalman.stateY', 'float')
     log_config_kal_and_lh.add_variable('kalman.stateZ', 'float')
