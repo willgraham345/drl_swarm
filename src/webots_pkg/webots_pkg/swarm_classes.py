@@ -456,6 +456,30 @@ class tb_dict2json(tb):
             f.write("TurtleBot3Burger ")
             f.write(json.dumps(tb_robot, indent=1))
 
+
+class JSONReadHandler():
+    def __init__(self, tb_name, json_file_path=None):
+        if json_file_path is None:
+            raise ValueError("json_file_path cannot be None")
+        else:
+            self.json_file_path = json_file_path
+        self.json_data = self.load_json()
+
+    def load_json(self):
+        with open(self.json_file_path, 'r') as json_file:
+            data = json.load(json_file)
+        return data
+
+    def get_field(self, field_name):
+        return self.json_data.get(field_name, None)
+    
+    def get_translation(self):
+        return self.get_field("translation")
+    
+    def get_name(self):
+        return self.get_field("name")
+
+
 class Swarm():
     """
     Swarm class, represents a swarm of turtlebots and crazyflies in both webots and experiments
