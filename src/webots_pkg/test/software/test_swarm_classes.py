@@ -95,7 +95,7 @@ def test_swarm_dict_json_file():
         print(file_contents)
     # TODO: add tests to confirm that we're getting the right output
     # TODO: Remove the testing files from the test directory
-    # os.remove(json_file_path)
+    os.remove(json_file_path)
         
 if __name__ == "__main__":
     # if __name__ == '__main__': run pytest
