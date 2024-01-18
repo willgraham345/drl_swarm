@@ -32,7 +32,7 @@ from webots_pkg.lighthouse_node import LighthousePose
 
 # ...
 # Define the z offset value here
-Z_OFFSET = 0.09  #TODO: Confirm that this is in meters
+Z_OFFSET = 0.09  
 
 
 ROTATION_MATRIX = [
@@ -88,6 +88,11 @@ def main():
         bs_geo.valid = True
         geo_dict = {i: bs_geo}
         WriteLHGeoMem(args.uri, geo_dict)
+        print("Basestation {} geometry written to Crazyflie".format(i))
+        print("geo_dict: {}".format(geo_dict))
+        print("bs_geo: {}".format(bs_geo))
+        print("bs_geo.origin: {}".format(bs_geo.origin))
+        print("bs_geo.rotation_matrix: {}".format(bs_geo.rotation_matrix))
     
 
 
