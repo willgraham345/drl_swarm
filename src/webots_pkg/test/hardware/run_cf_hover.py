@@ -5,7 +5,9 @@
 # /_/ /_/ /_/\__,_/_/\__/_/_/   \____/_.___/\____/\__/  /____/ |__/|__/\__,_/_/  /_/ /_/ /_/____/  
 
 """
-This script is used to test the Crazyflie's hover function.
+This script is used to test the Crazyflie's hover function, and should be used in a scripting setup.
+
+Make sure that the initial position of the crazyflie is roughly 1/2 a meter down on x axis from lighthouses.
 
 Usage: pytest -v test_cf_hover.py
 Author: Will Graham
@@ -17,10 +19,12 @@ import sys
 import os
 import logging
 import time
+import json
 import cflib.crtp
 from cflib.crazyflie import Crazyflie
 from cflib.crazyflie.log import LogConfig
 from cflib.crazyflie.syncCrazyflie import SyncCrazyflie
+from cflib.crazyflie.extpos import Extpos
 from cflib.positioning.motion_commander import MotionCommander
 from cflib.utils import uri_helper
 
@@ -31,9 +35,10 @@ DEFAULT_HEIGHT = 0.75
 
 logging.basicConfig(level=logging.ERROR)
 
-position_estimate = [0, 0, 0, 0] 
 
-def test_hover_crazyflie():
+position_estimate = [-0.5, 0, 0, 0]
+
+def test_hover_crazyflie(): #FIXME: Remove this test, keep this a script file
     # Initialize the Crazyflie object
     cf = Crazyflie()
 
@@ -66,9 +71,12 @@ def move_up_land_slowly_simple(scf):
         mc.land(0.05)
 
 def take_off_simple(scf):
-    with MotionCommander(scf, default_height=0.5) as mc:
-        time.sleep(3)
-        mc.stop()
+    print("sending external pos")
+    # cf = Crazyflie(URI) 
+    # extpos = Extpos(cf)
+    # extpos.send_extpos(-0.5, 0, 0)
+    with MotionCommander(scf, default_height=DEFAULT_HEIGHT) as mc:
+        time.sleep(5)
 
 def log_pos_callback(timestamp, data, logconf):
     print(data)
@@ -78,12 +86,18 @@ def log_pos_callback(timestamp, data, logconf):
     position_estimate[2] = data['stateEstimate.z']
     position_estimate[3] = data['stabilizer.yaw']
 
+# RUN_TESTS: Confirm the json file is written correctly
+def output_position_estimate(position_estimate):
+    timestamp = int(time.time())
+    filename = f"cf_hover_trial_{timestamp}.json"
+
+    with open(filename, 'w') as file:
+        json.dump(position_estimate, file)
 
 # RUN_TESTS: Confirm the cf can hover when flashed with the correct firmware
 
 if __name__ == '__main__':
     cflib.crtp.init_drivers()
-
 
     with SyncCrazyflie(URI, cf = Crazyflie(rw_cache='./cache')) as scf:
         time.sleep(1)
@@ -94,12 +108,12 @@ if __name__ == '__main__':
         logconf.add_variable('stateEstimate.z', 'float')
 
         logconf.add_variable('stabilizer.yaw', 'float')
-        #TODO: Add variables for lighthouse position
-
         scf.cf.log.add_config(logconf)
+
         logconf.data_received_cb.add_callback(log_pos_callback)
 
         logconf.start()
+
 
         take_off_simple(scf)
         # move_linear_simple(scf)
