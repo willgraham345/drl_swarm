@@ -18,6 +18,7 @@ from cflib.crazyflie import Crazyflie
 from cflib.crazyflie.log import LogConfig
 from cflib.crazyflie.syncCrazyflie import SyncCrazyflie
 from cflib.positioning.motion_commander import MotionCommander
+from cflib.positioning.position_hl_commander import PositionHlCommander
 from cflib.crazyflie.mem import LighthouseBsGeometry
 from cflib.crazyflie.mem import LighthouseMemHelper
 from cflib.utils import uri_helper
@@ -26,7 +27,8 @@ from cflib.utils import uri_helper
 from cflib.crazyflie.mem import LighthouseMemory
 
 
-position_estimate = [0, 0, 0, 0]
+position_estimate = [0, 0, 0]
+lh_estimate = [0, 0, 0]
 DEFAULT_HEIGHT = 0.65
 # Only output errors from the logging framework
 # logging.basicConfig(level=logging.ERROR)
@@ -139,10 +141,19 @@ class SyncCrazyflie_WriteLh():
         hover: Hover the Crazyflie for 5 seconds.
         _set_initial_position: Sets the initial position of the Crazyflie.
     '''
-    def __init__(self, URI, initial_position: list[int], initial_yaw: int, geos_dict: dict, rotation_matrix: list):
+    def __init__(self,
+            URI,
+            initial_position: list[float],
+            final_position: list[float],
+            initial_yaw: int,
+            geos_dict: dict,
+            rotation_matrix: list,
+            move: bool = False):
+        self.move = move
         self.cf = Crazyflie(rw_cache='./cache')
         self._validate_geos(geos_dict, rotation_matrix)
         self._initial_position = initial_position
+        self._final_position = final_position
         self._initial_yaw = initial_yaw
 
         self._event = Event()
@@ -150,14 +161,17 @@ class SyncCrazyflie_WriteLh():
             self.setup(scf)
 
     def setup(self, scf):
-        self._set_initial_position(scf)
-        self._init_log_config(scf)
-        self._init_configure_lighthouse(scf)
-        self.get_lighthouse_geos()
+        if self.move(1):
+            self._init_configure_lighthouse(scf)
+            self._init_kalman_log_config(scf)
+            # self.get_lighthouse_geos()
 
-        time.sleep(1)        
-        scf.cf
-        self.hover(scf)
+            time.sleep(1)        
+            self.hover(scf)
+            self.send_to_position(scf, self._final_position)
+        else: 
+            self._init_configure_lighthouse(scf)
+            self._init_ext_log_config(scf)
 
     def _validate_geos(self, geos_dict, rotation_matrix):
         '''
@@ -210,6 +224,21 @@ class SyncCrazyflie_WriteLh():
         self._event.wait()
         self._event.clear()
 
+    def _init_ext_log_config(self, scf):
+        self._reset_position_estimator(scf)
+        self._set_initial_position(scf)
+        self.log_config = LogConfig(name='Position', period_in_ms=10)
+        self.log_config.add_variable('kalman.stateX', 'float')
+        self.log_config.add_variable('kalman.stateY', 'float')
+        self.log_config.add_variable('kalman.stateZ', 'float')
+        self.log_config.add_variable('lighthouse.x', 'float')
+        self.log_config.add_variable('lighthouse.y', 'float')
+        self.log_config.add_variable('lighthouse.z', 'float')
+        self.log_config.add_variable('lighthouse.bs_delta', 'float')
+        self.logConf.data_received.add_callback(self._log_pos_callback)
+        scf.cf.log.add_config(self.log_config)
+        self.logconf.start()
+
     def _geo_read_ready(self, geo_data):
         for id, data in geo_data.items():
             print('---- Geometry for base station', id + 1)
@@ -218,13 +247,15 @@ class SyncCrazyflie_WriteLh():
         self._event.set()
 
 
-    def _init_log_config(self, scf):
+    def _init_kalman_log_config(self, scf):
         '''
         Initializes the log configuration and adds callback for logging function.
         
         Args:
             scf (SyncCrazyflie): The SyncCrazyflie object.
         '''
+        self._reset_position_estimator(scf)
+        self._set_initial_position(scf)
         self.logconf = LogConfig(name='Position', period_in_ms=10)
         self.logconf.add_variable('stateEstimate.x', 'float')
         self.logconf.add_variable('stateEstimate.y', 'float')
@@ -244,11 +275,6 @@ class SyncCrazyflie_WriteLh():
             logconf: The log configuration.
         '''
         print(data)
-        global position_estimate
-        position_estimate[0] = data['stateEstimate.x']
-        position_estimate[1] = data['stateEstimate.y']
-        position_estimate[2] = data['stateEstimate.z']
-        position_estimate[3] = data['stabilizer.yaw']
 
     def hover(self, scf):
         '''
@@ -257,15 +283,35 @@ class SyncCrazyflie_WriteLh():
         self._set_initial_position(scf)
         with MotionCommander(scf, default_height = DEFAULT_HEIGHT) as mc:
             time.sleep(5)
+    
+    def send_to_position(self, scf, position):
+        '''
+        Send the Crazyflie to a position.
+        
+        Args:
+            scf (SyncCrazyflie): The SyncCrazyflie object.
+            position (list[int]): The position to send the Crazyflie to.
+        '''
+        with PositionHlCommander(scf, default_height = DEFAULT_HEIGHT) as pc:
+            pc.take_off(height = 0.75)
+            time.sleep(5)
+            pc.go_to(self._final_position[0], self._final_position[1], self._final_position[2], velocity = 0.075)
+            time.sleep(5)
+            pc.land()
 
     def _set_initial_position(self, scf):
+        self._reset_position_estimator(scf)
         scf.cf.param.set_value('kalman.initialX', self._initial_position[0])
         scf.cf.param.set_value('kalman.initialY', self._initial_position[1])
         scf.cf.param.set_value('kalman.initialZ', self._initial_position[2])
         scf.cf.param.set_value('kalman.initialYaw', self._initial_yaw)
-        # scf.cf.param.set_value('kalman.initialRoll', 0.0)
-        # scf.cf.param.set_value('kalman.initialPitch', 0.0)
-        # scf.cf.param.set_value('kalman.initialYaw', self._initial_yaw)
+        
+    
+    def _reset_position_estimator(self, scf):
+        scf.cf.param.set_value('kalman.resetEstimation', '1')
+        time.sleep(0.1)
+        scf.cf.param.set_value('kalman.resetEstimation', '0')
+        
 
 # This Python file is used to write a new origin and rotation matrix for the lighthouse.
 
