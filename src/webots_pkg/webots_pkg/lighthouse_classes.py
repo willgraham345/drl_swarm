@@ -12,13 +12,18 @@ Author: Will Graham
 import sys
 import logging
 import time
-from threading import Event
+from threading import Event, Timer
 import cflib.crtp 
 from cflib.crazyflie import Crazyflie
 from cflib.crazyflie.log import LogConfig
 from cflib.crazyflie.syncCrazyflie import SyncCrazyflie
 from cflib.positioning.motion_commander import MotionCommander
 from cflib.positioning.position_hl_commander import PositionHlCommander
+from cflib.localization.lighthouse_types import LhCfPoseSample
+from cflib.localization.lighthouse_geometry_solver import LighthouseGeometrySolver
+from cflib.localization.lighthouse_sweep_angle_reader import LighthouseSweepAngleAverageReader
+from cflib.localization.lighthouse_initial_estimator import LighthouseInitialEstimator
+from cflib.localization.lighthouse_types import LhDeck4SensorPositions
 from cflib.crazyflie.mem import LighthouseBsGeometry
 from cflib.crazyflie.mem import LighthouseMemHelper
 from cflib.utils import uri_helper
@@ -27,9 +32,9 @@ from cflib.utils import uri_helper
 from cflib.crazyflie.mem import LighthouseMemory
 
 
-position_estimate = [0, 0, 0]
+position_estimate = [0, 0, 0, 0]
 lh_estimate = [0, 0, 0]
-DEFAULT_HEIGHT = 0.65
+DEFAULT_HEIGHT = 2.0
 # Only output errors from the logging framework
 # logging.basicConfig(level=logging.ERROR)
 class ReadLHMem:
@@ -147,9 +152,8 @@ class SyncCrazyflie_WriteLh():
             final_position: list[float],
             initial_yaw: int,
             geos_dict: dict,
-            rotation_matrix: list,
-            move: bool = False):
-        self.move = move
+            rotation_matrix: list):
+        self.URI = URI
         self.cf = Crazyflie(rw_cache='./cache')
         self._validate_geos(geos_dict, rotation_matrix)
         self._initial_position = initial_position
@@ -161,18 +165,14 @@ class SyncCrazyflie_WriteLh():
             self.setup(scf)
 
     def setup(self, scf):
-        if self.move(1):
-            self._init_configure_lighthouse(scf)
-            self._init_kalman_log_config(scf)
-            # self.get_lighthouse_geos()
-
-            time.sleep(1)        
-            self.hover(scf)
-            self.send_to_position(scf, self._final_position)
-        else: 
-            self._init_configure_lighthouse(scf)
-            self._init_ext_log_config(scf)
-
+        self._init_configure_lighthouse(scf)
+        self._init_kalman_log_config(scf)
+        # self.estimate_pose_from_lh(scf)
+        # self.get_lighthouse_geos()
+        time.sleep(1)        
+        # self.hover(scf)
+        self.send_to_position(scf, self._final_position)
+    
     def _validate_geos(self, geos_dict, rotation_matrix):
         '''
         '''
@@ -224,48 +224,26 @@ class SyncCrazyflie_WriteLh():
         self._event.wait()
         self._event.clear()
 
-    def _init_ext_log_config(self, scf):
+    def _init_kalman_log_config(self, scf):
         self._reset_position_estimator(scf)
         self._set_initial_position(scf)
         self.log_config = LogConfig(name='Position', period_in_ms=10)
-        self.log_config.add_variable('kalman.stateX', 'float')
-        self.log_config.add_variable('kalman.stateY', 'float')
-        self.log_config.add_variable('kalman.stateZ', 'float')
-        self.log_config.add_variable('lighthouse.x', 'float')
-        self.log_config.add_variable('lighthouse.y', 'float')
-        self.log_config.add_variable('lighthouse.z', 'float')
-        self.log_config.add_variable('lighthouse.bs_delta', 'float')
-        self.logConf.data_received.add_callback(self._log_pos_callback)
-        scf.cf.log.add_config(self.log_config)
-        self.logconf.start()
-
-    def _geo_read_ready(self, geo_data):
-        for id, data in geo_data.items():
-            print('---- Geometry for base station', id + 1)
-            data.dump()
-            print()
-        self._event.set()
-
-
-    def _init_kalman_log_config(self, scf):
-        '''
-        Initializes the log configuration and adds callback for logging function.
+        self.log_config.add_variable('stateEstimate.x', 'float')
+        self.log_config.add_variable('stateEstimate.y', 'float')
+        self.log_config.add_variable('stateEstimate.z', 'float')
+        self.log_config.add_variable('stabilizer.yaw', 'float')
+        try: 
+            self.log_config.data_received_cb.add_callback(self.__log_pos_callback)
+            self.log_config.error_cb.add_callback(self.__log_error_callback)
+            scf.cf.log.add_config(self.log_config)
+            self.log_config.start()
+        except KeyError as e:
+            print('Could not start log configuration,'
+                '{} not found in TOC'.format(str(e)))
+        except AttributeError:
+            print('Could not add Position log config, bad configuration.')
         
-        Args:
-            scf (SyncCrazyflie): The SyncCrazyflie object.
-        '''
-        self._reset_position_estimator(scf)
-        self._set_initial_position(scf)
-        self.logconf = LogConfig(name='Position', period_in_ms=10)
-        self.logconf.add_variable('stateEstimate.x', 'float')
-        self.logconf.add_variable('stateEstimate.y', 'float')
-        self.logconf.add_variable('stateEstimate.z', 'float')
-        self.logconf.add_variable('stabilizer.yaw', 'float')
-        self.logconf.data_received_cb.add_callback(self._log_pos_callback)
-        scf.cf.log.add_config(self.logconf)
-        self.logconf.start()
-    
-    def _log_pos_callback(self, timstamp, data, logconf):
+    def __log_pos_callback(self, timstamp, data, logconf):
         '''
         Callback function for logging position data.
         
@@ -275,6 +253,28 @@ class SyncCrazyflie_WriteLh():
             logconf: The log configuration.
         '''
         print(data)
+        for name, value in data.items():
+            print(f'{name}: {value:3.3f}', end='')
+        print()
+        
+        
+    def __log_error_callback(self, logconf, msg):
+        '''
+        Callback function for logging errors.
+        
+        Args:
+            logconf: The log configuration.
+            msg: The error message.
+        '''
+        print(msg)
+
+    def _geo_read_ready(self, geo_data):
+        for id, data in geo_data.items():
+            print('---- Geometry for base station', id + 1)
+            data.dump()
+            print()
+        self._event.set()
+
 
     def hover(self, scf):
         '''
@@ -300,18 +300,83 @@ class SyncCrazyflie_WriteLh():
             pc.land()
 
     def _set_initial_position(self, scf):
-        self._reset_position_estimator(scf)
         scf.cf.param.set_value('kalman.initialX', self._initial_position[0])
         scf.cf.param.set_value('kalman.initialY', self._initial_position[1])
         scf.cf.param.set_value('kalman.initialZ', self._initial_position[2])
         scf.cf.param.set_value('kalman.initialYaw', self._initial_yaw)
+        self._reset_position_estimator(scf)
         
     
     def _reset_position_estimator(self, scf):
         scf.cf.param.set_value('kalman.resetEstimation', '1')
         time.sleep(0.1)
         scf.cf.param.set_value('kalman.resetEstimation', '0')
+    
+    def estimate_pose_from_lh(self, scf):
+        do_repeat = True
+        while do_repeat:
+            measurement = self.record_angles_average(scf)
+            do_repeat = False
+            if measurement is not None:
+                position_measurement = measurement
+            else:
+                do_repeat = True
+        self.estimate_position_from_sample(position_measurement)
+
+    def record_angles_average(self, scf) -> LhCfPoseSample:
+        '''
+        Records the angles from the lighthouse and returns the average.
+        Args:
+            scf (SyncCrazyflie): The SyncCrazyflie object.
+        Returns:
+            LhCfPoseSample: The average of the lighthouse angles.
+        '''
+        recorded_angles = None
+
+        is_ready = Event()
+
+        def ready_cb(averages):
+            nonlocal recorded_angles
+            recorded_angles = averages
+            is_ready.set()
+
+        reader = LighthouseSweepAngleAverageReader(scf.cf, ready_cb)
+        print('Taking lighthouse measurement...')
+        reader.start_angle_collection()
+        is_ready.wait(timeout = 10.0)
+
+        if recorded_angles is None:
+            print('Measurement failed, trying again!')
+            return None
+
+        angles_calibrated = {}
+        for bs_id, data in recorded_angles.items():
+            angles_calibrated[bs_id] = data[1]
+
+        result = LhCfPoseSample(angles_calibrated=angles_calibrated)
+
+        visible = ', '.join(map(lambda x: str(x + 1), recorded_angles.keys()))
+        print(f'  Position recorded, base station ids visible: {visible}')
+
+        if len(recorded_angles.keys()) < 2:
+            print('Received too few base stations, we need at least two. Please try again!')
+            result = None
+
+        return result
         
+    
+    def estimate_position_from_sample(self, position_measurement: LhCfPoseSample):
+        matched_samples = [position_measurement] 
+        initial_guess, cleaned_matched_samples = LighthouseInitialEstimator.estimate(matched_samples, LhDeck4SensorPositions.positions)
+        
+        bs_poses = initial_guess.bs_poses
+        cf_poses = initial_guess.cf_poses
+        for cf in initial_guess.cf_poses:
+            print(f"Guess of cf", cf, "matrix vec:", cf.matrix_vec)
+        for bs, value in initial_guess.bs_poses.items():
+            print("Guess of bs", bs, "matrix vec:", value.matrix_vec)
+        
+
 
 # This Python file is used to write a new origin and rotation matrix for the lighthouse.
 

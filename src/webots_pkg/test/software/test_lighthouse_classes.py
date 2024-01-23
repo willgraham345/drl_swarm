@@ -35,27 +35,11 @@ ROTATION_MATRIX = [
     [0.0, 1.0, 0.0],
     [1.0, 0.0, 0.0],]
 
-FINAL_POS = [-0.5, -0.5, 0.75]
+FINAL_POS = [0.5, 0.5, 2.0]
 def test_init_SyncCrazyflie_WriteLh_guess_lh_position():
     start_time = time.time()
-    initial_position = [-0.0, 0.0, 0.0]
-    initial_yaw = 0.0
-    bs_dict = {0: [0.0, -0.5, LH_Z_OFFSET], 1: [0.0, 0.5, LH_Z_OFFSET]}
-    URI = "radio://0/80/2M/E7E7E7E7E7"
-    sync_cf = SyncCrazyflie_WriteLh(URI,
-                initial_position,
-                FINAL_POS,
-                initial_yaw,
-                bs_dict,
-                ROTATION_MATRIX,
-                move=False)
-
-
-def test_init_SyncCrazyflie_WriteLh_move(): 
-    # Initializations
-    start_time = time.time()
     cflib.crtp.init_drivers()
-    initial_position = [-0.0, 0.0, 0.0]
+    initial_position = [0.1, 0.0, 1.2]
     initial_yaw = 0.0
     bs_dict = {0: [0.0, -0.5, LH_Z_OFFSET], 1: [0.0, 0.5, LH_Z_OFFSET]}
     URI = "radio://0/80/2M/E7E7E7E7E7"
@@ -64,8 +48,24 @@ def test_init_SyncCrazyflie_WriteLh_move():
                 FINAL_POS,
                 initial_yaw,
                 bs_dict,
-                ROTATION_MATRIX,
-                move=True)
+                ROTATION_MATRIX)
+
+
+# def test_init_SyncCrazyflie_WriteLh_move(): 
+#     # Initializations
+#     start_time = time.time()
+#     cflib.crtp.init_drivers()
+#     initial_position = [-0.0, 0.0, 0.0]
+#     initial_yaw = 0.0
+#     bs_dict = {0: [0.0, -0.5, LH_Z_OFFSET], 1: [0.0, 0.5, LH_Z_OFFSET]}
+#     URI = "radio://0/80/2M/E7E7E7E7E7"
+#     sync_cf = SyncCrazyflie_WriteLh(URI,
+#                 initial_position,
+#                 FINAL_POS,
+#                 initial_yaw,
+#                 bs_dict,
+#                 ROTATION_MATRIX,
+#                 move=True)
 
 
 
