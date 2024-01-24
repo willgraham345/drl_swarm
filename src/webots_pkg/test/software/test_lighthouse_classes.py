@@ -39,7 +39,7 @@ FINAL_POS = [0.5, 0.5, 2.0]
 def test_init_SyncCrazyflie_WriteLh_guess_lh_position():
     start_time = time.time()
     cflib.crtp.init_drivers()
-    initial_position = [0.1, 0.0, 1.2]
+    initial_position = [1.0, 0.0, 0.0]
     initial_yaw = 0.0
     bs_dict = {0: [0.0, -0.5, LH_Z_OFFSET], 1: [0.0, 0.5, LH_Z_OFFSET]}
     URI = "radio://0/80/2M/E7E7E7E7E7"
