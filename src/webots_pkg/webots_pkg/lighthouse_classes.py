@@ -170,8 +170,8 @@ class SyncCrazyflie_WriteLh():
         # self.estimate_pose_from_lh(scf)
         # self.get_lighthouse_geos()
         time.sleep(1)        
-        # self.hover(scf)
-        self.send_to_position(scf, self._final_position)
+        self.hover(scf)
+        # self.send_to_position(scf, self._final_position)
     
     def _validate_geos(self, geos_dict, rotation_matrix):
         '''
@@ -231,7 +231,7 @@ class SyncCrazyflie_WriteLh():
         self.log_config.add_variable('stateEstimate.x', 'float')
         self.log_config.add_variable('stateEstimate.y', 'float')
         self.log_config.add_variable('stateEstimate.z', 'float')
-        self.log_config.add_variable('stabilizer.yaw', 'float')
+        self.log_config.add_variable('stateEstimate.yaw', 'float')
         try: 
             self.log_config.data_received_cb.add_callback(self.__log_pos_callback)
             self.log_config.error_cb.add_callback(self.__log_error_callback)
@@ -283,6 +283,8 @@ class SyncCrazyflie_WriteLh():
         self._set_initial_position(scf)
         with MotionCommander(scf, default_height = DEFAULT_HEIGHT) as mc:
             time.sleep(5)
+            mc.stop()
+            time.sleep(2)
     
     def send_to_position(self, scf, position):
         '''
