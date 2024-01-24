@@ -185,6 +185,63 @@ class SyncCrazyflie_WriteLh():
     '''
     A class that will sync with a crazyflie and fly it, with capability to write custom lighthouse configuration.
     
+    Args:
+        URI (str): The URI of the Crazyflie.
+        initial_position (list[float]): The initial position of the Crazyflie as a list of floats [x, y, z].
+        final_position (list[float]): The final position of the Crazyflie as a list of floats [x, y, z].
+        initial_yaw (int): The initial yaw angle of the Crazyflie.
+        geos_dict (dict): A dictionary containing the base station IDs as keys and their corresponding positions as values.
+        rotation_matrix (list): The rotation matrix for the base stations.
+
+    Attributes:
+        URI (str): The URI of the Crazyflie.
+        cf (Crazyflie): The Crazyflie object.
+        _initial_position (list[float]): The initial position of the Crazyflie as a list of floats [x, y, z].
+        _final_position (list[float]): The final position of the Crazyflie as a list of floats [x, y, z].
+        _initial_yaw (int): The initial yaw angle of the Crazyflie.
+        lh_dict (dict): A dictionary containing the base station IDs as keys and their corresponding LighthouseBsGeometry objects as values.
+        lh_helper (LighthouseMemHelper): The LighthouseMemHelper object for writing lighthouse geometry.
+        log_config (LogConfig): The LogConfig object for logging position data.
+
+    Methods:
+        setup(scf): Sets up the Crazyflie by configuring lighthouse, initializing kalman log config, and hovering.
+        _validate_geos(geos_dict, rotation_matrix): Validates the base station geometries.
+        _init_configure_lighthouse(scf): Initializes the lighthouse geo writer and writes the lighthouse geometry.
+        _data_written(success): Callback function for writing data to the lighthouse.
+        get_lighthouse_geos(): Prints the lighthouse geometries to the command line interface.
+        _init_kalman_log_config(scf): Initializes the kalman log config for logging position data.
+        __log_pos_callback(timstamp, data, logconf): Callback function for logging position data.
+        __log_error_callback(logconf, msg): Callback function for logging errors.
+        _geo_read_ready(geo_data): Callback function for reading lighthouse geometries.
+        hover(scf): Hovers the Crazyflie for 5 seconds.
+        send_to_position(scf, position): Sends the Crazyflie to a specified position.
+        _set_initial_position(scf): Sets the initial position of the Crazyflie.
+        _reset_position_estimator(scf): Resets the position estimator of the Crazyflie.
+        estimate_pose_from_lh(scf): Estimates the pose of the Crazyflie from lighthouse measurements.
+        record_angles_average(scf): Records the angles from the lighthouse and returns the average.
+        estimate_position_from_sample(position_measurement): Estimates the position of the Crazyflie from a lighthouse pose sample.
+    '''
+    def __init__(self,
+            URI,
+            initial_position: list[float],
+            final_position: list[float],
+            initial_yaw: int,
+            geos_dict: dict,
+            rotation_matrix: list):
+        self.URI = URI
+        self.cf = Crazyflie(rw_cache='./cache')
+        self._validate_geos(geos_dict, rotation_matrix)
+        self._initial_position = initial_position
+        self._final_position = final_position
+        self._initial_yaw = initial_yaw
+
+        self._event = Event()
+        with SyncCrazyflie(URI, cf = Crazyflie(rw_cache='./cache')) as scf:
+            self.setup(scf)
+class SyncCrazyflie_WriteLh():
+    '''
+    A class that will sync with a crazyflie and fly it, with capability to write custom lighthouse configuration.
+    
     '''
     def __init__(self,
             URI,
@@ -206,11 +263,11 @@ class SyncCrazyflie_WriteLh():
 
     def setup(self, scf):
         self._init_configure_lighthouse(scf)
+        self.estimate_pose_from_lh(scf)
         self._init_kalman_log_config(scf)
-        # self.estimate_pose_from_lh(scf)
         # self.get_lighthouse_geos()
         time.sleep(1)        
-        self.hover(scf)
+        # self.hover(scf)
         # self.send_to_position(scf, self._final_position)
     
     def _validate_geos(self, geos_dict, rotation_matrix):
@@ -221,6 +278,7 @@ class SyncCrazyflie_WriteLh():
             bs_geo = LighthouseBsGeometry()
             bs_geo.origin = geos_dict[bs]
             bs_geo.rotation_matrix = rotation_matrix
+            print("wrote geo for bs", bs, "origin:", bs_geo.origin, "rotation matrix:", bs_geo.rotation_matrix)
             bs_geo.valid = True
             self.lh_dict[bs] = bs_geo
 
@@ -322,8 +380,6 @@ class SyncCrazyflie_WriteLh():
         '''
         self._set_initial_position(scf)
         with MotionCommander(scf, default_height = DEFAULT_HEIGHT) as mc:
-            time.sleep(5)
-            mc.stop()
             time.sleep(2)
     
     def send_to_position(self, scf, position):
@@ -347,6 +403,7 @@ class SyncCrazyflie_WriteLh():
         scf.cf.param.set_value('kalman.initialZ', self._initial_position[2])
         scf.cf.param.set_value('kalman.initialYaw', self._initial_yaw)
         self._reset_position_estimator(scf)
+        time.sleep(0.1)
         
     
     def _reset_position_estimator(self, scf):
