@@ -36,7 +36,10 @@ ROTATION_MATRIX = [
     [1.0, 0.0, 0.0],]
 
 FINAL_POS = [0.5, 0.5, 2.0]
-def test_init_SyncCrazyflie_WriteLh_guess_lh_position():
+def test_init_SyncCrazyflie_WriteLh():
+    """
+    Test the SyncCrazyflie_WriteLh class
+    """
     start_time = time.time()
     cflib.crtp.init_drivers()
     initial_position = [1.0, 0.0, 0.0]
@@ -70,5 +73,5 @@ def test_init_SyncCrazyflie_WriteLh_guess_lh_position():
 
 
 if __name__ == "__main__":
-    test_init_SyncCrazyflie_WriteLh_guess_lh_position()
+    test_init_SyncCrazyflie_WriteLh()
     # test_init_SyncCrazyflie_WriteLh_move()
