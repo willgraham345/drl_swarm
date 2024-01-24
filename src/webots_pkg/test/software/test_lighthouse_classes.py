@@ -31,9 +31,9 @@ import pytest
 LH_Z_OFFSET = 0.1
 
 ROTATION_MATRIX = [
+    [1.0, 0.0, 0.0],
     [0.0, 0.0, -1.0],
-    [0.0, 1.0, 0.0],
-    [1.0, 0.0, 0.0],]
+    [0.0, 1.0, 0.0],]
 
 FINAL_POS = [0.5, 0.5, 2.0]
 def test_init_SyncCrazyflie_WriteLh():
