@@ -1,12 +1,20 @@
 {
     "python.autoComplete.extraPaths": [
-        "/opt/ros/foxy/lib/python3.8/site-packages"
-        "/home/will/drl_swarm/install/explore_pkg/share"
+        "/opt/ros/humble/lib/python3.10/site-packages",
+        "/opt/ros/humble/local/lib/python3.10/dist-packages",
+        "/my_project/build/package1",
+        "/my_project/build/package2",
+        "/home/will/drl_swarm/build/webots_ros2_turtlebot"
+        "/home/will/drl_swarm/install/webots_ros2_turtlebot/lib/python3.10/site-packages,"
+        "/home/will/drl_swarm/build/webots_pkg,"
+        "/home/will/drl_swarm/install/webots_pkg/lib/python3.10/site-packages,"
     ],
     "python.analysis.extraPaths": [
-        "/opt/ros/foxy/lib/python3.8/site-packages"
-        "/home/will/drl_swarm/install/explore_pkg/share"
-        "/home/will/crazyflie-firmware/build"
-        "/home/will/drl/swarm/install/webots_pkg/share"
+        "/opt/ros/humble/lib/python3.10/site-packages",
+        "/opt/ros/humble/local/lib/python3.10/dist-packages",
+        "/home/will/drl_swarm/build/webots_ros2_turtlebot"
+        "/home/will/drl_swarm/install/webots_ros2_turtlebot/lib/python3.10/site-packages,"
+        "/home/will/drl_swarm/build/webots_pkg,"
+        "/home/will/drl_swarm/install/webots_pkg/lib/python3.10/site-packages,"
     ]
 }

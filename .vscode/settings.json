@@ -6,8 +6,6 @@
     "python.analysis.extraPaths": [
         "/opt/ros/foxy/lib/python3.8/site-packages"
     ],
-    "python.linting.pylintEnabled": true,
-    "python.linting.enabled": true,
     "cmake.configureOnOpen": false,
     "cmake.sourceDirectory": "/home/will/drl_swarm/src/crazyflie_ros2_experimental/crazyflie_ros2_slam"
 }
