@@ -47,6 +47,7 @@ setup(
             'potential_field = webots_pkg.potential_field_node:main',
             'simple_mapper = webots_pkg.simple_mapper:main',
             'crazyflie_controller = webots_pkg.crazyflie_controller:main'
+            'webots_world_launch = webots_pkg.webots_world_launch:main'
         ],
     },
 )
