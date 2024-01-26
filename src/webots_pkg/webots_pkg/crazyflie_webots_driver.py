@@ -6,7 +6,6 @@ from nav_msgs.msg import Odometry
 from geometry_msgs.msg import PoseWithCovarianceStamped
 
 
-from geometry_msgs.msg import Twist
 from geometry_msgs.msg import Point, Pose, Quaternion, Twist, Vector3
 from sensor_msgs.msg import LaserScan
 from nav_msgs.msg import Odometry
