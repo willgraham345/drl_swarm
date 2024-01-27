@@ -25,11 +25,11 @@
   
 
 
-  <depend>ament_copyright</depend>
-  <depend>ament_flake8</depend>
-  <depend>ament_pep257</depend>
-  <depend>python3-pytest</depend>
-  <depend>webots_ros2_tests</depend>
+  <test_depend>ament_copyright</test_depend>
+  <test_depend>ament_flake8</test_depend>
+  <test_depend>ament_pep257</test_depend>
+  <test_depend>python3-pytest</test_depend>
+  <test_depend>webots_ros2_tests</test_depend>
   
 
   <export>
