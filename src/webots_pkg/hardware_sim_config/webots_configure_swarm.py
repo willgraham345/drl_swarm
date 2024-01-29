@@ -3,6 +3,8 @@ import sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from webots_pkg.swarm_classes import Swarm, cf, tb, cf_dict2json, tb_dict2json
 
+
+#TODO: Create a config file that defines swarm and world file
 # Define Swarm here
 def define_swarm():
     cf1 = cf("cf1", [-1, -1, 0.015])
