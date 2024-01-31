@@ -534,6 +534,16 @@ class Swarm():
                 tb.write_dict_to_json()
 
 
+class Swarm_config_storage():
+    def __init__(self, cf_protos: list[str], tb_protos: list[str]):
+        self.cf_protos = cf_protos
+        self.tb_protos = tb_protos
+
+
+
+
+
+
 if __name__ == "__main__":
     # Create a swarm of turtlebots and crazyflies
     tb1 = tb("tb1", start_position=[-1.5, -1.5, 0])
