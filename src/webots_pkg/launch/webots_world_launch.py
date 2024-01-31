@@ -155,7 +155,7 @@ def generate_launch_description():
 
     #Development here
     swarm = define_swarm()
-    robot_controllers = []
+    swarm_nodes = []
 
 
     for cf in swarm.crazyflies:
@@ -169,10 +169,9 @@ def generate_launch_description():
                 'robot_description': '<robot name=""><link name=""/></robot>'
             }],
         )
-        robot_controllers.append(robot_state_publisher)
-        robot_controllers.append(handle_initial_frame_tf(cf))
-        for node in get_cf_driver(cf):
-            robot_controllers.append(node)
+        swarm_nodes.append(robot_state_publisher)
+        # robot_controllers.append(handle_initial_frame_tf(cf))
+        swarm_nodes.append(get_cf_driver(cf))
         
     
     for tb in swarm.turtlebots:
@@ -187,14 +186,12 @@ def generate_launch_description():
                 'robot_description': '<robot name=""><link name=""/></robot>',
             }],
         )
-        robot_controllers.append(robot_state_publisher)
-        robot_controllers.append(handle_initial_frame_tf(tb))
-
-        tb_nodes = tb_launcher(tb)
-        robot_controllers.append(tb_nodes) #Temporary fix, go back to for loop commented below
+        swarm_nodes.append(robot_state_publisher)
+        # robot_controllers.append(handle_initial_frame_tf(tb))
+        swarm_nodes.append(tb_launcher(tb)) 
 
 
-
+    print("swarm_nodes = ", swarm_nodes)
     return LaunchDescription([
         DeclareLaunchArgument(
             'world',
@@ -204,6 +201,6 @@ def generate_launch_description():
         webots,
         webots._supervisor,
         launch_handler,
-        robot_controllers,
+        *swarm_nodes,
         event_handler,
     ])
