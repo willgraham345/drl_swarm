@@ -20,23 +20,23 @@ class MyTurtlebotDriver:
     :return: the instance of the MyTurtlebotDriver class
     :rtype: MyTurtlebotDriver
     """
-    def __init__(self):
-        self.__robot = None
-        self.timestep = None
-        self._robot_name = None
-        self.__left_motor = None
-        self.__right_motor = None
-        self.__gps = None
-        self.__imu = None
-        self.__gyro = None
-        self.__compass = None
-        self.__target_twist = None
-        self.__namespace = None
-        self.tb_driver = None
-        self.laser_publisher = None
-        self.odom_publisher = None
-        self.tfbr = None
-        self.lidar = None
+    # def __init__(self):
+    #     self.__robot = None
+    #     self.timestep = None
+    #     self._robot_name = None
+    #     self.__left_motor = None
+    #     self.__right_motor = None
+    #     self.__gps = None
+    #     self.__imu = None
+    #     self.__gyro = None
+    #     self.__compass = None
+    #     self.__target_twist = None
+    #     self.__namespace = None
+    #     self.tb_driver = None
+    #     self.laser_publisher = None
+    #     self.odom_publisher = None
+    #     self.tfbr = None
+    #     self.lidar = None
 
 
     def init(self, webots_node, properties):
@@ -151,6 +151,11 @@ class MyTurtlebotDriver:
 
     def step(self):
         rclpy.spin_once(self.tb_driver, timeout_sec=0)
+        try: 
+            self.__robot.step(self.timestep)
+        except Exception as e:
+            print(e)
+            print("Error in step")
 
         forward_speed = self.__target_twist.linear.x
         angular_speed = self.__target_twist.angular.z

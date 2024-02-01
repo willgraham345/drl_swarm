@@ -49,17 +49,17 @@ CF2_TRANSLATION = [-2, 2, 0.015]
 CF2_ORIENTATION = [0, 0, 0, 1]
 
 
-TB1_NAME = "tb1"
-TB1_TRANSLATION = [0, 0, 0.015]
-TB1_ORIENTATION = [0, 0, 0, 1]
+# TB1_NAME = "tb1"
+# TB1_TRANSLATION = [0, 0, 0.015]
+# TB1_ORIENTATION = [0, 0, 0, 1]
 
-TB2_NAME = "tb2"
-TB2_TRANSLATION = [0, 0, 0.015]
-TB2_ORIENTATION = [0, 0, 0, 1]
+# TB2_NAME = "tb2"
+# TB2_TRANSLATION = [0, 0, 0.015]
+# TB2_ORIENTATION = [0, 0, 0, 1]
 
 
 
-world_files = 'apartment.wbt'
+world_files = 'apartment_notb.wbt'
 
 package_dir = get_package_share_directory('webots_pkg')
 
@@ -71,10 +71,11 @@ def define_swarm():
     cf1 = cf(CF1_NAME, CF1_URI, CF1_TRANSLATION, CF1_ORIENTATION)
     cf2 = cf(CF2_NAME, CF2_URI, CF2_TRANSLATION, CF2_ORIENTATION)
 
-    tb1 = tb(TB1_NAME, TB1_TRANSLATION, TB1_ORIENTATION)
-    tb2 = tb(TB2_NAME, TB2_TRANSLATION, TB2_ORIENTATION)
+    # tb1 = tb(TB1_NAME, TB1_TRANSLATION, TB1_ORIENTATION)
+    # tb2 = tb(TB2_NAME, TB2_TRANSLATION, TB2_ORIENTATION)
 
-    swarm = Swarm([tb1, tb2], [cf1, cf2])
+    # swarm = Swarm([tb1, tb2], [cf1, cf2])
+    swarm = Swarm([], [cf1, cf2])
     return swarm
 
 def get_cf_driver(cf):
@@ -172,7 +173,7 @@ def generate_launch_description():
     return LaunchDescription([
         DeclareLaunchArgument(
             'world',
-            default_value='apartment.wbt',
+            default_value='apartment_notb.wbt',
             description='The world file name to be launched, from within the worlds folder'
         ),
         webots,
