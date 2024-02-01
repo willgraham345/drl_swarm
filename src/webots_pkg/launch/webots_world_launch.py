@@ -19,12 +19,14 @@ import os
 import sys
 import pathlib
 import launch
+import logging
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.substitutions import LaunchConfiguration
 from launch.actions import DeclareLaunchArgument, LogInfo
 
 from webots_ros2_driver.webots_launcher import WebotsLauncher
+from webots_ros2_driver.webots_controller import WebotsController
 from webots_ros2_driver.webots_launcher import Ros2SupervisorLauncher
 from launch_ros.actions import Node
 from webots_ros2_driver.utils import controller_url_prefix
@@ -76,40 +78,36 @@ def define_swarm():
     return swarm
 
 def get_cf_driver(cf):
-    robot_description = pathlib.Path(os.path.join(package_dir, 'resource', 'crazyflie.urdf')).read_text()
+    robot_description = pathlib.Path(os.path.join(package_dir, 'resource', 'crazyflie.urdf'))
 
-    crazyflie_driver = Node(
-        package='webots_ros2_driver',
-        executable='driver',
-        output='screen',
-        additional_env={
-            'WEBOTS_ROBOT_NAME':cf.name,
-            'WEBOTS_CONTROLLER_URL': controller_url_prefix() + cf.name,
-            },
-        parameters=[
+    crazyflie_driver = WebotsController(
+        robot_name = cf.name,
+        parameters = [
             {'robot_description': robot_description,
-             'use_sim_time': True,}
-        ]
+             'use_sim_time': True,
+             'set_robot_state_publisher': False}, #default is False
+        ],
+        # remappings = 
     )
+    logging.debug(f"crazyflie_driver = {crazyflie_driver}")
+    logging.debug(f"robot_description = {robot_description}")
     return crazyflie_driver
 
 
-def tb_launcher(tb):
-    robot_description = pathlib.Path(os.path.join(package_dir, 'resource', 'turtlebot.urdf')).read_text()
-    print("robot_description = ", robot_description)
-    print("tb.name = ", tb.name)
-    turtlebot_driver = Node(
-        package='webots_ros2_driver',
-        executable='driver',
-        output='screen',
-        additional_env={
-            'WEBOTS_ROBOT_NAME':tb.name,
-            'WEBOTS_CONTROLLER_URL': controller_url_prefix() + tb.name,
-            },
-        parameters=[
-            {'robot_description': robot_description},
-        ]
+def get_tb_driver(tb):
+    robot_description = pathlib.Path(os.path.join(package_dir, 'resource', 'turtlebot.urdf'))
+
+    turtlebot_driver = WebotsController(
+        robot_name = tb.name,
+        parameters = [
+            {'robot_description': robot_description,
+             'use_sim_time': True,
+             'set_robot_state_publisher': False}, #default is False
+        ],
+        # remappings = 
     )
+    logging.debug(f"turtlebot_driver = {turtlebot_driver}")
+    logging.debug(f"robot_description = {robot_description}")
     return turtlebot_driver
 
 
@@ -159,36 +157,15 @@ def generate_launch_description():
 
 
     for cf in swarm.crazyflies:
-        print("cf = ", cf)
-        robot_state_publisher = Node(
-            package='robot_state_publisher',
-            executable='robot_state_publisher',
-            output='screen',
-            namespace=cf.name,
-            parameters=[{
-                'robot_description': '<robot name=""><link name=""/></robot>'
-            }],
-        )
-        swarm_nodes.append(robot_state_publisher)
+        # swarm_nodes.append(robot_state_publisher)
         # robot_controllers.append(handle_initial_frame_tf(cf))
         swarm_nodes.append(get_cf_driver(cf))
         
     
     for tb in swarm.turtlebots:
-        print("tb = ", tb)
-        print("tb.name = ", tb.name)
-        robot_state_publisher = Node(
-            package='robot_state_publisher',
-            executable='robot_state_publisher',
-            output='screen',
-            namespace=tb.name,
-            parameters=[{
-                'robot_description': '<robot name=""><link name=""/></robot>',
-            }],
-        )
-        swarm_nodes.append(robot_state_publisher)
+        # swarm_nodes.append(robot_state_publisher)
         # robot_controllers.append(handle_initial_frame_tf(tb))
-        swarm_nodes.append(tb_launcher(tb)) 
+        swarm_nodes.append(get_tb_driver(tb)) 
 
 
     print("swarm_nodes = ", swarm_nodes)

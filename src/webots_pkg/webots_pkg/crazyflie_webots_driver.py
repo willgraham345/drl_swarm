@@ -1,5 +1,6 @@
 import rclpy
 from rclpy.node import Node
+from rosgraph_msgs.msg import Clock
 from rclpy.time import Time
 from std_msgs.msg import String
 from nav_msgs.msg import Odometry
@@ -23,15 +24,15 @@ import cffirmware
 
 class CrazyflieWebotsDriver():
     def init(self, webots_node, properties):
+        # initialize webots driver node
+        rclpy.init(args=None)
         # Declare the robot name and fix the timestep
         self.robot = webots_node.robot
         self.timestep = int(self.robot.getBasicTimeStep())
         self.robot_name = self.robot.getName()
 
-        # initialize webots driver node
-        rclpy.init(args=None)
         self.namespace = str(self.robot_name)
-        self.cf_driver = rclpy.create_node(
+        self.__node = rclpy.create_node(
                             'cf_driver',
                             namespace=self.namespace,
                             allow_undeclared_parameters=True,
@@ -73,7 +74,10 @@ class CrazyflieWebotsDriver():
         self.past_x_global = 0
         self.past_y_global = 0
         self.past_z_global = 0
-        self.past_time = self.robot.getTime()
+        # self.past_time = self.robot.getTime() #TODO: figure out why this is throwing an error in the simulation. 
+        self.__clock = Clock()
+        self.__node.create_subscription(Clock, 'clock', self.__clock_callback, 1)
+        self.__publisher = self.__node.create_publisher(Clock, 'custom_clock', 1)
 
         self.first_pos = True
         self.first_x_global = 0.0
@@ -83,15 +87,15 @@ class CrazyflieWebotsDriver():
         cffirmware.controllerPidInit()
 
         msg_type = Twist()
-        self.tfbr = TransformBroadcaster(self.cf_driver)
+        self.tfbr = TransformBroadcaster(self.__node)
         self.msg_laser = LaserScan()
-        self.cf_driver.create_timer(1.0/30.0, self.publish_laserscan_data)
+        self.__node.create_timer(1.0/30.0, self.publish_laserscan_data)
         
         self.target_cmd_vel = msg_type
         try:
-            self.cf_driver.create_subscription(Twist(),  '/{}/cmd_vel'.format(self.namespace), self.cmd_vel_callback, 1)
-            self.laser_publisher = self.cf_driver.create_publisher(LaserScan, '/{}/scan'.format(self.namespace), 10)
-            self.odom_publisher = self.cf_driver.create_publisher(Odometry, '/{}/odom'.format(self.namespace), 10)
+            self.__node.create_subscription(Twist(),  '/{}/cmd_vel'.format(self.namespace), self.cmd_vel_callback, 1)
+            self.laser_publisher = self.__node.create_publisher(LaserScan, '/{}/scan'.format(self.namespace), 10)
+            self.odom_publisher = self.__node.create_publisher(Odometry, '/{}/odom'.format(self.namespace), 10)
             print("Created subscriber and publisher on Crazyflie")
         except Exception as e:
             print(e)
@@ -168,7 +172,7 @@ class CrazyflieWebotsDriver():
         self.odom_publisher.publish(odom_msg)
     
     def step(self):
-        rclpy.spin_once(self.cf_driver, timeout_sec=0)
+        rclpy.spin_once(self.__node, timeout_sec=0)
 
         dt = self.robot.getTime() - self.past_time
 

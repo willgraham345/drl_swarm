@@ -96,7 +96,7 @@ class WriteLHGeoMem:
     :type geo_dict: dict[int, LighthouseBsGeometry]
 
     """
-    #TODO: Refactor this class to take a rotation matrix and origin as arguments rather than a dictionary
+    #TODO: Remove these classes (depricated)
     def __init__(self, uri, geo_dict):
         self._event = Event()
 
