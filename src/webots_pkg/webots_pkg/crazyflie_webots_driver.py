@@ -24,20 +24,13 @@ import cffirmware
 
 class CrazyflieWebotsDriver():
     def init(self, webots_node, properties):
-        # initialize webots driver node
-        rclpy.init(args=None)
         # Declare the robot name and fix the timestep
         self.robot = webots_node.robot
         self.timestep = int(self.robot.getBasicTimeStep())
         self.robot_name = self.robot.getName()
 
         self.namespace = str(self.robot_name)
-        self.__node = rclpy.create_node(
-                            'cf_driver',
-                            namespace=self.namespace,
-                            allow_undeclared_parameters=True,
-                            automatically_declare_parameters_from_overrides=True)
-        
+
         ## Initialize motors
         self.m1_motor = self.robot.getDevice("m1_motor")
         self.m1_motor.setPosition(float('inf'))
@@ -55,7 +48,7 @@ class CrazyflieWebotsDriver():
         self.target_twist = Twist()
 
         ## Initialize Sensors
-        self.imu = self.robot.getDevice("inertial unit")
+        self.imu = self.robot.getDevice("inertial_unit")
         self.imu.enable(self.timestep)
         self.gps = self.robot.getDevice("gps")
         self.gps.enable(self.timestep)
@@ -74,10 +67,10 @@ class CrazyflieWebotsDriver():
         self.past_x_global = 0
         self.past_y_global = 0
         self.past_z_global = 0
-        # self.past_time = self.robot.getTime() #TODO: figure out why this is throwing an error in the simulation. 
-        self.__clock = Clock()
-        self.__node.create_subscription(Clock, 'clock', self.__clock_callback, 1)
-        self.__publisher = self.__node.create_publisher(Clock, 'custom_clock', 1)
+        self.past_time = self.robot.getTime() #TODO: figure out why this is throwing an error in the simulation. 
+        # self.__clock = Clock()
+        # self.__node.create_subscription(Clock, 'clock', self.__clock_callback, 1)
+        # self.__publisher = self.__node.create_publisher(Clock, 'custom_clock', 1)
 
         self.first_pos = True
         self.first_x_global = 0.0
@@ -86,12 +79,20 @@ class CrazyflieWebotsDriver():
 
         cffirmware.controllerPidInit()
 
+        rclpy.init(args=None)
+        self.__node = rclpy.create_node(
+                            'cf_driver',
+                            namespace=self.namespace,
+                            allow_undeclared_parameters=True,
+                            automatically_declare_parameters_from_overrides=True)
+
         msg_type = Twist()
         self.tfbr = TransformBroadcaster(self.__node)
         self.msg_laser = LaserScan()
         self.__node.create_timer(1.0/30.0, self.publish_laserscan_data)
         
         self.target_cmd_vel = msg_type
+        # initialize webots driver node
         try:
             self.__node.create_subscription(Twist(),  '/{}/cmd_vel'.format(self.namespace), self.cmd_vel_callback, 1)
             self.laser_publisher = self.__node.create_publisher(LaserScan, '/{}/scan'.format(self.namespace), 10)
@@ -173,14 +174,26 @@ class CrazyflieWebotsDriver():
     
     def step(self):
         rclpy.spin_once(self.__node, timeout_sec=0)
+        try: 
+            self.robot.step(self.timestep)
+        except Exception as e:
+            print(e)
+            print("Failed to step the robot")
+        
+        try:
+            dt = self.robot.getTime() - self.past_time
+            ## Get measurements
+        except:
+            print("Failed to get timing measurements")
 
-        dt = self.robot.getTime() - self.past_time
+        self.robot.step()
 
         if self.first_pos is True:
             self.first_x_global = self.gps.getValues()[0]
             self.first_y_global = self.gps.getValues()[1]
             self.first_pos = False
 
+        dt = self.robot.getTime() - self.past_time
         ## Get measurements
         roll = self.imu.getRollPitchYaw()[0]
         pitch = self.imu.getRollPitchYaw()[1]
