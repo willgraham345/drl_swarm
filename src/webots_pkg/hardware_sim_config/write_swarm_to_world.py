@@ -104,7 +104,7 @@ if __name__ == "__main__":
     tb1_proto= create_tb_protos(TB1_NAME, TB1_TRANSLATION)
     tb2_proto= create_tb_protos(TB2_NAME, TB2_TRANSLATION)
 
-    swarm = Swarm_config_storage([cf1_proto, cf2_proto], [])
+    swarm = Swarm_config_storage([cf1_proto, cf2_proto], [tb1_proto, tb2_proto])
 
 
     file_path = shutil.copy(COPIED_FILE, DESTINATION_DIR)

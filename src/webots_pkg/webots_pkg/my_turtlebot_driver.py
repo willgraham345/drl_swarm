@@ -20,25 +20,6 @@ class MyTurtlebotDriver:
     :return: the instance of the MyTurtlebotDriver class
     :rtype: MyTurtlebotDriver
     """
-    # def __init__(self):
-    #     self.__robot = None
-    #     self.timestep = None
-    #     self._robot_name = None
-    #     self.__left_motor = None
-    #     self.__right_motor = None
-    #     self.__gps = None
-    #     self.__imu = None
-    #     self.__gyro = None
-    #     self.__compass = None
-    #     self.__target_twist = None
-    #     self.__namespace = None
-    #     self.tb_driver = None
-    #     self.laser_publisher = None
-    #     self.odom_publisher = None
-    #     self.tfbr = None
-    #     self.lidar = None
-
-
     def init(self, webots_node, properties):
         self.__robot = webots_node.robot
         self.timestep = int(self.__robot.getBasicTimeStep())

@@ -49,13 +49,35 @@ CF2_TRANSLATION = [-2, 2, 0.015]
 CF2_ORIENTATION = [0, 0, 0, 1]
 
 
-# TB1_NAME = "tb1"
-# TB1_TRANSLATION = [0, 0, 0.015]
-# TB1_ORIENTATION = [0, 0, 0, 1]
+TB1_NAME = "tb1"
+TB1_TRANSLATION = [0, 0, 0.015]
+TB1_ORIENTATION = [0, 0, 0, 1]
 
-# TB2_NAME = "tb2"
-# TB2_TRANSLATION = [0, 0, 0.015]
-# TB2_ORIENTATION = [0, 0, 0, 1]
+TB2_NAME = "tb2"
+TB2_TRANSLATION = [0, 0, 0.015]
+TB2_ORIENTATION = [0, 0, 0, 1]
+
+
+
+# Macros for swarm configuration
+CF1_NAME = "cf1"
+CF1_URI = ""
+CF1_TRANSLATION = [-1, -1, 0.015]
+CF1_ORIENTATION = [0, 0, 0, 1]
+
+CF2_NAME = "cf2"
+CF2_URI = ""
+CF2_TRANSLATION = [-2, -2, 0.015]
+CF2_ORIENTATION = [0, 0, 0, 1]
+
+
+TB1_NAME = "tb1"
+TB1_TRANSLATION = [-1.5, -1.5, 0.015]
+TB1_ORIENTATION = [0, 0, 0, 1]
+
+TB2_NAME = "tb2"
+TB2_TRANSLATION = [-2.5, -2.5, 0.015]
+TB2_ORIENTATION = [0, 0, 0, 1]
 
 
 
@@ -68,14 +90,15 @@ def define_swarm():
     """
     Defines the swarm configuration
     """
-    cf1 = cf(CF1_NAME, CF1_URI, CF1_TRANSLATION, CF1_ORIENTATION)
-    cf2 = cf(CF2_NAME, CF2_URI, CF2_TRANSLATION, CF2_ORIENTATION)
+    # cf1 = cf(CF1_NAME, CF1_URI, CF1_TRANSLATION, CF1_ORIENTATION)
+    # cf2 = cf(CF2_NAME, CF2_URI, CF2_TRANSLATION, CF2_ORIENTATION)
 
-    # tb1 = tb(TB1_NAME, TB1_TRANSLATION, TB1_ORIENTATION)
-    # tb2 = tb(TB2_NAME, TB2_TRANSLATION, TB2_ORIENTATION)
+    tb1 = tb(TB1_NAME, TB1_TRANSLATION, TB1_ORIENTATION)
+    tb2 = tb(TB2_NAME, TB2_TRANSLATION, TB2_ORIENTATION)
 
+    swarm = Swarm([tb1, tb2], [])
     # swarm = Swarm([tb1, tb2], [cf1, cf2])
-    swarm = Swarm([], [cf1, cf2])
+    # swarm = Swarm([], [cf1, cf2])
     return swarm
 
 def get_cf_driver(cf):
@@ -158,14 +181,10 @@ def generate_launch_description():
 
 
     for cf in swarm.crazyflies:
-        # swarm_nodes.append(robot_state_publisher)
-        # robot_controllers.append(handle_initial_frame_tf(cf))
         swarm_nodes.append(get_cf_driver(cf))
         
     
     for tb in swarm.turtlebots:
-        # swarm_nodes.append(robot_state_publisher)
-        # robot_controllers.append(handle_initial_frame_tf(tb))
         swarm_nodes.append(get_tb_driver(tb)) 
 
 
@@ -173,7 +192,7 @@ def generate_launch_description():
     return LaunchDescription([
         DeclareLaunchArgument(
             'world',
-            default_value='apartment_notb.wbt',
+            default_value='apartment_nocf.wbt',
             description='The world file name to be launched, from within the worlds folder'
         ),
         webots,
