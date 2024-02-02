@@ -23,7 +23,9 @@ import logging
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.substitutions import LaunchConfiguration
-from launch.actions import DeclareLaunchArgument, LogInfo
+from launch.actions import DeclareLaunchArgument, LogInfo, IncludeLaunchDescription 
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch_xml.launch_description_sources import XMLLaunchDescriptionSource
 
 from webots_ros2_driver.webots_launcher import WebotsLauncher
 from webots_ros2_driver.webots_controller import WebotsController
@@ -159,6 +161,11 @@ def generate_launch_description():
         world=PathJoinSubstitution([package_dir, 'worlds', 'configured_worlds', world]),
         ros2_supervisor=True
     )
+    foxglove_websocket = IncludeLaunchDescription(
+        XMLLaunchDescriptionSource(
+            [os.path.join(get_package_share_directory('foxglove_bridge'), 'launch', 'foxglove_bridge_launch.xml')]
+        )
+    )
     launch_handler = launch.actions.RegisterEventHandler(
         event_handler=launch.event_handlers.OnProcessStart(
             target_action=webots,
@@ -218,6 +225,7 @@ def generate_launch_description():
             default_value='apartment.wbt',
             description='The world file name to be launched, from within the worlds folder'
         ),
+        foxglove_websocket,
         webots,
         webots._supervisor,
         launch_handler,
