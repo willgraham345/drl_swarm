@@ -33,7 +33,7 @@ EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/project
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/objects/paintings/protos/LandscapePainting.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/robots/robotis/turtlebot/protos/TurtleBot3Burger.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/devices/robotis/protos/RobotisLds01.proto"
-EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/bitcraze/crazyflie/protos/Crazyflie.proto"
+
 WorldInfo {
   info [
     "Sample of how the indoor objects can be placed"
@@ -492,13 +492,13 @@ Crazyflie {
 }
     
 Crazyflie {
-  translation -2 2 0.015
+  translation -2 -2 0.015
   name "cf2"
   controller "<extern>"
 }
     
 TurtleBot3Burger {
-  translation 0 0 0.015
+  translation -1.5 -1.5 0.015
   name "tb1"
   controller "<extern>"
   controllerArgs [
@@ -519,7 +519,7 @@ TurtleBot3Burger {
 }
 
 TurtleBot3Burger {
-  translation 0 0 0.015
+  translation -2.5 -2.5 0.015
   name "tb2"
   controller "<extern>"
   controllerArgs [
@@ -538,3 +538,4 @@ TurtleBot3Burger {
       }
   ]
 }
+
