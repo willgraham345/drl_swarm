@@ -1,3 +1,0 @@
-[submodule "src/mocap4ros2_vicon"]
-	path = src/mocap4ros2_vicon
-	url = https://github.com/MOCAP4ROS2-Project/mocap4ros2_vicon.git
