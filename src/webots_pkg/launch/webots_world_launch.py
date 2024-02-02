@@ -81,7 +81,7 @@ TB2_ORIENTATION = [0, 0, 0, 1]
 
 
 
-world_files = 'apartment_notb.wbt'
+world_files = 'apartment.wbt'
 
 package_dir = get_package_share_directory('webots_pkg')
 
@@ -167,6 +167,7 @@ def generate_launch_description():
             ]
         )
     )
+    webots
     event_handler = launch.actions.RegisterEventHandler(
         event_handler=launch.event_handlers.OnProcessExit(
             target_action=webots,
@@ -181,10 +182,32 @@ def generate_launch_description():
 
 
     for cf in swarm.crazyflies:
+        # TODO: Confirm that the robot_state_publisher is publishing data to tf
+        robot_state_publisher = Node(
+            package='robot_state_publisher',
+            executable='robot_state_publisher',
+            output='screen',
+            namespace=cf.name,
+            parameters=[{
+                'robot_description': '<robot name=""><link name=""/></robot>',
+            }],
+        )
+        swarm_nodes.append(robot_state_publisher)
         swarm_nodes.append(get_cf_driver(cf))
         
     
     for tb in swarm.turtlebots:
+        # TODO: Confirm that the robot_state_publisher is publishing data to tf
+        robot_state_publisher = Node(
+            package='robot_state_publisher',
+            executable='robot_state_publisher',
+            output='screen',
+            namespace=tb.name,
+            parameters=[{
+                'robot_description': '<robot name=""><link name=""/></robot>',
+            }],
+        )
+        swarm_nodes.append(robot_state_publisher)
         swarm_nodes.append(get_tb_driver(tb)) 
 
 
@@ -192,7 +215,7 @@ def generate_launch_description():
     return LaunchDescription([
         DeclareLaunchArgument(
             'world',
-            default_value='apartment_nocf.wbt',
+            default_value='apartment.wbt',
             description='The world file name to be launched, from within the worlds folder'
         ),
         webots,
