@@ -20,43 +20,24 @@ class MyTurtlebotDriver:
     :return: the instance of the MyTurtlebotDriver class
     :rtype: MyTurtlebotDriver
     """
-    def __init__(self):
-        self.__robot = None
-        self.timestep = None
-        self._robot_name = None
-        self.__left_motor = None
-        self.__right_motor = None
-        self.__gps = None
-        self.__imu = None
-        self.__gyro = None
-        self.__compass = None
-        self.__target_twist = None
-        self.__namespace = None
-        self.tb_driver = None
-        self.laser_publisher = None
-        self.odom_publisher = None
-        self.tfbr = None
-        self.lidar = None
-
-
     def init(self, webots_node, properties):
         self.__robot = webots_node.robot
         self.timestep = int(self.__robot.getBasicTimeStep())
         self._robot_name = self.__robot.getName()
         self.__left_motor = self.__robot.getDevice('left wheel motor')
         self.__right_motor = self.__robot.getDevice('right wheel motor')
-        self.__gps = self.__robot.getGPS('gps')
-        self.__gps.enable(self.timestep)
+        # self.__gps = self.__robot.getGPS('gps')
+        # self.__gps.enable(self.timestep)
         #self.__ort = self.__robot.getQuaternion()
         # self.__gps.enable(self.timestep)
-        # self.__imu = self.__robot.getDevice('inertial unit')
-        # self.__imu.enable(self.timestep)
+        self.__imu = self.__robot.getDevice('accelerometer')
+        self.__imu# .enable(self.timestep)
         # self.__gyro = self.__robot.getDevice('gyro')
         # self.__gyro.enable(self.timestep)
         self.__compass = self.__robot.getDevice('compass')
         self.__compass.enable(self.timestep)
 
-        self.lidar = self.__robot.getLidar("LDS-01")
+        self.lidar = self.__robot.getDevice("LDS-01")
         self.lidar.enable(self.timestep)
 
         self.__left_motor.setPosition(float('inf'))
@@ -94,17 +75,21 @@ class MyTurtlebotDriver:
         :return: None
         :rtype: None
         """
-        ranges = self.lidar.getLayerRangeImage(0)
-        msg = LaserScan()
-        msg.header.stamp = self.tb_driver.get_clock().now().to_msg()
-        msg.header.frame_id = '{}/base_link'.format(self.__namespace)
-        msg.angle_min = -self.lidar.getFov()/2
-        msg.angle_max = self.lidar.getFov()/2
-        msg.angle_increment = 2*pi / (self.lidar.getHorizontalResolution() - 1)
-        msg.range_min = self.lidar.getMinRange() 
-        msg.range_max = self.lidar.getMaxRange()
-        msg.ranges = ranges
-        self.laser_publisher.publish(msg)
+        #FIXME: Fix this
+        # Webots API on using the Lidar functions
+        # https://cyberbotics.com/doc/reference/lidar?tab-language=python
+
+        # ranges = self.lidar.getLayerRangeImage(0)
+        # msg = LaserScan()
+        # msg.header.stamp = self.tb_driver.get_clock().now().to_msg()
+        # msg.header.frame_id = '{}/base_link'.format(self.__namespace)
+        # msg.angle_min = -self.lidar.getFov()/2
+        # msg.angle_max = self.lidar.getFov()/2
+        # msg.angle_increment = 2*pi / (self.lidar.getHorizontalResolution() - 1)
+        # msg.range_min = self.lidar.getMinRange() 
+        # msg.range_max = self.lidar.getMaxRange()
+        # msg.ranges = ranges
+        # self.laser_publisher.publish(msg)
 
     def _publish_gps(self, gps_vals,heading):
         # Get position and orientation from the robot
@@ -151,6 +136,11 @@ class MyTurtlebotDriver:
 
     def step(self):
         rclpy.spin_once(self.tb_driver, timeout_sec=0)
+        try: 
+            self.__robot.step(self.timestep)
+        except Exception as e:
+            print(e)
+            print("Error in step")
 
         forward_speed = self.__target_twist.linear.x
         angular_speed = self.__target_twist.angular.z
@@ -160,7 +150,8 @@ class MyTurtlebotDriver:
 
         self.__left_motor.setVelocity(command_motor_left)
         self.__right_motor.setVelocity(command_motor_right)
-        self._publish_gps(self.__gps.getValues(),self.__compass.getValues())#,self.__ort)
+        #FIXME: GPS node isn't connected
+        # self._publish_gps(self.__gps.getValues(),self.__compass.getValues())#,self.__ort)
         
         
         # print(gps_values)
