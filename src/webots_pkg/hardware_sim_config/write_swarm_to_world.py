@@ -16,40 +16,41 @@ IMPORTANT: This file must match the configuration specified within the launch fi
 import os
 import sys
 import json
+import yaml
 import shutil
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from webots_pkg.swarm_classes import Swarm, cf, tb, Swarm_config_storage
 
 # Other configs
 dir_path = os.path.dirname(__file__)
-COPIED_FILE = os.path.join( dir_path, '..', 'worlds', 'base_worlds', 'apartment.wbt')
 DESTINATION_DIR = dir_path
 
-# Macros for swarm configuration
-CF1_NAME = "cf1"
-CF1_URI = ""
-CF1_TRANSLATION = "-1 -1 0.015"
-CF1_ORIENTATION = [0, 0, 0, 1]
-
-CF2_NAME = "cf2"
-CF2_URI = ""
-CF2_TRANSLATION = "-2 -2 0.015"
-CF2_ORIENTATION = [0, 0, 0, 1]
+CONFIG_FILE_PATH = os.path.abspath(os.path.join(dir_path, '..', 'config', 'webots_config.yaml'))
 
 
-TB1_NAME = "tb1"
-TB1_TRANSLATION = "-1.5 -1.5 0.015"
-TB1_ORIENTATION = [0, 0, 0, 1]
-
-TB2_NAME = "tb2"
-TB2_TRANSLATION = "-2.5 -2.5 0.015"
-TB2_ORIENTATION = [0, 0, 0, 1]
-
-world_files = "apartment.wbt"
-
-
-
-
+def import_webots_swarm_config(config_file_path : str):
+    with open(config_file_path, 'r') as file:
+        config = yaml.safe_load(file)
+    
+    cf_protos = []
+    tb_protos = []
+    
+    for cf in config['robots']['crazyflies']:
+        cf_name = cf['name']
+        cf_translation = cf['translation']
+        cf_proto = create_cf_protos(cf_name, cf_translation)
+        cf_protos.append(cf_proto)
+    
+    for tb in config['robots']['turtlebots']:
+        tb_name = tb['name']
+        tb_translation = tb['translation']
+        tb_proto = create_tb_protos(tb_name, tb_translation)
+        tb_protos.append(tb_proto)
+    
+    world_file_to_copy_path = config['world_file_to_copy_path']
+    world_file_to_write_path = config['world_file_to_write_path']
+    swarm = Swarm_config_storage(cf_protos, tb_protos)
+    return swarm, world_file_to_write_path, world_file_to_copy_path
 
 def create_cf_protos(cf_name, start_position):
     cf_template = """
@@ -86,7 +87,7 @@ TurtleBot3Burger {{
 '''
         return tb_template.format(start_position=start_position, tb_name=tb_name)
 
-def append_json_to_world_files(world_files, swarm_config: Swarm_config_storage):
+def append_protos_to_world_files(world_files, swarm_config: Swarm_config_storage):
     for file_path in world_files:
         with open(file_path, 'a') as file:
             file.write("\n")
@@ -96,17 +97,11 @@ def append_json_to_world_files(world_files, swarm_config: Swarm_config_storage):
                 file.write(tb_proto)
 # Example usage
 if __name__ == "__main__":
-    # cf1_dict = create_cf_dict(CF1_NAME, CF1_TRANSLATION)
-    # cf2_dict = create_cf_dict(CF2_NAME, CF2_TRANSLATION)
 
-    cf1_proto= create_cf_protos(CF1_NAME, CF1_TRANSLATION)
-    cf2_proto= create_cf_protos(CF2_NAME, CF2_TRANSLATION)
-    tb1_proto= create_tb_protos(TB1_NAME, TB1_TRANSLATION)
-    tb2_proto= create_tb_protos(TB2_NAME, TB2_TRANSLATION)
+    swarm, world_file_to_write_path, world_file_to_copy_path = import_webots_swarm_config(CONFIG_FILE_PATH)
 
-    swarm = Swarm_config_storage([cf1_proto, cf2_proto], [tb1_proto, tb2_proto])
-
+    COPIED_FILE = os.path.join( dir_path, world_file_to_copy_path)
 
     file_path = shutil.copy(COPIED_FILE, DESTINATION_DIR)
 
-    append_json_to_world_files([file_path], swarm)
+    append_protos_to_world_files([file_path], swarm)
