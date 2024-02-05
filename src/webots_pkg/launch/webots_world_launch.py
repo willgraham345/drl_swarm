@@ -39,54 +39,12 @@ from launch.substitutions.path_join_substitution import PathJoinSubstitution
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from webots_pkg.swarm_classes import Swarm, cf, tb 
+DIR_PATH = os.path.dirname(__file__)
 
-# Macros for swarm configuration
-CF1_NAME = "cf1"
-CF1_URI = ""
-CF1_TRANSLATION = [-1, -1, 0.015]
-CF1_ORIENTATION = [0, 0, 0, 1]
+WORLD_FILES = 'apartment.wbt'
 
-CF2_NAME = "cf2"
-CF2_URI = ""
-CF2_TRANSLATION = [-2, 2, 0.015]
-CF2_ORIENTATION = [0, 0, 0, 1]
-
-
-TB1_NAME = "tb1"
-TB1_TRANSLATION = [0, 0, 0.015]
-TB1_ORIENTATION = [0, 0, 0, 1]
-
-TB2_NAME = "tb2"
-TB2_TRANSLATION = [0, 0, 0.015]
-TB2_ORIENTATION = [0, 0, 0, 1]
-
-
-
-# Macros for swarm configuration
-CF1_NAME = "cf1"
-CF1_URI = ""
-CF1_TRANSLATION = [-1, -1, 0.015]
-CF1_ORIENTATION = [0, 0, 0, 1]
-
-CF2_NAME = "cf2"
-CF2_URI = ""
-CF2_TRANSLATION = [-2, -2, 0.015]
-CF2_ORIENTATION = [0, 0, 0, 1]
-
-
-TB1_NAME = "tb1"
-TB1_TRANSLATION = [-1.5, -1.5, 0.015]
-TB1_ORIENTATION = [0, 0, 0, 1]
-
-TB2_NAME = "tb2"
-TB2_TRANSLATION = [-2.5, -2.5, 0.015]
-TB2_ORIENTATION = [0, 0, 0, 1]
-
-
-
-world_files = 'apartment.wbt'
-
-package_dir = get_package_share_directory('webots_pkg')
+PACKAGE_DIR = get_package_share_directory('webots_pkg')
+CONFIG_FILE_PATH = os.path.abspath(os.path.join(PACKAGE_DIR, 'config', 'webots_config.yaml'))
 
 
 def import_webots_swarm_config(config_file_path : str):
@@ -98,8 +56,8 @@ def import_webots_swarm_config(config_file_path : str):
         Crazyflie = cf(crazyflie['name'], crazyflie['translation'])
         swarm.add_cf(Crazyflie)
     
-    for tb in config['robots']['turtlebots']:
-        Turtlebot = tb(tb['name'], tb['translation'])
+    for turtlebot in config['robots']['turtlebots']:
+        Turtlebot = tb(turtlebot['name'], turtlebot['translation'])
         swarm.add_tb(Turtlebot)
         
     return swarm 
@@ -120,7 +78,7 @@ def define_swarm():
     return swarm
 
 def get_cf_driver(cf):
-    robot_description = pathlib.Path(os.path.join(package_dir, 'resource', 'crazyflie.urdf'))
+    robot_description = pathlib.Path(os.path.join(PACKAGE_DIR, 'resource', 'crazyflie.urdf'))
 
     crazyflie_driver = WebotsController(
         robot_name = cf.name,
@@ -137,7 +95,7 @@ def get_cf_driver(cf):
 
 
 def get_tb_driver(tb):
-    robot_description = pathlib.Path(os.path.join(package_dir, 'resource', 'turtlebot.urdf'))
+    robot_description = pathlib.Path(os.path.join(PACKAGE_DIR, 'resource', 'turtlebot.urdf'))
 
     turtlebot_driver = WebotsController(
         robot_name = tb.name,
@@ -174,7 +132,7 @@ def generate_launch_description():
     # Declare launch arguments for substitution
     world = LaunchConfiguration('world')
     webots = WebotsLauncher(
-        world=PathJoinSubstitution([package_dir, 'worlds', 'configured_worlds', world]),
+        world=PathJoinSubstitution([PACKAGE_DIR, 'worlds', 'configured_worlds', world]),
         ros2_supervisor=True
     )
     foxglove_websocket = IncludeLaunchDescription(
@@ -200,7 +158,7 @@ def generate_launch_description():
 
 
     #Development here
-    swarm = define_swarm()
+    swarm = import_webots_swarm_config(CONFIG_FILE_PATH)
     swarm_nodes = []
 
 

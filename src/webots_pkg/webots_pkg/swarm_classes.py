@@ -67,7 +67,7 @@ class Swarm():
 
 
         """
-        def __init__(self, turtlebots, crazyflies, world_file = None):
+        def __init__(self, turtlebots: tb = None, crazyflies: cf = None, world_file = None):
                 self.turtlebots = []
                 self.crazyflies = []
                 if turtlebots is not None:
