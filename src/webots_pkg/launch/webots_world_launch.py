@@ -20,6 +20,7 @@ import sys
 import pathlib
 import launch
 import logging
+import yaml
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.substitutions import LaunchConfiguration
@@ -87,6 +88,21 @@ world_files = 'apartment.wbt'
 
 package_dir = get_package_share_directory('webots_pkg')
 
+
+def import_webots_swarm_config(config_file_path : str):
+    with open(config_file_path, 'r') as file:
+        config = yaml.safe_load(file)
+    swarm = Swarm()
+    
+    for crazyflie in config['robots']['crazyflies']:
+        Crazyflie = cf(crazyflie['name'], crazyflie['translation'])
+        swarm.add_cf(Crazyflie)
+    
+    for tb in config['robots']['turtlebots']:
+        Turtlebot = tb(tb['name'], tb['translation'])
+        swarm.add_tb(Turtlebot)
+        
+    return swarm 
 
 def define_swarm():
     """

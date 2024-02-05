@@ -481,63 +481,47 @@ class JSONReadHandler():
 
 
 class Swarm():
-    """
-    Swarm class, represents a swarm of turtlebots and crazyflies in both webots and experiments
-    
-    :param turtlebots: List of Turtlebot objects
-    :type turtlebots: Turtlebot()
-    :param crazyflies: List of Crazyflie objects
-    :type crazyflies: Crazyflie()
-    :param world_file: Path to webots world file we want to edit
-    :type world_file: str
-    
-
-    """
-    def __init__(self, turtlebots, crazyflies, world_file = None):
-        self.turtlebots = []
-        self.crazyflies = []
-        if turtlebots is not None:
-          for tb in turtlebots:
-            self.turtlebots.append(tb)
-        if crazyflies is not None:
-          for cf in crazyflies:
-            self.crazyflies.append(cf)
-        if world_file is None:
-          self.world_file = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-             "worlds/apartment.wbt")
-        else:
-            self.world_file = world_file
-
-    def write_swarm_to_json(self, json_file_path):
-            """
-            Write the swarm information to a JSON file.
-
-            Parameters:
-            - json_file_path (str): The path to the JSON file.
-
-            Returns:
-            None
-            """
-            cf_dict2json_instances = []
-            tb_dict2json_instances = []
-            # raise("Not yet tested")
-            for cf in self.crazyflies:
-                cf_instance = cf_dict2json(cf.name, cf.start_position, json_file_path)
-                cf_dict2json_instances.append(cf_instance)
-            for tb in self.turtlebots:
-                tb_instance = tb_dict2json(tb.name, tb.start_position, json_file_path)
-                tb_dict2json_instances.append(tb_instance)
-
-            for cf in cf_dict2json_instances:
-                cf.write_dict_to_json() # FIXME: This is not writing to the json file
-            for tb in tb_dict2json_instances:
-                tb.write_dict_to_json()
+        """
+        Swarm class, represents a swarm of turtlebots and crazyflies in both webots and experiments
+        
+        :param turtlebots: List of Turtlebot objects
+        :type turtlebots: Turtlebot()
+        :param crazyflies: List of Crazyflie objects
+        :type crazyflies: Crazyflie()
+        :param world_file: Path to webots world file we want to edit
+        :type world_file: str
 
 
-class Swarm_config_storage():
+        """
+        def __init__(self, turtlebots, crazyflies, world_file = None):
+                self.turtlebots = []
+                self.crazyflies = []
+                if turtlebots is not None:
+                    for tb in turtlebots:
+                        self.turtlebots.append(tb)
+                if crazyflies is not None:
+                    for cf in crazyflies:
+                        self.crazyflies.append(cf)
+                if world_file is None:
+                    self.world_file = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                         "worlds/apartment.wbt")
+                else:
+                        self.world_file = world_file
+        
+        def add_tb(self, tb):
+                self.turtlebots.append(tb)
+        
+        def add_cf(self, cf):
+                self.crazyflies.append(cf)
+
+
+
+class SwarmProtoWriteHelper():
     def __init__(self, cf_protos: list[str], tb_protos: list[str]):
         self.cf_protos = cf_protos
         self.tb_protos = tb_protos
+
+
 
 
 

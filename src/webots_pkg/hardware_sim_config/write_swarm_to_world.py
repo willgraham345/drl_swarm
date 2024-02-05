@@ -19,7 +19,7 @@ import json
 import yaml
 import shutil
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from webots_pkg.swarm_classes import Swarm, cf, tb, Swarm_config_storage
+from webots_pkg.swarm_classes import Swarm, cf, tb, SwarmProtoWriteHelper
 
 # Other configs
 dir_path = os.path.dirname(__file__)
@@ -49,8 +49,8 @@ def import_webots_swarm_config(config_file_path : str):
     
     world_file_to_copy_path = config['world_file_to_copy_path']
     world_file_to_write_path = config['world_file_to_write_path']
-    swarm = Swarm_config_storage(cf_protos, tb_protos)
-    return swarm, world_file_to_write_path, world_file_to_copy_path
+    swarm_proto_helper = SwarmProtoWriteHelper(cf_protos, tb_protos)
+    return swarm_proto_helper, world_file_to_write_path, world_file_to_copy_path
 
 def create_cf_protos(cf_name, start_position):
     cf_template = """
@@ -87,7 +87,7 @@ TurtleBot3Burger {{
 '''
         return tb_template.format(start_position=start_position, tb_name=tb_name)
 
-def append_protos_to_world_files(world_files, swarm_config: Swarm_config_storage):
+def append_protos_to_world_files(world_files, swarm_config: SwarmProtoWriteHelper):
     for file_path in world_files:
         with open(file_path, 'a') as file:
             file.write("\n")
@@ -98,10 +98,10 @@ def append_protos_to_world_files(world_files, swarm_config: Swarm_config_storage
 # Example usage
 if __name__ == "__main__":
 
-    swarm, world_file_to_write_path, world_file_to_copy_path = import_webots_swarm_config(CONFIG_FILE_PATH)
+    swarm_proto_helper, world_file_to_write_path, world_file_to_copy_path = import_webots_swarm_config(CONFIG_FILE_PATH)
 
     COPIED_FILE = os.path.join( dir_path, world_file_to_copy_path)
 
     file_path = shutil.copy(COPIED_FILE, DESTINATION_DIR)
 
-    append_protos_to_world_files([file_path], swarm)
+    append_protos_to_world_files([file_path], swarm_proto_helper)
