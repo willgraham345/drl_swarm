@@ -58,8 +58,8 @@ def test_init_SyncCrazyflie_WriteLh():
     """
     start_time = time.time()
     cflib.crtp.init_drivers()
-    # initial_position = TESTING_STAND
-    initial_position = MIDDLE_OF_ROOM
+    initial_position = TESTING_STAND
+    # initial_position = MIDDLE_OF_ROOM
     initial_yaw = 0.0
     bs_dict = {0: [0.0, 0.5, LH_Z_OFFSET], 1: [0.0, -0.5, LH_Z_OFFSET]}
     URI = "radio://0/80/2M/E7E7E7E7E7"

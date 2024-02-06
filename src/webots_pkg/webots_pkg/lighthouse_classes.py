@@ -133,7 +133,7 @@ class SyncCrazyflie_WriteLh():
         self._final_position = final_position
         self._initial_yaw = initial_yaw
         self.lh_helper = None
-        self.log_pose_config = None
+
         self.hl_commander = None
 
         self._event = Event()
@@ -363,6 +363,7 @@ class SyncCrazyflie_WriteLh():
 
         if len(recorded_angles.keys()) < 2:
             print('Received too few base stations, we need at least two. Please try again!')
+            print(f'Recorded keys: {recorded_angles.keys()}')
             result = None
 
         return result
@@ -375,12 +376,26 @@ class SyncCrazyflie_WriteLh():
         bs_poses = initial_guess.bs_poses
         cf_poses = initial_guess.cf_poses
         # cf is a Pose object
-        for cf in initial_guess.cf_poses:
-            print(f"Guess of cf", cf, "matrix vec:", cf.matrix_vec)
-            print(f"Rotate translate guess of cf", cf, "matrix vec:", cf.rotate_translate_pose(cf))
-        for bs, value in initial_guess.bs_poses.items():
-            print("Guess of bs", bs, "matrix vec:", value.matrix_vec)
-            print(f"Rotate translate guess of bs", bs, "matrix vec:", value.rotate_translate(bs))
+        print()
+        print('------------------------------------')
+        print("Lighthouse position estimate")
+        print("This calculates position of crazyflie as the center of the world")
+        for cf in cf_poses:
+            translation = cf.translation
+            rot_matrix = cf.rot_matrix
+            print(f'Translation of cf {cf}: {translation}')
+            print(f'Rotation matrix of cf {cf}: {rot_matrix}')
+        print('------------------------------------')
+        for bs, pose_obj in bs_poses.items():
+            print(f'Translation of cf according to bs {bs}: {pose_obj.translation}')
+            print(f'Rotation matrix of cf according to bs {bs}: {pose_obj.rot_matrix}')
+
+        # for cf in initial_guess.cf_poses:
+        #     print(f"Guess of cf", cf, "matrix vec:", cf.matrix_vec)
+        #     print(f"Rotate translate guess of cf", cf, "matrix vec:", cf.rotate_translate_pose(cf))
+        # for bs, value in initial_guess.bs_poses.items():
+        #     print("Guess of bs", bs, "matrix vec:", value.matrix_vec)
+        #     print(f"Rotate translate guess of bs", bs, "matrix vec:", value.rotate_translate(bs))
 
 # The WriteGeoMem class is used to write only the geometry memory.
 # It takes a URI of the Crazyflie to connect to and a dictionary of base station geometries to write.
