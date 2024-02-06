@@ -25,49 +25,49 @@ import cffirmware
 class CrazyflieWebotsDriver():
     def init(self, webots_node, properties):
         # Declare the robot name and fix the timestep
-        self.robot = webots_node.robot
-        self.timestep = int(self.robot.getBasicTimeStep())
-        self.robot_name = self.robot.getName()
+        self.__robot = webots_node.robot
+        self.timestep = int(self.__robot.getBasicTimeStep())
+        self._robot_name = self.__robot.getName()
 
-        self.namespace = str(self.robot_name)
+        self.namespace = str(self._robot_name)
 
         ## Initialize motors
-        self.m1_motor = self.robot.getDevice("m1_motor")
-        self.m1_motor.setPosition(float('inf'))
-        self.m1_motor.setVelocity(-1)
-        self.m2_motor = self.robot.getDevice("m2_motor")
-        self.m2_motor.setPosition(float('inf'))
-        self.m2_motor.setVelocity(1)
-        self.m3_motor = self.robot.getDevice("m3_motor")
-        self.m3_motor.setPosition(float('inf'))
-        self.m3_motor.setVelocity(-1)
-        self.m4_motor = self.robot.getDevice("m4_motor")
-        self.m4_motor.setPosition(float('inf'))
-        self.m4_motor.setVelocity(1)
+        self.__m1_motor = self.__robot.getDevice("m1_motor")
+        self.__m1_motor.setPosition(float('inf'))
+        self.__m1_motor.setVelocity(-1)
+        self.__m2_motor = self.__robot.getDevice("m2_motor")
+        self.__m2_motor.setPosition(float('inf'))
+        self.__m2_motor.setVelocity(1)
+        self.__m3_motor = self.__robot.getDevice("m3_motor")
+        self.__m3_motor.setPosition(float('inf'))
+        self.__m3_motor.setVelocity(-1)
+        self.__m4_motor = self.__robot.getDevice("m4_motor")
+        self.__m4_motor.setPosition(float('inf'))
+        self.__m4_motor.setVelocity(1)
 
         self.target_twist = Twist()
 
         ## Initialize Sensors
-        self.imu = self.robot.getDevice("inertial_unit")
-        self.imu.enable(self.timestep)
-        self.gps = self.robot.getDevice("gps")
-        self.gps.enable(self.timestep)
-        self.gyro = self.robot.getDevice("gyro")
-        self.gyro.enable(self.timestep)
-        self.range_front = self.robot.getDevice("range_front")
+        self.__imu = self.__robot.getDevice("inertial_unit")
+        self.__imu.enable(self.timestep)
+        self.__gps = self.__robot.getDevice("gps") #TODO: Remove this gps signal
+        self.__gps.enable(self.timestep)
+        self.__gyro = self.__robot.getDevice("gyro")
+        self.__gyro.enable(self.timestep)
+        self.range_front = self.__robot.getDevice("range_front")
         self.range_front.enable(self.timestep)
-        self.range_left = self.robot.getDevice("range_left")
+        self.range_left = self.__robot.getDevice("range_left")
         self.range_left.enable(self.timestep)
-        self.range_back = self.robot.getDevice("range_back")
+        self.range_back = self.__robot.getDevice("range_back")
         self.range_back.enable(self.timestep)
-        self.range_right = self.robot.getDevice("range_right")
+        self.range_right = self.__robot.getDevice("range_right")
         self.range_right.enable(self.timestep)
 
         ## Intialize Variables
         self.past_x_global = 0
         self.past_y_global = 0
         self.past_z_global = 0
-        self.past_time = self.robot.getTime() #TODO: figure out why this is throwing an error in the simulation. 
+        self.past_time = self.__robot.getTime()
         # self.__clock = Clock()
         # self.__node.create_subscription(Clock, 'clock', self.__clock_callback, 1)
         # self.__publisher = self.__node.create_publisher(Clock, 'custom_clock', 1)
@@ -120,7 +120,7 @@ class CrazyflieWebotsDriver():
             back_range = float("inf")  
 
         self.msg_laser = LaserScan()
-        self.msg_laser.header.stamp = Time(seconds=self.robot.getTime()).to_msg()
+        self.msg_laser.header.stamp = Time(seconds=self.__robot.getTime()).to_msg()
         self.msg_laser.header.frame_id = '{}/base_link'.format(self.namespace)
         self.msg_laser.range_min = 0.1
         self.msg_laser.range_max = max_range
@@ -132,7 +132,7 @@ class CrazyflieWebotsDriver():
 
     def cmd_vel_callback(self, twist):
         self.target_twist = twist
-    def publish_odometry(self, odom_msg):
+    def publish_odometry(self, odom_msg): #TODO: Fix this publisher
         #
         # odom = Odometry()
         # odom.header.stamp = Time(seconds=self.robot.getTime()).to_msg()
@@ -175,37 +175,37 @@ class CrazyflieWebotsDriver():
     def step(self):
         rclpy.spin_once(self.__node, timeout_sec=0)
         try: 
-            self.robot.step(self.timestep)
+            self.__robot.step(self.timestep)
         except Exception as e:
             print(e)
             print("Failed to step the robot")
         
         try:
-            dt = self.robot.getTime() - self.past_time
+            dt = self.__robot.getTime() - self.past_time
             ## Get measurements
         except:
             print("Failed to get timing measurements")
 
-        self.robot.step()
+        self.__robot.step()
 
         if self.first_pos is True:
-            self.first_x_global = self.gps.getValues()[0]
-            self.first_y_global = self.gps.getValues()[1]
+            self.first_x_global = self.__gps.getValues()[0]
+            self.first_y_global = self.__gps.getValues()[1]
             self.first_pos = False
 
-        dt = self.robot.getTime() - self.past_time
+        dt = self.__robot.getTime() - self.past_time
         ## Get measurements
-        roll = self.imu.getRollPitchYaw()[0]
-        pitch = self.imu.getRollPitchYaw()[1]
-        yaw = self.imu.getRollPitchYaw()[2]
-        roll_rate = self.gyro.getValues()[0]
-        pitch_rate = self.gyro.getValues()[1]
-        yaw_rate = self.gyro.getValues()[2]
-        x_global = self.gps.getValues()[0] - self.first_x_global
+        roll = self.__imu.getRollPitchYaw()[0]
+        pitch = self.__imu.getRollPitchYaw()[1]
+        yaw = self.__imu.getRollPitchYaw()[2]
+        roll_rate = self.__gyro.getValues()[0]
+        pitch_rate = self.__gyro.getValues()[1]
+        yaw_rate = self.__gyro.getValues()[2]
+        x_global = self.__gps.getValues()[0] - self.first_x_global
         vx_global = (x_global - self.past_x_global)/dt
-        y_global = self.gps.getValues()[1]- self.first_y_global
+        y_global = self.__gps.getValues()[1]- self.first_y_global
         vy_global = (y_global - self.past_y_global)/dt
-        z_global = self.gps.getValues()[2]
+        z_global = self.__gps.getValues()[2]
         vz_global = (z_global - self.past_z_global)/dt
 
 
@@ -213,7 +213,7 @@ class CrazyflieWebotsDriver():
         
         q_base = tf_transformations.quaternion_from_euler(0, 0, yaw)
         odom_msg = Odometry()
-        odom_msg.header.stamp = Time(seconds=self.robot.getTime()).to_msg()
+        odom_msg.header.stamp = Time(seconds=self.__robot.getTime()).to_msg()
         odom_msg.header.frame_id = 'odom'
         odom_msg.child_frame_id = '{}/base_link'.format(self.namespace)
         odom_msg.pose.pose.position.x = x_global
@@ -233,7 +233,7 @@ class CrazyflieWebotsDriver():
 
 
         t_base = TransformStamped()
-        t_base.header.stamp = Time(seconds=self.robot.getTime()).to_msg()
+        t_base.header.stamp = Time(seconds=self.__robot.getTime()).to_msg()
         t_base.header.frame_id = 'odom'
         t_base.child_frame_id = '{}/base_link'.format(self.namespace)
         t_base.transform.translation.x = x_global
@@ -298,12 +298,12 @@ class CrazyflieWebotsDriver():
         motorPower_m4 =  cmd_thrust + cmd_roll + cmd_pitch - cmd_yaw
 
         scaling = 1000 ##Todo, remove necessity of this scaling (SI units in firmware)
-        self.m1_motor.setVelocity(-motorPower_m1/scaling)
-        self.m2_motor.setVelocity(motorPower_m2/scaling)
-        self.m3_motor.setVelocity(-motorPower_m3/scaling)
-        self.m4_motor.setVelocity(motorPower_m4/scaling)
+        self.__m1_motor.setVelocity(-motorPower_m1/scaling)
+        self.__m2_motor.setVelocity(motorPower_m2/scaling)
+        self.__m3_motor.setVelocity(-motorPower_m3/scaling)
+        self.__m4_motor.setVelocity(motorPower_m4/scaling)
 
-        self.past_time = self.robot.getTime()
+        self.past_time = self.__robot.getTime()
         self.past_x_global = x_global
         self.past_y_global = y_global
         self.past_z_global = z_global

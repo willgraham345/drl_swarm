@@ -62,20 +62,6 @@ def import_webots_swarm_config(config_file_path : str):
         
     return swarm 
 
-def define_swarm():
-    """
-    Defines the swarm configuration
-    """
-    # cf1 = cf(CF1_NAME, CF1_URI, CF1_TRANSLATION, CF1_ORIENTATION)
-    # cf2 = cf(CF2_NAME, CF2_URI, CF2_TRANSLATION, CF2_ORIENTATION)
-
-    tb1 = tb(TB1_NAME, TB1_TRANSLATION, TB1_ORIENTATION)
-    tb2 = tb(TB2_NAME, TB2_TRANSLATION, TB2_ORIENTATION)
-
-    swarm = Swarm([tb1, tb2], [])
-    # swarm = Swarm([tb1, tb2], [cf1, cf2])
-    # swarm = Swarm([], [cf1, cf2])
-    return swarm
 
 def get_cf_driver(cf):
     robot_description = pathlib.Path(os.path.join(PACKAGE_DIR, 'resource', 'crazyflie.urdf'))

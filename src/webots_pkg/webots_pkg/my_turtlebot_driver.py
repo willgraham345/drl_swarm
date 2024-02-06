@@ -1,5 +1,5 @@
-from math import cos, sin, pi, atan2
 import rclpy
+from math import cos, sin, pi, atan2
 from geometry_msgs.msg import Twist
 from geometry_msgs.msg import TransformStamped
 from sensor_msgs.msg import LaserScan
@@ -10,7 +10,7 @@ HALF_DISTANCE_BETWEEN_WHEELS = 0.045
 WHEEL_RADIUS = 0.025
 # USE THIS!!!!
 # https://cyberbotics.com/doc/reference/lidar?tab-language=python
-class MyTurtlebotDriver:
+class MyTurtlebotDriver():
     """
     This class is a driver for the Turtlebot3 robot.
     :param webots_node: the instance of the WebotsNode class
@@ -31,7 +31,7 @@ class MyTurtlebotDriver:
         #self.__ort = self.__robot.getQuaternion()
         # self.__gps.enable(self.timestep)
         self.__imu = self.__robot.getDevice('accelerometer')
-        self.__imu# .enable(self.timestep)
+        self.__imu .enable(self.timestep)
         # self.__gyro = self.__robot.getDevice('gyro')
         # self.__gyro.enable(self.timestep)
         self.__compass = self.__robot.getDevice('compass')
@@ -47,21 +47,36 @@ class MyTurtlebotDriver:
         self.__right_motor.setVelocity(0)
 
         self.__target_twist = Twist()
+
+
+        # Initialize ROS2 nodes and log to debug console
         rclpy.init(args=None)
         self.__namespace = str(self._robot_name)
-        self.tb_driver = rclpy.create_node('my_turtlebot_driver',
-                                namespace=self.__namespace,
-                                allow_undeclared_parameters=True,
-                                automatically_declare_parameters_from_overrides=True)
-        self.tb_driver.create_subscription(Twist,
-                                '/{}/cmd_vel'.format(self.__namespace),
-                                self.__cmd_vel_callback, 1)
-        self.laser_publisher = self.tb_driver.create_publisher(LaserScan,
-                                '/{}/scan'.format(self.__namespace), 10)
-        self.odom_publisher = self.tb_driver.create_publisher(Odometry, 
-                                '/{}/odom'.format(self.__namespace), 10)
-
-        self.tfbr = TransformBroadcaster(self.tb_driver)
+        self.tb_driver = rclpy.create_node(
+            node_name = 'my_turtlebot_driver',
+            namespace=self.__namespace,
+            allow_undeclared_parameters=True,
+            automatically_declare_parameters_from_overrides=True)
+        self.tb_driver.get_logger().debug(f'Turtlebot driver node created for {self.__namespace}')
+        self.tb_driver.create_subscription(
+            msg_type = Twist,
+            topic = '/{}/cmd_vel'.format(self.__namespace),
+            callback=self.__cmd_vel_callback,
+            qos_profile = 1)
+        self.tb_driver.get_logger().debug(f'Turtlebot driver subscribed to /{self.__namespace}/cmd_vel')
+        self.laser_publisher = self.tb_driver.create_publisher(
+            msg_type = LaserScan,
+            topic = '/{}/scan'.format(self.__namespace), 
+            qos_profile = 10)
+        self.tb_driver.get_logger().debug(f'Turtlebot driver created /{self.__namespace}/scan publisher')
+        self.odom_publisher = self.tb_driver.create_publisher(
+            msg_type = Odometry,
+            topic = '/{}/odom'.format(self.__namespace),
+            qos_profile = 10)
+        self.tb_driver.get_logger().debug(f'Turtlebot driver created /{self.__namespace}/odom publisher')
+        self.tfbr = TransformBroadcaster(
+            node = self.tb_driver)
+        self.tb_driver.get_logger().debug(f'Turtlebot driver created TransformBroadcaster')
 
 
 
@@ -71,9 +86,6 @@ class MyTurtlebotDriver:
 
     def publish_lidar(self):
         """
-        Publishes the lidar data to the /scan topic
-        :return: None
-        :rtype: None
         """
         #FIXME: Fix this
         # Webots API on using the Lidar functions
@@ -90,6 +102,7 @@ class MyTurtlebotDriver:
         # msg.range_max = self.lidar.getMaxRange()
         # msg.ranges = ranges
         # self.laser_publisher.publish(msg)
+        pass
 
     def _publish_gps(self, gps_vals,heading):
         # Get position and orientation from the robot
