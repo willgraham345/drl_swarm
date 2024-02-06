@@ -133,22 +133,22 @@ class SyncCrazyflie_WriteLh():
         self._final_position = final_position
         self._initial_yaw = initial_yaw
         self.lh_helper = None
-        self.log_config = None
+        self.log_pose_config = None
         self.hl_commander = None
 
         self._event = Event()
         with SyncCrazyflie(URI, cf = Crazyflie(rw_cache='./cache')) as scf:
-            self.setup(scf)
+            self.scf = scf
+            self.setup()
 
-    def setup(self, scf):
-        self._init_configure_lighthouse(scf)
-        # self.estimate_pose_from_lh(cf)
-        self.__init_hl_commander(scf)
-        self._init_kalman_log_config(scf)
+    def setup(self):
+        self._init_configure_lighthouse()
+        self.__init_hl_commander()
+        self._init_kalman_log_config()
+
         # self.get_lighthouse_geos()
-        # print('Battery health:', self._get_battery_health(scf))
-        # print('Battery voltage:', self._get_battery_voltage(scf))
         time.sleep(1)        
+        self.estimate_pose_from_lh(self.scf)
         # self.hl_commander_workflow()
         # self.send_to_position(scf, self._final_position)
     
@@ -164,14 +164,14 @@ class SyncCrazyflie_WriteLh():
             bs_geo.valid = True
             self.lh_dict[bs] = bs_geo
 
-    def _init_configure_lighthouse(self, scf):
+    def _init_configure_lighthouse(self):
         '''
         This class initializes a new lighthouse geo writer for easier use.
         
         Args:
             config_packet (LighthouseConfigPacket): The configuration packet for the lighthouse.
         '''
-        self.lh_helper = LighthouseMemHelper(scf.cf)
+        self.lh_helper = LighthouseMemHelper(self.scf.cf)
         self.lh_helper.write_geos(self.lh_dict, self._data_written)
         self._event.wait()
         self._event.clear()
@@ -204,26 +204,31 @@ class SyncCrazyflie_WriteLh():
         self._event.wait()
         self._event.clear()
 
-    def _init_kalman_log_config(self, scf):
-        self._reset_position_estimator(scf)
-        self._set_initial_position(scf)
-        self.log_config = LogConfig(name='Position', period_in_ms=10)
-        self.log_config.add_variable('stateEstimate.x', 'float')
-        self.log_config.add_variable('stateEstimate.y', 'float')
-        self.log_config.add_variable('stateEstimate.z', 'float')
-        self.log_config.add_variable('stateEstimate.yaw', 'float')
-        self.log_config.add_variable('pm.batteryLevel', 'float')
+    def _init_kalman_log_config(self):
+        self._reset_position_estimator()
+        self._set_initial_position()
+        self.log_pose_config = LogConfig(name='Position', period_in_ms=10)
+        self.log_pose_config.add_variable('stateEstimate.x', 'float')
+        self.log_pose_config.add_variable('stateEstimate.y', 'float')
+        self.log_pose_config.add_variable('stateEstimate.z', 'float')
+        self.log_pose_config.add_variable('stateEstimate.yaw', 'float')
+        self.log_pose_config.add_variable('pm.batteryLevel', 'float')
         try: 
-            self.log_config.data_received_cb.add_callback(self.__log_pos_callback)
-            self.log_config.error_cb.add_callback(self.__log_error_callback)
-            scf.cf.log.add_config(self.log_config)
-            self.log_config.start()
+            self.log_pose_config.data_received_cb.add_callback(self.__log_pos_callback)
+            self.log_pose_config.error_cb.add_callback(self.__log_error_callback)
+            self.scf.cf.log.add_config(self.log_pose_config)
+            self.log_pose_config.start()
         except KeyError as e:
             print('Could not start log configuration,'
                 '{} not found in TOC'.format(str(e)))
         except AttributeError:
             print('Could not add Position log config, bad configuration.')
-        
+    def stop_log_config(self):
+        self.log_pose_config.stop()
+
+    def start_log_config(self):
+        self.log_pose_config.start()
+
     def __log_pos_callback(self, timstamp, data, logconf):
         '''
         Callback function for logging position data.
@@ -234,10 +239,9 @@ class SyncCrazyflie_WriteLh():
             logconf: The log configuration.
         '''
         print(data)
-        for name, value in data.items():
-            print(f'{name}: {value:3.3f}, ', end='')
-        print()
-        
+        # for name, value in data.items():
+        #     print(f'{name}: {value:3.3f}, ', end='')
+        # print()
         
     def __log_error_callback(self, logconf, msg):
         '''
@@ -256,22 +260,29 @@ class SyncCrazyflie_WriteLh():
             print()
         self._event.set()
   
-    def __init_hl_commander(self, scf):
+    def __init_hl_commander(self):
         '''
         Initializes the high level commander.
         
         Args:
             scf (SyncCrazyflie): The SyncCrazyflie object.
         '''
-        self.hl_commander = PositionHlCommander(scf, x = self._initial_position[0], y = self._initial_position[1], z = self._initial_position[2], default_height = DEFAULT_HEIGHT, controller = 1)
+        self.hl_commander = PositionHlCommander(self.scf, x = self._initial_position[0], y = self._initial_position[1], z = self._initial_position[2], default_height = DEFAULT_HEIGHT, controller = 1)
         time.sleep(.1)
-        print(self.hl_commander.get_position())
         print(f'Position according to hl commander: {self._get_pos_hl_commander()}')
         time.sleep(1)
         print(f'Position according to hl commander: {self._get_pos_hl_commander()}')
-        print(self.hl_commander.get_position())
         time.sleep(.1)
+        self.__set_hl_velocity(0.05)
     
+    def __set_hl_velocity(self, velocity):
+        '''
+        Sets the velocity of the high level commander.
+        
+        Args:
+            velocity (float): The velocity to set.
+        '''
+        self.hl_commander.set_default_velocity(velocity)
     def _get_pos_hl_commander(self):
         '''
         Returns the position according to the high level commander'''
@@ -279,42 +290,31 @@ class SyncCrazyflie_WriteLh():
     
     def hl_commander_workflow(self):
         ''' Starts hl commander in a hover state'''
-        self.hl_commander.take_off(height = 1.5)
+        print("Starting take off")
+        self.hl_commander.take_off(height = 2.0)
+        print("Stay in one spot for 3 seconds.")
         time.sleep(3.0)
+        print("Going to final position")
         self.hl_commander.go_to(self._final_position[0], self._final_position[1], self._final_position[2], velocity = 0.075)
         time.sleep(5.0)
         self.hl_commander.land()
 
-    def send_to_position(self, scf, position):
-        '''
-        Send the Crazyflie to a position.
-        
-        Args:
-            scf (SyncCrazyflie): The SyncCrazyflie object.
-            position (list[int]): The position to send the Crazyflie to.
-        '''
-        with PositionHlCommander(scf, default_height = DEFAULT_HEIGHT) as pc:
-            pc.take_off(height = 0.75)
-            time.sleep(5)
-            pc.go_to(self._final_position[0], self._final_position[1], self._final_position[2], velocity = 0.075)
-            time.sleep(5)
-            pc.land()
-
-    def _set_initial_position(self, scf):
-        scf.cf.param.set_value('kalman.initialX', self._initial_position[0])
-        scf.cf.param.set_value('kalman.initialY', self._initial_position[1])
-        scf.cf.param.set_value('kalman.initialZ', self._initial_position[2])
-        scf.cf.param.set_value('kalman.initialYaw', self._initial_yaw)
-        self._reset_position_estimator(scf)
+    def _set_initial_position(self):
+        self.scf.cf.param.set_value('kalman.initialX', self._initial_position[0])
+        self.scf.cf.param.set_value('kalman.initialY', self._initial_position[1])
+        self.scf.cf.param.set_value('kalman.initialZ', self._initial_position[2])
+        self.scf.cf.param.set_value('kalman.initialYaw', self._initial_yaw)
+        self._reset_position_estimator()
         time.sleep(0.1)
         
     
-    def _reset_position_estimator(self, scf):
-        scf.cf.param.set_value('kalman.resetEstimation', '1')
+    def _reset_position_estimator(self):
+        self.scf.cf.param.set_value('kalman.resetEstimation', '1')
         time.sleep(0.1)
-        scf.cf.param.set_value('kalman.resetEstimation', '0')
+        self.scf.cf.param.set_value('kalman.resetEstimation', '0')
     
     def estimate_pose_from_lh(self, scf):
+        self.stop_log_config()
         do_repeat = True
         while do_repeat:
             measurement = self.record_angles_average(scf)
@@ -324,6 +324,7 @@ class SyncCrazyflie_WriteLh():
             else:
                 do_repeat = True
         self.estimate_position_from_sample(position_measurement)
+        self.start_log_config()
 
     def record_angles_average(self, scf) -> LhCfPoseSample:
         '''
