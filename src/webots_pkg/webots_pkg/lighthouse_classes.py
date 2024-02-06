@@ -141,13 +141,15 @@ class SyncCrazyflie_WriteLh():
             self.setup(scf)
 
     def setup(self, scf):
-        # self._init_configure_lighthouse(scf)
-        # self.estimate_pose_from_lh(scf)
+        self._init_configure_lighthouse(scf)
+        # self.estimate_pose_from_lh(cf)
         self.__init_hl_commander(scf)
-        # self._init_kalman_log_config(scf)
+        self._init_kalman_log_config(scf)
         # self.get_lighthouse_geos()
+        # print('Battery health:', self._get_battery_health(scf))
+        # print('Battery voltage:', self._get_battery_voltage(scf))
         time.sleep(1)        
-        self.hl_commander_workflow()
+        # self.hl_commander_workflow()
         # self.send_to_position(scf, self._final_position)
     
     def _create_lh_geos(self, geos_dict, rotation_matrix):
@@ -210,6 +212,7 @@ class SyncCrazyflie_WriteLh():
         self.log_config.add_variable('stateEstimate.y', 'float')
         self.log_config.add_variable('stateEstimate.z', 'float')
         self.log_config.add_variable('stateEstimate.yaw', 'float')
+        self.log_config.add_variable('pm.batteryLevel', 'float')
         try: 
             self.log_config.data_received_cb.add_callback(self.__log_pos_callback)
             self.log_config.error_cb.add_callback(self.__log_error_callback)
@@ -232,7 +235,7 @@ class SyncCrazyflie_WriteLh():
         '''
         print(data)
         for name, value in data.items():
-            print(f'{name}: {value:3.3f}', end='')
+            print(f'{name}: {value:3.3f}, ', end='')
         print()
         
         
@@ -252,8 +255,7 @@ class SyncCrazyflie_WriteLh():
             data.dump()
             print()
         self._event.set()
-
-
+  
     def __init_hl_commander(self, scf):
         '''
         Initializes the high level commander.
@@ -264,20 +266,23 @@ class SyncCrazyflie_WriteLh():
         self.hl_commander = PositionHlCommander(scf, x = self._initial_position[0], y = self._initial_position[1], z = self._initial_position[2], default_height = DEFAULT_HEIGHT, controller = 1)
         time.sleep(.1)
         print(self.hl_commander.get_position())
-        time.sleep(3)
+        print(f'Position according to hl commander: {self._get_pos_hl_commander()}')
+        time.sleep(1)
+        print(f'Position according to hl commander: {self._get_pos_hl_commander()}')
         print(self.hl_commander.get_position())
         time.sleep(.1)
     
     def _get_pos_hl_commander(self):
         '''
         Returns the position according to the high level commander'''
+        return self.hl_commander.get_position()
     
     def hl_commander_workflow(self):
         ''' Starts hl commander in a hover state'''
-        self.hl_commander.take_off(height = 2)
-        time.sleep(2)
+        self.hl_commander.take_off(height = 1.5)
+        time.sleep(3.0)
         self.hl_commander.go_to(self._final_position[0], self._final_position[1], self._final_position[2], velocity = 0.075)
-        time.sleep(3)
+        time.sleep(5.0)
         self.hl_commander.land()
 
     def send_to_position(self, scf, position):
