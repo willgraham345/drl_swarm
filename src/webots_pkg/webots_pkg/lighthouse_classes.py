@@ -143,12 +143,13 @@ class SyncCrazyflie_WriteLh():
 
     def setup(self):
         self._init_configure_lighthouse()
-        self.__init_hl_commander()
         self._init_kalman_log_config()
+        self.__init_lighthouse_log_config()
+        self.__init_hl_commander()
+        time.sleep(1)
+        self.hl_commander_workflow()
 
         # self.get_lighthouse_geos()
-        time.sleep(1)        
-        self.estimate_pose_from_lh(self.scf)
         # self.hl_commander_workflow()
         # self.send_to_position(scf, self._final_position)
     
@@ -223,13 +224,13 @@ class SyncCrazyflie_WriteLh():
                 '{} not found in TOC'.format(str(e)))
         except AttributeError:
             print('Could not add Position log config, bad configuration.')
-    def stop_log_config(self):
+    def stop_kalman_log(self):
         self.log_pose_config.stop()
 
-    def start_log_config(self):
+    def start_kalman_log(self):
         self.log_pose_config.start()
 
-    def __log_pos_callback(self, timstamp, data, logconf):
+    def __log_pos_callback(self, timestamp, data, logconf):
         '''
         Callback function for logging position data.
         
@@ -238,6 +239,7 @@ class SyncCrazyflie_WriteLh():
             data: The logged data.
             logconf: The log configuration.
         '''
+        data['timestamp'] = timestamp
         print(data)
         # for name, value in data.items():
         #     print(f'{name}: {value:3.3f}, ', end='')
@@ -252,6 +254,23 @@ class SyncCrazyflie_WriteLh():
             msg: The error message.
         '''
         print(msg)
+    
+    def __init_lighthouse_log_config(self):
+        self.log_lighthouse_config = LogConfig(name='Lighthouse', period_in_ms=10)
+        self.log_lighthouse_config.add_variable('lighthouse.x', 'float')
+        self.log_lighthouse_config.add_variable('lighthouse.y', 'float')
+        self.log_lighthouse_config.add_variable('lighthouse.z', 'float')
+
+        try:
+            self.log_lighthouse_config.data_received_cb.add_callback(self.__log_pos_callback)
+            self.log_lighthouse_config.error_cb.add_callback(self.__log_error_callback)
+            self.scf.cf.log.add_config(self.log_lighthouse_config)
+            self.log_lighthouse_config.start()
+        except KeyError as e:
+            print('Could not start log configuration,'
+                '{} not found in TOC'.format(str(e)))
+        except AttributeError:
+            print('Could not add Position log config, bad configuration.')
 
     def _geo_read_ready(self, geo_data):
         for id, data in geo_data.items():
@@ -314,7 +333,7 @@ class SyncCrazyflie_WriteLh():
         self.scf.cf.param.set_value('kalman.resetEstimation', '0')
     
     def estimate_pose_from_lh(self, scf):
-        self.stop_log_config()
+        self.stop_kalman_log()
         do_repeat = True
         while do_repeat:
             measurement = self.record_angles_average(scf)
@@ -324,7 +343,7 @@ class SyncCrazyflie_WriteLh():
             else:
                 do_repeat = True
         self.estimate_position_from_sample(position_measurement)
-        self.start_log_config()
+        self.start_kalman_log()
 
     def record_angles_average(self, scf) -> LhCfPoseSample:
         '''
@@ -378,24 +397,33 @@ class SyncCrazyflie_WriteLh():
         # cf is a Pose object
         print()
         print('------------------------------------')
-        print("Lighthouse position estimate")
-        print("This calculates position of crazyflie as the center of the world")
+        print("CF Position, as estimated by lighthouse. Note: This will estimate cf to be the origin of the new world frame.")
         for cf in cf_poses:
             translation = cf.translation
             rot_matrix = cf.rot_matrix
-            print(f'Translation of cf {cf}: {translation}')
-            print(f'Rotation matrix of cf {cf}: {rot_matrix}')
+            print(f'{cf} translation: {translation}')
+            print(f'{cf} rot_matrix: {rot_matrix}')
         print('------------------------------------')
+        print("CF position in rotor frame as seen by LH:")
         for bs, pose_obj in bs_poses.items():
-            print(f'Translation of cf according to bs {bs}: {pose_obj.translation}')
-            print(f'Rotation matrix of cf according to bs {bs}: {pose_obj.rot_matrix}')
+            print(f'{bs} translation: {pose_obj.translation}')
+            print(f'{bs} rot_matrix: {pose_obj.rot_matrix}')
+        print()
+        print('------------------------------------')
+        print("Current basestation location global frame:")
+        for bs, geo in self.lh_dict.items():
+            print(f'{bs}: {geo.origin}')
+            print(f'Rotation matrix of bs {bs}: {geo.rotation_matrix}')
+        print()
+        print('------------------------------------')
+        print("Position of the crazflie in global frame from lighthouse:")
+        
+        '''
+        pseudocode:
+        1. Get the lighthouse position and rotation matrix in the global frame
+        2. Use that to output a position and rotation matrix for the crazyflie in the global frame
+        '''
 
-        # for cf in initial_guess.cf_poses:
-        #     print(f"Guess of cf", cf, "matrix vec:", cf.matrix_vec)
-        #     print(f"Rotate translate guess of cf", cf, "matrix vec:", cf.rotate_translate_pose(cf))
-        # for bs, value in initial_guess.bs_poses.items():
-        #     print("Guess of bs", bs, "matrix vec:", value.matrix_vec)
-        #     print(f"Rotate translate guess of bs", bs, "matrix vec:", value.rotate_translate(bs))
 
 # The WriteGeoMem class is used to write only the geometry memory.
 # It takes a URI of the Crazyflie to connect to and a dictionary of base station geometries to write.
