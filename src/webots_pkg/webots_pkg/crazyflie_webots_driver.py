@@ -104,8 +104,8 @@ class CrazyflieWebotsDriver():
 
     def publish_laserscan_data(self):
 
+        # Get range values from sensors
         front_range = self.range_front.getValue()/1000.0
-
         back_range = self.range_back.getValue()/1000.0
         left_range = self.range_left.getValue()/1000.0
         right_range = self.range_right.getValue()/1000.0
@@ -119,6 +119,7 @@ class CrazyflieWebotsDriver():
         if back_range > max_range:
             back_range = float("inf")  
 
+        # Create LaserScan message
         self.msg_laser = LaserScan()
         self.msg_laser.header.stamp = Time(seconds=self.__robot.getTime()).to_msg()
         self.msg_laser.header.frame_id = '{}/base_link'.format(self.namespace)
@@ -128,6 +129,8 @@ class CrazyflieWebotsDriver():
         self.msg_laser.angle_min = 0.5 * 2*pi
         self.msg_laser.angle_max =  -0.5 * 2*pi
         self.msg_laser.angle_increment = -1.0*pi/2
+
+        # Publish LaserScan message to ROS
         self.laser_publisher.publish(self.msg_laser)
 
     def cmd_vel_callback(self, twist):

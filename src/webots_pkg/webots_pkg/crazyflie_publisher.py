@@ -23,7 +23,7 @@ import math
 from math import pi
 
 URI = uri_helper.uri_from_env(default='radio://0/80/2M/E7E7E7E7E7')
-FLYING = True
+FLYING = False
 def radians(degrees):  
     return degrees * math.pi / 180.0
 
@@ -114,7 +114,7 @@ class CrazyfliePublisher(Node):
             self._lg_range.start()
             self._cf.log.add_config(self._lh_pose)
             self._lh_pose.data_received_cb.add_callback(self._lh_log_data)
-            self._lh_range.error_cb.add_callback(self._lh_log_error)
+            self._lh_pose.error_cb.add_callback(self._lh_log_error)
             self._lh_pose.start()
 
         except KeyError as e:
@@ -216,25 +216,28 @@ class CrazyfliePublisher(Node):
             print(f'{name}: {value:3.3f} ', end='')
         print()"""
 
-        msg = Odometry()
-
+        # Get odometry values from crazyflie stability logger
         x = data.get('stateEstimate.x')
         y = data.get('stateEstimate.y')
         z = data.get('stateEstimate.z')
         roll = radians(data.get('stabilizer.roll'))
         pitch = radians(-1.0 * data.get('stabilizer.pitch'))
         yaw = radians(data.get('stabilizer.yaw'))
-        msg.pose.pose.position.x = x
-        msg.pose.pose.position.y = y
-        msg.pose.pose.position.z = z
+        
+        # Create odometry message and publish to ROS2
+        odom_msg = Odometry()
+        odom_msg.pose.pose.position.x = x
+        odom_msg.pose.pose.position.y = y
+        odom_msg.pose.pose.position.z = z
         q = tf_transformations.quaternion_from_euler(roll, pitch, yaw)
-        msg.pose.pose.orientation.x = q[0]
-        msg.pose.pose.orientation.y = q[1]
-        msg.pose.pose.orientation.z = q[2]
-        msg.pose.pose.orientation.w = q[3]
-        self.odom_publisher.publish(msg)
+        odom_msg.pose.pose.orientation.x = q[0]
+        odom_msg.pose.pose.orientation.y = q[1]
+        odom_msg.pose.pose.orientation.z = q[2]
+        odom_msg.pose.pose.orientation.w = q[3]
+        self.odom_publisher.publish(odom_msg)
 
 
+        # Create tf2 transforms and send to tf2
         q_base = tf_transformations.quaternion_from_euler(0, 0, yaw)
         t_base = TransformStamped()
         t_base.header.stamp = self.get_clock().now().to_msg()
@@ -249,6 +252,7 @@ class CrazyfliePublisher(Node):
         t_base.transform.rotation.w = q_base[3]
         self.tfbr.sendTransform(t_base)
 
+        #TODO: Figure out why t_odom  transform was made
         t_odom = TransformStamped()
         t_odom.header.stamp = self.get_clock().now().to_msg()
         t_odom.header.frame_id = 'odom'
@@ -264,6 +268,7 @@ class CrazyfliePublisher(Node):
     
         #self.tfbr.sendTransform(t_odom)
 
+        # Create t_cf message, assigned values from the crazyflie stability logger 
         t_cf = TransformStamped()
         q_cf = tf_transformations.quaternion_from_euler(roll, pitch, 0)
         t_cf.header.stamp = self.get_clock().now().to_msg()
@@ -276,7 +281,46 @@ class CrazyfliePublisher(Node):
         t_cf.transform.rotation.y = q_cf[1]
         t_cf.transform.rotation.z = q_cf[2]
         t_cf.transform.rotation.w = q_cf[3]
+
+        # Publish t_cf to tf2
         self.tfbr.sendTransform(t_cf)
+    
+    def _lh_log_error(self, logconf, msg):
+        """Callback from the log API when an error occurs"""
+        print('Error when logging %s: %s' % (logconf.name, msg))
+    
+    def _lh_log_data(self, timestamp, data, logconf):
+        """Callback from a the log API when LH data arrives"""
+        # print to console
+        for name, value in data.items():
+            print(f'{name}: {value:3.3f} ', end='')
+        print()
+
+        # Send to tf2
+        # TODO: Make sure this is working correctly
+        t_lh = TransformStamped()
+        q = tf_transformations.quaternion_from_euler(0, radians(90), 0)
+        t_lh.header.stamp = self.get_clock().now().to_msg()
+        t_lh.header.frame_id = 'base_link'
+        t_lh.child_frame_id = 'lighthouse'
+        self.tfbr.sendTransform(t_lh)
+
+        x = data.get('lighthouse.x')
+        y = data.get('lighthouse.y')
+        z = data.get('lighthouse.z')
+        q = tf_transformations.quaternion_from_euler(0, 0, 0)
+        t_lh = TransformStamped()
+        t_lh.header.stamp = self.get_clock().now().to_msg()
+        t_lh.header.frame_id = 'lighthouse'
+        t_lh.child_frame_id = 'lighthouse_link'
+        t_lh.transform.translation.x = x
+        t_lh.transform.translation.y = y
+        t_lh.transform.translation.z = z
+        t_lh.transform.rotation.x = q[0]
+        t_lh.transform.rotation.y = q[1]
+        t_lh.transform.rotation.z = q[2]
+        t_lh.transform.rotation.w = q[3]
+        self.tfbr.sendTransform(t_lh)
 
     def _disconnected():
         print('disconnected')
