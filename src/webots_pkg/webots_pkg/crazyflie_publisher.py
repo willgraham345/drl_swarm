@@ -22,7 +22,7 @@ import math
 
 from math import pi
 
-URI = uri_helper.uri_from_env(default='radio://0/100/2M/E7E7E7E7E7')
+URI = uri_helper.uri_from_env(default='radio://0/80/2M/E7E7E7E7E7')
 FLYING = True
 def radians(degrees):  
     return degrees * math.pi / 180.0
@@ -38,9 +38,16 @@ class CrazyfliePublisher(Node):
     # TODO_after_testing: Add capability for URI to be passed in as a parameter
     # TODO_after_testing: check to see if the URI can already be passed in as a parameter
     def __init__(self, link_uri):
-        print("Initializing CrazyfliePublisher")
-        print("URI: " + link_uri)
-        super().__init__("crazyflie_publisher")
+
+        # Initialize the Node with the name "crazyflie_publisher"
+        super().__init__("crazyflie_publisher") 
+        self.get_logger().debug("Initializing CrazyfliePublisher")
+
+        # TODO: Add launch parameters for URI
+        # self.declare_parameter('link_uri', link_uri)
+
+
+
         self.range_publisher = self.create_publisher(Range, "/zrange", 10)
         self.laser_publisher = self.create_publisher(LaserScan, "/scan", 10)
         self.odom_publisher = self.create_publisher(Odometry,  "/odom", 10)
@@ -57,6 +64,9 @@ class CrazyfliePublisher(Node):
         self._cf.open_link(link_uri)
 
 
+
+
+        # Initialize ranges and timer for the laser scan
         self.ranges= [0.0, 0.0, 0.0, 0.0, 0.0]
         self.create_timer(1.0/30.0, self.publish_laserscan_data)
         if FLYING:
@@ -71,30 +81,7 @@ class CrazyfliePublisher(Node):
                 self.hover['x'], self.hover['y'], self.hover['yaw'],
                 self.hover['height'])
 
-    def publish_laserscan_data(self):
-
-        msg = LaserScan()
-        msg.header.stamp = self.get_clock().now().to_msg()
-        msg.header.frame_id = 'base_link'
-        msg.range_min = 0.01
-        msg.range_max = 3.49
-        msg.ranges = self.ranges
-        msg.angle_min = 0.5 * 2*pi
-        msg.angle_max =  -0.5 * 2*pi
-        msg.angle_increment = -1.0*pi/2
-        self.laser_publisher.publish(msg)
-
-
-    def sendHoverCommand(self):
-        hover_height =  self.hover['height'] + self.hover['z']*0.1
-        self._cf.commander.send_hover_setpoint(
-            self.hover['x'], self.hover['y'], self.hover['yaw'],
-            hover_height)
-        self.hover['height'] = hover_height
-
-
     def _connected(self, link_uri):
-
         self.get_logger().info('Connected!')
         self._lg_stab = LogConfig(name='Stabilizer', period_in_ms=100)
         self._lg_stab.add_variable('stateEstimate.x', 'float')
@@ -110,6 +97,11 @@ class CrazyfliePublisher(Node):
         self._lg_range.add_variable('range.right', 'uint16_t')
         self._lg_range.add_variable('range.left', 'uint16_t')
         self._lg_range.add_variable('range.back', 'uint16_t')
+    
+        self._lh_pose = LogConfig(name='Lighthouse', period_in_ms=100)
+        self._lh_pose.add_variable('lighthouse.x', 'float')
+        self._lh_pose.add_variable('lighthouse.y', 'float')
+        self._lh_pose.add_variable('lighthouse.z', 'float')
 
         try:
             self._cf.log.add_config(self._lg_stab)
@@ -120,6 +112,10 @@ class CrazyfliePublisher(Node):
             self._lg_range.data_received_cb.add_callback(self._range_log_data)
             self._lg_range.error_cb.add_callback(self._range_log_error)
             self._lg_range.start()
+            self._cf.log.add_config(self._lh_pose)
+            self._lh_pose.data_received_cb.add_callback(self._lh_log_data)
+            self._lh_range.error_cb.add_callback(self._lh_log_error)
+            self._lh_pose.start()
 
         except KeyError as e:
             print('Could not start log configuration,'
@@ -128,14 +124,35 @@ class CrazyfliePublisher(Node):
             print('Could not add Stabilizer log config, bad configuration.')
 
 
-    def _disconnected():
-        print('disconnected')
 
-    def _connection_failed(self, link_uri, msg):
-        print('connection_failed')
+    def sendHoverCommand(self):
+        hover_height =  self.hover['height'] + self.hover['z']*0.1
+        self._cf.commander.send_hover_setpoint(
+            self.hover['x'], self.hover['y'], self.hover['yaw'],
+            hover_height)
+        self.hover['height'] = hover_height
 
-    def _connection_lost(self, link_uri, msg):
-        print('connection_lost')
+    def cmd_vel_callback(self, twist):
+        self.target_twist = twist
+
+        self.hover['x'] = twist.linear.x
+        self.hover['y'] = twist.linear.y
+        self.hover['z'] = twist.linear.z
+        self.hover['yaw'] = -1* math.degrees(twist.angular.z)
+
+    def publish_laserscan_data(self):
+
+        msg = LaserScan()
+        msg.header.stamp = self.get_clock().now().to_msg()
+        msg.header.frame_id = 'base_link'
+        msg.range_min = 0.01
+        msg.range_max = 3.49
+        msg.ranges = self.ranges
+        msg.angle_min = 0.5 * 2*pi
+        msg.angle_max =  -0.5 * 2*pi
+        msg.angle_increment = -1.0*pi/2
+        self.laser_publisher.publish(msg)
+
 
     def _range_log_error(self, logconf, msg):
         """Callback from the log API when an error occurs"""
@@ -185,13 +202,6 @@ class CrazyfliePublisher(Node):
         self.ranges = [back_range, left_range, front_range, right_range, back_range]
 
 
-    def cmd_vel_callback(self, twist):
-        self.target_twist = twist
-
-        self.hover['x'] = twist.linear.x
-        self.hover['y'] = twist.linear.y
-        self.hover['z'] = twist.linear.z
-        self.hover['yaw'] = -1* math.degrees(twist.angular.z)
         
 
 
@@ -268,7 +278,14 @@ class CrazyfliePublisher(Node):
         t_cf.transform.rotation.w = q_cf[3]
         self.tfbr.sendTransform(t_cf)
 
-        
+    def _disconnected():
+        print('disconnected')
+
+    def _connection_failed(self, link_uri, msg):
+        print('connection_failed')
+
+    def _connection_lost(self, link_uri, msg):
+        print('connection_lost')
 
 def main(args=None):
 

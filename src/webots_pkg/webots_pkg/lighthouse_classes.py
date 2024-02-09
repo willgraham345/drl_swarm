@@ -271,6 +271,21 @@ class SyncCrazyflie_WriteLh():
                 '{} not found in TOC'.format(str(e)))
         except AttributeError:
             print('Could not add Position log config, bad configuration.')
+    
+    def __log_lh_pos_callback(self, timestamp, data, logconf):
+        '''
+        Callback function for logging lighthouse position data.
+        
+        Args:
+            timstamp: The timestamp of the logged data.
+            data: The logged data.
+            logconf: The log configuration.
+        '''
+        data['lh timestamp'] = timestamp
+        print(data)
+        # for name, value in data.items():
+        #     print(f'{name}: {value:3.3f}, ', end='')
+        # print()
 
     def _geo_read_ready(self, geo_data):
         for id, data in geo_data.items():
@@ -288,13 +303,13 @@ class SyncCrazyflie_WriteLh():
         '''
         self.hl_commander = PositionHlCommander(self.scf, x = self._initial_position[0], y = self._initial_position[1], z = self._initial_position[2], default_height = DEFAULT_HEIGHT, controller = 1)
         time.sleep(.1)
-        print(f'Position according to hl commander: {self._get_pos_hl_commander()}')
+        print(f'Position according to hl commander: {self.get_pos_hl_commander()}')
         time.sleep(1)
-        print(f'Position according to hl commander: {self._get_pos_hl_commander()}')
+        print(f'Position according to hl commander: {self.get_pos_hl_commander()}')
         time.sleep(.1)
-        self.__set_hl_velocity(0.05)
+        self._set_hl_velocity(0.05)
     
-    def __set_hl_velocity(self, velocity):
+    def _set_hl_velocity(self, velocity):
         '''
         Sets the velocity of the high level commander.
         
@@ -302,7 +317,7 @@ class SyncCrazyflie_WriteLh():
             velocity (float): The velocity to set.
         '''
         self.hl_commander.set_default_velocity(velocity)
-    def _get_pos_hl_commander(self):
+    def get_pos_hl_commander(self):
         '''
         Returns the position according to the high level commander'''
         return self.hl_commander.get_position()
@@ -310,12 +325,12 @@ class SyncCrazyflie_WriteLh():
     def hl_commander_workflow(self):
         ''' Starts hl commander in a hover state'''
         print("Starting take off")
-        self.hl_commander.take_off(height = 2.0)
-        print("Stay in one spot for 3 seconds.")
-        time.sleep(3.0)
-        print("Going to final position")
-        self.hl_commander.go_to(self._final_position[0], self._final_position[1], self._final_position[2], velocity = 0.075)
-        time.sleep(5.0)
+        self.hl_commander.take_off(height = 1.0)
+        print("Stay in one spot for 1 second(s)")
+        time.sleep(1.0)
+        # print("Going to final position")
+        # self.hl_commander.go_to(self._final_position[0], self._final_position[1], self._final_position[2], velocity = 0.075)
+        # time.sleep(5.0)
         self.hl_commander.land()
 
     def _set_initial_position(self):

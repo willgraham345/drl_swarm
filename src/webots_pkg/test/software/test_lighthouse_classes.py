@@ -32,7 +32,9 @@ LH_Z_OFFSET = 0.1
 
 TESTING_STAND = [-0.2, -0, 1.1]
 
-MIDDLE_OF_ROOM = [0.5, 0.0, 0.0]
+MIDDLE_OF_ROOM = [0.0, 0.0, 0.0]
+
+MIDDLE_OF_ROOM_ON_BOX = [0.0, 0.0, 0.15]
 
 IN_FRONT = [1, 0, 0]
 # ROTATION_MATRIX = [
@@ -59,9 +61,9 @@ def test_init_SyncCrazyflie_WriteLh():
     start_time = time.time()
     cflib.crtp.init_drivers()
     # initial_position = TESTING_STAND
-    initial_position = MIDDLE_OF_ROOM
+    initial_position = MIDDLE_OF_ROOM_ON_BOX
     initial_yaw = 0.0
-    bs_dict = {0: [0.0, 0.2, LH_Z_OFFSET], 1: [0.0, -0.2, LH_Z_OFFSET]}
+    bs_dict = {0: [0.0, 0.5, LH_Z_OFFSET], 1: [0.0, -0.5, LH_Z_OFFSET]}
     URI = "radio://0/80/2M/E7E7E7E7E7"
     sync_cf = SyncCrazyflie_WriteLh(URI,
                 initial_position,
