@@ -1,5 +1,6 @@
 import rclpy
 from rclpy.node import Node
+from rcl_interfaces.msg import ParameterDescriptor
 
 from std_msgs.msg import String
 from geometry_msgs.msg import Pose
@@ -23,7 +24,6 @@ import math
 from math import pi
 
 URI = uri_helper.uri_from_env(default='radio://0/80/2M/E7E7E7E7E7')
-FLYING = False
 def radians(degrees):  
     return degrees * math.pi / 180.0
 
@@ -44,7 +44,11 @@ class CrazyfliePublisher(Node):
         self.get_logger().debug("Initializing CrazyfliePublisher")
 
         # TODO: Add launch parameters for URI
-        # self.declare_parameter('link_uri', link_uri)
+        self.declare_parameter('link_uri', link_uri)
+        
+        flying_descriptor = ParameterDescriptor(
+            description='Determines if the crazyflie is in testing mode')
+        self.declare_parameter('fly', rclpy.Parameter.Type.BOOL, flying_descriptor)
 
 
 
@@ -69,7 +73,14 @@ class CrazyfliePublisher(Node):
         # Initialize ranges and timer for the laser scan
         self.ranges= [0.0, 0.0, 0.0, 0.0, 0.0]
         self.create_timer(1.0/30.0, self.publish_laserscan_data)
-        if FLYING:
+
+
+        # Determine if the crazyflie is in testing mode
+        try: 
+            fly = self.get_parameter('fly').get_parameter_value()
+        except:
+            self.get_logger().fatal("Error setting flying parameter. Make sure to set the parameter in the launch file or as a command line argument")
+        if fly == True:
             timer_period = 0.1  # seconds
             self.create_timer(timer_period, self.sendHoverCommand)
 
@@ -252,7 +263,6 @@ class CrazyfliePublisher(Node):
         t_base.transform.rotation.w = q_base[3]
         self.tfbr.sendTransform(t_base)
 
-        #TODO: Figure out why t_odom  transform was made
         t_odom = TransformStamped()
         t_odom.header.stamp = self.get_clock().now().to_msg()
         t_odom.header.frame_id = 'odom'
@@ -260,7 +270,7 @@ class CrazyfliePublisher(Node):
         q_odom = tf_transformations.quaternion_from_euler(0, 0, 0)
         t_odom.transform.translation.x = 0.0
         t_odom.transform.translation.y = 0.0
-        t_odom.transform.translation.z = 0.1
+        t_odom.transform.translation.z = 0.1 # TODO: Figure out why this is off
         t_odom.transform.rotation.x = q_odom[0]
         t_odom.transform.rotation.y = q_odom[1]
         t_odom.transform.rotation.z = q_odom[2]
