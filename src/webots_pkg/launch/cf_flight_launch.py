@@ -12,21 +12,24 @@ from launch.actions import DeclareLaunchArgument
 
 
 def generate_launch_description():
-    pkg_share = get_package_share_directory('crazyflie_ros2_simple_mapper')
+    # pkg_share = get_package_share_directory('crazyflie_ros2_simple_mapper')
 
 
-    simple_mapper_node = launch_ros.actions.Node(
-        package='webots_pkg',
-        executable='simple_mapper')
-
+    # simple_mapper_node = launch_ros.actions.Node(
+    #     package='webots_pkg',
+    #     executable='simple_mapper')
 
     crazyflie_node = launch_ros.actions.Node(
         package='webots_pkg',
-        executable='crazyflie_publisher')
-
+        executable='cf_publisher',
+        parameters = [
+            {'fly': True,
+             'uri': 'radio://0/80/2M/E7E7E7E7E7',}
+        ],
+    )
 
     ld = LaunchDescription()
     ld.add_action(crazyflie_node)
-    ld.add_action(simple_mapper_node)
+    # ld.add_action(simple_mapper_node)
 
     return ld

@@ -77,7 +77,7 @@ class CrazyfliePublisher(Node):
 
         # Determine if the crazyflie is in testing mode
         try: 
-            fly = self.get_parameter('fly').get_parameter_value()
+            fly = self.get_parameter('fly').value
         except:
             self.get_logger().fatal("Error setting flying parameter. Make sure to set the parameter in the launch file or as a command line argument")
         if fly == True:
@@ -302,35 +302,39 @@ class CrazyfliePublisher(Node):
     def _lh_log_data(self, timestamp, data, logconf):
         """Callback from a the log API when LH data arrives"""
         # print to console
-        for name, value in data.items():
-            print(f'{name}: {value:3.3f} ', end='')
-        print()
 
-        # Send to tf2
-        # TODO: Make sure this is working correctly
-        t_lh = TransformStamped()
-        q = tf_transformations.quaternion_from_euler(0, radians(90), 0)
-        t_lh.header.stamp = self.get_clock().now().to_msg()
-        t_lh.header.frame_id = 'base_link'
-        t_lh.child_frame_id = 'lighthouse'
-        self.tfbr.sendTransform(t_lh)
+        try:
+            for name, value in data.items():
+                print(f'{name}: {value:3.3f} ', end='')
+            print()
 
-        x = data.get('lighthouse.x')
-        y = data.get('lighthouse.y')
-        z = data.get('lighthouse.z')
-        q = tf_transformations.quaternion_from_euler(0, 0, 0)
-        t_lh = TransformStamped()
-        t_lh.header.stamp = self.get_clock().now().to_msg()
-        t_lh.header.frame_id = 'lighthouse'
-        t_lh.child_frame_id = 'lighthouse_link'
-        t_lh.transform.translation.x = x
-        t_lh.transform.translation.y = y
-        t_lh.transform.translation.z = z
-        t_lh.transform.rotation.x = q[0]
-        t_lh.transform.rotation.y = q[1]
-        t_lh.transform.rotation.z = q[2]
-        t_lh.transform.rotation.w = q[3]
-        self.tfbr.sendTransform(t_lh)
+            # Send to tf2
+            # TODO: Make sure this is working correctly
+            t_lh = TransformStamped()
+            q = tf_transformations.quaternion_from_euler(0, radians(90), 0)
+            t_lh.header.stamp = self.get_clock().now().to_msg()
+            t_lh.header.frame_id = 'base_link'
+            t_lh.child_frame_id = 'lighthouse'
+            self.tfbr.sendTransform(t_lh)
+
+            x = data.get('lighthouse.x')
+            y = data.get('lighthouse.y')
+            z = data.get('lighthouse.z')
+            q = tf_transformations.quaternion_from_euler(0, 0, 0)
+            t_lh = TransformStamped()
+            t_lh.header.stamp = self.get_clock().now().to_msg()
+            t_lh.header.frame_id = 'lighthouse'
+            t_lh.child_frame_id = 'lighthouse_link'
+            t_lh.transform.translation.x = x
+            t_lh.transform.translation.y = y
+            t_lh.transform.translation.z = z
+            t_lh.transform.rotation.x = q[0]
+            t_lh.transform.rotation.y = q[1]
+            t_lh.transform.rotation.z = q[2]
+            t_lh.transform.rotation.w = q[3]
+            self.tfbr.sendTransform(t_lh)
+        except:
+            self.get_logger().debug("Error in LH log data, not published to tf2")
 
     def _disconnected():
         print('disconnected')
