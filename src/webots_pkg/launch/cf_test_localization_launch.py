@@ -50,5 +50,5 @@ def generate_launch_description():
 
     return ld
 
-if name == 'main':
+if __name__ == '__main__':
     generate_launch_description()

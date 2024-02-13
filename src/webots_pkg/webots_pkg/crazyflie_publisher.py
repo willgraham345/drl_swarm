@@ -356,34 +356,33 @@ class CrazyfliePublisher(Node):
         except:
             self.get_logger().debug("Error in LH log data, not published to tf2")
     
-    def _read_lh_geos_from_config(self, geos: dict, rotation_matrix: list[list[float]]):
+    def _read_lh_geos_from_config(self, rotation_matrix: list[list[float]]):
         """
-        Read lighthouse geometries from the given configuration parameter file, and calls lighthouse_config_writer
-       """
-       #STOPPEDHERE: Working to get the lighthouse geometries from the config file
-        tb_initial_position = []
+        Read lighthouse geometries from the given configuration parameter file and call lighthouse_config_writer.
+        """
+        geos = {}
+        basestation_number = 0
         with open(self._config_file, 'r') as file:
             config = yaml.safe_load(file)
-            for tb in config['turtlebots']:
-                tb_initial_position.append(tb['translation'])
-        print("tb_initial_position:", tb_initial_position)
-
-        #TODO: test
-
+            for tb in config['robots']['turtlebots']:
+                geos[basestation_number] = tb['translation']
+                basestation_number += 1
+        print("geos", geos)
+    def dict_to_lh_config(self, geos: dict, rotation_matrix: list[list[float]], write_to_mem: bool = True):
         lh_config = {}
-        for bs in geos:
+        for bs, origin in geos.items():
             bs_geo = LighthouseBsGeometry()
-            bs_geo.origin = geos[bs]
+            bs_geo.origin = origin
             bs_geo.rotation_matrix = rotation_matrix
             print("geo for bs", bs, "origin:", bs_geo.origin, "rotation matrix:", bs_geo.rotation_matrix)
             bs_geo.valid = True
             self.lh_dict[bs] = bs_geo
-
-
-        self.lighthouse_config_writer(lh_config)
-
+        if write_to_mem == True:
+            self._lighthouse_config_writer(lh_config)
+        else:
+            return lh_config
     
-    def lighthouse_config_writer(self, lh_config: dict):
+    def _lighthouse_config_writer(self, lh_config: dict):
         self.lh_helper = LighthouseMemHelper(self._cf)
         self.lh_helper.write_geos(self.lh_dict, self._data_written)
         self._cf_event.wait()
