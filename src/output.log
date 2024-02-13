@@ -1,330 +1,96 @@
 [DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.IncludeLaunchDescription'
-[INFO] [launch]: All log files can be found below /home/will/.ros/log/2024-02-05-13-35-30-466999-will-31066
+[INFO] [launch]: All log files can be found below /home/will/.ros/log/2024-02-12-18-19-02-206794-will-25071
 [INFO] [launch]: Default logging verbosity is set to DEBUG
-[DEBUG] [launch]: processing event: '<launch.events.include_launch_description.IncludeLaunchDescription object at 0x7fcb9dff7fd0>'
-[DEBUG] [launch]: processing event: '<launch.events.include_launch_description.IncludeLaunchDescription object at 0x7fcb9dff7fd0>' ✓ '<launch.event_handlers.on_include_launch_description.OnIncludeLaunchDescription object at 0x7fcb9dff5240>'
-swarm_nodes =  [<launch_ros.actions.node.Node object at 0x7fcb9dff7490>, <webots_ros2_driver.webots_controller.WebotsController object at 0x7fcb9dd5dbd0>, <launch_ros.actions.node.Node object at 0x7fcb9de10280>, <webots_ros2_driver.webots_controller.WebotsController object at 0x7fcb9dff7340>, <launch_ros.actions.node.Node object at 0x7fcb9dff66b0>, <webots_ros2_driver.webots_controller.WebotsController object at 0x7fcb9dd206a0>, <launch_ros.actions.node.Node object at 0x7fcb9dd22650>, <webots_ros2_driver.webots_controller.WebotsController object at 0x7fcb9dd50640>]
-[INFO] [foxglove_bridge-1]: process started with pid [31067]
+[DEBUG] [launch]: processing event: '<launch.events.include_launch_description.IncludeLaunchDescription object at 0x7f5a947f3670>'
+[DEBUG] [launch]: processing event: '<launch.events.include_launch_description.IncludeLaunchDescription object at 0x7f5a947f3670>' ✓ '<launch.event_handlers.on_include_launch_description.OnIncludeLaunchDescription object at 0x7f5a947f1240>'
+[INFO] [cf_publisher-1]: process started with pid [25081]
 [DEBUG] [launch.launch_context]: emitting event: 'launch.events.process.ProcessStarted'
-[INFO] [webots-2]: process started with pid [31069]
+[INFO] [foxglove_bridge-2]: process started with pid [25083]
 [DEBUG] [launch.launch_context]: emitting event: 'launch.events.process.ProcessStarted'
-[INFO] [ros2_supervisor.py-3]: process started with pid [31071]
-[DEBUG] [launch.launch_context]: emitting event: 'launch.events.process.ProcessStarted'
-[INFO] [robot_state_publisher-4]: process started with pid [31075]
-[DEBUG] [launch.launch_context]: emitting event: 'launch.events.process.ProcessStarted'
-[INFO] [webots_controller_cf1-5]: process started with pid [31077]
-[DEBUG] [launch.launch_context]: emitting event: 'launch.events.process.ProcessStarted'
-[INFO] [robot_state_publisher-6]: process started with pid [31080]
-[DEBUG] [launch.launch_context]: emitting event: 'launch.events.process.ProcessStarted'
-[INFO] [webots_controller_cf2-7]: process started with pid [31082]
-[DEBUG] [launch.launch_context]: emitting event: 'launch.events.process.ProcessStarted'
-[INFO] [robot_state_publisher-8]: process started with pid [31084]
-[DEBUG] [launch.launch_context]: emitting event: 'launch.events.process.ProcessStarted'
-[INFO] [webots_controller_tb1-9]: process started with pid [31086]
-[DEBUG] [launch.launch_context]: emitting event: 'launch.events.process.ProcessStarted'
-[INFO] [robot_state_publisher-10]: process started with pid [31089]
-[DEBUG] [launch.launch_context]: emitting event: 'launch.events.process.ProcessStarted'
-[INFO] [webots_controller_tb2-11]: process started with pid [31092]
-[DEBUG] [launch.launch_context]: emitting event: 'launch.events.process.ProcessStarted'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_started.ProcessStarted object at 0x7fcb9f9079a0>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_started.ProcessStarted object at 0x7fcb9db18d60>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_started.ProcessStarted object at 0x7fcb9db18d60>' ✓ '<launch.event_handlers.on_process_start.OnProcessStart object at 0x7fcb9dff7b80>'
-[INFO] [launch.user]: Webots sim has started, spawning can now be performed!
-[DEBUG] [launch]: processing event: '<launch.events.process.process_started.ProcessStarted object at 0x7fcb9db190f0>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_started.ProcessStarted object at 0x7fcb9db1bb20>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_started.ProcessStarted object at 0x7fcb9db1bfd0>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_started.ProcessStarted object at 0x7fcb9db192a0>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_started.ProcessStarted object at 0x7fcb9db1a740>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_started.ProcessStarted object at 0x7fcb9db18ca0>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_started.ProcessStarted object at 0x7f5a94518310>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_started.ProcessStarted object at 0x7f5a94518250>'
 [DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_started.ProcessStarted object at 0x7fcb9db19510>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_started.ProcessStarted object at 0x7fcb9db19090>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_started.ProcessStarted object at 0x7fcb9db1fb20>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9f9079a0>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9f9079a0>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7fcb9dcb1c30>'
-[robot_state_publisher-4] [INFO] [1707165330.643675987] [cf1.robot_state_publisher]: got segment 
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7f5a95e931c0>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7f5a95e931c0>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7f5a9443e410>'
+[foxglove_bridge-2] [INFO] [1707787142.323357523] [foxglove_bridge_component_manager]: Load Library: /opt/ros/humble/lib/libfoxglove_bridge_component.so
 [DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9f907ee0>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9f907ee0>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7fcb9fb92050>'
-[foxglove_bridge-1] [INFO] [1707165330.647862156] [foxglove_bridge_component_manager]: Load Library: /opt/ros/humble/lib/libfoxglove_bridge_component.so
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7f5a95e90b50>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7f5a95e90b50>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7f5a9443e410>'
+[foxglove_bridge-2] [INFO] [1707787142.327183562] [foxglove_bridge_component_manager]: Found class: rclcpp_components::NodeFactoryTemplate<foxglove_bridge::FoxgloveBridge>
+[foxglove_bridge-2] [INFO] [1707787142.327199147] [foxglove_bridge_component_manager]: Instantiate class: rclcpp_components::NodeFactoryTemplate<foxglove_bridge::FoxgloveBridge>
 [DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9f907ee0>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9f907ee0>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7fcb9db007f0>'
-[robot_state_publisher-6] [INFO] [1707165330.652137518] [cf2.robot_state_publisher]: got segment 
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7f5a95e931c0>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7f5a95e931c0>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7f5a9443e410>'
+[foxglove_bridge-2] [INFO] [1707787142.328118998] [foxglove_bridge]: Starting foxglove_bridge (humble, 0.7.4@) with WebSocket++/0.8.2
 [DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9db1a740>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9db1a740>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7fcb9fb92050>'
-[foxglove_bridge-1] [INFO] [1707165330.652651086] [foxglove_bridge_component_manager]: Found class: rclcpp_components::NodeFactoryTemplate<foxglove_bridge::FoxgloveBridge>
-[foxglove_bridge-1] [INFO] [1707165330.652683955] [foxglove_bridge_component_manager]: Instantiate class: rclcpp_components::NodeFactoryTemplate<foxglove_bridge::FoxgloveBridge>
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7f5a94518310>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7f5a94518310>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7f5a9443e410>'
+[foxglove_bridge-2] [INFO] [1707787142.328317735] [foxglove_bridge]: [WS] Server running without TLS
 [DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7f5a95e90b50>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7f5a95e90b50>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7f5a9443e410>'
+[foxglove_bridge-2] [INFO] [1707787142.328436437] [foxglove_bridge]: [WS] WebSocket server listening at ws://0.0.0.0:8765
+[foxglove_bridge-2] [INFO] [1707787142.328442178] [foxglove_bridge]: [WS] WebSocket server run loop started
 [DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7f5a95e931c0>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7f5a95e931c0>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7f5a94525780>'
+[cf_publisher-1] [INFO] [1707787142.640869346] [crazyflie_publisher]: Got fly parameter
 [DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9db19090>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9db19090>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7fcb9db01c00>'
-[robot_state_publisher-8] [INFO] [1707165330.653648071] [tb1.robot_state_publisher]: got segment 
-[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9db1a740>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9db1a740>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7fcb9db18d00>'
-[robot_state_publisher-10] [INFO] [1707165330.653672627] [tb2.robot_state_publisher]: got segment 
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9db18ca0>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9db18ca0>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7fcb9fb92050>'
-[foxglove_bridge-1] [INFO] [1707165330.654128260] [foxglove_bridge]: Starting foxglove_bridge (humble, 0.7.4@) with WebSocket++/0.8.2
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9f907ee0>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9f907ee0>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7fcb9fb92050>'
-[foxglove_bridge-1] [INFO] [1707165330.654403863] [foxglove_bridge]: [WS] Server running without TLS
-[foxglove_bridge-1] [INFO] [1707165330.654619665] [foxglove_bridge]: [WS] WebSocket server listening at ws://0.0.0.0:8765
-[foxglove_bridge-1] [INFO] [1707165330.654632073] [foxglove_bridge]: [WS] WebSocket server run loop started
-[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9f9079a0>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9f9079a0>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7fcb9db021d0>'
-[webots_controller_cf1-5] The specified robot is not in the list of robots with <extern> controllers, retrying for another 50 seconds...
-[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9f9079a0>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9f9079a0>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7fcb9db03460>'
-[webots_controller_tb1-9] The specified robot is not in the list of robots with <extern> controllers, retrying for another 50 seconds...
-[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9db1bb20>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9db1bb20>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7fcb9db03520>'
-[webots_controller_cf2-7] The specified robot is not in the list of robots with <extern> controllers, retrying for another 50 seconds...
-[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9f907ee0>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9f907ee0>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7fcb9db1bd30>'
-[webots_controller_tb2-11] The specified robot is not in the list of robots with <extern> controllers, retrying for another 50 seconds...
-[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9f9079a0>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9f9079a0>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7fcb9dcb3940>'
-[ros2_supervisor.py-3] The specified robot is not in the list of robots with <extern> controllers, retrying for another 50 seconds...
-[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9f907ee0>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9f907ee0>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7fcb9db03460>'
-[webots_controller_tb1-9] [INFO] [1707165336.394621470] [tb1]: Controller successfully connected to robot in Webots simulation.
-[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9f9079a0>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9f9079a0>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7fcb9db1bd30>'
-[webots_controller_tb2-11] [INFO] [1707165336.408876413] [tb2]: Controller successfully connected to robot in Webots simulation.
-[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9f907ee0>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9f907ee0>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7fcb9db021d0>'
-[webots_controller_cf1-5] [INFO] [1707165336.417646546] [cf1]: Controller successfully connected to robot in Webots simulation.
-[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9f9079a0>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9f9079a0>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7fcb9db03520>'
-[webots_controller_cf2-7] [INFO] [1707165336.420437262] [cf2]: Controller successfully connected to robot in Webots simulation.
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7f5a95e931c0>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7f5a95e931c0>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7f5a94525780>'
+[cf_publisher-1] [INFO] [1707787142.641062569] [crazyflie_publisher]: Got URI parameter
+[cf_publisher-1] [INFO] [1707787142.641196432] [crazyflie_publisher]: Got config_file parameter
 [WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
 [DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.Shutdown'
 [DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
+[DEBUG] [launch]: processing event: '<launch.events.shutdown.Shutdown object at 0x7f5a945183a0>'
+[DEBUG] [launch]: processing event: '<launch.events.shutdown.Shutdown object at 0x7f5a945183a0>' ✓ '<launch.event_handlers.on_shutdown.OnShutdown object at 0x7f5a9443fa00>'
+[DEBUG] [launch]: processing event: '<launch.events.shutdown.Shutdown object at 0x7f5a945183a0>' ✓ '<launch.event_handlers.on_shutdown.OnShutdown object at 0x7f5a94525c30>'
+[DEBUG] [launch]: processing event: '<launch.events.shutdown.Shutdown object at 0x7f5a945183a0>' ✓ '<launch.event_handlers.on_shutdown.OnShutdown object at 0x7f5a947f2530>'
 [DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
 [DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
-[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
-[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
-[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
-[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
-[DEBUG] [launch]: processing event: '<launch.events.shutdown.Shutdown object at 0x7fcb9db1a740>'
-[DEBUG] [launch]: processing event: '<launch.events.shutdown.Shutdown object at 0x7fcb9db1a740>' ✓ '<launch.event_handlers.on_shutdown.OnShutdown object at 0x7fcb9db1b040>'
-[DEBUG] [launch]: processing event: '<launch.events.shutdown.Shutdown object at 0x7fcb9db1a740>' ✓ '<launch.event_handlers.on_shutdown.OnShutdown object at 0x7fcb9db1a200>'
-[DEBUG] [launch]: processing event: '<launch.events.shutdown.Shutdown object at 0x7fcb9db1a740>' ✓ '<launch.event_handlers.on_shutdown.OnShutdown object at 0x7fcb9db001c0>'
-[DEBUG] [launch]: processing event: '<launch.events.shutdown.Shutdown object at 0x7fcb9db1a740>' ✓ '<launch.event_handlers.on_shutdown.OnShutdown object at 0x7fcb9db03d00>'
-[DEBUG] [launch]: processing event: '<launch.events.shutdown.Shutdown object at 0x7fcb9db1a740>' ✓ '<launch.event_handlers.on_shutdown.OnShutdown object at 0x7fcb9db01570>'
-[DEBUG] [launch]: processing event: '<launch.events.shutdown.Shutdown object at 0x7fcb9db1a740>' ✓ '<launch.event_handlers.on_shutdown.OnShutdown object at 0x7fcb9db00b20>'
-[DEBUG] [launch]: processing event: '<launch.events.shutdown.Shutdown object at 0x7fcb9db1a740>' ✓ '<launch.event_handlers.on_shutdown.OnShutdown object at 0x7fcb9db03730>'
-[DEBUG] [launch]: processing event: '<launch.events.shutdown.Shutdown object at 0x7fcb9db1a740>' ✓ '<launch.event_handlers.on_shutdown.OnShutdown object at 0x7fcb9dcb2290>'
-[DEBUG] [launch]: processing event: '<launch.events.shutdown.Shutdown object at 0x7fcb9db1a740>' ✓ '<launch.event_handlers.on_shutdown.OnShutdown object at 0x7fcb9dcb2410>'
-[DEBUG] [launch]: processing event: '<launch.events.shutdown.Shutdown object at 0x7fcb9db1a740>' ✓ '<launch.event_handlers.on_shutdown.OnShutdown object at 0x7fcb9f94c5e0>'
-[DEBUG] [launch]: processing event: '<launch.events.shutdown.Shutdown object at 0x7fcb9db1a740>' ✓ '<launch.event_handlers.on_shutdown.OnShutdown object at 0x7fcb9fb915a0>'
-[DEBUG] [launch]: processing event: '<launch.events.shutdown.Shutdown object at 0x7fcb9db1a740>' ✓ '<launch.event_handlers.on_shutdown.OnShutdown object at 0x7fcb9dff6530>'
-[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
-[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
-[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9f907ee0>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9f907ee0>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7fcb9db021d0>'
-[webots_controller_cf1-5] [INFO] [1707165354.369045407] [rclcpp]: signal_handler(signum=2)
-[ERROR] [ros2_supervisor.py-3]: process has died [pid 31071, exit code -2, cmd '/opt/ros/humble/lib/webots_ros2_driver/ros2_supervisor.py --ros-args -r __ns:=/Ros2Supervisor -r /Ros2Supervisor/clock:=/clock'].
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7f5a95e90b50>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7f5a95e90b50>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7f5a9443e410>'
+[foxglove_bridge-2] [INFO] [1707787149.652879748] [rclcpp]: signal_handler(signum=2)
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7f5a9450b400>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7f5a9450b400>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7f5a94525780>'
+[cf_publisher-1] Traceback (most recent call last):
+[cf_publisher-1]   File "/home/will/drl_swarm/install/webots_pkg/lib/webots_pkg/cf_publisher", line 33, in <module>
+[cf_publisher-1]     sys.exit(load_entry_point('webots-pkg', 'console_scripts', 'cf_publisher')())
+[cf_publisher-1]   File "/home/will/drl_swarm/build/webots_pkg/webots_pkg/crazyflie_publisher.py", line 395, in main
+[cf_publisher-1]     rclpy.spin(crazyflie_publisher)
+[cf_publisher-1]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/__init__.py", line 222, in spin
+[cf_publisher-1]     executor.spin_once()
+[cf_publisher-1]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 739, in spin_once
+[cf_publisher-1]     self._spin_once_impl(timeout_sec)
+[cf_publisher-1]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 728, in _spin_once_impl
+[cf_publisher-1]     handler, entity, node = self.wait_for_ready_callbacks(timeout_sec=timeout_sec)
+[cf_publisher-1]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 711, in wait_for_ready_callbacks
+[cf_publisher-1]     return next(self._cb_iter)
+[cf_publisher-1]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 608, in _wait_for_ready_callbacks
+[cf_publisher-1]     wait_set.wait(timeout_nsec)
+[cf_publisher-1] KeyboardInterrupt
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7f5a9450b550>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7f5a9450b550>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7f5a9443e410>'
+[foxglove_bridge-2] [INFO] [1707787149.654260298] [foxglove_bridge]: Shutting down foxglove_bridge
+[foxglove_bridge-2] [INFO] [1707787149.654295769] [foxglove_bridge]: [WS] Stopping WebSocket server
+[foxglove_bridge-2] [INFO] [1707787149.654332364] [foxglove_bridge]: [WS] All WebSocket connections closed
+[foxglove_bridge-2] [INFO] [1707787149.654335092] [foxglove_bridge]: [WS] Waiting for WebSocket server run loop to terminate
+[foxglove_bridge-2] [INFO] [1707787149.654355825] [foxglove_bridge]: [WS] asio handle_accept error: asio.system:125 (Operation aborted.)
+[foxglove_bridge-2] [INFO] [1707787149.654388371] [foxglove_bridge]: [WS] Error getting remote endpoint: asio.system:9 (Bad file descriptor)
+[foxglove_bridge-2] [INFO] [1707787149.654412047] [foxglove_bridge]: [WS] asio async_shutdown error: asio.system:9 (Bad file descriptor)
+[foxglove_bridge-2] [ERROR] [1707787149.654419974] [foxglove_bridge]: [WS] handle_accept error: Operation aborted.
+[foxglove_bridge-2] [INFO] [1707787149.654423177] [foxglove_bridge]: [WS] Stopping acceptance of new connections because the underlying transport is no longer listening.
+[foxglove_bridge-2] [INFO] [1707787149.654441634] [foxglove_bridge]: [WS] WebSocket server run loop stopped
+[foxglove_bridge-2] [INFO] [1707787149.654547384] [foxglove_bridge]: [WS] WebSocket server run loop terminated
+[foxglove_bridge-2] [INFO] [1707787149.654568700] [foxglove_bridge]: Shutdown complete
+[ERROR] [cf_publisher-1]: process has died [pid 25081, exit code -2, cmd '/home/will/drl_swarm/install/webots_pkg/lib/webots_pkg/cf_publisher --ros-args --params-file /tmp/launch_params_dkwa8s5b'].
 [DEBUG] [launch.launch_context]: emitting event: 'launch.events.process.ProcessExited'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9db18ca0>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9db18ca0>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7fcb9db18d00>'
-[robot_state_publisher-10] [INFO] [1707165354.369054892] [rclcpp]: signal_handler(signum=2)
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9db19090>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9db19090>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7fcb9db03460>'
-[webots_controller_tb1-9] [INFO] [1707165354.369045853] [rclcpp]: signal_handler(signum=2)
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9dff5510>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9dff5510>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7fcb9db1bd30>'
-[webots_controller_tb2-11] [INFO] [1707165354.369053860] [rclcpp]: signal_handler(signum=2)
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9dff6860>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9dff6860>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7fcb9db03520>'
-[webots_controller_cf2-7] [INFO] [1707165354.369103393] [rclcpp]: signal_handler(signum=2)
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9dff5300>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9dff5300>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7fcb9db007f0>'
-[robot_state_publisher-6] [INFO] [1707165354.369131009] [rclcpp]: signal_handler(signum=2)
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9dff55d0>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9dff55d0>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7fcb9dcb1c30>'
-[robot_state_publisher-4] [INFO] [1707165354.369147658] [rclcpp]: signal_handler(signum=2)
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9db1c610>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9db1c610>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7fcb9db01c00>'
-[robot_state_publisher-8] [INFO] [1707165354.369152080] [rclcpp]: signal_handler(signum=2)
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9db19570>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9db19570>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7fcb9fb92050>'
-[foxglove_bridge-1] [INFO] [1707165354.369156519] [rclcpp]: signal_handler(signum=2)
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9db322c0>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9db322c0>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7fcb9fb92050>'
-[foxglove_bridge-1] [INFO] [1707165354.373067764] [foxglove_bridge]: Shutting down foxglove_bridge
-[foxglove_bridge-1] [INFO] [1707165354.373134843] [foxglove_bridge]: [WS] Stopping WebSocket server
-[foxglove_bridge-1] [INFO] [1707165354.373203716] [foxglove_bridge]: [WS] All WebSocket connections closed
-[foxglove_bridge-1] [INFO] [1707165354.373210787] [foxglove_bridge]: [WS] Waiting for WebSocket server run loop to terminate
-[foxglove_bridge-1] [INFO] [1707165354.373288917] [foxglove_bridge]: [WS] asio handle_accept error: asio.system:125 (Operation aborted.)
-[foxglove_bridge-1] [INFO] [1707165354.373355346] [foxglove_bridge]: [WS] Error getting remote endpoint: asio.system:9 (Bad file descriptor)
-[foxglove_bridge-1] [INFO] [1707165354.373421479] [foxglove_bridge]: [WS] asio async_shutdown error: asio.system:9 (Bad file descriptor)
-[foxglove_bridge-1] [ERROR] [1707165354.373450859] [foxglove_bridge]: [WS] handle_accept error: Operation aborted.
-[foxglove_bridge-1] [INFO] [1707165354.373485339] [foxglove_bridge]: [WS] Stopping acceptance of new connections because the underlying transport is no longer listening.
-[foxglove_bridge-1] [INFO] [1707165354.373528406] [foxglove_bridge]: [WS] WebSocket server run loop stopped
-[foxglove_bridge-1] [INFO] [1707165354.374540782] [foxglove_bridge]: [WS] WebSocket server run loop terminated
-[foxglove_bridge-1] [INFO] [1707165354.374567573] [foxglove_bridge]: Shutdown complete
-[DEBUG] [launch]: processing event: '<launch.events.process.process_exited.ProcessExited object at 0x7fcb9f907ee0>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_exited.ProcessExited object at 0x7fcb9f907ee0>' ✓ '<launch.event_handlers.on_process_exit.OnProcessExit object at 0x7fcb9dcb2a40>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_exited.ProcessExited object at 0x7fcb9f907ee0>' ✓ '<launch.event_handlers.on_process_exit.OnProcessExit object at 0x7fcb9dcb2260>'
-[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9dcb3340>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9dcb3340>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7fcb9db03520>'
-[webots_controller_cf2-7] Traceback (most recent call last):
-[webots_controller_cf2-7]   File "/home/will/drl_swarm/build/webots_pkg/webots_pkg/crazyflie_webots_driver.py", line 225, in step
-[webots_controller_cf2-7]     self.odom_publisher.publish(odom_msg)
-[webots_controller_cf2-7]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/publisher.py", line 70, in publish
-[webots_controller_cf2-7]     self.__publisher.publish(msg)
-[webots_controller_cf2-7] rclpy._rclpy_pybind11.RCLError: Failed to publish: publisher's context is invalid, at ./src/rcl/publisher.c:389
-[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStdout'
-[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stdout.ProcessStdout object at 0x7fcb9db1c610>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stdout.ProcessStdout object at 0x7fcb9db1c610>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7fcb9db03520>'
-[webots_controller_cf2-7] Created subscriber and publisher on Crazyflie
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9dff5510>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9dff5510>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7fcb9db1bd30>'
-[webots_controller_tb2-11] Traceback (most recent call last):
-[webots_controller_tb2-11]   File "/home/will/drl_swarm/build/webots_pkg/webots_pkg/my_turtlebot_driver.py", line 138, in step
-[webots_controller_tb2-11]     rclpy.spin_once(self.tb_driver, timeout_sec=0)
-[webots_controller_tb2-11]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/__init__.py", line 202, in spin_once
-[webots_controller_tb2-11]     executor.spin_once(timeout_sec=timeout_sec)
-[webots_controller_tb2-11]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 739, in spin_once
-[webots_controller_tb2-11]     self._spin_once_impl(timeout_sec)
-[webots_controller_tb2-11]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 728, in _spin_once_impl
-[webots_controller_tb2-11]     handler, entity, node = self.wait_for_ready_callbacks(timeout_sec=timeout_sec)
-[webots_controller_tb2-11]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 711, in wait_for_ready_callbacks
-[webots_controller_tb2-11]     return next(self._cb_iter)
-[webots_controller_tb2-11]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 584, in _wait_for_ready_callbacks
-[webots_controller_tb2-11]     wait_set = _rclpy.WaitSet(
-[webots_controller_tb2-11] rclpy._rclpy_pybind11.RCLError: failed to initialize wait set: the given context is not valid, either rcl_init() was not called or rcl_shutdown() was called., at ./src/rcl/wait.c:130
-[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9db24ac0>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9db24ac0>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7fcb9db03460>'
-[webots_controller_tb1-9] Traceback (most recent call last):
-[webots_controller_tb1-9]   File "/home/will/drl_swarm/build/webots_pkg/webots_pkg/my_turtlebot_driver.py", line 138, in step
-[webots_controller_tb1-9]     rclpy.spin_once(self.tb_driver, timeout_sec=0)
-[webots_controller_tb1-9]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/__init__.py", line 202, in spin_once
-[webots_controller_tb1-9]     executor.spin_once(timeout_sec=timeout_sec)
-[webots_controller_tb1-9]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 739, in spin_once
-[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9dcb2dd0>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9dcb2dd0>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7fcb9db03460>'
-[webots_controller_tb1-9]     self._spin_once_impl(timeout_sec)
-[webots_controller_tb1-9]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 728, in _spin_once_impl
-[webots_controller_tb1-9]     handler, entity, node = self.wait_for_ready_callbacks(timeout_sec=timeout_sec)
-[webots_controller_tb1-9]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 711, in wait_for_ready_callbacks
-[webots_controller_tb1-9]     return next(self._cb_iter)
-[webots_controller_tb1-9]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 584, in _wait_for_ready_callbacks
-[webots_controller_tb1-9]     wait_set = _rclpy.WaitSet(
-[webots_controller_tb1-9] rclpy._rclpy_pybind11.RCLError: failed to initialize wait set: the given context is not valid, either rcl_init() was not called or rcl_shutdown() was called., at ./src/rcl/wait.c:130
-[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9dcb1930>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9dcb1930>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7fcb9db021d0>'
-[webots_controller_cf1-5] Traceback (most recent call last):
-[webots_controller_cf1-5]   File "/home/will/drl_swarm/build/webots_pkg/webots_pkg/crazyflie_webots_driver.py", line 225, in step
-[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
-[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStdout'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9db1c610>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9db1c610>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7fcb9db021d0>'
-[webots_controller_cf1-5]     self.odom_publisher.publish(odom_msg)
-[webots_controller_cf1-5]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/publisher.py", line 70, in publish
-[webots_controller_cf1-5]     self.__publisher.publish(msg)
-[webots_controller_cf1-5] rclpy._rclpy_pybind11.RCLError: Failed to publish: publisher's context is invalid, at ./src/rcl/publisher.c:389
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stdout.ProcessStdout object at 0x7fcb9dcb1930>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stdout.ProcessStdout object at 0x7fcb9dcb1930>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7fcb9db021d0>'
-[webots_controller_cf1-5] Created subscriber and publisher on Crazyflie
-[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9dcb1930>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9dcb1930>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7fcb9db1bd30>'
-[webots_controller_tb2-11] [INFO] [1707165354.446900757] [tb2]: Controller successfully disconnected from robot in Webots simulation.
-[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9dff5510>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9dff5510>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7fcb9db03520>'
-[webots_controller_cf2-7] [INFO] [1707165354.447580460] [cf2]: Controller successfully disconnected from robot in Webots simulation.
-[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9db1c610>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9db1c610>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7fcb9db03460>'
-[webots_controller_tb1-9] [INFO] [1707165354.455496339] [tb1]: Controller successfully disconnected from robot in Webots simulation.
-[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9f907ee0>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7fcb9f907ee0>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7fcb9db021d0>'
-[webots_controller_cf1-5] [INFO] [1707165354.460731938] [cf1]: Controller successfully disconnected from robot in Webots simulation.
-[INFO] [robot_state_publisher-10]: process has finished cleanly [pid 31089]
+[DEBUG] [launch]: processing event: '<launch.events.process.process_exited.ProcessExited object at 0x7f5a95e91cc0>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_exited.ProcessExited object at 0x7f5a95e91cc0>' ✓ '<launch.event_handlers.on_process_exit.OnProcessExit object at 0x7f5a94526b60>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_exited.ProcessExited object at 0x7f5a95e91cc0>' ✓ '<launch.event_handlers.on_process_exit.OnProcessExit object at 0x7f5a94525570>'
+[INFO] [foxglove_bridge-2]: process has finished cleanly [pid 25083]
 [DEBUG] [launch.launch_context]: emitting event: 'launch.events.process.ProcessExited'
-[INFO] [robot_state_publisher-4]: process has finished cleanly [pid 31075]
-[DEBUG] [launch.launch_context]: emitting event: 'launch.events.process.ProcessExited'
-[INFO] [robot_state_publisher-6]: process has finished cleanly [pid 31080]
-[DEBUG] [launch.launch_context]: emitting event: 'launch.events.process.ProcessExited'
-[INFO] [robot_state_publisher-8]: process has finished cleanly [pid 31084]
-[DEBUG] [launch.launch_context]: emitting event: 'launch.events.process.ProcessExited'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_exited.ProcessExited object at 0x7fcb9dcb1930>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_exited.ProcessExited object at 0x7fcb9dcb1930>' ✓ '<launch.event_handlers.on_process_exit.OnProcessExit object at 0x7fcb9db1be80>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_exited.ProcessExited object at 0x7fcb9dcb1930>' ✓ '<launch.event_handlers.on_process_exit.OnProcessExit object at 0x7fcb9db1b190>'
-[INFO] [foxglove_bridge-1]: process has finished cleanly [pid 31067]
-[DEBUG] [launch.launch_context]: emitting event: 'launch.events.process.ProcessExited'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_exited.ProcessExited object at 0x7fcb9dff7070>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_exited.ProcessExited object at 0x7fcb9dff7070>' ✓ '<launch.event_handlers.on_process_exit.OnProcessExit object at 0x7fcb9dcb1900>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_exited.ProcessExited object at 0x7fcb9dff7070>' ✓ '<launch.event_handlers.on_process_exit.OnProcessExit object at 0x7fcb9dcb39d0>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_exited.ProcessExited object at 0x7fcb9db00580>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_exited.ProcessExited object at 0x7fcb9db00580>' ✓ '<launch.event_handlers.on_process_exit.OnProcessExit object at 0x7fcb9db01d80>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_exited.ProcessExited object at 0x7fcb9db00580>' ✓ '<launch.event_handlers.on_process_exit.OnProcessExit object at 0x7fcb9db01540>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_exited.ProcessExited object at 0x7fcb9de11780>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_exited.ProcessExited object at 0x7fcb9de11780>' ✓ '<launch.event_handlers.on_process_exit.OnProcessExit object at 0x7fcb9db02320>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_exited.ProcessExited object at 0x7fcb9de11780>' ✓ '<launch.event_handlers.on_process_exit.OnProcessExit object at 0x7fcb9db01f00>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_exited.ProcessExited object at 0x7fcb9dcb1930>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_exited.ProcessExited object at 0x7fcb9dcb1930>' ✓ '<launch.event_handlers.on_process_exit.OnProcessExit object at 0x7fcb9fb91630>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_exited.ProcessExited object at 0x7fcb9dcb1930>' ✓ '<launch.event_handlers.on_process_exit.OnProcessExit object at 0x7fcb9fb91810>'
-[INFO] [webots_controller_cf2-7]: process has finished cleanly [pid 31082]
-[DEBUG] [launch.launch_context]: emitting event: 'launch.events.process.ProcessExited'
-[INFO] [webots_controller_cf1-5]: process has finished cleanly [pid 31077]
-[DEBUG] [launch.launch_context]: emitting event: 'launch.events.process.ProcessExited'
-[INFO] [webots_controller_tb2-11]: process has finished cleanly [pid 31092]
-[DEBUG] [launch.launch_context]: emitting event: 'launch.events.process.ProcessExited'
-[INFO] [webots_controller_tb1-9]: process has finished cleanly [pid 31086]
-[DEBUG] [launch.launch_context]: emitting event: 'launch.events.process.ProcessExited'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_exited.ProcessExited object at 0x7fcb9f907d90>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_exited.ProcessExited object at 0x7fcb9f907d90>' ✓ '<launch.event_handlers.on_process_exit.OnProcessExit object at 0x7fcb9db00340>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_exited.ProcessExited object at 0x7fcb9f907d90>' ✓ '<launch.event_handlers.on_process_exit.OnProcessExit object at 0x7fcb9db039d0>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_exited.ProcessExited object at 0x7fcb9dee4970>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_exited.ProcessExited object at 0x7fcb9dee4970>' ✓ '<launch.event_handlers.on_process_exit.OnProcessExit object at 0x7fcb9db01450>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_exited.ProcessExited object at 0x7fcb9dee4970>' ✓ '<launch.event_handlers.on_process_exit.OnProcessExit object at 0x7fcb9db02800>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_exited.ProcessExited object at 0x7fcb9de10ee0>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_exited.ProcessExited object at 0x7fcb9de10ee0>' ✓ '<launch.event_handlers.on_process_exit.OnProcessExit object at 0x7fcb9db19d80>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_exited.ProcessExited object at 0x7fcb9de10ee0>' ✓ '<launch.event_handlers.on_process_exit.OnProcessExit object at 0x7fcb9db1b550>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_exited.ProcessExited object at 0x7fcb9dd52e30>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_exited.ProcessExited object at 0x7fcb9dd52e30>' ✓ '<launch.event_handlers.on_process_exit.OnProcessExit object at 0x7fcb9db01e70>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_exited.ProcessExited object at 0x7fcb9dd52e30>' ✓ '<launch.event_handlers.on_process_exit.OnProcessExit object at 0x7fcb9db01cc0>'
-[INFO] [webots-2]: process has finished cleanly [pid 31069]
-[DEBUG] [launch.launch_context]: emitting event: 'launch.events.process.ProcessExited'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_exited.ProcessExited object at 0x7fcb9dee4970>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_exited.ProcessExited object at 0x7fcb9dee4970>' ✓ '<launch.event_handlers.on_process_exit.OnProcessExit object at 0x7fcb9dff5e40>'
-[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.Shutdown'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_exited.ProcessExited object at 0x7fcb9dee4970>' ✓ '<launch.event_handlers.on_process_exit.OnProcessExit object at 0x7fcb9f94c430>'
-[DEBUG] [launch]: processing event: '<launch.events.process.process_exited.ProcessExited object at 0x7fcb9dee4970>' ✓ '<launch.event_handlers.on_process_exit.OnProcessExit object at 0x7fcb9f94d5a0>'
-[DEBUG] [launch]: processing event: '<launch.events.shutdown.Shutdown object at 0x7fcb9dff5cf0>'
-[DEBUG] [launch]: processing event: '<launch.events.shutdown.Shutdown object at 0x7fcb9dff5cf0>' ✓ '<launch.event_handlers.on_shutdown.OnShutdown object at 0x7fcb9db1b040>'
-[DEBUG] [launch]: processing event: '<launch.events.shutdown.Shutdown object at 0x7fcb9dff5cf0>' ✓ '<launch.event_handlers.on_shutdown.OnShutdown object at 0x7fcb9db1a200>'
-[DEBUG] [launch]: processing event: '<launch.events.shutdown.Shutdown object at 0x7fcb9dff5cf0>' ✓ '<launch.event_handlers.on_shutdown.OnShutdown object at 0x7fcb9db001c0>'
-[DEBUG] [launch]: processing event: '<launch.events.shutdown.Shutdown object at 0x7fcb9dff5cf0>' ✓ '<launch.event_handlers.on_shutdown.OnShutdown object at 0x7fcb9db03d00>'
-[DEBUG] [launch]: processing event: '<launch.events.shutdown.Shutdown object at 0x7fcb9dff5cf0>' ✓ '<launch.event_handlers.on_shutdown.OnShutdown object at 0x7fcb9db01570>'
-[DEBUG] [launch]: processing event: '<launch.events.shutdown.Shutdown object at 0x7fcb9dff5cf0>' ✓ '<launch.event_handlers.on_shutdown.OnShutdown object at 0x7fcb9db00b20>'
-[DEBUG] [launch]: processing event: '<launch.events.shutdown.Shutdown object at 0x7fcb9dff5cf0>' ✓ '<launch.event_handlers.on_shutdown.OnShutdown object at 0x7fcb9db03730>'
-[DEBUG] [launch]: processing event: '<launch.events.shutdown.Shutdown object at 0x7fcb9dff5cf0>' ✓ '<launch.event_handlers.on_shutdown.OnShutdown object at 0x7fcb9dcb2290>'
-[DEBUG] [launch]: processing event: '<launch.events.shutdown.Shutdown object at 0x7fcb9dff5cf0>' ✓ '<launch.event_handlers.on_shutdown.OnShutdown object at 0x7fcb9dcb2410>'
-[DEBUG] [launch]: processing event: '<launch.events.shutdown.Shutdown object at 0x7fcb9dff5cf0>' ✓ '<launch.event_handlers.on_shutdown.OnShutdown object at 0x7fcb9f94c5e0>'
-[DEBUG] [launch]: processing event: '<launch.events.shutdown.Shutdown object at 0x7fcb9dff5cf0>' ✓ '<launch.event_handlers.on_shutdown.OnShutdown object at 0x7fcb9fb915a0>'
-[DEBUG] [launch]: processing event: '<launch.events.shutdown.Shutdown object at 0x7fcb9dff5cf0>' ✓ '<launch.event_handlers.on_shutdown.OnShutdown object at 0x7fcb9dff6530>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_exited.ProcessExited object at 0x7f5a94518730>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_exited.ProcessExited object at 0x7f5a94518730>' ✓ '<launch.event_handlers.on_process_exit.OnProcessExit object at 0x7f5a9443de40>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_exited.ProcessExited object at 0x7f5a94518730>' ✓ '<launch.event_handlers.on_process_exit.OnProcessExit object at 0x7f5a9443e860>'

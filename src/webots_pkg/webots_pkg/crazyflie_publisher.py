@@ -1,3 +1,5 @@
+from threading import Event
+import yaml
 import rclpy
 from rclpy.node import Node
 from rcl_interfaces.msg import ParameterDescriptor
@@ -16,8 +18,11 @@ import cflib.crtp  # noqa
 from cflib.crazyflie import Crazyflie
 from cflib.crazyflie.log import LogConfig
 from cflib.utils import uri_helper
+from cflib.crazyflie.mem import LighthouseMemHelper
+from cflib.crazyflie.mem import LighthouseBsGeometry
 from cflib.crazyflie.syncCrazyflie import SyncCrazyflie
 from cflib.positioning.motion_commander import MotionCommander
+from cflib.localization.lighthouse_types import LhCfPoseSample
 
 import math
 
@@ -35,39 +40,53 @@ class CrazyfliePublisher(Node):
     :type link_uri: str
     """
 
-    # TODO_after_testing: Add capability for URI to be passed in as a parameter
-    # TODO_after_testing: check to see if the URI can already be passed in as a parameter
-    def __init__(self, link_uri):
+    def __init__(self):
 
         # Initialize the Node with the name "crazyflie_publisher"
         super().__init__("crazyflie_publisher") 
         self.get_logger().debug("Initializing CrazyfliePublisher")
 
-        # TODO: Add launch parameters for URI
-        self.declare_parameter('link_uri', link_uri)
-        
-        flying_descriptor = ParameterDescriptor(
-            description='Determines if the crazyflie is in testing mode')
-        self.declare_parameter('fly', rclpy.Parameter.Type.BOOL, flying_descriptor)
+        # Declare and get parameters
+        self.declare_parameter('URI', rclpy.Parameter.Type.STRING)
+        self.declare_parameter('fly', rclpy.Parameter.Type.BOOL,
+            ParameterDescriptor(
+                description = "Determines if the crazyflie is in testing mode")
+        )
+        self.declare_parameter('config_file', rclpy.Parameter.Type.STRING)
+        try: 
+            
+            fly = self.get_parameter('fly').value
+            self.get_logger().info("Got fly parameter")
+            link_uri = self.get_parameter('URI').value
+            self.get_logger().info("Got URI parameter")
+            config_file = self.get_parameter('config_file').value
+            self._config_file = config_file
+            self.get_logger().info("Got config_file parameter")
+        except Exception as e:
+            self.get_logger().fatal(f"Error getting paramater value: {e}")
 
 
-
+        # Initialize publishers and tf2 broadcasters
         self.range_publisher = self.create_publisher(Range, "/zrange", 10)
         self.laser_publisher = self.create_publisher(LaserScan, "/scan", 10)
         self.odom_publisher = self.create_publisher(Odometry,  "/odom", 10)
-    
-        self.create_subscription(Twist,  "/cmd_vel", self.cmd_vel_callback, 1)
-
         self.tfbr = TransformBroadcaster(self)
+    
+        # Initialize subscribers
+        self.create_subscription(Twist,  "/cmd_vel", self.cmd_vel_callback, 1)
+        #TODO: Implement subscription to lighthouse node for up-to-date pose data
+        #TODO: Create callback for lighthouse data
 
+
+
+        # Handle crazyflie connection
         self._cf = Crazyflie(rw_cache='./cache')
         self._cf.connected.add_callback(self._connected)
         self._cf.disconnected.add_callback(self._disconnected)
         self._cf.connection_failed.add_callback(self._connection_failed)
         self._cf.connection_lost.add_callback(self._connection_lost)
         self._cf.open_link(link_uri)
-
-
+        self._cf_event = Event()
 
 
         # Initialize ranges and timer for the laser scan
@@ -75,11 +94,7 @@ class CrazyfliePublisher(Node):
         self.create_timer(1.0/30.0, self.publish_laserscan_data)
 
 
-        # Determine if the crazyflie is in testing mode
-        try: 
-            fly = self.get_parameter('fly').value
-        except:
-            self.get_logger().fatal("Error setting flying parameter. Make sure to set the parameter in the launch file or as a command line argument")
+        # Send flight commands if in flight mode
         if fly == True:
             timer_period = 0.1  # seconds
             self.create_timer(timer_period, self.sendHoverCommand)
@@ -133,6 +148,7 @@ class CrazyfliePublisher(Node):
                   '{} not found in TOC'.format(str(e)))
         except AttributeError:
             print('Could not add Stabilizer log config, bad configuration.')
+        self._read_lh_geos_from_config()
 
 
 
@@ -153,21 +169,25 @@ class CrazyfliePublisher(Node):
 
     def publish_laserscan_data(self):
 
-        msg = LaserScan()
-        msg.header.stamp = self.get_clock().now().to_msg()
-        msg.header.frame_id = 'base_link'
-        msg.range_min = 0.01
-        msg.range_max = 3.49
-        msg.ranges = self.ranges
-        msg.angle_min = 0.5 * 2*pi
-        msg.angle_max =  -0.5 * 2*pi
-        msg.angle_increment = -1.0*pi/2
-        self.laser_publisher.publish(msg)
+        try:
+            msg = LaserScan()
+            msg.header.stamp = self.get_clock().now().to_msg()
+            msg.header.frame_id = 'base_link'
+            msg.range_min = 0.01
+            msg.range_max = 3.49
+            msg.ranges = self.ranges
+            msg.angle_min = 0.5 * 2*pi
+            msg.angle_max =  -0.5 * 2*pi
+            msg.angle_increment = -1.0*pi/2
+            self.laser_publisher.publish(msg)
+        except:
+            self.get_logger().debug("Error in laser scan data, not published to tf2")
 
 
     def _range_log_error(self, logconf, msg):
         """Callback from the log API when an error occurs"""
         print('Error when logging %s: %s' % (logconf.name, msg))
+        self.get_logger().debug('Error when logging %s: %s' % (logconf.name, msg))
 
     def _range_log_data(self, timestamp, data, logconf):
         """Callback from a the log API when data arrives"""
@@ -335,6 +355,39 @@ class CrazyfliePublisher(Node):
             self.tfbr.sendTransform(t_lh)
         except:
             self.get_logger().debug("Error in LH log data, not published to tf2")
+    
+    def _read_lh_geos_from_config(self, geos: dict, rotation_matrix: list[list[float]]):
+        """
+        Read lighthouse geometries from the given configuration parameter file, and calls lighthouse_config_writer
+       """
+       #STOPPEDHERE: Working to get the lighthouse geometries from the config file
+        tb_initial_position = []
+        with open(self._config_file, 'r') as file:
+            config = yaml.safe_load(file)
+            for tb in config['turtlebots']:
+                tb_initial_position.append(tb['translation'])
+        print("tb_initial_position:", tb_initial_position)
+
+        #TODO: test
+
+        lh_config = {}
+        for bs in geos:
+            bs_geo = LighthouseBsGeometry()
+            bs_geo.origin = geos[bs]
+            bs_geo.rotation_matrix = rotation_matrix
+            print("geo for bs", bs, "origin:", bs_geo.origin, "rotation matrix:", bs_geo.rotation_matrix)
+            bs_geo.valid = True
+            self.lh_dict[bs] = bs_geo
+
+
+        self.lighthouse_config_writer(lh_config)
+
+    
+    def lighthouse_config_writer(self, lh_config: dict):
+        self.lh_helper = LighthouseMemHelper(self._cf)
+        self.lh_helper.write_geos(self.lh_dict, self._data_written)
+        self._cf_event.wait()
+        self._cf_event.clear()
 
     def _disconnected():
         print('disconnected')
@@ -349,7 +402,7 @@ def main(args=None):
 
     cflib.crtp.init_drivers()
     rclpy.init(args=args)
-    crazyflie_publisher = CrazyfliePublisher(URI)
+    crazyflie_publisher = CrazyfliePublisher()
     rclpy.spin(crazyflie_publisher)
     crazyflie_publisher.destroy_node()
     rclpy.shutdown()
