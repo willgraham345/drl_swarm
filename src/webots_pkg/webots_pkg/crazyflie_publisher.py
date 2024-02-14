@@ -32,6 +32,17 @@ URI = uri_helper.uri_from_env(default='radio://0/80/2M/E7E7E7E7E7')
 def radians(degrees):  
     return degrees * math.pi / 180.0
 
+ROTATION_MATRIX_NEG_90_PITCH = [
+    [0.0, 0.0, -1.0],
+    [0.0, 1.0, 0.0],
+    [1.0, 0.0, 0.0],
+]
+NO_ROTATION_MATRIX = [
+    [1.0, 0.0, 0.0],
+    [0.0, 1.0, 0.0],
+    [0.0, 0.0, 1.0]
+]
+
 
 class CrazyfliePublisher(Node):
     """
@@ -53,6 +64,8 @@ class CrazyfliePublisher(Node):
                 description = "Determines if the crazyflie is in testing mode")
         )
         self.declare_parameter('config_file', rclpy.Parameter.Type.STRING)
+        self.lh_config = {}
+        self.lh_rotation_matrix = ROTATION_MATRIX_NEG_90_PITCH
         try: 
             
             fly = self.get_parameter('fly').value
@@ -85,6 +98,8 @@ class CrazyfliePublisher(Node):
         self._cf.disconnected.add_callback(self._disconnected)
         self._cf.connection_failed.add_callback(self._connection_failed)
         self._cf.connection_lost.add_callback(self._connection_lost)
+        # Aded for lighthouse config
+        self.lh_helper = None
         self._cf.open_link(link_uri)
         self._cf_event = Event()
 
@@ -94,6 +109,7 @@ class CrazyfliePublisher(Node):
         self.create_timer(1.0/30.0, self.publish_laserscan_data)
 
 
+        self._read_lh_geos_from_config()
         # Send flight commands if in flight mode
         if fly == True:
             timer_period = 0.1  # seconds
@@ -108,7 +124,7 @@ class CrazyfliePublisher(Node):
                 self.hover['height'])
 
     def _connected(self, link_uri):
-        self.get_logger().info('Connected!')
+        self.get_logger().info('Connected to cf!')
         self._lg_stab = LogConfig(name='Stabilizer', period_in_ms=100)
         self._lg_stab.add_variable('stateEstimate.x', 'float')
         self._lg_stab.add_variable('stateEstimate.y', 'float')
@@ -144,11 +160,10 @@ class CrazyfliePublisher(Node):
             self._lh_pose.start()
 
         except KeyError as e:
-            print('Could not start log configuration,'
+            self.get_logger.fatal('Could not start log configuration,'
                   '{} not found in TOC'.format(str(e)))
         except AttributeError:
-            print('Could not add Stabilizer log config, bad configuration.')
-        self._read_lh_geos_from_config()
+            self.get_logger.fatal('Could not add Stabilizer log config, bad configuration.')
 
 
 
@@ -181,7 +196,7 @@ class CrazyfliePublisher(Node):
             msg.angle_increment = -1.0*pi/2
             self.laser_publisher.publish(msg)
         except:
-            self.get_logger().debug("Error in laser scan data, not published to tf2")
+            self.get_logger().warning("Error in laser scan data, not published to tf2")
 
 
     def _range_log_error(self, logconf, msg):
@@ -195,16 +210,19 @@ class CrazyfliePublisher(Node):
             print(f'{name}: {value:3.3f} ', end='')
         print()
 
-        t_range = TransformStamped()
-        q = tf_transformations.quaternion_from_euler(0, radians(90), 0)
-        t_range.header.stamp = self.get_clock().now().to_msg()
-        t_range.header.frame_id = 'base_link'
-        t_range.child_frame_id = 'crazyflie_flowdeck'
-        t_range.transform.rotation.x = q[0]
-        t_range.transform.rotation.y = q[1]
-        t_range.transform.rotation.z = q[2]
-        t_range.transform.rotation.w = q[3]
-        self.tfbr.sendTransform(t_range)
+        try:
+            t_range = TransformStamped()
+            q = tf_transformations.quaternion_from_euler(0, radians(90), 0)
+            t_range.header.stamp = self.get_clock().now().to_msg()
+            t_range.header.frame_id = 'base_link'
+            t_range.child_frame_id = 'crazyflie_flowdeck'
+            t_range.transform.rotation.x = q[0]
+            t_range.transform.rotation.y = q[1]
+            t_range.transform.rotation.z = q[2]
+            t_range.transform.rotation.w = q[3]
+            self.tfbr.sendTransform(t_range)
+        except:
+            self.get_logger().warning("Error in range transform, not published to tf2")
 
         zrange = float(data.get('range.zrange'))/1000.0
         msg = Range()
@@ -248,40 +266,46 @@ class CrazyfliePublisher(Node):
         print()"""
 
         # Get odometry values from crazyflie stability logger
-        x = data.get('stateEstimate.x')
-        y = data.get('stateEstimate.y')
-        z = data.get('stateEstimate.z')
-        roll = radians(data.get('stabilizer.roll'))
-        pitch = radians(-1.0 * data.get('stabilizer.pitch'))
-        yaw = radians(data.get('stabilizer.yaw'))
-        
-        # Create odometry message and publish to ROS2
-        odom_msg = Odometry()
-        odom_msg.pose.pose.position.x = x
-        odom_msg.pose.pose.position.y = y
-        odom_msg.pose.pose.position.z = z
-        q = tf_transformations.quaternion_from_euler(roll, pitch, yaw)
-        odom_msg.pose.pose.orientation.x = q[0]
-        odom_msg.pose.pose.orientation.y = q[1]
-        odom_msg.pose.pose.orientation.z = q[2]
-        odom_msg.pose.pose.orientation.w = q[3]
-        self.odom_publisher.publish(odom_msg)
+        try: 
+            x = data.get('stateEstimate.x')
+            y = data.get('stateEstimate.y')
+            z = data.get('stateEstimate.z')
+            roll = radians(data.get('stabilizer.roll'))
+            pitch = radians(-1.0 * data.get('stabilizer.pitch'))
+            yaw = radians(data.get('stabilizer.yaw'))
+            
+            # Create odometry message and publish to ROS2
+            odom_msg = Odometry()
+            odom_msg.pose.pose.position.x = x
+            odom_msg.pose.pose.position.y = y
+            odom_msg.pose.pose.position.z = z
+            q = tf_transformations.quaternion_from_euler(roll, pitch, yaw)
+            odom_msg.pose.pose.orientation.x = q[0]
+            odom_msg.pose.pose.orientation.y = q[1]
+            odom_msg.pose.pose.orientation.z = q[2]
+            odom_msg.pose.pose.orientation.w = q[3]
+            self.odom_publisher.publish(odom_msg)
+        except Exception as e:
+            self.get_logger().warning(f"Error in publishing odom message: {e}")
 
 
         # Create tf2 transforms and send to tf2
-        q_base = tf_transformations.quaternion_from_euler(0, 0, yaw)
-        t_base = TransformStamped()
-        t_base.header.stamp = self.get_clock().now().to_msg()
-        t_base.header.frame_id = 'odom'
-        t_base.child_frame_id = 'base_footprint'
-        t_base.transform.translation.x = x
-        t_base.transform.translation.y = y
-        t_base.transform.translation.z = 0.0
-        t_base.transform.rotation.x = q_base[0]
-        t_base.transform.rotation.y = q_base[1]
-        t_base.transform.rotation.z = q_base[2]
-        t_base.transform.rotation.w = q_base[3]
-        self.tfbr.sendTransform(t_base)
+        try:
+            q_base = tf_transformations.quaternion_from_euler(0, 0, yaw)
+            t_base = TransformStamped()
+            t_base.header.stamp = self.get_clock().now().to_msg()
+            t_base.header.frame_id = 'odom'
+            t_base.child_frame_id = 'base_footprint'
+            t_base.transform.translation.x = x
+            t_base.transform.translation.y = y
+            t_base.transform.translation.z = 0.0
+            t_base.transform.rotation.x = q_base[0]
+            t_base.transform.rotation.y = q_base[1]
+            t_base.transform.rotation.z = q_base[2]
+            t_base.transform.rotation.w = q_base[3]
+            self.tfbr.sendTransform(t_base)
+        except Exception as e:
+            self.get_logger().warning(f"Error in publishing base_footprint transform: {e}")
 
         t_odom = TransformStamped()
         t_odom.header.stamp = self.get_clock().now().to_msg()
@@ -298,22 +322,24 @@ class CrazyfliePublisher(Node):
     
         #self.tfbr.sendTransform(t_odom)
 
-        # Create t_cf message, assigned values from the crazyflie stability logger 
-        t_cf = TransformStamped()
-        q_cf = tf_transformations.quaternion_from_euler(roll, pitch, 0)
-        t_cf.header.stamp = self.get_clock().now().to_msg()
-        t_cf.header.frame_id = 'base_footprint'
-        t_cf.child_frame_id = 'base_link'
-        t_cf.transform.translation.x = 0.0
-        t_cf.transform.translation.y = 0.0
-        t_cf.transform.translation.z = z
-        t_cf.transform.rotation.x = q_cf[0]
-        t_cf.transform.rotation.y = q_cf[1]
-        t_cf.transform.rotation.z = q_cf[2]
-        t_cf.transform.rotation.w = q_cf[3]
-
         # Publish t_cf to tf2
-        self.tfbr.sendTransform(t_cf)
+        try:
+            # Create t_cf message, assigned values from the crazyflie stability logger 
+            t_cf = TransformStamped()
+            q_cf = tf_transformations.quaternion_from_euler(roll, pitch, 0)
+            t_cf.header.stamp = self.get_clock().now().to_msg()
+            t_cf.header.frame_id = 'base_footprint'
+            t_cf.child_frame_id = 'base_link'
+            t_cf.transform.translation.x = 0.0
+            t_cf.transform.translation.y = 0.0
+            t_cf.transform.translation.z = z
+            t_cf.transform.rotation.x = q_cf[0]
+            t_cf.transform.rotation.y = q_cf[1]
+            t_cf.transform.rotation.z = q_cf[2]
+            t_cf.transform.rotation.w = q_cf[3]
+            self.tfbr.sendTransform(t_cf)
+        except Exception as e:
+            self.get_logger().warning(f"Error in base_link transform publisher: {e}")
     
     def _lh_log_error(self, logconf, msg):
         """Callback from the log API when an error occurs"""
@@ -356,37 +382,60 @@ class CrazyfliePublisher(Node):
         except:
             self.get_logger().debug("Error in LH log data, not published to tf2")
     
-    def _read_lh_geos_from_config(self, rotation_matrix: list[list[float]]):
+    def _read_lh_geos_from_config(self):
         """
         Read lighthouse geometries from the given configuration parameter file and call lighthouse_config_writer.
         """
+        self.get_logger().debug('Reading lighthouse geometries from config file')
         geos = {}
         basestation_number = 0
         with open(self._config_file, 'r') as file:
             config = yaml.safe_load(file)
             for tb in config['robots']['turtlebots']:
                 geos[basestation_number] = tb['translation']
+                self.get_logger().debug(f"tb['translation']: {tb['translation']}, type {type(tb['translation'])}")
                 basestation_number += 1
-        print("geos", geos)
+        self.get_logger().debug(f"geos: {geos}, type: {type(geos)}")
+        self.dict_to_lh_config(geos, self.lh_rotation_matrix, True)
+
     def dict_to_lh_config(self, geos: dict, rotation_matrix: list[list[float]], write_to_mem: bool = True):
         lh_config = {}
         for bs, origin in geos.items():
             bs_geo = LighthouseBsGeometry()
             bs_geo.origin = origin
             bs_geo.rotation_matrix = rotation_matrix
-            print("geo for bs", bs, "origin:", bs_geo.origin, "rotation matrix:", bs_geo.rotation_matrix)
+            self.get_logger().info(f"geo for bs {bs} origin: {bs_geo.origin} rotation matrix: {bs_geo.rotation_matrix}")
+            self.get_logger().info(str(type(rotation_matrix)))
             bs_geo.valid = True
-            self.lh_dict[bs] = bs_geo
+            self.lh_config[bs] = bs_geo
         if write_to_mem == True:
-            self._lighthouse_config_writer(lh_config)
+            self.get_logger().debug("Writing lighthouse config to memory")
+            self._lighthouse_config_writer() 
         else:
             return lh_config
     
-    def _lighthouse_config_writer(self, lh_config: dict):
-        self.lh_helper = LighthouseMemHelper(self._cf)
-        self.lh_helper.write_geos(self.lh_dict, self._data_written)
-        self._cf_event.wait()
-        self._cf_event.clear()
+    def _lighthouse_config_writer(self):
+        try:
+            self.get_logger().debug("Writing lighthouse config to memory")
+            self.get_logger().debug(f'Crazyflie type: {type(self._cf)}')
+            lh_helper = LighthouseMemHelper(self._cf)
+            self.get_logger().debug(f'Lighthouse helper type: {type(self.lh_helper)}')
+            lh_helper.write_geos(self.lh_config, self._data_written)
+            self.get_logger().debug("Lighthouse config written to memory")
+            self._cf_event.wait()
+            self._cf_event.clear()
+        except Exception as e:
+            self.get_logger().error(f"Error writing lighthouse config to memory: {e}")
+
+    def _data_written(self, success):
+        if success:
+            print('Lighthouse data correctly written to crazyflie')
+            self.get_logger().info('Lighthouse data correctly written to crazyflie')
+        else:
+            self.get_logger().error('Writing crazyflie lighthouse data failed')
+            print('Write failed')
+
+        self._cf_event.set()
 
     def _disconnected():
         print('disconnected')
@@ -414,4 +463,15 @@ if __name__ == '__main__':
 
 
 
+# For debugging as a normal python file
+"""
+def main():
+    ls = launch.LaunchService()
+    ld = generate_launch_description()
+    ls.include_launch_description(ld)
+    return ls.run()
 
+
+if __name__ == '__main__':
+    main()
+"""

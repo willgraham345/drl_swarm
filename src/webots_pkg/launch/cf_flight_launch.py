@@ -12,8 +12,8 @@ from launch.substitutions import Command, LaunchConfiguration
 from launch.actions import DeclareLaunchArgument
 
 
-# PACKAGE_DIR = get_package_share_directory('webots_pkg')
-# CONFIG_FILE_PATH = os.path.abspath(os.path.join(PACKAGE_DIR, 'config', 'webots_config.yaml'))
+PACKAGE_DIR = get_package_share_directory('webots_pkg')
+CONFIG_FILE_PATH = os.path.abspath(os.path.join(PACKAGE_DIR, 'config', 'experiment_config.yaml'))
 
 def generate_launch_description():
     # pkg_share = get_package_share_directory('crazyflie_ros2_simple_mapper')
@@ -29,7 +29,7 @@ def generate_launch_description():
     )
     # params_file = CONFIG_FILE_PATH
     # print(f'params_file: {params_file}')
-    CONFIG_FILE_NAME = 'webots_config.yaml'
+    CONFIG_FILE_NAME = CONFIG_FILE_PATH
 
 
     crazyflie_node = launch_ros.actions.Node(

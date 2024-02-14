@@ -13,22 +13,19 @@ from launch.actions import DeclareLaunchArgument
 
 
 PACKAGE_DIR = get_package_share_directory('webots_pkg')
-CONFIG_FILE_PATH = os.path.abspath(os.path.join(PACKAGE_DIR, 'config', 'webots_config.yaml'))
+CONFIG_FILE_PATH = os.path.abspath(os.path.join(PACKAGE_DIR, 'config', 'experiment_config.yaml'))
 
 def generate_launch_description():
-    # pkg_share = get_package_share_directory('crazyflie_ros2_simple_mapper')
-
-
     # simple_mapper_node = launch_ros.actions.Node(
     #     package='webots_pkg',
     #     executable='simple_mapper')
+    
     foxglove_websocket = IncludeLaunchDescription(
         XMLLaunchDescriptionSource(
             [os.path.join(get_package_share_directory('foxglove_bridge'), 'launch', 'foxglove_bridge_launch.xml')]
         )
     )
     params_file = CONFIG_FILE_PATH
-    CONFIG_FILE_NAME = 'webots_config.yaml'
 
 
     crazyflie_node = launch_ros.actions.Node(
@@ -41,7 +38,7 @@ def generate_launch_description():
             'config_file': params_file,
             }
         ],
-        )
+    )
 
 
     ld = LaunchDescription()
