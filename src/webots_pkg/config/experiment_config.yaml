@@ -2,7 +2,7 @@ robots:
   crazyflies:
     - name: cf1
       uri: ""
-      translation: [-0 -0 0.015]
+      translation: [-0, -0, 0.015]
       orientation: [0, 0, 0, 1]
     # - name: cf2
     #   uri: ""
@@ -12,10 +12,10 @@ robots:
   turtlebots: 
     - name: tb1
       uri: ""
-      translation: [0 -0.5 0.015]
+      translation: [0, -0.2, 0.015]
       orientation: [0, 0, 0, 1]
 
     - name: tb2
       uri: ""
-      translation: [0 0.5 0.015]
+      translation: [0, 0.2, 0.015]
       orientation: [0, 0, 0, 1]
