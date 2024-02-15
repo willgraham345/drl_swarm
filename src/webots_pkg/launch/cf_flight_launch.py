@@ -43,10 +43,18 @@ def generate_launch_description():
         ],
         )
 
+    teleop_twist_node = launch_ros.actions.Node(
+        package='teleop_twist_keyboard',
+        node_executable="teleop_twist_keyboard",
+        output='screen',
+        prefix = 'xterm -e',
+        node_name='teleop',
+        )
 
     ld = LaunchDescription()
     ld.add_action(crazyflie_node)
     ld.add_action(foxglove_websocket)
+    ld.add_action(teleop_twist_node)
 
     return ld
 

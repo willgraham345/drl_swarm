@@ -22,6 +22,8 @@
   <depend>builtin_interfaces</depend>
   <depend>joint_state_broadcaster</depend>
   <depend>rviz2</depend>
+  <depend>foxglove_bridge</depend>
+  <depend>teleop_twist_keyboard</depend>
   
 
 
