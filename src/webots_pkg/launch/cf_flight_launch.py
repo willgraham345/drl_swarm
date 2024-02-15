@@ -36,7 +36,7 @@ def generate_launch_description():
         package='webots_pkg',
         executable='cf_publisher',
         parameters = [
-            {'fly': False,
+            {'fly': True,
              'URI': 'radio://0/80/2M/E7E7E7E7E7',
              'config_file': CONFIG_FILE_NAME,
             }

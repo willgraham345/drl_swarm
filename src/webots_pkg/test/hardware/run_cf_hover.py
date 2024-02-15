@@ -38,7 +38,7 @@ logging.basicConfig(level=logging.ERROR)
 
 position_estimate = [-0.5, 0, 0, 0]
 
-def test_hover_crazyflie(): #FIXME: Remove this test, keep this a script file
+def hover_crazyflie(): 
     # Initialize the Crazyflie object
     cf = Crazyflie()
 
@@ -86,15 +86,6 @@ def log_pos_callback(timestamp, data, logconf):
     position_estimate[2] = data['stateEstimate.z']
     position_estimate[3] = data['stabilizer.yaw']
 
-# RUN_TESTS: Confirm the json file is written correctly
-def output_position_estimate(position_estimate):
-    timestamp = int(time.time())
-    filename = f"cf_hover_trial_{timestamp}.json"
-
-    with open(filename, 'w') as file:
-        json.dump(position_estimate, file)
-
-# RUN_TESTS: Confirm the cf can hover when flashed with the correct firmware
 
 if __name__ == '__main__':
     cflib.crtp.init_drivers()

@@ -88,7 +88,6 @@ class CrazyfliePublisher(Node):
         # Initialize subscribers
         self.create_subscription(Twist,  "/cmd_vel", self.cmd_vel_callback, 1)
         #TODO: Implement subscription to lighthouse node for up-to-date pose data
-        #TODO: Create callback for lighthouse data
 
 
 
@@ -102,6 +101,11 @@ class CrazyfliePublisher(Node):
         self.lh_helper = None
         self._cf.open_link(link_uri)
         self._cf_event = Event()
+
+        # Double check that crazyflie is connected
+        if self._cf.is_connected() is None:
+            self.get_logger().fatal("Crazyflie unable to connect")
+            return
 
 
         # Initialize ranges and timer for the laser scan
