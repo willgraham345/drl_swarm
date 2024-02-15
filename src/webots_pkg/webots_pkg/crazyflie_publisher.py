@@ -124,7 +124,10 @@ class CrazyfliePublisher(Node):
                 self.hover['height'])
 
     def _connected(self, link_uri):
-        self.get_logger().info('Connected to cf!')
+        try:
+            self.get_logger().info('Connected to cf!')
+        except Exception as e:
+            self.get_logger().fatal(f"Error connecting to cf: {e}")
         self._lg_stab = LogConfig(name='Stabilizer', period_in_ms=100)
         self._lg_stab.add_variable('stateEstimate.x', 'float')
         self._lg_stab.add_variable('stateEstimate.y', 'float')
@@ -422,8 +425,8 @@ class CrazyfliePublisher(Node):
             self.get_logger().debug(f'Lighthouse helper type: {type(self.lh_helper)}')
             lh_helper.write_geos(self.lh_config, self._data_written)
             self.get_logger().debug("Lighthouse config written to memory")
-            self._cf_event.wait()
-            self._cf_event.clear()
+            # self._cf_event.wait()
+            # self._cf_event.clear()
         except Exception as e:
             self.get_logger().error(f"Error writing lighthouse config to memory: {e}")
 
