@@ -45,6 +45,17 @@ NO_ROTATION_MATRIX = [
 ]
 
 
+def dict_to_lh_config(geos: dict, rotation_matrix: list[list[float]]):
+    lh_config = {}
+    for bs, origin in geos.items():
+        bs_geo = LighthouseBsGeometry()
+        bs_geo.origin = origin
+        bs_geo.rotation_matrix = rotation_matrix
+        bs_geo.valid = True
+        lh_config[bs] = bs_geo
+    return lh_config
+
+
 class CrazyfliePublisher(Node):
     """
     This class is a ROS2 node that publishes the position of the Crazyflie
@@ -65,10 +76,6 @@ class CrazyfliePublisher(Node):
                 description = "Determines if the crazyflie is in testing mode")
         )
         self.declare_parameter('config_file', rclpy.Parameter.Type.STRING)
-        self.lh_config = {}
-        self.lh_rotation_matrix = ROTATION_MATRIX_NEG_90_PITCH
-        self._read_config_data = False
-        self._robot_config = None
         try: 
             
             self._fly = self.get_parameter('fly').value
@@ -79,6 +86,14 @@ class CrazyfliePublisher(Node):
             self.get_logger().info("Got config_file parameter")
         except Exception as e:
             self.get_logger().fatal(f"Error getting paramater value: {e}")
+        
+
+        # Initialize configuration of lh and cf
+        self._read_config_data = False
+        self._robot_config = None
+        self._initial_translation = self._read_cf_pos_from_config()
+        self._lh_config = self._read_lh_geos_from_config()
+        self.lh_rotation_matrix = ROTATION_MATRIX_NEG_90_PITCH
 
 
         # Initialize publishers and tf2 broadcasters
@@ -101,12 +116,12 @@ class CrazyfliePublisher(Node):
         self._cf.connection_failed.add_callback(self._connection_failed)
         self._cf.connection_lost.add_callback(self._connection_lost)
 
-        # Aded for lighthouse config
+        # Create lighthouse variables
         self.lh_helper = None
-        self._cf.open_link(self._link_uri)
+        self._lh_initialized = False
+
         self._cf_event = Event()
-
-
+        self._cf.open_link(self._link_uri)
 
         # Set initial position once connected
         self._set_initial_position()
@@ -171,11 +186,13 @@ class CrazyfliePublisher(Node):
         except AttributeError:
             self.get_logger.fatal('Could not add Stabilizer log config, bad configuration.')
 
-        try:
-            self._read_lh_geos_from_config()
+        # TODO: Refactor the lighthouse read/write to use the lighthouse helper
+        # ! Under testing
+        self.get_logger().debug("Writing lighthouse config to memory")
+        self._init_lh_helper()
 
-        except Exception as e:
-            self.get_logger().fatal(f"Error reading lighthouse geometries from config file: {e}")
+        # except Exception as e:
+            # self.get_logger().fatal(f"Error reading lighthouse geometries from config file: {e}")
 
     def sendHoverCommand(self):
         hover_height =  self.hover['height'] + self.hover['z']*0.1
@@ -216,9 +233,8 @@ class CrazyfliePublisher(Node):
 
     def _range_log_data(self, timestamp, data, logconf):
         """Callback from a the log API when data arrives"""
-        for name, value in data.items():
-            print(f'{name}: {value:3.3f} ', end='')
-        print()
+        
+        print(data)
 
         try:
             t_range = TransformStamped()
@@ -260,10 +276,6 @@ class CrazyfliePublisher(Node):
             back_range = float("inf")  
         self.ranges = [back_range, left_range, front_range, right_range, back_range]
 
-
-        
-
-
     def _stab_log_error(self, logconf, msg):
         """Callback from the log API when an error occurs"""
         print('Error when logging %s: %s' % (logconf.name, msg))
@@ -271,9 +283,10 @@ class CrazyfliePublisher(Node):
     def _stab_log_data(self, timestamp, data, logconf):
         """Callback from a the log API when data arrives"""
 
-        for name, value in data.items():
-            print(f'{name}: {value:3.3f} ', end='')
-        print()
+        # for name, value in data.items():
+        #     print(f'{name}: {value:3.3f} ', end='')
+        # print()
+        print(data)
 
         # Get odometry values from crazyflie stability logger
         try: 
@@ -360,9 +373,7 @@ class CrazyfliePublisher(Node):
         # print to console
 
         try:
-            for name, value in data.items():
-                print(f'{name}: {value:3.3f} ', end='')
-            print()
+            print(data)
 
             # Send to tf2
             t_lh = TransformStamped()
@@ -386,34 +397,47 @@ class CrazyfliePublisher(Node):
         except:
             self.get_logger().warning("Error in LH log data, not published to tf2")
     
-    
-
-    def dict_to_lh_config(self, geos: dict, rotation_matrix: list[list[float]], write_to_mem: bool = True):
-        lh_config = {}
-        for bs, origin in geos.items():
-            bs_geo = LighthouseBsGeometry()
-            bs_geo.origin = origin
-            bs_geo.rotation_matrix = rotation_matrix
-            self.get_logger().info(f"geo for bs {bs} origin: {bs_geo.origin} rotation matrix: {bs_geo.rotation_matrix}")
-            self.get_logger().info(str(type(rotation_matrix)))
-            bs_geo.valid = True
-            self.lh_config[bs] = bs_geo
-        if write_to_mem == True:
-            self.get_logger().debug("Writing lighthouse config to memory")
-            self._lighthouse_config_writer() 
-        else:
-            return lh_config
-    
-    def _lighthouse_config_writer(self):
+    # ! Under testing
+    def _init_lh_helper(self):
         try:
-            self.get_logger().debug("Writing lighthouse config to memory")
-            self.get_logger().debug(f'Crazyflie type: {type(self._cf)}')
-            lh_helper = LighthouseMemHelper(self._cf)
-            self.get_logger().debug(f'Lighthouse helper type: {type(self.lh_helper)}')
-            lh_helper.write_geos(self.lh_config, self._data_written)
-            self.get_logger().debug("Lighthouse config written to memory")
+            self.lh_helper = LighthouseMemHelper(self._cf)
         except Exception as e:
-            self.get_logger().error(f"Error writing lighthouse config to memory: {e}")
+            self.get_logger().error(f"Error initializing lighthouse helper: {e}")
+        self._lh_initialized = True
+
+        # with SyncCrazyflie(self._link_uri, self._cf) as scf:
+        #     try:
+        #         self._lh_helper = LighthouseMemHelper(scf)
+        #         self._cf_event.wait()
+        #         self._cf_event.clear()
+        #         self._lh_helper.read_all_geos(self._lh_data_read_callback)
+        #         self._lh_helper.geo_reader.read_all(self._lh_data_read_callback)
+        #         self._lh_helper.write_geos(dict_to_lh_config(self._lh_config, self.lh_rotation_matrix), self._data_written)
+        #         self._lh_helper.read_all_geos(self._lh_data_read_callback)
+        #     except Exception as e:
+        #         print(f"Error initializing lighthouse helper: {e}")
+        #         print(f"Error initializing lighthouse helper: {e}")
+        # TODO: Read initial lighthouse config from memory, if it exists
+        self.lh_helper.read_all_geos(self._lh_data_read_callback)
+        self._cf_event.wait()
+        self._cf_event.clear()
+        self.lh_helper.geo_reader.read_all(self._lh_data_read_callback)
+        self._cf_event.wait()
+        self._cf_event.clear()
+
+        # TODO: Write initial lighthouse config to memory
+        self.lh_helper.write_geos(dict_to_lh_config(self._lh_config, self.lh_rotation_matrix), self._data_written)
+        # self.lh_helper.(dict_to_lh_config(self._lh_config, self.lh_rotation_matrix), self._data_written)
+
+        # TODO: Confirm that the lighthouse config was written to memory
+        self.lh_helper.read_all_geos(self._lh_data_read_callback)
+        
+        # TODO: Read lighthouse config from memory and print to console
+        # ? Initialize a callback that will print the lighthouse position to the console
+
+    def _lh_data_read_callback(self, data):
+        print(f"Lighthouse data initially on cf: {data}")
+        self._cf_event.set()
 
     def _data_written(self, success):
         if success:
@@ -424,8 +448,8 @@ class CrazyfliePublisher(Node):
             print('Write failed')
         self._cf_event.set()
 
+    # ! These are fine
     def _set_initial_position(self):
-        self._read_cf_pos_from_config()
         # self._reset_position_estimator()
         self.get_logger().info('Resetting cf position estimator')
         self._cf.param.set_value('kalman.initialX', self._initial_translation[0])
@@ -441,9 +465,10 @@ class CrazyfliePublisher(Node):
 
     def _get_config_data(self):
         with open(self._config_file, 'r') as file:
-            self._robot_config= yaml.safe_load(file)
+            _robot_config= yaml.safe_load(file)
 
         self.read_config_data = True
+        self._robot_config = _robot_config
 
 
     def _read_lh_geos_from_config(self):
@@ -460,7 +485,7 @@ class CrazyfliePublisher(Node):
             self.get_logger().debug(f"tb['translation']: {tb['translation']}, type {type(tb['translation'])}")
             basestation_number += 1
         self.get_logger().debug(f"geos: {geos}, type: {type(geos)}")
-        self.dict_to_lh_config(geos, self.lh_rotation_matrix, True)
+
     
     def _read_cf_pos_from_config(self):
         """
@@ -469,14 +494,12 @@ class CrazyfliePublisher(Node):
         if self._read_config_data == False:
             self._get_config_data()
         
-        self.get_logger().info('Reading crazyflie position from config file')
-        with open(self._config_file, 'r') as file:
-            config = yaml.safe_load(file)
-            for cf in config['robots']['crazyflies']:
-                if cf['name'] == 'cf1':
-                    self.get_logger().info(f"cf['translation']: {cf['translation']}, type {type(cf['translation'])}")
-                    self._initial_translation = [float(x) for x in cf['translation']]
-                    print(f"Initial translation: {self._initial_translation}")
+        for cf in self._robot_config['robots']['crazyflies']:
+            if cf['name'] == 'cf1':
+                self.get_logger().info(f"cf['translation']: {cf['translation']}, type {type(cf['translation'])}")
+                _initial_translation = [float(x) for x in cf['translation']]
+                # print(f"Initial translation: {_initial_translation}")
+        return _initial_translation
 
     def _disconnected():
         print('disconnected')
