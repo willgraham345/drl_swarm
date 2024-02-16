@@ -1,5 +1,6 @@
 import launch
 import launch_ros
+import yaml
 import os
 
 from launch import LaunchDescription
@@ -39,11 +40,31 @@ def generate_launch_description():
             }
         ],
     )
+    with open(params_file, 'r') as file:
+        config = yaml.safe_load(file)
+        for cf in config['robots']['crazyflies']:
+            if cf['name'] == 'cf1':
+                initial_translation = [float(x) for x in cf['translation']]
+    static_tf_publisher = launch_ros.actions.Node(
+        package = 'tf2_ros',
+        executable = 'static_transform_publisher',
+        output = 'screen',
+        arguments = [str(initial_translation[0]), str(initial_translation[1]), str(initial_translation[2]), '0', '0', '0', 'world', 'cf1/base_link']
+    )
+
+    # Launch rviz2 
+    rviz = launch_ros.actions.Node(
+        package='rviz2',
+        executable='rviz2',
+        output='screen',
+    )
 
 
     ld = LaunchDescription()
     ld.add_action(crazyflie_node)
     ld.add_action(foxglove_websocket)
+    ld.add_action(static_tf_publisher)
+    ld.add_action(rviz)
 
     return ld
 

@@ -27,9 +27,8 @@ def generate_launch_description():
             [os.path.join(get_package_share_directory('foxglove_bridge'), 'launch', 'foxglove_bridge_launch.xml')]
         )
     )
-    # params_file = CONFIG_FILE_PATH
-    # print(f'params_file: {params_file}')
-    CONFIG_FILE_NAME = CONFIG_FILE_PATH
+    params_file = CONFIG_FILE_PATH
+    print(f'params_file: {params_file}')
 
 
     crazyflie_node = launch_ros.actions.Node(
@@ -38,7 +37,7 @@ def generate_launch_description():
         parameters = [
             {'fly': True,
              'URI': 'radio://0/80/2M/E7E7E7E7E7',
-             'config_file': CONFIG_FILE_NAME,
+             'config_file': CONFIG_FILE_PATH,
             }
         ],
         )
