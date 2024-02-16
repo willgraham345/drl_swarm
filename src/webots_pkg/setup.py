@@ -48,6 +48,7 @@ setup(
             'simple_mapper = webots_pkg.simple_mapper:main',
             'crazyflie_controller = webots_pkg.crazyflie_controller:main'
             'webots_world_launch = webots_pkg.webots_world_launch:main'
+            'my_turtlebot_driver = webots_pkg.my_turtlebot_driver:main'
         ],
     },
 )

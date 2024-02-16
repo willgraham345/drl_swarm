@@ -11,16 +11,8 @@ WHEEL_RADIUS = 0.025
 # USE THIS!!!!
 # https://cyberbotics.com/doc/reference/lidar?tab-language=python
 class MyTurtlebotDriver():
-    """
-    This class is a driver for the Turtlebot3 robot.
-    :param webots_node: the instance of the WebotsNode class
-    :type webots_node: WebotsNode
-    :param properties: the properties of the robot
-    :type properties: dict
-    :return: the instance of the MyTurtlebotDriver class
-    :rtype: MyTurtlebotDriver
-    """
     def init(self, webots_node, properties):
+        # Webots handling
         self.__robot = webots_node.robot
         self.timestep = int(self.__robot.getBasicTimeStep())
         self._robot_name = self.__robot.getName()
@@ -49,7 +41,8 @@ class MyTurtlebotDriver():
         self.__target_twist = Twist()
 
 
-        # Initialize ROS2 nodes and log to debug console
+        # * ROS2 Node handling
+        # * High level ros2 config
         rclpy.init(args=None)
         self.__namespace = str(self._robot_name)
         self.tb_driver = rclpy.create_node(
@@ -58,12 +51,8 @@ class MyTurtlebotDriver():
             allow_undeclared_parameters=True,
             automatically_declare_parameters_from_overrides=True)
         self.tb_driver.get_logger().debug(f'Turtlebot driver node created for {self.__namespace}')
-        self.tb_driver.create_subscription(
-            msg_type = Twist,
-            topic = '/{}/cmd_vel'.format(self.__namespace),
-            callback=self.__cmd_vel_callback,
-            qos_profile = 1)
-        self.tb_driver.get_logger().debug(f'Turtlebot driver subscribed to /{self.__namespace}/cmd_vel')
+
+        # * Add publishers
         self.laser_publisher = self.tb_driver.create_publisher(
             msg_type = LaserScan,
             topic = '/{}/scan'.format(self.__namespace), 
@@ -74,17 +63,27 @@ class MyTurtlebotDriver():
             topic = '/{}/odom'.format(self.__namespace),
             qos_profile = 10)
         self.tb_driver.get_logger().debug(f'Turtlebot driver created /{self.__namespace}/odom publisher')
+
+
+        # * Add subscribers
+        self.tb_driver.create_subscription(
+            msg_type = Twist,
+            topic = '/{}/cmd_vel'.format(self.__namespace),
+            callback=self.__cmd_vel_callback,
+            qos_profile = 1)
+        self.tb_driver.get_logger().debug(f'Turtlebot driver subscribed to /{self.__namespace}/cmd_vel')
+
+        # * tf2 configuration
         self.tfbr = TransformBroadcaster(
             node = self.tb_driver)
         self.tb_driver.get_logger().debug(f'Turtlebot driver created TransformBroadcaster')
-
 
 
     def __cmd_vel_callback(self, twist):
         self.__target_twist = twist
 
 
-    def publish_lidar(self):
+    def _publish_lidar(self):
         """
         """
         #FIXME: Fix this
@@ -109,43 +108,53 @@ class MyTurtlebotDriver():
         # position = self.__robot.getPosition()
         # orientation = self.__robot.getOrientation()
         # Create and publish the Odometry message
-        odom = Odometry()
-        odom.header.stamp = self.tb_driver.get_clock().now().to_msg()
-        odom.header.frame_id = '/odom'
-        odom.child_frame_id = '{}/base_link'.format(self.__namespace)
-        odom.pose.pose.position.x = gps_vals[0]
-        odom.pose.pose.position.y = gps_vals[1]
-        odom.pose.pose.position.z = gps_vals[2]
+        # TODO: Fix this to no longer rely on the gps data
+        # ? Is there an example that uses geometry data from the robot?
+        # ? Can we leverage anything from webots?
+        try:
+            odom = Odometry()
+            odom.header.stamp = self.tb_driver.get_clock().now().to_msg()
+            odom.header.frame_id = '/odom'
+            odom.child_frame_id = '{}/base_link'.format(self.__namespace)
+            odom.pose.pose.position.x = gps_vals[0]
+            odom.pose.pose.position.y = gps_vals[1]
+            odom.pose.pose.position.z = gps_vals[2]
 
-        #quaternion = tf2_ros.transformations.quaternion_from_euler(0.0, 0.0, yaw)
-        yaw = -atan2(heading[1],heading[0])+pi/2
-        #if self.__namespace =="tb1":
-            #print(self.__compass.getValues())
-            #print(yaw*180/pi)
-        odom.pose.pose.orientation.z = sin(yaw / 2.0)
-        odom.pose.pose.orientation.w = cos(yaw / 2.0)
-        # odom.pose.pose.orientation.x = orientation[0]
-        # odom.pose.pose.orientation.y = orientation[1]
-        # odom.pose.pose.orientation.z = orientation[2]
-        # odom.pose.pose.orientation.w = orientation[3]
-        self.odom_publisher.publish(odom)
-
+            #quaternion = tf2_ros.transformations.quaternion_from_euler(0.0, 0.0, yaw)
+            yaw = -atan2(heading[1],heading[0])+pi/2
+            #if self.__namespace =="tb1":
+                #print(self.__compass.getValues())
+                #print(yaw*180/pi)
+            odom.pose.pose.orientation.z = sin(yaw / 2.0)
+            odom.pose.pose.orientation.w = cos(yaw / 2.0)
+            # odom.pose.pose.orientation.x = orientation[0]
+            # odom.pose.pose.orientation.y = orientation[1]
+            # odom.pose.pose.orientation.z = orientation[2]
+            # odom.pose.pose.orientation.w = orientation[3]
+            self.odom_publisher.publish(odom)
+        except Exception as e:
+            self.get_logger().warning("Odom publisher error: {}".format(e))
+    def _send_transform_base_link(self, gps_vals, heading):
         # Create a transform message
-        transform = TransformStamped()
-        transform.header.stamp = self.tb_driver.get_clock().now().to_msg()
-        transform.header.frame_id = 'odom'
-        transform.child_frame_id = '{}/base_link'.format(self.__namespace)
-        transform.transform.translation.x = gps_vals[0]
-        transform.transform.translation.y = gps_vals[1]
-        transform.transform.translation.z = gps_vals[2]
-        transform.transform.rotation.x = 0.0
-        transform.transform.rotation.y = 0.0
-        transform.transform.rotation.z = sin(yaw / 2.0)
-        transform.transform.rotation.w = cos(yaw / 2.0)
+        try:
+            yaw = -atan2(heading[1],heading[0])+pi/2
+            transform = TransformStamped()
+            transform.header.stamp = self.tb_driver.get_clock().now().to_msg()
+            transform.header.frame_id = 'odom'
+            transform.child_frame_id = '{}/base_link'.format(self.__namespace)
+            transform.transform.translation.x = gps_vals[0]
+            transform.transform.translation.y = gps_vals[1]
+            transform.transform.translation.z = gps_vals[2]
+            transform.transform.rotation.x = 0.0
+            transform.transform.rotation.y = 0.0
+            transform.transform.rotation.z = sin(yaw / 2.0)
+            transform.transform.rotation.w = cos(yaw / 2.0)
 
-        # Publish the transform message
-        #self.tf_publisher.publish(transform)
-        self.tfbr.sendTransform(transform)
+            # Publish the transform message
+            #self.tf_publisher.publish(transform)
+            self.tfbr.sendTransform(transform)
+        except Exception as e:
+            self.get_logger().warning("Transform publisher error: {}".format(e))
 
     def step(self):
         rclpy.spin_once(self.tb_driver, timeout_sec=0)
@@ -163,15 +172,8 @@ class MyTurtlebotDriver():
 
         self.__left_motor.setVelocity(command_motor_left)
         self.__right_motor.setVelocity(command_motor_right)
-        #FIXME: GPS node isn't connected
-        # self._publish_gps(self.__gps.getValues(),self.__compass.getValues())#,self.__ort)
-        
-        
-        # print(gps_values)
-        # wasn't working, so I comented this out.
-        self.publish_lidar()
-        # self.__publish_odom()
 
+        # ! Robot state publisher will publish all necessary transforms, joint states, and odometry
 
     # def pose_callback(self, msg):
     #     # Get position and orientation from the message
@@ -196,3 +198,11 @@ class MyTurtlebotDriver():
     #     odom.pose.pose.orientation.z = qz
     #     odom.pose.pose.orientation.w = qw
     #     self.odom_publisher.publish(odom)
+
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = MyTurtlebotDriver()
+    rclpy.spin(node)
+    rclpy.shutdown()
+

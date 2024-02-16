@@ -69,11 +69,12 @@ def get_cf_driver(cf):
     crazyflie_driver = WebotsController(
         robot_name = cf.name,
         parameters = [
-            {'robot_description': robot_description,
-             'use_sim_time': True,
-             'set_robot_state_publisher': False}, #default is False
+            {
+                'robot_description': robot_description,
+                'use_sim_time': True,
+                'namespace': cf.name
+            }, 
         ],
-        # remappings = 
     )
     logging.debug(f"crazyflie_driver = {crazyflie_driver}")
     logging.debug(f"robot_description = {robot_description}")
@@ -86,11 +87,12 @@ def get_tb_driver(tb):
     turtlebot_driver = WebotsController(
         robot_name = tb.name,
         parameters = [
-            {'robot_description': robot_description,
-             'use_sim_time': True,
-             'set_robot_state_publisher': False}, #default is False
+            {
+                'robot_description': robot_description,
+                'use_sim_time': True,
+                'namespace': tb.name
+            },
         ],
-        # remappings = 
     )
     logging.debug(f"turtlebot_driver = {turtlebot_driver}")
     logging.debug(f"robot_description = {robot_description}")
@@ -134,7 +136,6 @@ def generate_launch_description():
             ]
         )
     )
-    webots
     event_handler = launch.actions.RegisterEventHandler(
         event_handler=launch.event_handlers.OnProcessExit(
             target_action=webots,
@@ -149,32 +150,30 @@ def generate_launch_description():
 
 
     for cf in swarm.crazyflies:
-        # TODO: Confirm that the robot_state_publisher is publishing data to tf
-        robot_state_publisher = Node(
-            package='robot_state_publisher',
-            executable='robot_state_publisher',
-            output='screen',
-            namespace=cf.name, #TODO: Make sure this is correct, or add a tf_prefix(str) argument
-            parameters=[{
-                'robot_description': '<robot name=""><link name=""/></robot>',
-            }],
-        )
-        swarm_nodes.append(robot_state_publisher)
+        # robot_state_publisher = Node(
+        #     package='robot_state_publisher',
+        #     executable='robot_state_publisher',
+        #     output='screen',
+        #     namespace=cf.name, 
+        #     parameters=[{
+        #         'robot_description': '<robot name=""><link name=""/></robot>',
+        #     }],
+        # )
+        # swarm_nodes.append(robot_state_publisher)
         swarm_nodes.append(get_cf_driver(cf))
         
     
     for tb in swarm.turtlebots:
-        # TODO: Confirm that the robot_state_publisher is publishing data to tf
-        robot_state_publisher = Node(
-            package='robot_state_publisher',
-            executable='robot_state_publisher',
-            output='screen',
-            namespace=tb.name,
-            parameters=[{
-                'robot_description': '<robot name=""><link name=""/></robot>',
-            }],
-        )
-        swarm_nodes.append(robot_state_publisher)
+        # robot_state_publisher = Node(
+        #     package='robot_state_publisher',
+        #     executable='robot_state_publisher',
+        #     output='screen',
+        #     namespace=tb.name,
+        #     parameters=[{
+        #         'robot_description': '<robot name=""><link name=""/></robot>',
+        #     }],
+        # )
+        # swarm_nodes.append(robot_state_publisher)
         swarm_nodes.append(get_tb_driver(tb)) 
 
 
