@@ -44,7 +44,7 @@ DIR_PATH = os.path.dirname(__file__)
 WORLD_FILES = 'apartment.wbt'
 
 PACKAGE_DIR = get_package_share_directory('webots_pkg')
-CONFIG_FILE_PATH = os.path.abspath(os.path.join(PACKAGE_DIR, 'config', 'webots_config.yaml'))
+ROBOT_CONFIG_FILE_PATH = os.path.abspath(os.path.join(PACKAGE_DIR, 'config', 'webots_config.yaml'))
 
 
 def import_webots_swarm_config(config_file_path : str):
@@ -145,7 +145,7 @@ def generate_launch_description():
 
 
     #Development here
-    swarm = import_webots_swarm_config(CONFIG_FILE_PATH)
+    swarm = import_webots_swarm_config(ROBOT_CONFIG_FILE_PATH)
     swarm_nodes = []
 
 

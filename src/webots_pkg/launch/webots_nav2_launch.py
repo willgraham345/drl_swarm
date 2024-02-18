@@ -18,16 +18,23 @@ Author: Will Graham
 import os
 import sys
 import pathlib
-import launch
 import logging
 import yaml
-from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
+import launch
+from launch.actions import (
+    DeclareLaunchArgument,
+    LogInfo,
+    ExecuteProcess,
+    GroupAction,
+    IncludeLaunchDescription,
+    LogInfo,
+)
 from launch.substitutions import LaunchConfiguration
-from launch.actions import DeclareLaunchArgument, LogInfo, IncludeLaunchDescription 
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_xml.launch_description_sources import XMLLaunchDescriptionSource
 
+from ament_index_python.packages import get_package_share_directory
 from webots_ros2_driver.webots_launcher import WebotsLauncher
 from webots_ros2_driver.webots_controller import WebotsController
 from webots_ros2_driver.webots_launcher import Ros2SupervisorLauncher
@@ -37,43 +44,117 @@ from webots_ros2_driver.webots_launcher import WebotsLauncher
 from webots_ros2_driver.webots_controller import WebotsController
 from launch.substitutions.path_join_substitution import PathJoinSubstitution
 
+from nav2_common.launch import ParseMultiRobotPose
+
 DIR_PATH = os.path.dirname(__file__)
 
+WORLD_FILES = 'apartment.wbt'
+
+PACKAGE_DIR = get_package_share_directory('webots_pkg')
+ROBOT_CONFIG_FILE_PATH = os.path.abspath(os.path.join(PACKAGE_DIR, 'config', 'webots_config.yaml'))
 
 def generate_launch_description():
     """
-    Launches the webots world and the ros2 supervisor
+    launch multiple robots within webots from the given launch arguments
+
+    Args:
+        robot: dict of robot name, x, y, yaw, and controller
+
+    Returns:
+        LaunchDescription: The launch description for the webots world
     """
-    pkg_share = get_package_share_directory('webots_pkg')
+    ########## ! Simulation and foxglove arguments from webots_world_launch.py ########## 
+    world = LaunchConfiguration('world')
+    webots = WebotsLauncher(
+        world=PathJoinSubstitution([PACKAGE_DIR, 'worlds', 'configured_worlds', world]),
+        ros2_supervisor=True
+    )
+    
+    foxglove_websocket = IncludeLaunchDescription(
+        XMLLaunchDescriptionSource(
+            [os.path.join(get_package_share_directory('foxglove_bridge'), 'launch', 'foxglove_bridge_launch.xml')]
+        )
+    )
+    launch_handler = launch.actions.RegisterEventHandler(
+        event_handler=launch.event_handlers.OnProcessStart(
+            target_action=webots,
+            on_start=[
+                LogInfo(msg='Webots sim has started, spawning can now be performed!')
+            ]
+        )
+    )
+    event_handler = launch.actions.RegisterEventHandler(
+        event_handler=launch.event_handlers.OnProcessExit(
+            target_action=webots,
+            on_exit=[launch.actions.EmitEvent(event=launch.events.Shutdown())],
+        )
+    )
+    ########## ! End of Simulation and foxglove arguments from webots_world_launch.py ##########
+    rviz_cmd= IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(bringup_dir, 'launch', 'rviz_launch.py'),
+            launch_arguments={
+                'rviz_config': os.path.join(bringup_dir, 'rviz', 'nav2_default_view.rviz') #? Not sure if this is right
+                }.items())
+    )
+
+    ########## ! Start of nav2 development ##########
+    # Get nav2 bringup directory and launch directory
     bringup_dir = get_package_share_directory('nav2_bringup')
     launch_dir = os.path.join(bringup_dir, 'launch')
+    
+    # TODO: Add launch arguments for nav2
+    # * params_file: Full path to the ROS2 parameters file to use for all launched nodes
+    # * map: Full path to the map file to be used for localization and planning
 
-    bringup_cmd = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(launch_dir, 'bringup_launch.py')
-        ),
-        launch_arguments = {
-            "slam": "True",
-            "use_sim_time": "True",
-            "params_file": os.path.join(pkg_share, 'params', 'sim_nav2_params.yaml'),
-            "autostart": "true",
-        },
+    declare_params_file_cmd= DeclareLaunchArgument(
+        'params_file',
+        default_value=os.path.join(bringup_dir, 'params', 'nav2_params.yaml'), # ! Wrong, but included for now
+        description = 'Full path to the ROS2 parameters file to use for all launched nodes',
     )
-    # Declare launch arguments for substitution
-    rviz_cmd = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(pkg_share, 'launch', 'rviz_launch.py')
-        ),
-        launch_arguments = {
-            'rviz_config': os.path.join(bringup_dir, 'rviz', 'nav2_default_view.rviz')}.items()
-    )
-    world_launch_description = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(pkg_share, 'launch', 'webots_world_launch.py')
-        ),
-    )
-    ld = LaunchDescription()
-    ld.add_action(bringup_cmd)
-    ld.add_action(world_launch_description)
-    ld.add_action(rviz_cmd)
 
+    # TODO: Figure out how the ParseMultiRobotPose class works
+    robots_list = ParseMultiRobotPose('robots').value() #? No idea how this works yet
+    bringup_cmd_group = []
+    for robot_name in robots_lists:
+        init_pose = robots_list[robot_name]
+        group = GroupAction([
+            LogInfo(
+                msg=f'Launching namespace = {robot_name} with initial pose = {init_pose}'
+            ),
+            # TODO: Fix this include launch description
+            IncludeLaunchDescription(
+                PythonLaunchDescriptionSource(os.path.join(launch_dir, 'bringup_launch.py')),
+                # TODO: launch arguements for nav2
+                launch_arguments={
+                    'use_sim_time': 'True',
+                    'autostart': 'True',
+                    'params_file': LaunchConfiguration('params_file'),
+                    'map': LaunchConfiguration('map'),
+                    'namespace': robot_name,
+                    'use_namespace': 'True',
+                    'initial_pose_x': str(init_pose[0]),
+                    'initial_pose_y': str(init_pose[1]),
+                    'initial_pose_a': str(init_pose[2]),
+                }.items()
+            )
+
+
+    # TODO: bringup_cmd_group initialization (see the multi robot launch file)
+    ld = LaunchDescription([
+        DeclareLaunchArgument(
+            'world',
+            default_value='apartment.wbt',
+            description='The world file name to be launched, from within the worlds folder'
+        ),
+        webots,
+        webots._supervisor,
+        foxglove_websocket,
+        launch_handler,
+        event_handler,
+
+    ])
+    for cmd in bringup_cmd_group:
+        ld.add_action(cmd)
+
+    return ld
