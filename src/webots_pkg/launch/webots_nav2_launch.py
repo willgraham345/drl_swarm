@@ -106,6 +106,8 @@ def generate_launch_description():
     # TODO: Add launch arguments for nav2
     # * params_file: Full path to the ROS2 parameters file to use for all launched nodes
     # * map: Full path to the map file to be used for localization and planning
+    params_file = LaunchConfiguration('params_file')
+    rviz_config_file = LaunchConfiguration('rviz_config')
 
     declare_params_file_cmd= DeclareLaunchArgument(
         'params_file',
@@ -115,6 +117,7 @@ def generate_launch_description():
 
     # TODO: Figure out how the ParseMultiRobotPose class works
     robots_list = ParseMultiRobotPose('robots').value() #? No idea how this works yet
+    # TODO: Modify simulation configuration to match ParseMultiRobotPose class
     bringup_cmd_group = []
     for robot_name in robots_lists:
         init_pose = robots_list[robot_name]
@@ -129,13 +132,14 @@ def generate_launch_description():
                 launch_arguments={
                     'use_sim_time': 'True',
                     'autostart': 'True',
-                    'params_file': LaunchConfiguration('params_file'),
+                    'params_file': params_file,
                     'map': LaunchConfiguration('map'),
                     'namespace': robot_name,
                     'use_namespace': 'True',
-                    'initial_pose_x': str(init_pose[0]),
-                    'initial_pose_y': str(init_pose[1]),
-                    'initial_pose_a': str(init_pose[2]),
+                    'initial_pose_x': TextSubstitution(text=str(init_pose[0])),
+                    'initial_pose_y': TextSubstitution(text=str(init_pose[1])),
+                    'initial_pose_yaw': TextSubstitution(text=str(init_pose[2])),
+                    'robot_name': TextSubstitution(text=robot_name),
                 }.items()
             )
 
