@@ -123,8 +123,6 @@ class CrazyfliePublisher(Node):
         # self._lh_helper = LighthouseMemHelper(self._cf)
         self._lh_initialized = Event()
 
-        # TODO: Refactor the lighthouse read/write to use the lighthouse helper
-        # ! Under testing
         self._cf_lh_write_event = Event()
         self._cf.open_link(self._link_uri)
 
@@ -154,6 +152,9 @@ class CrazyfliePublisher(Node):
             self._cf.commander.send_hover_setpoint(
                 self.hover['x'], self.hover['y'], self.hover['yaw'],
                 self.hover['height'])
+        
+        self._cf.param.request_update_of_all_params()
+        
 
     def _connected(self, link_uri):
         self._lg_stab = LogConfig(name='Stabilizer', period_in_ms=100)
@@ -402,6 +403,7 @@ class CrazyfliePublisher(Node):
             self.tfbr.sendTransform(t_lh)
         except:
             self.get_logger().warning("Error in LH log data, not published to tf2")
+            print("Error in LH log data, not published to tf2")
     
     # ! Needs to have data rewritten.
     def _init_lh_helper(self):
@@ -415,6 +417,7 @@ class CrazyfliePublisher(Node):
         print("Writing lighthouse data to memory")
         self._write_lh_config_to_memory()
         self._read_lh_config_from_memory()
+        #TODO: Get lighthouse data to correctly be output to the console.
 
     def _write_lh_config_to_memory(self):
         try:

@@ -49,7 +49,7 @@ def generate_launch_description():
         package = 'tf2_ros',
         executable = 'static_transform_publisher',
         output = 'screen',
-        arguments = [str(initial_translation[0]), str(initial_translation[1]), str(initial_translation[2]), '0', '0', '0', 'world', 'cf1/base_link']
+        arguments = [str(initial_translation[0]), str(initial_translation[1]), str(initial_translation[2]), '0', '0', '0', 'world', 'odom']
     )
 
     # Launch rviz2 
