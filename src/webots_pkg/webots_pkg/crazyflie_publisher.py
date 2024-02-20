@@ -29,7 +29,6 @@ import math
 
 from math import pi
 
-URI = uri_helper.uri_from_env(default='radio://0/80/2M/E7E7E7E7E7')
 def radians(degrees):  
     return degrees * math.pi / 180.0
 
@@ -486,7 +485,7 @@ class CrazyfliePublisher(Node):
             self._get_config_data()
     
         geos = {}
-        basestation_number = 0
+        basestation_number = 0 # ! Important: Can't be initialized at 1, or lighthouseMemHelper won't work.
         for tb in self._robot_config['robots']['turtlebots']:
             geos[basestation_number] = tb['translation']
             self.get_logger().debug(f"tb['translation']: {tb['translation']}, type {type(tb['translation'])}")
