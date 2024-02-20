@@ -53,6 +53,7 @@ def dict_to_lh_config(geos: dict, rotation_matrix: list[list[float]]):
         bs_geo.rotation_matrix = rotation_matrix
         bs_geo.valid = True
         lh_config[bs] = bs_geo
+    print(lh_config)
     return lh_config
 
 
@@ -116,15 +117,26 @@ class CrazyfliePublisher(Node):
         self._cf.connection_failed.add_callback(self._connection_failed)
         self._cf.connection_lost.add_callback(self._connection_lost)
 
+        # self._scf = SyncCrazyflie(self._link_uri, cf=self._cf)
+
         # Create lighthouse variables
-        self.lh_helper = None
+        # self._lh_config = self.
+        # self._lh_helper = LighthouseMemHelper(self._cf)
         self._lh_initialized = False
 
-        self._cf_event = Event()
+        # TODO: Refactor the lighthouse read/write to use the lighthouse helper
+        # ! Under testing
+        self._cf_lh_write_event = Event()
         self._cf.open_link(self._link_uri)
+
+
 
         # Set initial position once connected
         self._set_initial_position()
+
+        self.get_logger().debug("Writing lighthouse config to memory")
+        self._init_lh_helper()
+        self.get_logger().debug("Lighthouse config written to memory")
 
         # Initialize ranges and timer for the laser scan
         self.ranges= [0.0, 0.0, 0.0, 0.0, 0.0]
@@ -186,10 +198,6 @@ class CrazyfliePublisher(Node):
         except AttributeError:
             self.get_logger.fatal('Could not add Stabilizer log config, bad configuration.')
 
-        # TODO: Refactor the lighthouse read/write to use the lighthouse helper
-        # ! Under testing
-        self.get_logger().debug("Writing lighthouse config to memory")
-        self._init_lh_helper()
 
         # except Exception as e:
             # self.get_logger().fatal(f"Error reading lighthouse geometries from config file: {e}")
@@ -397,47 +405,46 @@ class CrazyfliePublisher(Node):
         except:
             self.get_logger().warning("Error in LH log data, not published to tf2")
     
-    # ! Under testing
+    # ! Needs to have data rewritten.
     def _init_lh_helper(self):
-        try:
-            self.lh_helper = LighthouseMemHelper(self._cf)
-        except Exception as e:
-            self.get_logger().error(f"Error initializing lighthouse helper: {e}")
+
+        print("Reading lighthouse data from memory")
+        # print(f"mems in the cf {self._cf.mem.get_mems()}")
+        self._lh_helper = LighthouseMemHelper(self._cf)
+        self._cf_lh_write_event.clear()
+        self._lh_helper.read_all_geos(read_done_cb=self._lh_data_read_callback)
+        self._cf_lh_write_event.wait() # * Waits for the callback to set the event
+        self._cf_lh_write_event.clear() # * Clears the event for the next step
+
+        print("Writing lighthouse data to memory")
+        self._write_lh_config_to_memory()
+        self._read_lh_config_from_memory()
         self._lh_initialized = True
 
-        # with SyncCrazyflie(self._link_uri, self._cf) as scf:
-        #     try:
-        #         self._lh_helper = LighthouseMemHelper(scf)
-        #         self._cf_event.wait()
-        #         self._cf_event.clear()
-        #         self._lh_helper.read_all_geos(self._lh_data_read_callback)
-        #         self._lh_helper.geo_reader.read_all(self._lh_data_read_callback)
-        #         self._lh_helper.write_geos(dict_to_lh_config(self._lh_config, self.lh_rotation_matrix), self._data_written)
-        #         self._lh_helper.read_all_geos(self._lh_data_read_callback)
-        #     except Exception as e:
-        #         print(f"Error initializing lighthouse helper: {e}")
-        #         print(f"Error initializing lighthouse helper: {e}")
-        # TODO: Read initial lighthouse config from memory, if it exists
-        self.lh_helper.read_all_geos(self._lh_data_read_callback)
-        self._cf_event.wait()
-        self._cf_event.clear()
-        self.lh_helper.geo_reader.read_all(self._lh_data_read_callback)
-        self._cf_event.wait()
-        self._cf_event.clear()
+    def _write_lh_config_to_memory(self):
+        try:
+            print("Cf event status before write: ", self._cf_lh_write_event.is_set())
+            self._lh_helper.write_geos(dict_to_lh_config(self._lh_config, self.lh_rotation_matrix), self._data_written)
+            self._cf_lh_write_event.wait()
+            self._cf_lh_write_event.clear()
 
-        # TODO: Write initial lighthouse config to memory
-        self.lh_helper.write_geos(dict_to_lh_config(self._lh_config, self.lh_rotation_matrix), self._data_written)
-        # self.lh_helper.(dict_to_lh_config(self._lh_config, self.lh_rotation_matrix), self._data_written)
+        except Exception as e:
+            self.get_logger().error(f"Error writing lighthouse data to memory: {e}")
 
-        # TODO: Confirm that the lighthouse config was written to memory
-        self.lh_helper.read_all_geos(self._lh_data_read_callback)
-        
-        # TODO: Read lighthouse config from memory and print to console
-        # ? Initialize a callback that will print the lighthouse position to the console
+    def _read_lh_config_from_memory(self):
+        print("Reading lighthouse data from memory")
+        self._lh_helper.read_all_geos(self._lh_data_read_callback)
+        self._cf_lh_write_event.wait()
+        self._cf_lh_write_event.clear()
 
-    def _lh_data_read_callback(self, data):
-        print(f"Lighthouse data initially on cf: {data}")
-        self._cf_event.set()
+    def _lh_data_read_callback(self, geo_data):
+        print("Lighthouse data read")
+        for id, data in geo_data.items():
+            print('---- Geometry for base station', id + 1)
+            data.dump()
+            print()
+        # print(geo_data)
+        self._cf_lh_write_event.set()
 
     def _data_written(self, success):
         if success:
@@ -446,7 +453,7 @@ class CrazyfliePublisher(Node):
         else:
             self.get_logger().error('Writing crazyflie lighthouse data failed')
             print('Write failed')
-        self._cf_event.set()
+        self._cf_lh_write_event.set()
 
     # ! These are fine
     def _set_initial_position(self):
@@ -485,6 +492,7 @@ class CrazyfliePublisher(Node):
             self.get_logger().debug(f"tb['translation']: {tb['translation']}, type {type(tb['translation'])}")
             basestation_number += 1
         self.get_logger().debug(f"geos: {geos}, type: {type(geos)}")
+        return geos
 
     
     def _read_cf_pos_from_config(self):
