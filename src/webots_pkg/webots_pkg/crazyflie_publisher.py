@@ -121,7 +121,7 @@ class CrazyfliePublisher(Node):
         # Create lighthouse variables
         # self._lh_config = self.
         # self._lh_helper = LighthouseMemHelper(self._cf)
-        self._lh_initialized = False
+        self._lh_initialized = Event()
 
         # TODO: Refactor the lighthouse read/write to use the lighthouse helper
         # ! Under testing
@@ -196,7 +196,6 @@ class CrazyfliePublisher(Node):
                   '{} not found in TOC'.format(str(e)))
         except AttributeError:
             self.get_logger.fatal('Could not add Stabilizer log config, bad configuration.')
-
 
         # except Exception as e:
             # self.get_logger().fatal(f"Error reading lighthouse geometries from config file: {e}")
@@ -411,14 +410,11 @@ class CrazyfliePublisher(Node):
         # print(f"mems in the cf {self._cf.mem.get_mems()}")
         self._lh_helper = LighthouseMemHelper(self._cf)
         self._cf_lh_write_event.clear()
-        self._lh_helper.read_all_geos(read_done_cb=self._lh_data_read_callback)
-        self._cf_lh_write_event.wait() # * Waits for the callback to set the event
-        self._cf_lh_write_event.clear() # * Clears the event for the next step
+
 
         print("Writing lighthouse data to memory")
         self._write_lh_config_to_memory()
         self._read_lh_config_from_memory()
-        self._lh_initialized = True
 
     def _write_lh_config_to_memory(self):
         try:
