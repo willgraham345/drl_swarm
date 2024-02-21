@@ -20,7 +20,7 @@ from cflib.crazyflie import Crazyflie
 from cflib.crazyflie.log import LogConfig
 from cflib.utils import uri_helper
 from cflib.crazyflie.mem import LighthouseMemHelper
-from cflib.crazyflie.mem import LighthouseBsGeometry
+from cflib.crazyflie.mem import LighthouseBsGeometry, LighthouseBsCalibration
 from cflib.crazyflie.syncCrazyflie import SyncCrazyflie
 from cflib.positioning.motion_commander import MotionCommander
 from cflib.localization.lighthouse_types import LhCfPoseSample
@@ -44,6 +44,43 @@ NO_ROTATION_MATRIX = [
 ]
 
 
+# TODO: Repalce this with lab tested results
+calib0 = LighthouseBsCalibration()
+calib0.sweeps[0].tilt = -0.049844
+calib0.sweeps[0].phase = 0.000000
+calib0.sweeps[0].curve = -0.477082
+calib0.sweeps[0].gibphase = 1.870844
+calib0.sweeps[0].gibmag = -0.006574
+calib0.sweeps[0].ogeephase = 1.916343
+calib0.sweeps[0].ogeemag = 0.110889
+calib0.sweeps[1].tilt = 0.048504
+calib0.sweeps[1].phase = 0.004812
+calib0.sweeps[1].curve = 0.545917
+calib0.sweeps[1].gibphase = 2.412284
+calib0.sweeps[1].gibmag = -0.006277
+calib0.sweeps[1].ogeephase = 3.063375
+calib0.sweeps[1].ogeemag = 0.202656
+calib0.uid = 0x2C0DCDCD
+calib0.valid = True
+
+calib1 = LighthouseBsCalibration()
+calib1.sweeps[0].tilt = -0.048398
+calib1.sweeps[0].phase = 0.000000
+calib1.sweeps[0].curve = 0.155712
+calib1.sweeps[0].gibphase = 1.315732
+calib1.sweeps[0].gibmag = -0.002849
+calib1.sweeps[0].ogeephase = 1.291309
+calib1.sweeps[0].ogeemag = -0.108465
+calib1.sweeps[1].tilt = 0.047573
+calib1.sweeps[1].phase = -0.005821
+calib1.sweeps[1].curve = 0.246296
+calib1.sweeps[1].gibphase = 1.344470
+calib1.sweeps[1].gibmag = -0.005334
+calib1.sweeps[1].ogeephase = 1.408694
+calib1.sweeps[1].ogeemag = 0.039339
+calib1.uid = 0xE72CEE73
+calib1.valid = True
+
 def dict_to_lh_config(geos: dict, rotation_matrix: list[list[float]]):
     lh_config = {}
     for bs, origin in geos.items():
@@ -56,33 +93,45 @@ def dict_to_lh_config(geos: dict, rotation_matrix: list[list[float]]):
     return lh_config
 
 class LighthouseConfigWriter:
-    def __init__(self, cf, rotation_matrix, lh_config: dict):
+    def __init__(self, cf, rotation_matrix, lh_config: dict, calibs: dict[int, LighthouseBsCalibration]):
         print('Configuring lighthouse')
         self._cf = cf
+        self.lh_rotation_matrix = rotation_matrix
+        self._lh_config = lh_config
+        self._calibs = calibs
+
         self._read_write_event = Event()
         self._lh_helper = LighthouseMemHelper(self._cf)
         self._read_write_event.clear()
-        self._write_lh_geos_to_memory()
-        self._read_lh_geos_from_memory()
-        self._read_lh_calibs_from_memory()
+        self.write_lh_geos_to_memory()
+        self.read_lh_geos_from_memory()
+        self.write_lh_calibs_to_memory()
+        self.read_lh_calibs_from_memory()
 
-    def _write_lh_geos_to_memory(self):
+    def write_lh_geos_to_memory(self):
         try:
-            # print("Cf event status before write: ", self._cf_lh_write_event.is_set())
-            self._lh_helper.write_geos(dict_to_lh_config(self._lh_config, self.lh_rotation_matrix), self._data_written)
+            self._lh_helper.write_geos(dict_to_lh_config(self._lh_config, self.lh_rotation_matrix), self._lh_geo_data_written_callback)
             self._read_write_event.wait()
             self._read_write_event.clear()
 
         except Exception as e:
             print(f"Error writing lighthouse data to memory: {e}")
 
-    def _read_lh_geos_from_memory(self):
+    def write_lh_calibs_to_memory(self):
+        try:
+            self._lh_helper.write_calibs(self._calibs, self._lh_calib_data_written_callback)
+            self._read_write_event.wait()
+            self._read_write_event.clear()
+        except Exception as e:
+            print(f"Error writing lighthouse calibration to memory: {e}")
+
+    def read_lh_geos_from_memory(self):
         print("Reading lighthouse data from memory")
         self._lh_helper.read_all_geos(self._lh_geo_read_callback)
         self._read_write_event.wait()
         self._read_write_event.clear()
     
-    def _read_lh_calibs_from_memory(self):
+    def read_lh_calibs_from_memory(self):
         print("Reading lighthouse calibration from memory")
         self._lh_helper.read_all_calibs(self._lh_calib_read_callback)
         self._read_write_event.wait()
@@ -105,11 +154,18 @@ class LighthouseConfigWriter:
         self._read_write_event.set()
 
 
-    def _data_written(self, success):
+    def _lh_geo_data_written_callback(self, success):
         if success:
             print('Lighthouse data correctly written to crazyflie')
         else:
             print('Writing crazyflie lighthouse data failed')
+        self._read_write_event.set()
+    
+    def _lh_calib_data_written_callback(self, success):
+        if success:
+            print('Lighthouse calibration data correctly written to crazyflie')
+        else:
+            print('Writing crazyflie lighthouse calibration data failed')
         self._read_write_event.set()
 
 class CrazyfliePublisher(Node):
@@ -163,8 +219,6 @@ class CrazyfliePublisher(Node):
         self.create_subscription(Twist,  "/cmd_vel", self.cmd_vel_callback, 1)
         #TODO: Implement subscription to lighthouse node for up-to-date pose data
 
-
-
         # Handle crazyflie connection
         self._cf = Crazyflie(rw_cache='./cache')
         self._cf.connected.add_callback(self._connected)
@@ -174,9 +228,6 @@ class CrazyfliePublisher(Node):
 
         # self._scf = SyncCrazyflie(self._link_uri, cf=self._cf)
 
-        # Create lighthouse variables
-        # self._lh_config = self.
-        # self._lh_helper = LighthouseMemHelper(self._cf)
         self._lh_initialized = Event()
         self._lh_config_writer = None
         self._cf.open_link(self._link_uri)
@@ -460,10 +511,11 @@ class CrazyfliePublisher(Node):
             self.get_logger().warning("Error in LH log data, not published to tf2")
             print("Error in LH log data, not published to tf2")
     
-    # ! Needs to have data rewritten.
+    # TODO: Confirm that we are getting correct data output in the lab. 
     def _init_lh_config_writer(self):
-        #TODO: Get lighthouse data to correctly be output to the console.
-        self._init_lh_config_writer = LighthouseConfigWriter(self._cf, self.lh_rotation_matrix, self._lh_config)
+        calibs = {0: calib0, 1: calib1}
+        self._init_lh_config_writer = LighthouseConfigWriter(self._cf, self.lh_rotation_matrix, self._lh_config, calibs)
+        self._lh_initialized.set()
 
     # ! These are fine
     def _set_initial_position(self):
