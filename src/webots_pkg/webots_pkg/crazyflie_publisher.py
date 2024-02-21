@@ -55,6 +55,62 @@ def dict_to_lh_config(geos: dict, rotation_matrix: list[list[float]]):
     print(lh_config)
     return lh_config
 
+class LighthouseConfigWriter:
+    def __init__(self, cf, rotation_matrix, lh_config: dict):
+        print('Configuring lighthouse')
+        self._cf = cf
+        self._read_write_event = Event()
+        self._lh_helper = LighthouseMemHelper(self._cf)
+        self._read_write_event.clear()
+        self._write_lh_geos_to_memory()
+        self._read_lh_geos_from_memory()
+        self._read_lh_calibs_from_memory()
+
+    def _write_lh_geos_to_memory(self):
+        try:
+            # print("Cf event status before write: ", self._cf_lh_write_event.is_set())
+            self._lh_helper.write_geos(dict_to_lh_config(self._lh_config, self.lh_rotation_matrix), self._data_written)
+            self._read_write_event.wait()
+            self._read_write_event.clear()
+
+        except Exception as e:
+            print(f"Error writing lighthouse data to memory: {e}")
+
+    def _read_lh_geos_from_memory(self):
+        print("Reading lighthouse data from memory")
+        self._lh_helper.read_all_geos(self._lh_geo_read_callback)
+        self._read_write_event.wait()
+        self._read_write_event.clear()
+    
+    def _read_lh_calibs_from_memory(self):
+        print("Reading lighthouse calibration from memory")
+        self._lh_helper.read_all_calibs(self._lh_calib_read_callback)
+        self._read_write_event.wait()
+        self._read_write_event.clear()
+
+    def _lh_geo_read_callback(self, geo_data):
+        print("Lighthouse data read")
+        for id, data in geo_data.items():
+            print('---- Geometry for base station', id + 1)
+            data.dump()
+            print()
+        # print(geo_data)
+        self._read_write_event.set()
+    
+    def _lh_calib_read_callback(self, calib_data):
+        for id, data in calib_data.items():
+            print('---- Calibration data for base station', id + 1)
+            data.dump()
+            print()
+        self._read_write_event.set()
+
+
+    def _data_written(self, success):
+        if success:
+            print('Lighthouse data correctly written to crazyflie')
+        else:
+            print('Writing crazyflie lighthouse data failed')
+        self._read_write_event.set()
 
 class CrazyfliePublisher(Node):
     """
@@ -122,8 +178,7 @@ class CrazyfliePublisher(Node):
         # self._lh_config = self.
         # self._lh_helper = LighthouseMemHelper(self._cf)
         self._lh_initialized = Event()
-
-        self._cf_lh_write_event = Event()
+        self._lh_config_writer = None
         self._cf.open_link(self._link_uri)
 
 
@@ -132,7 +187,7 @@ class CrazyfliePublisher(Node):
         self._set_initial_position()
 
         self.get_logger().debug("Writing lighthouse config to memory")
-        self._init_lh_helper()
+        self._init_lh_config_writer()
         self.get_logger().debug("Lighthouse config written to memory")
 
         # Initialize ranges and timer for the laser scan
@@ -406,52 +461,9 @@ class CrazyfliePublisher(Node):
             print("Error in LH log data, not published to tf2")
     
     # ! Needs to have data rewritten.
-    def _init_lh_helper(self):
-
-        print("Reading lighthouse data from memory")
-        # print(f"mems in the cf {self._cf.mem.get_mems()}")
-        self._lh_helper = LighthouseMemHelper(self._cf)
-        self._cf_lh_write_event.clear()
-
-
-        print("Writing lighthouse data to memory")
-        self._write_lh_config_to_memory()
-        self._read_lh_config_from_memory()
+    def _init_lh_config_writer(self):
         #TODO: Get lighthouse data to correctly be output to the console.
-
-    def _write_lh_config_to_memory(self):
-        try:
-            print("Cf event status before write: ", self._cf_lh_write_event.is_set())
-            self._lh_helper.write_geos(dict_to_lh_config(self._lh_config, self.lh_rotation_matrix), self._data_written)
-            self._cf_lh_write_event.wait()
-            self._cf_lh_write_event.clear()
-
-        except Exception as e:
-            self.get_logger().error(f"Error writing lighthouse data to memory: {e}")
-
-    def _read_lh_config_from_memory(self):
-        print("Reading lighthouse data from memory")
-        self._lh_helper.read_all_geos(self._lh_data_read_callback)
-        self._cf_lh_write_event.wait()
-        self._cf_lh_write_event.clear()
-
-    def _lh_data_read_callback(self, geo_data):
-        print("Lighthouse data read")
-        for id, data in geo_data.items():
-            print('---- Geometry for base station', id + 1)
-            data.dump()
-            print()
-        # print(geo_data)
-        self._cf_lh_write_event.set()
-
-    def _data_written(self, success):
-        if success:
-            print('Lighthouse data correctly written to crazyflie')
-            self.get_logger().info('Lighthouse data correctly written to crazyflie')
-        else:
-            self.get_logger().error('Writing crazyflie lighthouse data failed')
-            print('Write failed')
-        self._cf_lh_write_event.set()
+        self._init_lh_config_writer = LighthouseConfigWriter(self._cf, self.lh_rotation_matrix, self._lh_config)
 
     # ! These are fine
     def _set_initial_position(self):
