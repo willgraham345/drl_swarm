@@ -30,7 +30,7 @@ from launch.actions import (
     IncludeLaunchDescription,
     LogInfo,
 )
-from launch.substitutions import LaunchConfiguration
+from launch.substitutions import LaunchConfiguration, TextSubstitution
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_xml.launch_description_sources import XMLLaunchDescriptionSource
 
@@ -89,20 +89,26 @@ def generate_launch_description():
             on_exit=[launch.actions.EmitEvent(event=launch.events.Shutdown())],
         )
     )
+    print("Starting rviz configuration")
     ########## ! End of Simulation and foxglove arguments from webots_world_launch.py ##########
-    rviz_cmd= IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(bringup_dir, 'launch', 'rviz_launch.py'),
-            launch_arguments={
-                'rviz_config': os.path.join(bringup_dir, 'rviz', 'nav2_default_view.rviz') #? Not sure if this is right
-                }.items())
-    )
+    
 
-    ########## ! Start of nav2 development ##########
+    ########## ! Start of nav2  ##########
     # Get nav2 bringup directory and launch directory
     bringup_dir = get_package_share_directory('nav2_bringup')
-    launch_dir = os.path.join(bringup_dir, 'launch')
+    nav2_launch_dir = os.path.join(bringup_dir, 'launch')
+    print(); print();
+    print("Starting nav2 launch")
+    print(); print();
     
+    # TODO: Debug rviz launch after the nav2 launch is up and running
+    rviz_cmd= IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(bringup_dir, 'launch', 'rviz_launch.py')),
+        launch_arguments={
+            'rviz_config': os.path.join(bringup_dir, 'rviz', 'nav2_default_view.rviz')
+            }.items()
+    )
     # TODO: Add launch arguments for nav2
     # * params_file: Full path to the ROS2 parameters file to use for all launched nodes
     # * map: Full path to the map file to be used for localization and planning
@@ -119,31 +125,33 @@ def generate_launch_description():
     robots_list = ParseMultiRobotPose('robots').value() #? No idea how this works yet
     # TODO: Modify simulation configuration to match ParseMultiRobotPose class
     bringup_cmd_group = []
-    for robot_name in robots_lists:
+    
+    print(); print();
+    print(f'robots_list: {robots_list}')
+    print(); print();
+    
+
+    for robot_name in robots_list:
         init_pose = robots_list[robot_name]
-        group = GroupAction([
-            LogInfo(
-                msg=f'Launching namespace = {robot_name} with initial pose = {init_pose}'
-            ),
-            # TODO: Fix this include launch description
-            IncludeLaunchDescription(
-                PythonLaunchDescriptionSource(os.path.join(launch_dir, 'bringup_launch.py')),
-                # TODO: launch arguements for nav2
-                launch_arguments={
-                    'use_sim_time': 'True',
-                    'autostart': 'True',
-                    'params_file': params_file,
-                    'map': LaunchConfiguration('map'),
-                    'namespace': robot_name,
-                    'use_namespace': 'True',
-                    'initial_pose_x': TextSubstitution(text=str(init_pose[0])),
-                    'initial_pose_y': TextSubstitution(text=str(init_pose[1])),
-                    'initial_pose_yaw': TextSubstitution(text=str(init_pose[2])),
-                    'robot_name': TextSubstitution(text=robot_name),
+        # TODO: Fix this include launch description
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(os.path.join(nav2_launch_dir, 'bringup_launch.py')),
+            # TODO: launch arguements for nav2
+            launch_arguments={
+                'use_sim_time': 'True',
+                'autostart': 'True',
+                'params_file': params_file,
+                'map': LaunchConfiguration('map'),
+                'namespace': robot_name,
+                'use_namespace': 'True',
+                'initial_pose_x': TextSubstitution(text=str(init_pose[0])),
+                'initial_pose_y': TextSubstitution(text=str(init_pose[1])),
+                'initial_pose_yaw': TextSubstitution(text=str(init_pose[2])),
+                'robot_name': TextSubstitution(text=robot_name),
                 }.items()
-            )
+        )
 
-
+   
     # TODO: bringup_cmd_group initialization (see the multi robot launch file)
     ld = LaunchDescription([
         DeclareLaunchArgument(
@@ -154,6 +162,7 @@ def generate_launch_description():
         webots,
         webots._supervisor,
         foxglove_websocket,
+        rviz_cmd,
         launch_handler,
         event_handler,
 
