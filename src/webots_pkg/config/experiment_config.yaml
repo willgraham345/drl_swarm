@@ -2,7 +2,7 @@ robots:
   crazyflies:
     - name: cf1
       uri: ""
-      translation: [-0, -0, 0.015]
+      translation: [-0.5, -0, 0.015]
       orientation: [0, 0, 0, 1]
     # - name: cf2
     #   uri: ""

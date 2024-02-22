@@ -33,9 +33,9 @@ def radians(degrees):
     return degrees * math.pi / 180.0
 
 ROTATION_MATRIX_NEG_90_PITCH = [
-    [0.0, 0.0, -1.0],
+    [0.0, 0.0, 1.0],
     [0.0, 1.0, 0.0],
-    [1.0, 0.0, 0.0],
+    [-1.0, 0.0, 0.0],
 ]
 NO_ROTATION_MATRIX = [
     [1.0, 0.0, 0.0],
@@ -45,40 +45,78 @@ NO_ROTATION_MATRIX = [
 
 
 # TODO: Repalce this with lab tested results
+# calib0 = LighthouseBsCalibration()
+# calib0.sweeps[0].tilt = -0.049844
+# calib0.sweeps[0].phase = 0.000000
+# calib0.sweeps[0].curve = -0.477082
+# calib0.sweeps[0].gibphase = 1.870844
+# calib0.sweeps[0].gibmag = -0.006574
+# calib0.sweeps[0].ogeephase = 1.916343
+# calib0.sweeps[0].ogeemag = 0.110889
+# calib0.sweeps[1].tilt = 0.048504
+# calib0.sweeps[1].phase = 0.004812
+# calib0.sweeps[1].curve = 0.545917
+# calib0.sweeps[1].gibphase = 2.412284
+# calib0.sweeps[1].gibmag = -0.006277
+# calib0.sweeps[1].ogeephase = 3.063375
+# calib0.sweeps[1].ogeemag = 0.202656
+# calib0.uid = 0x2C0DCDCD
+# calib0.valid = True
+
+# calib1 = LighthouseBsCalibration()
+# calib1.sweeps[0].tilt = -0.048398
+# calib1.sweeps[0].phase = 0.000000
+# calib1.sweeps[0].curve = 0.155712
+# calib1.sweeps[0].gibphase = 1.315732
+# calib1.sweeps[0].gibmag = -0.002849
+# calib1.sweeps[0].ogeephase = 1.291309
+# calib1.sweeps[0].ogeemag = -0.108465
+# calib1.sweeps[1].tilt = 0.047573
+# calib1.sweeps[1].phase = -0.005821
+# calib1.sweeps[1].curve = 0.246296
+# calib1.sweeps[1].gibphase = 1.344470
+# calib1.sweeps[1].gibmag = -0.005334
+# calib1.sweeps[1].ogeephase = 1.408694
+# calib1.sweeps[1].ogeemag = 0.039339
+# calib1.uid = 0xE72CEE73
+# calib1.valid = True
+
+
+# * Lab Calib results
 calib0 = LighthouseBsCalibration()
-calib0.sweeps[0].tilt = -0.049844
-calib0.sweeps[0].phase = 0.000000
-calib0.sweeps[0].curve = -0.477082
-calib0.sweeps[0].gibphase = 1.870844
-calib0.sweeps[0].gibmag = -0.006574
-calib0.sweeps[0].ogeephase = 1.916343
-calib0.sweeps[0].ogeemag = 0.110889
-calib0.sweeps[1].tilt = 0.048504
-calib0.sweeps[1].phase = 0.004812
-calib0.sweeps[1].curve = 0.545917
-calib0.sweeps[1].gibphase = 2.412284
-calib0.sweeps[1].gibmag = -0.006277
-calib0.sweeps[1].ogeephase = 3.063375
-calib0.sweeps[1].ogeemag = 0.202656
-calib0.uid = 0x2C0DCDCD
+calib0.sweeps[0].curve = -0.0113677978515625
+calib0.sweeps[0].gibmag = -0.0039215087890625
+calib0.sweeps[0].gibphase = 0.4111328125
+calib0.sweeps[0].ogeemag = -0.2215576171875
+calib0.sweeps[0].ogeephase = 2.173828125
+calib0.sweeps[0].phase = 0.0
+calib0.sweeps[0].tilt = -0.05035400390625
+calib0.sweeps[1].curve= 0.2939453125
+calib0.sweeps[1].gibmag= -0.005096435546875
+calib0.sweeps[1].gibphase= 1.09375
+calib0.sweeps[1].ogeemag= -0.08184814453125
+calib0.sweeps[1].ogeephase= 2.353515625
+calib0.sweeps[1].phase= -0.00424957275390625
+calib0.sweeps[1].tilt= 0.04296875
+calib0.uid = 1043017066
 calib0.valid = True
 
 calib1 = LighthouseBsCalibration()
-calib1.sweeps[0].tilt = -0.048398
-calib1.sweeps[0].phase = 0.000000
-calib1.sweeps[0].curve = 0.155712
-calib1.sweeps[0].gibphase = 1.315732
-calib1.sweeps[0].gibmag = -0.002849
-calib1.sweeps[0].ogeephase = 1.291309
-calib1.sweeps[0].ogeemag = -0.108465
-calib1.sweeps[1].tilt = 0.047573
-calib1.sweeps[1].phase = -0.005821
-calib1.sweeps[1].curve = 0.246296
-calib1.sweeps[1].gibphase = 1.344470
-calib1.sweeps[1].gibmag = -0.005334
-calib1.sweeps[1].ogeephase = 1.408694
-calib1.sweeps[1].ogeemag = 0.039339
-calib1.uid = 0xE72CEE73
+calib1.sweeps[0].curve = 0.055908203125
+calib1.sweeps[0].gibmag = 0.0010480880737304688
+calib1.sweeps[0].gibphase = 1.150390625
+calib1.sweeps[0].ogeemag = -0.31884765625
+calib1.sweeps[0].ogeephase = 1.3759765625
+calib1.sweeps[0].phase = 0.0
+calib1.sweeps[0].tilt = -0.049285888671875
+calib1.sweeps[1].curve = 0.194091796875
+calib1.sweeps[1].gibmag = -0.0020427703857421875
+calib1.sweeps[1].gibphase = 0.232177734375
+calib1.sweeps[1].ogeemag = -0.2666015625
+calib1.sweeps[1].ogeephase = 2.095703125
+calib1.sweeps[1].phase = -0.00547027587890625
+calib1.sweeps[1].tilt = 0.04638671875
+calib1.uid = 3821474937
 calib1.valid = True
 
 def dict_to_lh_config(geos: dict, rotation_matrix: list[list[float]]):
@@ -94,19 +132,31 @@ def dict_to_lh_config(geos: dict, rotation_matrix: list[list[float]]):
 
 class LighthouseConfigWriter:
     def __init__(self, cf, rotation_matrix, lh_config: dict, calibs: dict[int, LighthouseBsCalibration]):
+        print(); print();
         print('Configuring lighthouse')
+        print(); print()
         self._cf = cf
         self.lh_rotation_matrix = rotation_matrix
         self._lh_config = lh_config
+        self._calibs_on_cf = False
         self._calibs = calibs
-
         self._read_write_event = Event()
         self._lh_helper = LighthouseMemHelper(self._cf)
         self._read_write_event.clear()
+
+
+        # * Write lighthouse geometries to memory, output results to console.
         self.write_lh_geos_to_memory()
         self.read_lh_geos_from_memory()
-        self.write_lh_calibs_to_memory()
-        self.read_lh_calibs_from_memory()
+        # * Check if calibs have been written to memory. If not, write them. If they are there, read them out
+        try:
+            self.read_lh_calibs_from_memory()
+        except:
+            self.write_lh_calibs_to_memory()
+            self.read_lh_calibs_from_memory()
+        print(); print();
+        print('Lighthouse configuration complete')
+        print(); print()
 
     def write_lh_geos_to_memory(self):
         try:
@@ -139,6 +189,7 @@ class LighthouseConfigWriter:
 
     def _lh_geo_read_callback(self, geo_data):
         print("Lighthouse data read")
+        self._calibs_on_cf = True
         for id, data in geo_data.items():
             print('---- Geometry for base station', id + 1)
             data.dump()
@@ -513,7 +564,7 @@ class CrazyfliePublisher(Node):
     
     # TODO: Confirm that we are getting correct data output in the lab. 
     def _init_lh_config_writer(self):
-        calibs = {0: calib0, 1: calib1}
+        calibs = {0: calib1, 1: calib0}
         self._init_lh_config_writer = LighthouseConfigWriter(self._cf, self.lh_rotation_matrix, self._lh_config, calibs)
         self._lh_initialized.set()
 
