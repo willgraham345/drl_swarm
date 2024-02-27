@@ -4,96 +4,97 @@ import ast
 import argparse
 import pandas as pd
 import plotly.graph_objs as go
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+pd.options.plotting.backend = "plotly"
 
-DEFAULT_FILE = '/home/will/drl_swarm/data_analysis/vicon_outputs.csv'
-
-def new_parse_file(file_path, topics):
-        # Read the CSV file into a pandas DataFrame
-    df = pd.read_csv(file_path)
-
-    df['header.stamp'] = pd.to_datetime(df['header.stamp'], unit='s')
-    df.set_index('header.stamp', inplace=True)
-    print("df.head(): ", df.head())
-    new_df = pd.DataFrame()
-    for topic in df['topic'].unique():
-        topic_df = df[df['topic'] == topic].copy()
-        # print("topic_df.head(): ", topic_df.head())
-        topic_df.drop(columns=['topic'], inplace=True)
-        topic_df.rename(columns={'value': topic}, inplace=True)
-        print("topic_df.head(): ", topic_df.head())
-        new_df = pd.merge(new_df, topic_df[topic], how='outer')
-
-    print(new_df.head())
-    return df
-
-def parse_file(filename):
+VICON_FILE = '/home/will/drl_swarm/data_analysis/vicon_outputs.csv'
+LH_FILE = '/home/will/drl_swarm/data_analysis/lh_data.csv'
+ODOM_FILE = '/home/will/drl_swarm/data_analysis/odom_data.csv'
+def parse_datastamp_topic_csv(file_path, rename_args=None):
     """
-    Parses a file containing data in each line and returns a list of dictionaries.
+    Parse a file and return a DataFrame with the parsed data.
 
     Args:
-        filename (str): The path to the file.
+        file_path (str): The path to the file to be parsed.
 
     Returns:
-        list: A list of dictionaries representing the parsed data.
+        pandas.DataFrame: The parsed data in a DataFrame format.
     """
-    parsed_data = []
-    with open(filename, 'rt', encoding='utf-8') as file:
-        for line in file:
-            try:
-                data = ast.literal_eval(line)
-                if isinstance(data, dict):
-                    parsed_data.append(data)
-                else:
-                    print(f"Line '{line.strip()}' does not represent a dictionary.")
-            except:
-                print(f"Error parsing line '{line.strip()}'")
-    return parsed_data
+    if not os.path.exists(file_path):
+        raise FileNotFoundError(f"File '{file_path}' does not exist.")
+    if rename_args is not None:
+        if not isinstance(rename_args, dict):
+            raise ValueError(f"rename_args must be a dictionary. Got {type(rename_args)} instead.")
+    time_index = "receive time"
+    df_temp = pd.read_csv(file_path)
+    df_temp[time_index] = pd.to_datetime(df_temp[time_index], unit='s')
+    df_temp.set_index(time_index, inplace=True)
+    df = df_temp.pivot_table(index = time_index, columns='topic', values='value', aggfunc='first')
+    if rename_args is None:
+        return df
+    else:
+        df.rename(columns=rename_args, inplace=True)
+        return df
 
-def unpack_data(data_fmt):
+def simple_plot(df, graph_title: str = 'Data Plot'):
+    fig = df.plot(title=graph_title, x=df.index, y=df.columns, kind='scatter')
+    fig.show()
+    print("Plot finished")
+
+
+def plot_df(df, title_of_graph: str = 'Data Plot'):
     """
-    Unpacks the data format and returns a dictionary with separate lists for each data type.
+    Plots the data using Plotly library.
 
     Args:
-        data_fmt (list): A list of dictionaries representing the data.
-
-    Returns:
-        dict: A dictionary with separate lists for each data type.
+        df (pandas.DataFrame): The data to be plotted.
+        title_of_graphs (str, optional): The title of the graphs. Defaults to 'Data Plot'.
     """
-    x_values = []
-    y_values = []
-    z_values = []
-    yaw_values = []
-    timestamp = []
-    lh_x_values = []
-    lh_y_values = []
-    lh_z_values = []
-    lh_timestamp = []
-    for point in data_fmt:
-        if 'stateEstimate.x' in point:
-            x_values.append(point['stateEstimate.x'])
-        if 'stateEstimate.y' in point:
-            y_values.append(point['stateEstimate.y'])
-        if 'stateEstimate.z' in point:
-            z_values.append(point['stateEstimate.z'])
-        if 'stateEstimate.yaw' in point:
-            yaw_values.append(point['stateEstimate.yaw'])
-        if 'timestamp' in point:
-            timestamp = point['timestamp']
-        if 'lighthouse.x' in point:
-            lh_x_values.append(point['lighthouse.x'])
-        if 'lighthouse.y' in point:
-            lh_y_values.append(point['lighthouse.y'])
-        if 'lighthouse.z' in point:
-            lh_z_values.append(point['lighthouse.z'])
-        if 'lh_timestamp' in point:
-            lh_timestamp = point['lh_timestamp']
-    timestep = list(range(len(x_values)))
-    data_fmt = {"x": x_values, "y": y_values, "z": z_values, "yaw": yaw_values,
-            "timestamp": timestamp, "timestep": timestep,
-            "lh_x": lh_x_values, "lh_y": lh_y_values, "lh_z": lh_z_values,
-            "lh_timestamp": lh_timestamp}
-    return data_fmt
+    # Plotting
+    raise NotImplementedError("This function is not yet implemented.")
+    fig = go.Figure()
+
+    # Calculate test duration
+    test_duration = (df.index[-1] - df.index[0]).total_seconds()
+
+    # Add annotation
+    fig.add_annotation(
+        text=f'Test Duration: {test_duration:.2f} seconds',
+        showarrow=False,
+        font=dict(size=12),
+    )
+
+    # Plot the data
+    # for column in df.columns:
+    #     if column[:3] == 'tb1':
+    #         fig.add_trace(go.Scatter(x = df.index, y = df[column], mode = 'markers', yaxis = "tb1"))
+            
+    #     elif column[:3] == 'tb2':
+    #         fig.add_trace(go.Scatter(x = df.index, y = df[column], mode = 'markers', yaxis = "tb2"))
+    #     elif column[:2] == 'cf':
+    #         fig.add_trace(go.Scatter(x = df.index, y = df[column], mode = 'markers', yaxis = "cf"))
+    #     elif column[:4] == 'odom':
+
+    #     elif column[:2] == 'lh':
+    #         # Do something for lh columns
+    #         pass
+    #     else:
+    #         # Handle other columns
+    #         pass
+    
+    fig.update_layout(
+        title = title_of_graph,
+        xaxis = dict(
+            autorange = True,
+            type = 'linear',
+            rangeslider = dict(
+                autorange = True,
+            )
+        ),
+    )
+
+    fig.show()
+
+    print(df.head())
 
 def plot_data(data, title_of_graphs: str = 'Data Plot'):
     """
@@ -318,13 +319,33 @@ def arg_parser():
 
 # Example usage:
 if __name__ == '__main__':
-    vicon_topics = [("/rigid_bodies.rigidbodies[0].pose.position.x", "tb1_x"), 
-                    ("/rigid_bodies.rigidbodies[0].pose.position.y", "tb1_y"),
-                    ("/rigid_bodies.rigidbodies[0].pose.position.z", "tb1_z"),
-                    ("/rigid_bodies.rigidbodies[1].pose.position.x", "tb2_x"),
-                    ("/rigid_bodies.rigidbodies[1].pose.position.y", "tb2_y"),
-                    ("/rigid_bodies.rigidbodies[1].pose.position.z", "tb2_z"),
-                    ("/rigid_bodies.rigidbodies[2].pose.position.x", "cf_x"),
-                    ("/rigid_bodies.rigidbodies[2].pose.position.y", "cf_y"),
-                    ("/rigid_bodies.rigidbodies[2].pose.position.z", "cf_z"),]
-    df_vicon = new_parse_file(DEFAULT_FILE, vicon_topics)
+    vicon_topics = {"/rigid_bodies.rigidbodies[0].pose.position.x": "tb1_x",
+                    "/rigid_bodies.rigidbodies[0].pose.position.y": "tb1_y",
+                    "/rigid_bodies.rigidbodies[0].pose.position.z": "tb1_z",
+                    "/rigid_bodies.rigidbodies[1].pose.position.x": "tb2_x",
+                    "/rigid_bodies.rigidbodies[1].pose.position.y": "tb2_y",
+                    "/rigid_bodies.rigidbodies[1].pose.position.z": "tb2_z",
+                    "/rigid_bodies.rigidbodies[2].pose.position.x": "cf_x",
+                    "/rigid_bodies.rigidbodies[2].pose.position.y": "cf_y",
+                    "/rigid_bodies.rigidbodies[2].pose.position.z": "cf_z",}
+    odom_topics = {"/odom.pose.pose.position.x": "odom_x",
+                   "/odom.pose.pose.position.y": "odom_y",
+                   "/odom.pose.pose.position.z": "odom_z",}
+    lh_topics = {'/tf.transforms[:]{child_frame_id=="lighthouse_link"}.transform.translation.x': 'lh_x',
+                 '/tf.transforms[:]{child_frame_id=="lighthouse_link"}.transform.translation.y': 'lh_y',
+                 '/tf.transforms[:]{child_frame_id=="lighthouse_link"}.transform.translation.z': 'lh_z',}
+    df_vicon = parse_datastamp_topic_csv(VICON_FILE, vicon_topics)
+    df_lh = parse_datastamp_topic_csv(LH_FILE, lh_topics)
+    df_odom = parse_datastamp_topic_csv(ODOM_FILE, odom_topics)
+    tb_vicon_data = df_vicon.filter(like="tb")
+    cf_vicon_data = df_vicon.filter(like="cf")
+    
+    simple_plot(tb_vicon_data, graph_title='Turtlebot Pos Vicon', )
+    simple_plot(cf_vicon_data, graph_title='Crazyflie Pos Vicon', )
+    simple_plot(df_lh, graph_title='Crazyflie Pos LH', )
+    simple_plot(df_odom, graph_title='Crazyflie Pos Odom', )
+    comparison_df = pd.concat([df_vicon.filter(like="cf"), df_lh], axis=1)
+    print(comparison_df.head())
+
+
+
