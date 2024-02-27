@@ -25,6 +25,7 @@ def parse_tf_csv(file_path, child_frame_ids):
             except:
                 print(f"Error parsing line '{row}'")
     return data
+
 def parse_rigid_bodies_csv(filepath, rigid_body_ids):
     data = {rigid_body_id: {} for rigid_body_id in rigid_body_ids}
     with open(filepath, 'r') as csv_file:

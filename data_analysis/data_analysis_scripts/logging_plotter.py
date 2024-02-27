@@ -1,14 +1,31 @@
-
-
-
 import sys
 import os
 import ast
 import argparse
+import pandas as pd
 import plotly.graph_objs as go
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-DEFAULT_FILE = 'cf_lh_pcb_tests/test1.log'
+DEFAULT_FILE = '/home/will/drl_swarm/data_analysis/vicon_outputs.csv'
+
+def new_parse_file(file_path, topics):
+        # Read the CSV file into a pandas DataFrame
+    df = pd.read_csv(file_path)
+
+    df['header.stamp'] = pd.to_datetime(df['header.stamp'], unit='s')
+    df.set_index('header.stamp', inplace=True)
+    print("df.head(): ", df.head())
+    new_df = pd.DataFrame()
+    for topic in df['topic'].unique():
+        topic_df = df[df['topic'] == topic].copy()
+        # print("topic_df.head(): ", topic_df.head())
+        topic_df.drop(columns=['topic'], inplace=True)
+        topic_df.rename(columns={'value': topic}, inplace=True)
+        print("topic_df.head(): ", topic_df.head())
+        new_df = pd.merge(new_df, topic_df[topic], how='outer')
+
+    print(new_df.head())
+    return df
 
 def parse_file(filename):
     """
@@ -301,8 +318,13 @@ def arg_parser():
 
 # Example usage:
 if __name__ == '__main__':
-    try:
-        INPUT_FILE = arg_parser()
-    except SystemExit:
-        INPUT_FILE = DEFAULT_FILE
-    plot_data(parse_file(INPUT_FILE), INPUT_FILE)
+    vicon_topics = [("/rigid_bodies.rigidbodies[0].pose.position.x", "tb1_x"), 
+                    ("/rigid_bodies.rigidbodies[0].pose.position.y", "tb1_y"),
+                    ("/rigid_bodies.rigidbodies[0].pose.position.z", "tb1_z"),
+                    ("/rigid_bodies.rigidbodies[1].pose.position.x", "tb2_x"),
+                    ("/rigid_bodies.rigidbodies[1].pose.position.y", "tb2_y"),
+                    ("/rigid_bodies.rigidbodies[1].pose.position.z", "tb2_z"),
+                    ("/rigid_bodies.rigidbodies[2].pose.position.x", "cf_x"),
+                    ("/rigid_bodies.rigidbodies[2].pose.position.y", "cf_y"),
+                    ("/rigid_bodies.rigidbodies[2].pose.position.z", "cf_z"),]
+    df_vicon = new_parse_file(DEFAULT_FILE, vicon_topics)
