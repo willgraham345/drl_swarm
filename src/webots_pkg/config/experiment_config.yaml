@@ -12,10 +12,10 @@ robots:
   turtlebots: 
     - name: tb1
       uri: ""
-      translation: [0, -0.2, 0.015]
+      translation: [0.871499, 0.491375, 0.175985]
       orientation: [0, 0, 0, 1]
 
     - name: tb2
       uri: ""
-      translation: [0, 0.2, 0.015]
+      translation: [0.8664591, 0.6533398, 0.183863]
       orientation: [0, 0, 0, 1]

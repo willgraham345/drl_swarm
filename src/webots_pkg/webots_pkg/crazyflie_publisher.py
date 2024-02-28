@@ -32,10 +32,16 @@ from math import pi
 def radians(degrees):  
     return degrees * math.pi / 180.0
 
-ROTATION_MATRIX_NEG_90_PITCH = [
+ROTATION_MATRIX_90_PITCH = [
     [0.0, 0.0, 1.0],
     [0.0, 1.0, 0.0],
     [-1.0, 0.0, 0.0],
+]
+
+ROTATION_MATRIX_NEG_90_PITCH = [
+    [0.0, 0.0, -1.0],
+    [0.0, 1.0, 0.0],
+    [1.0, 0.0, 0.0],
 ]
 NO_ROTATION_MATRIX = [
     [1.0, 0.0, 0.0],
