@@ -262,7 +262,7 @@ class CrazyfliePublisher(Node):
         self._robot_config = None
         self._initial_translation = self._read_cf_pos_from_config()
         self._lh_config = self._read_lh_geos_from_config()
-        self.lh_rotation_matrix = ROTATION_MATRIX_NEG_90_PITCH
+        self.lh_rotation_matrix = ROTATION_MATRIX_90_PITCH
 
 
         # Initialize publishers and tf2 broadcasters
