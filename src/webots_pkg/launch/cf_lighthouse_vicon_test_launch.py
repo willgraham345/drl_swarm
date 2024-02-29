@@ -69,6 +69,10 @@ def generate_launch_description():
         cmd = ['ros2', 'lifecycle', 'set', '/mocap_vicon_driver_node', 'activate'],
     )
 
+    record_all_nodes = ExecuteProcess(
+        cmd = ['ros2', 'bag', 'record', '-a']
+    )
+
 
     ld = LaunchDescription()
     ld.add_action(vicon_driver_launch)
@@ -77,6 +81,7 @@ def generate_launch_description():
     ld.add_action(static_tf_publisher)
     ld.add_action(rviz)
     ld.add_action(start_vicon_publishing)
+    ld.add_action(record_all_nodes)
 
     return ld
 
