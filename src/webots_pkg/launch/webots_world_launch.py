@@ -19,12 +19,11 @@ import os
 import sys
 import pathlib
 import launch
-import logging
 import yaml
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.substitutions import LaunchConfiguration
-from launch.actions import DeclareLaunchArgument, LogInfo, IncludeLaunchDescription 
+from launch.actions import DeclareLaunchArgument, LogInfo, IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_xml.launch_description_sources import XMLLaunchDescriptionSource
 
@@ -76,8 +75,8 @@ def get_cf_driver(cf):
             }, 
         ],
     )
-    logging.debug(f"crazyflie_driver = {crazyflie_driver}")
-    logging.debug(f"robot_description = {robot_description}")
+    print(f"crazyflie_driver = {crazyflie_driver}")
+    print(f"robot_description = {robot_description}")
     return crazyflie_driver
 
 
@@ -94,8 +93,8 @@ def get_tb_driver(tb):
             },
         ],
     )
-    logging.debug(f"turtlebot_driver = {turtlebot_driver}")
-    logging.debug(f"robot_description = {robot_description}")
+    print(f"turtlebot_driver = {turtlebot_driver}")
+    print(f"robot_description = {robot_description}")
     return turtlebot_driver
 
 
@@ -146,6 +145,7 @@ def generate_launch_description():
 
     #Development here
     swarm = import_webots_swarm_config(ROBOT_CONFIG_FILE_PATH)
+    print(f"swarm = {swarm}")
     swarm_nodes = []
 
 

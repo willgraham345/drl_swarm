@@ -1,0 +1,14 @@
+robots:
+  turtlebots: 
+    - name: tb1
+      uri: ""
+      translation: "-1.5 -1.5 0.015"
+      orientation: [0, 0, 0, 1]
+    - name: tb2
+      uri: ""
+      translation: "-2.5 -2.5 0.015"
+      orientation: [0, 0, 0, 1]
+
+world_file_to_write_path: "apartment.wbt"
+
+world_file_to_copy_path: "../worlds/base_worlds/apartment.wbt"

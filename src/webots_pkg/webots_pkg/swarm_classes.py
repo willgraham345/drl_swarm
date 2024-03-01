@@ -12,6 +12,7 @@ Author: Will Graham
 
 
 import os
+import math
 import json
 import typing
 
@@ -34,6 +35,10 @@ class cf():
         self.URI_address = URI_address
         self.start_position = start_position
         self.start_orientation = start_orientation
+    def get_yaw(self) -> float:
+        qw, qx, qy, qz = self.start_orientation
+        yaw = math.atan2(2.0 * (qy * qz + qw * qx), qw * qw - qx * qx - qy * qy + qz * qz)
+        return yaw
 
 
 class tb(): 
@@ -53,6 +58,10 @@ class tb():
         self.ROS2_address = ROS2_address
         self.start_position = start_position
         self.start_orientation = start_orientation
+    def get_yaw(self) -> float:
+        qw, qx, qy, qz = self.start_orientation
+        yaw = math.atan2(2.0 * (qy * qz + qw * qx), qw * qw - qx * qx - qy * qy + qz * qz)
+        return yaw
 
 class Swarm():
         """
@@ -87,6 +96,21 @@ class Swarm():
         
         def add_cf(self, cf):
                 self.crazyflies.append(cf)
+        def get_robot_str(self) -> str:
+            robot_str = ""
+            try:
+                for cf in self.crazyflies:
+                        robot_str+= f"{cf.name}="
+                        robot_str+= f"x: {cf.start_position[0]}, y: {cf.start_position[1]}, z: {cf.start_position[2]}, yaw: {cf.get_yaw()};"
+            except:
+                print("No crazyflies found in swarm during get_robot_str")
+            try:
+                for tb in self.turtlebots:
+                        robot_str+= f"{tb.name}="
+                        robot_str+= f"x: {tb.start_position[0]}, y: {tb.start_position[1]}, z: {tb.start_position[2]}, yaw: {tb.get_yaw()};"
+            except:
+                print("No turtlebots found in swarm during get_robot_str")
+            return robot_str
 
 
 
