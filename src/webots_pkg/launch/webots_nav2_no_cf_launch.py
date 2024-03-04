@@ -48,6 +48,7 @@ from nav2_common.launch import ParseMultiRobotPose
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from webots_pkg.swarm_classes import Swarm, cf, tb 
+from webots_pkg.config_readers import import_webots_swarm_config
 DIR_PATH = os.path.dirname(__file__)
 
 WORLD_FILES = 'apartment.wbt'
@@ -56,27 +57,7 @@ PACKAGE_DIR = get_package_share_directory('webots_pkg')
 ROBOT_CONFIG_FILE_PATH = os.path.abspath(os.path.join(PACKAGE_DIR, 'config', 'webots_config_no_cf.yaml'))
 #TODO: Consider adding a macro for the default nav2 params file
 
-def import_webots_swarm_config(config_file_path : str):
-    with open(config_file_path, 'r') as file:
-        config = yaml.safe_load(file)
-    swarm = Swarm()
-    
-    try:
-        for crazyflie in config['robots']['crazyflies']:
-            Crazyflie = cf(crazyflie['name'], crazyflie['translation'])
-            swarm.add_cf(Crazyflie)
 
-    except Exception as e:
-        print(f"No crazyflies found in config file: {e}") 
-    try:
-        for turtlebot in config['robots']['turtlebots']:
-            Turtlebot = tb(turtlebot['name'], turtlebot['translation'])
-            swarm.add_tb(Turtlebot)
-    except Exception as e:
-        print(f"No turtlebots found in config file: {e}")
-        
-    # !: Left off here with the swarm class. Need it to output correctly
-    return swarm 
 
 def generate_launch_description():
     """
@@ -146,16 +127,16 @@ def generate_launch_description():
     # Get robot_list
     swarm = import_webots_swarm_config(ROBOT_CONFIG_FILE_PATH)
     print(f"swarm = {swarm}")
+    print(f"swarm_method = {swarm.get_robot_str()}")
     print(f"swarm dictionary = {swarm.__dict__}")
-    print(f"robots_list = {swarm.get_robot_str()}")
     robots_list = swarm.get_robot_str()
     robots_list = ParseMultiRobotPose('robots').value() #? No idea how this works yet
     # TODO: Modify simulation configuration to match ParseMultiRobotPose class
     bringup_cmd_group = []
     
-    print(); print();
-    print(f'robots_list: {robots_list}')
-    print(); print();
+    print() 
+    print(f'robots_list before iterative: {robots_list}')
+    print() 
     
 
     for robot_name in robots_list:

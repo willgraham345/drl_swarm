@@ -34,7 +34,7 @@ class cf():
     """
     def __init__(self, name, start_position, URI_address=None, start_orientation=None):
         assert isinstance(start_position, (list)), "Start position must be a list or tuple"
-        assert all(isinstance(coord, (int, float)) for coord in start_position), "Start position coordinates must be integers or floats"
+        assert all(isinstance(coord, float) for coord in start_position), "Start position coordinates must be integers or floats"
         assert isinstance(name, str), "Name must be a string"
         self.name = name
         self.URI_address = URI_address
@@ -60,7 +60,7 @@ class tb():
     """
     def __init__(self, name, start_position, ROS2_address=None, start_orientation=None):
         assert isinstance(start_position, (list)), "Start position must be a list or tuple"
-        assert all(isinstance(coord, (int, float)) for coord in start_position), "Start position coordinates must be integers or floats"
+        assert all(isinstance(coord, float) for coord in start_position), "Start position coordinates must be integers or floats"
         assert isinstance(name, str), "Name must be a string"
         self.name = name
         self.ROS2_address = ROS2_address

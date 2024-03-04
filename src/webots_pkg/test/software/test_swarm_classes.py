@@ -24,6 +24,7 @@ def test_cf_get_yaw():
     crazyflie = cf("cf1", [0, 0, 0], "cf1_address", start_orientation)
     expected_yaw = 0.0
     assert crazyflie.get_yaw() == expected_yaw
+    # TODO: Add more yaw tests to make sure this thing is actually working
 
 
 def test_tb_instantiation():
