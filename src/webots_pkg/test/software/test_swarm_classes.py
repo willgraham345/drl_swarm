@@ -7,6 +7,43 @@ TB2 = tb("tb2", [1, 1, 1], "tb2_address", [0, 0, 0, 1])
 CF1 = cf("cf1", [0, 0, 0], "cf1_address", [0, 0, 0, 1])
 CF2 = cf("cf2", [1, 1, 1], "cf2_address", [0, 0, 0, 1])
 
+def test_cf_instantiation():
+    cf_name = "cf1"
+    start_position = [0, 0, 0]
+    URI_ADDRESS = "cf1_address"
+    start_orientation = [0, 0, 0, 1]
+    crazyflie = cf(cf_name, start_position, URI_ADDRESS, start_orientation)
+    assert isinstance(crazyflie, cf)
+    assert crazyflie.name == cf_name
+    assert crazyflie.start_position == start_position
+    assert crazyflie.URI_address == URI_ADDRESS
+    assert crazyflie.start_orientation == start_orientation
+
+def test_cf_get_yaw():
+    start_orientation = [0, 0, 0, 1]
+    crazyflie = cf("cf1", [0, 0, 0], "cf1_address", start_orientation)
+    expected_yaw = 0.0
+    assert crazyflie.get_yaw() == expected_yaw
+
+
+def test_tb_instantiation():
+    tb_name = "tb1"
+    start_position = [0, 0, 0]
+    ROS2_address = "tb1_address"
+    start_orientation = [0, 0, 0, 1]
+    turtlebot = tb(tb_name, start_position, ROS2_address, start_orientation)
+    assert isinstance(turtlebot, tb)
+    assert turtlebot.name == tb_name
+    assert turtlebot.start_position == start_position
+    assert turtlebot.ROS2_address == ROS2_address
+    assert turtlebot.start_orientation == start_orientation
+
+def test_tb_get_yaw():
+    start_orientation = [0, 0, 0, 1]
+    turtlebot = tb("tb1", [0, 0, 0], "tb1_address", start_orientation)
+    expected_yaw = 0.0
+    assert turtlebot.get_yaw() == expected_yaw
+
 # Test instantiation
 def test_swarm_instantiation():
     turtlebots = [...]  # List of Turtlebot objects
