@@ -15,6 +15,8 @@ import os
 import math
 import json
 import typing
+import sys
+import warnings
 
 
 class cf():
@@ -31,6 +33,9 @@ class cf():
 
     """
     def __init__(self, name, start_position, URI_address=None, start_orientation=None):
+        assert isinstance(start_position, (list)), "Start position must be a list or tuple"
+        assert all(isinstance(coord, (int, float)) for coord in start_position), "Start position coordinates must be integers or floats"
+        assert isinstance(name, str), "Name must be a string"
         self.name = name
         self.URI_address = URI_address
         self.start_position = start_position
@@ -54,6 +59,9 @@ class tb():
     :type start_orientation: list
     """
     def __init__(self, name, start_position, ROS2_address=None, start_orientation=None):
+        assert isinstance(start_position, (list)), "Start position must be a list or tuple"
+        assert all(isinstance(coord, (int, float)) for coord in start_position), "Start position coordinates must be integers or floats"
+        assert isinstance(name, str), "Name must be a string"
         self.name = name
         self.ROS2_address = ROS2_address
         self.start_position = start_position
@@ -91,25 +99,41 @@ class Swarm():
                 else:
                         self.world_file = world_file
         
-        def add_tb(self, tb):
-                self.turtlebots.append(tb)
-        
-        def add_cf(self, cf):
-                self.crazyflies.append(cf)
+        def add_tb(self, tb_in):
+            assert isinstance(tb_in, tb), "Input must be an instance of tb class"
+            self.turtlebots.append(tb_in)
+            print(f"Added turtlebot {tb_in.name} to swarm, current turtlebots: {self.turtlebots}", file=sys.stdout)
+
+        def add_cf(self, cf_in):
+            assert isinstance(cf_in, cf), "Input must be an instance of cf class"
+            self.crazyflies.append(cf_in)
+            print(f"Added crazyflie {cf_in.name} to swarm, current crazyflies: {self.crazyflies}", file=sys.stdout)
+
         def get_robot_str(self) -> str:
             robot_str = ""
             try:
-                for cf in self.crazyflies:
-                        robot_str+= f"{cf.name}="
-                        robot_str+= f"x: {cf.start_position[0]}, y: {cf.start_position[1]}, z: {cf.start_position[2]}, yaw: {cf.get_yaw()};"
-            except:
-                print("No crazyflies found in swarm during get_robot_str")
+                if self.crazyflies == []: 
+                    print("No crazyflies found in swarm during get_robot_str", file=sys.stdout)
+                else:
+                    for cf in self.crazyflies:
+                            robot_str += f"{cf.name}="
+                            robot_str+= f"x: {cf.start_position[0]}, y: {cf.start_position[1]}, z: {cf.start_position[2]}, yaw: {cf.get_yaw()};"
+            except Exception as e:
+                print(f"Error in get_robot_str: {e}", file=sys.stdout)
             try:
-                for tb in self.turtlebots:
-                        robot_str+= f"{tb.name}="
-                        robot_str+= f"x: {tb.start_position[0]}, y: {tb.start_position[1]}, z: {tb.start_position[2]}, yaw: {tb.get_yaw()};"
-            except:
-                print("No turtlebots found in swarm during get_robot_str")
+                if self.turtlebots == []:
+                    print("No turtlebots found in swarm during get_robot_str", file = sys.stdout)
+                else:
+                    print("hitting turtlebot loop")
+                    for tb in self.turtlebots:
+                            robot_str += f"{tb.name}="
+                            robot_str+= f"x: {tb.start_position[0]}, y: {tb.start_position[1]}, z: {tb.start_position[2]}, yaw: {tb.get_yaw()};"
+            except Exception as e:
+                print(f"Error in get_robot_str: {e}", file=sys.stdout)
+            
+            if robot_str == "" :
+                print("No robots found in swarm during get_robot_str", file=sys.stdout)
+                robot_str = "Empty"
             return robot_str
 
 
