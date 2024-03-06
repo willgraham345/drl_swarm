@@ -33,9 +33,14 @@ class cf():
 
     """
     def __init__(self, name, start_position, URI_address=None, start_orientation=None):
-        assert isinstance(start_position, (list)), "Start position must be a list or tuple"
-        assert all(isinstance(coord, float) for coord in start_position), "Start position coordinates must be integers or floats"
         assert isinstance(name, str), "Name must be a string"
+        assert isinstance(start_position, (list)), "Start position must be a list or tuple"
+        for coord in start_position:
+            assert isinstance(coord, (int,float)), "Start position coordinates must be or int or floats"
+        if start_orientation is not None:
+            assert isinstance(start_orientation, (list)), "Start orientation must be a list or tuple"
+        if URI_address is not None:
+            assert isinstance(URI_address, str), "URI address must be a string"
         self.name = name
         self.URI_address = URI_address
         self.start_position = start_position

@@ -5,7 +5,7 @@ robots:
       uri: ""
       translation: "-1 -1 0.015"
       orientation: [0, 0, 0, 1]
-    cf2
+    cf2:
       name: cf2
       uri: ""
       translation: "-2 -2 0.015"
