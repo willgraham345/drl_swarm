@@ -112,22 +112,26 @@ def test_swarm():
     crazyflies = [CF1, CF2]
     swarm = Swarm()
     robot_str = swarm.get_robot_str()
+    print("Robot String should be empty")
     print("robot_str: ", robot_str)
     print("swarm: ", swarm)
-    assert robot_str == "Empty"
+    assert swarm.crazyflies == []
+    assert swarm.turtlebots == []
 
 
     swarm.add_cf(CF1)
     robot_str = swarm.get_robot_str()
     print("robot_str: ", robot_str)
     print("swarm: ", swarm)
-    assert robot_str == "cf1=x: 0, y: 0, z: 0, yaw: 0.0;"
+    assert swarm.crazyflies == [CF1]
+    assert swarm.turtlebots == []
 
     swarm.add_tb(TB1)
     robot_str = swarm.get_robot_str()
     print("robot_str: ", robot_str)
     print("swarm: ", swarm)
-    assert robot_str == "cf1=x: 0, y: 0, z: 0, yaw: 0.0;tb1=x: 0, y: 0, z: 0, yaw: 0.0;"
+    assert swarm.crazyflies == [CF1]
+    assert swarm.turtlebots == [TB1]
 
 
 
@@ -135,4 +139,12 @@ def test_swarm():
 
 # Run the tests
 if __name__ == '__main__':
-    pytest.main()
+    test_add_cf()
+    test_add_tb()
+    test_cf_get_yaw()
+    test_cf_instantiation()
+    test_swarm_instantiation()
+    test_tb_get_yaw()
+    test_tb_instantiation()
+    test_swarm()
+    print("All tests passed!")

@@ -33,14 +33,14 @@ class cf():
 
     """
     def __init__(self, name, start_position, URI_address=None, start_orientation=None):
-        assert isinstance(name, str), "Name must be a string"
-        assert isinstance(start_position, (list)), "Start position must be a list or tuple"
+        assert isinstance(name, str), f"Name must be a string, not {name}"
+        assert isinstance(start_position, (list)), f"Start position must be a list or tuple, not {start_position}"
         for coord in start_position:
-            assert isinstance(coord, (int,float)), "Start position coordinates must be or int or floats"
+            assert isinstance(coord, (int, float)), f"Start position coordinates must be integers or floats, not {coord}"
         if start_orientation is not None:
-            assert isinstance(start_orientation, (list)), "Start orientation must be a list or tuple"
+            assert isinstance(start_orientation, (list)), f"Start orientation must be a list or tuple, not {start_orientation}"
         if URI_address is not None:
-            assert isinstance(URI_address, str), "URI address must be a string"
+            assert isinstance(URI_address, str), f"URI address must be a string, not {URI_address}"
         self.name = name
         self.URI_address = URI_address
         self.start_position = start_position
@@ -64,9 +64,15 @@ class tb():
     :type start_orientation: list
     """
     def __init__(self, name, start_position, ROS2_address=None, start_orientation=None):
-        assert isinstance(start_position, (list)), "Start position must be a list or tuple"
-        assert all(isinstance(coord, float) for coord in start_position), "Start position coordinates must be integers or floats"
         assert isinstance(name, str), "Name must be a string"
+        assert isinstance(start_position, (list)), "Start position must be a list or tuple"
+        assert isinstance(start_position, (list)), f"Start position must be a list or tuple, not {start_position}"
+        for coord in start_position:
+            assert isinstance(coord, (int, float)), f"Start position coordinates must be integers or floats, not {coord}"
+        if start_orientation is not None:
+            assert isinstance(start_orientation, (list)), f"Start orientation must be a list or tuple, not {start_orientation}"
+        if ROS2_address is not None:
+            assert isinstance(ROS2_address, str), f"URI address must be a string, not {ROS2_address}"
         self.name = name
         self.ROS2_address = ROS2_address
         self.start_position = start_position
@@ -115,31 +121,20 @@ class Swarm():
             print(f"Added crazyflie {cf_in.name} to swarm, current crazyflies: {self.crazyflies}", file=sys.stdout)
 
         def get_robot_str(self) -> str:
-            robot_str = ""
-            try:
-                if self.crazyflies == []: 
-                    print("No crazyflies found in swarm during get_robot_str", file=sys.stdout)
-                else:
-                    for cf in self.crazyflies:
-                            robot_str += f"{cf.name}="
-                            robot_str+= f"x: {cf.start_position[0]}, y: {cf.start_position[1]}, z: {cf.start_position[2]}, yaw: {cf.get_yaw()};"
-            except Exception as e:
-                print(f"Error in get_robot_str: {e}", file=sys.stdout)
-            try:
-                if self.turtlebots == []:
-                    print("No turtlebots found in swarm during get_robot_str", file = sys.stdout)
-                else:
-                    print("hitting turtlebot loop")
-                    for tb in self.turtlebots:
-                            robot_str += f"{tb.name}="
-                            robot_str+= f"x: {tb.start_position[0]}, y: {tb.start_position[1]}, z: {tb.start_position[2]}, yaw: {tb.get_yaw()};"
-            except Exception as e:
-                print(f"Error in get_robot_str: {e}", file=sys.stdout)
-            
-            if robot_str == "" :
-                print("No robots found in swarm during get_robot_str", file=sys.stdout)
-                robot_str = "Empty"
-            return robot_str
+            robots = {}
+            for tb in self.turtlebots:
+                robots[tb.name] = {
+                    "start_position": tb.start_position,
+                    "ROS2_address": tb.ROS2_address,
+                    "start_orientation": tb.start_orientation
+                }
+            for cf in self.crazyflies:
+                robots[cf.name] = {
+                    "start_position": cf.start_position,
+                    "URI_address": cf.URI_address,
+                    "start_orientation": cf.start_orientation
+                }
+            return json.dumps(robots, sort_keys=True, indent=2)
 
 
 
