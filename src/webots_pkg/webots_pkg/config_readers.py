@@ -10,10 +10,6 @@ def import_webots_swarm_config(config_file_path : str):
     print()
     with open(config_file_path, 'r') as file:
         config = yaml.safe_load(file)
-        print(f"config = {config}")
-        # print(f"crazyflies = {config['robots']['crazyflies']}")
-        print(f"turtlebots = {config['robots']['turtlebots']}")
-        print(f"turtlebots starting pos = {config['robots']['turtlebots'][0]['start_position']}")
     swarm = Swarm()
     
     try:
