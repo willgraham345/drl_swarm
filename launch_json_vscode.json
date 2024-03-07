@@ -1,0 +1,47 @@
+https://www.youtube.com/watch?v=A6ABRdL0ckg
+
+{
+    "configurations": [
+        {
+            "name": "Debug Current Python File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "clearConsole": true,
+        },
+        {
+            "name": "Python ROS Debugger: Current File with Arguments",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "args": "${command:pickArgs}",
+            "clearConsole": true,
+        },
+        {
+            "name": "crazyflie_publisher",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "args": [
+                "--ros-args",
+                "-p",
+                "config_file:=/home/will/drl_swarm/install/webots_pkg/share/webots_pkg/config/experiment_config.yaml",
+                "-p",
+                "URI:=radio://0/80/2M/E7E7E7E7E7",
+                "-p",
+                "fly:=false",
+            ],
+        },
+        {
+            "name": "Debug: webots_nav2_no_cf_launch.py",
+            "request": "launch",
+            "target": "/home/will/drl_swarm/src/webots_pkg/launch/webots_nav2_no_cf_launch.py",
+            "launch": ["rviz", "webots"], 
+            "type": "ros",
+        },
+    ]
+
+}

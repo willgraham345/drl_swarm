@@ -133,7 +133,14 @@ def test_swarm():
     assert swarm.crazyflies == [CF1]
     assert swarm.turtlebots == [TB1]
 
-
+def test_swarm_multirobot_pose():
+    turtlebots = [TB1, TB2]
+    crazyflies = [CF1, CF2]
+    swarm = Swarm(turtlebots, crazyflies)
+    robot_str = swarm.get_robot_str()
+    test_swarm_multirobot_pose = swarm.parse_multi_robot_pose()
+    print("robot_str: ", robot_str)
+    print("swarm_multirobot: ", test_swarm_multirobot_pose)
 
 
 
@@ -147,4 +154,5 @@ if __name__ == '__main__':
     test_tb_get_yaw()
     test_tb_instantiation()
     test_swarm()
+    test_swarm_multirobot_pose()
     print("All tests passed!")

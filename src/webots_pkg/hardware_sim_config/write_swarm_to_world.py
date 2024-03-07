@@ -21,7 +21,7 @@ import shutil
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from webots_pkg.swarm_classes import Swarm, cf, tb, SwarmProtoWriteHelper
 
-# TODO: Fix this script, it's totally broken. See notes in `config_rules.md` for more details on desired implementation.
+# TODO: Fix this script. See notes in `config_rules.md` for more details on desired implementation.
 # MACROS TO BE SET HERE
 CONFIG_FILE_INPUT = "webots_config_no_cf.yaml"
 # 1. Set the path to the world file to copy

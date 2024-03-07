@@ -1,31 +1,36 @@
 [DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.IncludeLaunchDescription'
-[INFO] [launch]: All log files can be found below /home/will/.ros/log/2024-03-04-15-35-18-872667-will-Desktop-57583
+[INFO] [launch]: All log files can be found below /home/will/.ros/log/2024-03-07-11-27-13-132809-will-Desktop-119562
 [INFO] [launch]: Default logging verbosity is set to DEBUG
-[DEBUG] [launch]: processing event: '<launch.events.include_launch_description.IncludeLaunchDescription object at 0x7f012cf057b0>'
-[DEBUG] [launch]: processing event: '<launch.events.include_launch_description.IncludeLaunchDescription object at 0x7f012cf057b0>' ✓ '<launch.event_handlers.on_include_launch_description.OnIncludeLaunchDescription object at 0x7f012cf05c60>'
+[DEBUG] [launch]: processing event: '<launch.events.include_launch_description.IncludeLaunchDescription object at 0x7f18d45569e0>'
+[DEBUG] [launch]: processing event: '<launch.events.include_launch_description.IncludeLaunchDescription object at 0x7f18d45569e0>' ✓ '<launch.event_handlers.on_include_launch_description.OnIncludeLaunchDescription object at 0x7f18d4555270>'
 Starting rviz configuration
 
 
 Starting nav2 launch
 
 
+Robot = <webots_pkg.swarm_classes.tb object at 0x7f18d2e7bdc0>
+Robot name = tb1
+Robot start_position = [-1.5, -1.5, 0.015]
+Added turtlebot tb1 to swarm, current turtlebots: [<webots_pkg.swarm_classes.tb object at 0x7f18d2e7bdc0>]
+Robot = <webots_pkg.swarm_classes.tb object at 0x7f18d2e79750>
+Robot name = tb2
+Robot start_position = [-2.5, -2.5, 0.015]
+Added turtlebot tb2 to swarm, current turtlebots: [<webots_pkg.swarm_classes.tb object at 0x7f18d2e7bdc0>, <webots_pkg.swarm_classes.tb object at 0x7f18d2e79750>]
+swarm = <webots_pkg.swarm_classes.Swarm object at 0x7f18d2e7b6a0>
+swarm_method = {'tb1': {'x': -1.5, 'y': -1.5, 'z': 0.015, 'roll': 0.0, 'pitch': 0.0, 'yaw': 0.0}, 'tb2': {'x': -2.5, 'y': -2.5, 'z': 0.015, 'roll': 0.0, 'pitch': 0.0, 'yaw': 0.0}}
 
+robots_list before iterative: {'tb1': {'x': -1.5, 'y': -1.5, 'z': 0.015, 'roll': 0.0, 'pitch': 0.0, 'yaw': 0.0}, 'tb2': {'x': -2.5, 'y': -2.5, 'z': 0.015, 'roll': 0.0, 'pitch': 0.0, 'yaw': 0.0}}
 
-Starting import_webots_swarm_config
-
-config = {'robots': {'turtlebots': [{'name': 'tb1', 'uri': '', 'translation': '-1.5 -1.5 0.015', 'orientation': [0, 0, 0, 1]}, {'name': 'tb2', 'uri': '', 'translation': '-2.5 -2.5 0.015', 'orientation': [0, 0, 0, 1]}]}, 'world_file_to_write_path': 'apartment.wbt', 'world_file_to_copy_path': '../worlds/base_worlds/apartment.wbt'}
-turtlebots = [{'name': 'tb1', 'uri': '', 'translation': '-1.5 -1.5 0.015', 'orientation': [0, 0, 0, 1]}, {'name': 'tb2', 'uri': '', 'translation': '-2.5 -2.5 0.015', 'orientation': [0, 0, 0, 1]}]
 [DEBUG] [launch]: An exception was raised in an async action/event
 [DEBUG] [launch]: Traceback (most recent call last):
   File "/opt/ros/humble/lib/python3.10/site-packages/launch/launch_description_sources/any_launch_file_utilities.py", line 54, in get_launch_description_from_any_launch_file
     return loader(launch_file_path)
   File "/opt/ros/humble/lib/python3.10/site-packages/launch/launch_description_sources/python_launch_file_utilities.py", line 68, in get_launch_description_from_python_launch_file
     return getattr(launch_file_module, 'generate_launch_description')()
-  File "/home/will/drl_swarm/install/webots_pkg/share/webots_pkg/launch/webots_nav2_no_cf_launch.py", line 160, in generate_launch_description
-    swarm = import_webots_swarm_config(ROBOT_CONFIG_FILE_PATH)
-  File "/home/will/drl_swarm/install/webots_pkg/share/webots_pkg/launch/webots_nav2_no_cf_launch.py", line 69, in import_webots_swarm_config
-    print(f"turtlebots starting pos = {config['robots']['turtlebots'][0]['start_position']}")
-KeyError: 'start_position'
+  File "/home/will/drl_swarm/install/webots_pkg/share/webots_pkg/launch/webots_nav2_no_cf_launch.py", line 153, in generate_launch_description
+    'initial_pose_x': TextSubstitution(text=str(init_pose[0])),
+KeyError: 0
 
 The above exception was the direct cause of the following exception:
 
@@ -53,12 +58,12 @@ Traceback (most recent call last):
   File "/opt/ros/humble/lib/python3.10/site-packages/launch/launch_description_sources/any_launch_file_utilities.py", line 57, in get_launch_description_from_any_launch_file
     raise InvalidLaunchFileError(extension, likely_errors=exceptions)
 launch.invalid_launch_file_error.InvalidLaunchFileError: Caught multiple exceptions when trying to load file of format [py]:
- - KeyError: 'start_position'
+ - KeyError: 0
  - InvalidFrontendLaunchFileError: The launch file may have a syntax error, or its format is unknown
 
 [ERROR] [launch]: Caught exception in launch (see debug for traceback): Caught multiple exceptions when trying to load file of format [py]:
- - KeyError: 'start_position'
+ - KeyError: 0
  - InvalidFrontendLaunchFileError: The launch file may have a syntax error, or its format is unknown
 [DEBUG] [launch.launch_context]: emitting event: 'launch.events.Shutdown'
-[DEBUG] [launch]: processing event: '<launch.events.shutdown.Shutdown object at 0x7f012cf06500>'
-[DEBUG] [launch]: processing event: '<launch.events.shutdown.Shutdown object at 0x7f012cf06500>' ✓ '<launch.event_handlers.on_shutdown.OnShutdown object at 0x7f012cf07d90>'
+[DEBUG] [launch]: processing event: '<launch.events.shutdown.Shutdown object at 0x7f18d4555060>'
+[DEBUG] [launch]: processing event: '<launch.events.shutdown.Shutdown object at 0x7f18d4555060>' ✓ '<launch.event_handlers.on_shutdown.OnShutdown object at 0x7f18d4557f40>'

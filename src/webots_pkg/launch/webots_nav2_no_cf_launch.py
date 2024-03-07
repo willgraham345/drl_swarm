@@ -48,7 +48,7 @@ from nav2_common.launch import ParseMultiRobotPose
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from webots_pkg.swarm_classes import Swarm, cf, tb 
-from webots_pkg.config_readers import import_webots_swarm_config
+from config.config_readers import import_webots_swarm_config
 DIR_PATH = os.path.dirname(__file__)
 
 WORLD_FILES = 'apartment.wbt'
@@ -125,22 +125,20 @@ def generate_launch_description():
     # TODO: Figure out how the ParseMultiRobotPose class works
     # * This is typically passed in through the command line in something that looks like: `ros2 launch nav2_bringup cloned_multi_tb3_simulation_launch.py robots:="robot1={x: 1.0, y: 1.0, yaw: 1.5707}; robot2={x: 1.0, y: 1.0, yaw: 1.5707}"`
     # Get robot_list
-    swarm = import_webots_swarm_config(ROBOT_CONFIG_FILE_PATH)
+    swarm = import_webots_swarm_config(ROBOT_CONFIG_FILE_PATH, {"turtlebots": tb})
     print(f"swarm = {swarm}")
-    print(f"swarm_method = {swarm.get_robot_str()}")
-    print(f"swarm dictionary = {swarm.__dict__}")
-    robots_list = swarm.get_robot_str()
-    robots_list = ParseMultiRobotPose('robots').value() #? No idea how this works yet
+    print(f"swarm_method = {swarm.parse_multi_robot_pose()}")
+    multirobots_dict = swarm.parse_multi_robot_pose()
     # TODO: Modify simulation configuration to match ParseMultiRobotPose class
     bringup_cmd_group = []
     
     print() 
-    print(f'robots_list before iterative: {robots_list}')
+    print(f'robots_list before iterative: {multirobots_dict}')
     print() 
     
 
-    for robot_name in robots_list:
-        init_pose = robots_list[robot_name]
+    for robot_name in multirobots_dict:
+        init_pose = multirobots_dict[robot_name]
         # TODO: Fix this include launch description
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(os.path.join(nav2_launch_dir, 'bringup_launch.py')),
