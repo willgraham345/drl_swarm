@@ -118,8 +118,11 @@ def generate_launch_description():
     # * params_file: Full path to the ROS2 parameters file to use for all launched nodes, declared below
     # TODO: Add map launch configuration
     # * map: Full path to the map file to be used for localization and planning
+    map_yaml_file = LaunchConfiguration('map')
     params_file = LaunchConfiguration('params_file')
     rviz_config_file = LaunchConfiguration('rviz_config')
+
+    
 
 
     # TODO: Figure out how the ParseMultiRobotPose class works
@@ -133,28 +136,38 @@ def generate_launch_description():
     bringup_cmd_group = []
     
     print() 
-    print(f'robots_list before iterative: {multirobots_dict}')
+    print(f'multirobot dict before iterative: {multirobots_dict}')
     print() 
     
 
     for robot_name in multirobots_dict:
         init_pose = multirobots_dict[robot_name]
+        print(f"robot_name: {robot_name}, init_pose: {init_pose}")
+        print("map = ", map_yaml_file)
         # TODO: Fix this include launch description
-        IncludeLaunchDescription(
+        bringup_cmd_group.append(
+            IncludeLaunchDescription(
             PythonLaunchDescriptionSource(os.path.join(nav2_launch_dir, 'bringup_launch.py')),
-            # TODO: launch arguements for nav2
             launch_arguments={
-                'use_sim_time': 'True',
-                'autostart': 'True',
-                'params_file': params_file,
-                'map': LaunchConfiguration('map'),
                 'namespace': robot_name,
                 'use_namespace': 'True',
-                'initial_pose_x': TextSubstitution(text=str(init_pose[0])),
-                'initial_pose_y': TextSubstitution(text=str(init_pose[1])),
-                'initial_pose_yaw': TextSubstitution(text=str(init_pose[2])),
+                'map': map_yaml_file,
+                'use_sim_time': 'True',
+                # 'params_file': params_file,
+                'autostart': 'True',
+                'use_rviz': 'False',
+                # 'use_simulator': 'True',
+                # 'headless': 'True',
+                # 'use_robot_state_publisher': 'True',
+                'x_pose': TextSubstitution(text=str(init_pose['x'])),
+                'y_pose': TextSubstitution(text=str(init_pose['y'])),
+                'z_pose': TextSubstitution(text=str(init_pose['z'])),
+                'roll': TextSubstitution(text=str(init_pose['roll'])),
+                'pitch': TextSubstitution(text=str(init_pose['pitch'])),
+                'yaw': TextSubstitution(text=str(init_pose['yaw'])),
                 'robot_name': TextSubstitution(text=robot_name),
                 }.items()
+            )
         )
 
    
@@ -165,13 +178,18 @@ def generate_launch_description():
             default_value='apartment_nocf.wbt',
             description='The world file name to be launched, from within the worlds folder'
         ),
-        DeclareLaunchArgument(
-            'params_file',
-            default_value=os.path.join(PACKAGE_DIR, 'params', 'nav2_params_nocf.yaml'), # ! Should be changed once this is running
-        ),
+        # DeclareLaunchArgument(
+        #     'params_file',
+        #     default_value=os.path.join(PACKAGE_DIR, 'params', 'nav2_params_nocf.yaml'), # ! Should be changed once this is running
+        # ),
         DeclareLaunchArgument(
             'rviz_config',
             default_value=os.path.join(bringup_dir, 'rviz', 'nav2_default_view.rviz'),
+        ),
+        DeclareLaunchArgument(
+            'map',
+            default_value=os.path.join(PACKAGE_DIR, 'maps', 'map.yaml'),
+            description='Full path to map file to load',
         ),
         webots,
         webots._supervisor,
