@@ -114,7 +114,7 @@ class MyTurtlebotDriver():
         try:
             odom = Odometry()
             odom.header.stamp = self.tb_driver.get_clock().now().to_msg()
-            odom.header.frame_id = '/odom'
+            odom.header.frame_id = '/base_footprint'
             odom.child_frame_id = '{}/base_link'.format(self.__namespace)
             odom.pose.pose.position.x = gps_vals[0]
             odom.pose.pose.position.y = gps_vals[1]
@@ -141,7 +141,7 @@ class MyTurtlebotDriver():
             transform = TransformStamped()
             transform.header.stamp = self.tb_driver.get_clock().now().to_msg()
             transform.header.frame_id = 'odom'
-            transform.child_frame_id = '{}/base_link'.format(self.__namespace)
+            transform.child_frame_id = '{}/base_footprint'.format(self.__namespace)
             transform.transform.translation.x = gps_vals[0]
             transform.transform.translation.y = gps_vals[1]
             transform.transform.translation.z = gps_vals[2]

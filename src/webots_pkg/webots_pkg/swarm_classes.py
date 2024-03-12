@@ -135,28 +135,56 @@ class Swarm():
                     "start_orientation": cf.start_orientation
                 }
             return json.dumps(robots, sort_keys=True, indent=2)
-        
-        def parse_multi_robot_pose(self, ) -> dict:
-            "robot1={x: 1.0, y: 1.0, yaw: 1.5707}; robot2={x: 1.0, y: 1.0, yaw: 1.5707}"
-            multirobots = {}
-            robot_pose_zeros = {"x": 0.0, "y": 0.0, "z": 0.0, "roll": 0.0, "pitch": 0.0, "yaw": 0.0}
+
+        def get_robots_dict_list(self) -> dict:
+            robots = []
             for tb in self.turtlebots:
-                pose_dict = {}
-                pose_dict["x"] = tb.start_position[0]
-                pose_dict["y"] = tb.start_position[1]
-                pose_dict["z"] = tb.start_position[2]
-                pose_dict["roll"] = 0.0
-                pose_dict["pitch"] = 0.0
-                pose_dict["yaw"] = tb.get_yaw()
+                robots.append({
+                    "name": tb.name,
+                    "x_pose": tb.start_position[0],
+                    "y_pose": tb.start_position[1],
+                    "z_pose": tb.start_position[2],
+                    "roll": tb.start_orientation[0],
+                    "pitch": tb.start_orientation[1],
+                    "yaw": tb.start_orientation[2]
+                })
+            for cf in self.crazyflies:
+                robots.append({
+                    "name": cf.name,
+                    "x": cf.start_position[0],
+                    "y": cf.start_position[1],
+                    "z": cf.start_position[2],
+                    "roll": cf.start_orientation[0],
+                    "pitch": cf.start_orientation[1],
+                    "yaw": cf.start_orientation[2]
+                })
+            return robots
+        
+        def parse_multi_robot_pose(self) -> dict:
+            """
+            Parses the pose of multiple robots and returns a dictionary with their positions and orientations.
+            Example input: "robot1={x: 1.0, y: 1.0, yaw: 1.5707}; robot2={x: 1.0, y: 1.0, yaw: 1.5707}"
+            """
+            multirobots = {}
+            for tb in self.turtlebots:
+                pose_dict = {
+                    "x": tb.start_position[0],
+                    "y": tb.start_position[1],
+                    "z": tb.start_position[2],
+                    "roll": 0.0,
+                    "pitch": 0.0,
+                    "yaw": tb.get_yaw()
+                }
                 multirobots[tb.name] = pose_dict
             for cf in self.crazyflies:
-                pose_dict = {}
-                pose_dict["x"] = cf.start_position[0]
-                pose_dict["y"] = cf.start_position[1]
-                pose_dict["z"] = cf.start_position[2]
-                pose_dict["roll"] = 0.0
-                pose_dict["pitch"] = 0.0
-                pose_dict["yaw"] = cf.get_yaw()
+                pose_dict = {
+                    "x": cf.start_position[0],
+                    "y": cf.start_position[1],
+                    "z": cf.start_position[2],
+                    "roll": 0.0,
+                    "pitch": 0.0,
+                    "yaw": cf.get_yaw()
+                }
                 multirobots[cf.name] = pose_dict
             return multirobots
 

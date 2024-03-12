@@ -143,6 +143,18 @@ def test_swarm_multirobot_pose():
     print("swarm_multirobot: ", test_swarm_multirobot_pose)
 
 
+def test_swarm_get_robot_dict_list():
+    swarm = Swarm([TB1, TB2], [CF1, CF2])
+    temp = swarm.get_robots_dict_list()
+    num_dicts = len(temp)
+    length_dicts = len(temp[0])
+    assert (num_dicts, length_dicts)== (4, 7)
+    assert temp[0]["name"] == "tb1"
+    assert temp[1]["name"] == "tb2"
+    assert temp[2]["x_pose"] == 0
+    assert temp[2]["y_pose"] == 0
+    assert temp[3]["x_pose"] == 1
+    assert temp[3]["y_pose"] == 1
 
 # Run the tests
 if __name__ == '__main__':
@@ -155,4 +167,5 @@ if __name__ == '__main__':
     test_tb_instantiation()
     test_swarm()
     test_swarm_multirobot_pose()
+    test_swarm_get_robot_dict_list()
     print("All tests passed!")
