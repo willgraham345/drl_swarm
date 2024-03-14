@@ -70,9 +70,9 @@ def generate_launch_description():
     )
 
     record_all_nodes = ExecuteProcess(
-        cmd = ['ros2', 'bag', 'record', '-a']
+        cmd = ['ros2', 'bag', 'record', '-a', '--output',
+               '/home/will/drl_swarm/data_analysis/rotation_matrix_testing/flipped_sensor_pos_config/90_pitch_90_yaw/rosbag'],
     )
-
 
     ld = LaunchDescription()
     ld.add_action(vicon_driver_launch)

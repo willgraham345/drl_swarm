@@ -49,8 +49,43 @@ NO_ROTATION_MATRIX = [
     [0.0, 0.0, 1.0]
 ]
 
+ROTATION_MATRIX_90_PITCH_180_ROLL = [
+    [0.0, 0.0, -1.0],
+    [0.0, -1.0, 0.0],
+    [-1.0, 0.0, 0.0],
+]
 
-# TODO: Repalce this with lab tested results
+ROTATION_MATRIX_NEG_90_PITCH_180_ROLL = [
+    [0.0, 0.0, 1.0],
+    [0.0, -1.0, 0.0],
+    [1.0, 0.0, 0.0],
+]
+
+ROTATION_MATRIX_90_PITCH_180_YAW = [
+    [0.0, 0.0, 1.0],
+    [0.0, -1.0, 0.0],
+    [-1.0, 0.0, 0.0],
+]
+
+ROTATION_MATRIX_NEG_90_PITCH_180_YAW = [
+    [0.0, 0.0, 1.0],
+    [0.0, -1.0, 0.0],
+    [1.0, 0.0, 0.0],
+]
+ROTATION_MATRIX_90_PITCH_180_YAW = [
+    [0.0, 0.0, -1.0],
+    [0.0, -1.0, 0.0],
+    [-1.0, 0.0, 0.0],
+]
+
+ROTATION_MATRIX_90_PITCH_90_YAW = [
+    [0.0, -1.0, 0.0],
+    [0.0, 0.0, 1.0],
+    [-1.0, 0.0, 0.0],
+]
+
+INPUT_ROTATION_MATRIX = ROTATION_MATRIX_90_PITCH_90_YAW
+'''
 # calib0 = LighthouseBsCalibration()
 # calib0.sweeps[0].tilt = -0.049844
 # calib0.sweeps[0].phase = 0.000000
@@ -86,6 +121,7 @@ NO_ROTATION_MATRIX = [
 # calib1.sweeps[1].ogeemag = 0.039339
 # calib1.uid = 0xE72CEE73
 # calib1.valid = True
+'''
 
 
 # * Lab Calib results
@@ -262,7 +298,7 @@ class CrazyfliePublisher(Node):
         self._robot_config = None
         self._initial_translation = self._read_cf_pos_from_config()
         self._lh_config = self._read_lh_geos_from_config()
-        self.lh_rotation_matrix = ROTATION_MATRIX_90_PITCH
+        self.lh_rotation_matrix = INPUT_ROTATION_MATRIX
 
 
         # Initialize publishers and tf2 broadcasters
@@ -392,8 +428,8 @@ class CrazyfliePublisher(Node):
             msg.angle_max =  -0.5 * 2*pi
             msg.angle_increment = -1.0*pi/2
             self.laser_publisher.publish(msg)
-        except:
-            self.get_logger().warning("Error in laser scan data, not published to tf2")
+        except Exception as e:
+            self.get_logger().warning(f"Error in laser scan data, not published to tf2: {e}")
 
 
     def _range_log_error(self, logconf, msg):
@@ -417,8 +453,8 @@ class CrazyfliePublisher(Node):
             t_range.transform.rotation.z = q[2]
             t_range.transform.rotation.w = q[3]
             self.tfbr.sendTransform(t_range)
-        except:
-            self.get_logger().warning("Error in range transform, not published to tf2")
+        except Exception as e:
+            self.get_logger().warning(f"Error in range transform, not published to tf2: {e}")
 
         zrange = float(data.get('range.zrange'))/1000.0
         msg = Range()
@@ -456,7 +492,7 @@ class CrazyfliePublisher(Node):
         # for name, value in data.items():
         #     print(f'{name}: {value:3.3f} ', end='')
         # print()
-        print(data)
+        print('stab_data', data)
 
         # Get odometry values from crazyflie stability logger
         try: 
@@ -499,21 +535,6 @@ class CrazyfliePublisher(Node):
             self.tfbr.sendTransform(t_base)
         except Exception as e:
             self.get_logger().warning(f"Error in publishing base_footprint transform: {e}")
-
-        t_odom = TransformStamped()
-        t_odom.header.stamp = self.get_clock().now().to_msg()
-        t_odom.header.frame_id = 'odom'
-        t_odom.child_frame_id = 'base_footprint'
-        q_odom = tf_transformations.quaternion_from_euler(0, 0, 0)
-        t_odom.transform.translation.x = 0.0
-        t_odom.transform.translation.y = 0.0
-        t_odom.transform.translation.z = 0.1 # TODO: Figure out why this is off
-        t_odom.transform.rotation.x = q_odom[0]
-        t_odom.transform.rotation.y = q_odom[1]
-        t_odom.transform.rotation.z = q_odom[2]
-        t_odom.transform.rotation.w = q_odom[3]
-    
-        #self.tfbr.sendTransform(t_odom)
 
         # Publish t_cf to tf2
         try:
@@ -566,6 +587,7 @@ class CrazyfliePublisher(Node):
             self.tfbr.sendTransform(t_lh)
         except:
             self.get_logger().warning("Error in LH log data, not published to tf2")
+            self.get_logger().warning("May need to recalibrate kalman filter values for lighthouse")
             print("Error in LH log data, not published to tf2")
     
     # TODO: Confirm that we are getting correct data output in the lab. 
