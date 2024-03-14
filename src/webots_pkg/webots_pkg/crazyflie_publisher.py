@@ -13,7 +13,7 @@ from geometry_msgs.msg import TransformStamped
 from sensor_msgs.msg import Range
 from sensor_msgs.msg import LaserScan
 from nav_msgs.msg import Odometry
-from geometry_msgs.msg import Twist
+from geometry_msgs.msg import Twist, QuaternionStamped
 
 import cflib.crtp  # noqa
 from cflib.crazyflie import Crazyflie
@@ -26,7 +26,6 @@ from cflib.positioning.motion_commander import MotionCommander
 from cflib.localization.lighthouse_types import LhCfPoseSample
 
 import math
-
 from math import pi
 
 def radians(degrees):  
@@ -268,6 +267,10 @@ class LighthouseConfigWriter:
             print('Writing crazyflie lighthouse calibration data failed')
         self._read_write_event.set()
 
+    def update_rotation_matrix(self, rotation_matrix):
+        self.lh_rotation_matrix = rotation_matrix
+        self.write_lh_geos_to_memory()
+
 class CrazyfliePublisher(Node):
     """
     This class is a ROS2 node that publishes the position of the Crazyflie
@@ -305,7 +308,7 @@ class CrazyfliePublisher(Node):
         self._robot_config = None
         self._initial_translation = self._read_cf_pos_from_config()
         self._lh_config = self._read_lh_geos_from_config()
-        self.lh_rotation_matrix = INPUT_ROTATION_MATRIX
+        self._lh_rotation_matrix = INPUT_ROTATION_MATRIX
 
 
         # Initialize publishers and tf2 broadcasters
@@ -317,7 +320,10 @@ class CrazyfliePublisher(Node):
     
         # Initialize subscribers
         self.create_subscription(Twist,  "/cmd_vel", self.cmd_vel_callback, 1)
-        #TODO: Implement subscription to lighthouse node for up-to-date pose data
+        self.create_subscription(QuaternionStamped,
+                "/lighthouse_rotx_matrix",
+                self._update_lh_rotation_matrix,
+                1)
 
         # Handle crazyflie connection
         self._cf = Crazyflie(rw_cache='./cache')
@@ -597,11 +603,18 @@ class CrazyfliePublisher(Node):
             self.get_logger().warning("May need to recalibrate kalman filter values for lighthouse")
             print("Error in LH log data, not published to tf2")
     
-    # TODO: Confirm that we are getting correct data output in the lab. 
     def _init_lh_config_writer(self):
         calibs = {0: calib1, 1: calib0}
-        self._init_lh_config_writer = LighthouseConfigWriter(self._cf, self.lh_rotation_matrix, self._lh_config, calibs)
+        self._init_lh_config_writer = LighthouseConfigWriter(self._cf, self._lh_rotation_matrix, self._lh_config, calibs)
         self._lh_initialized.set()
+
+    def _update_lh_rotation_matrix(self, q):
+        # TODO: Needs to be implemented
+        # Should update rotation matrix by using self._lh_config_writer.update_rotation_matrix(rotation_matrix)
+        self.lh_rotation_matrix = tf_transformations.quaternion_matrix(q)
+        print(f"Quaternion: {q}")
+        print(f"lh_rotation_matrix: {self.lh_rotation_matrix}")
+        # self._lh_config_writer.update_rotation_matrix(self.lh_rotation_matrix)
 
     # ! These are fine
     def _set_initial_position(self):
