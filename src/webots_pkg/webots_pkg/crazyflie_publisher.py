@@ -84,7 +84,14 @@ ROTATION_MATRIX_90_PITCH_90_YAW = [
     [-1.0, 0.0, 0.0],
 ]
 
-INPUT_ROTATION_MATRIX = ROTATION_MATRIX_90_PITCH_90_YAW
+
+NOT_SURE_WHAT_ROTATION_MATRIX = [
+    [0.0, 0.0, 1.0],
+    [0.0, 1.0, 0.0],
+    [1.0, 0.0, 0.0],
+]
+
+INPUT_ROTATION_MATRIX = NOT_SURE_WHAT_ROTATION_MATRIX
 '''
 # calib0 = LighthouseBsCalibration()
 # calib0.sweeps[0].tilt = -0.049844
