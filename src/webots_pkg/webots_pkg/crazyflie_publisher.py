@@ -7,7 +7,9 @@ import time
 from std_msgs.msg import String
 from geometry_msgs.msg import Pose
 import tf_transformations
-from tf2_ros import TransformBroadcaster
+from tf2_ros.transform_broadcaster import TransformBroadcaster
+from tf2_ros.transform_listener import TransformListener
+from tf2_ros.buffer import Buffer
 from tf2_ros.static_transform_broadcaster import StaticTransformBroadcaster
 from geometry_msgs.msg import TransformStamped
 from sensor_msgs.msg import Range
@@ -15,7 +17,7 @@ from sensor_msgs.msg import LaserScan
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Twist
 
-import cflib.crtp  # noqa
+import cflib.crtp
 from cflib.crazyflie import Crazyflie
 from cflib.crazyflie.log import LogConfig
 from cflib.utils import uri_helper
@@ -90,8 +92,13 @@ NOT_SURE_WHAT_ROTATION_MATRIX = [
     [0.0, 1.0, 0.0],
     [1.0, 0.0, 0.0],
 ]
+ZEROS = [
+    [0.0, 0.0, 0.0],
+    [0.0, 0.0, 0.0],
+    [0.0, 0.0, 0.0],
+]
 
-INPUT_ROTATION_MATRIX = NOT_SURE_WHAT_ROTATION_MATRIX
+INPUT_ROTATION_MATRIX = [ZEROS, ZEROS]    
 '''
 # calib0 = LighthouseBsCalibration()
 # calib0.sweeps[0].tilt = -0.049844
@@ -168,24 +175,24 @@ calib1.sweeps[1].tilt = 0.04638671875
 calib1.uid = 3821474937
 calib1.valid = True
 
-def dict_to_lh_config(geos: dict, rotation_matrix: list[list[float]]):
+def dict_to_lh_config(geos: dict, rotation_matrices: list[list[list[float]]]):
+    print(rotation_matrices)
     lh_config = {}
     for bs, origin in geos.items():
         bs_geo = LighthouseBsGeometry()
         bs_geo.origin = origin
-        bs_geo.rotation_matrix = rotation_matrix
+        bs_geo.rotation_matrix = rotation_matrices[bs]
         bs_geo.valid = True
         lh_config[bs] = bs_geo
-    print(lh_config)
     return lh_config
 
 class LighthouseConfigWriter:
-    def __init__(self, cf, rotation_matrix, lh_config: dict, calibs: dict[int, LighthouseBsCalibration]):
+    def __init__(self, cf, rotation_matrices, lh_config: dict, calibs: dict[int, LighthouseBsCalibration]):
         print(); print();
         print('Configuring lighthouse')
         print(); print()
         self._cf = cf
-        self.lh_rotation_matrix = rotation_matrix
+        self.lh_rotation_matrices = rotation_matrices
         self._lh_config = lh_config
         self._calibs_on_cf = False
         self._calibs = calibs
@@ -209,7 +216,7 @@ class LighthouseConfigWriter:
 
     def write_lh_geos_to_memory(self):
         try:
-            self._lh_helper.write_geos(dict_to_lh_config(self._lh_config, self.lh_rotation_matrix), self._lh_geo_data_written_callback)
+            self._lh_helper.write_geos(dict_to_lh_config(self._lh_config, self.lh_rotation_matrices), self._lh_geo_data_written_callback)
             self._read_write_event.wait()
             self._read_write_event.clear()
 
@@ -268,6 +275,14 @@ class LighthouseConfigWriter:
             print('Writing crazyflie lighthouse calibration data failed')
         self._read_write_event.set()
 
+    def update_rotation_matrices(self, rotation_matrices: list[list[list[float]]]):
+        self.lh_rotation_matrices = []
+        self._read_write_event.clear()
+        self.lh_rotation_matrices = rotation_matrices
+        self.read_lh_geos_from_memory()
+        self.write_lh_geos_to_memory()
+        self.read_lh_geos_from_memory()
+
 class CrazyfliePublisher(Node):
     """
     This class is a ROS2 node that publishes the position of the Crazyflie
@@ -288,6 +303,14 @@ class CrazyfliePublisher(Node):
                 description = "Determines if the crazyflie is in testing mode")
         )
         self.declare_parameter('config_file', rclpy.Parameter.Type.STRING)
+        #TODO: Refactor to take dynamic number of turtlebots
+        self.declare_parameter(
+            'lh0_pose_frame',
+            'tb1/lighthouse_pose')
+        self.declare_parameter(
+            'lh1_pose_frame',
+            'tb2/lighthouse_pose'
+        )
         try: 
             
             self._fly = self.get_parameter('fly').value
@@ -296,6 +319,10 @@ class CrazyfliePublisher(Node):
             self.get_logger().info("Got URI parameter")
             self._config_file =  self.get_parameter('config_file').value
             self.get_logger().info("Got config_file parameter")
+            self._lh0_pose_frame = self.get_parameter('lh0_pose_frame').value 
+            self.get_logger().info("Got lh0_pose_frame parameter")
+            self._lh1_pose_frame = self.get_parameter('lh1_pose_frame').value
+            self.get_logger().info("Got lh1_pose_frame parameter")
         except Exception as e:
             self.get_logger().fatal(f"Error getting paramater value: {e}")
         
@@ -305,8 +332,11 @@ class CrazyfliePublisher(Node):
         self._robot_config = None
         self._initial_translation = self._read_cf_pos_from_config()
         self._lh_config = self._read_lh_geos_from_config()
-        self.lh_rotation_matrix = INPUT_ROTATION_MATRIX
+        self.lh0_rotation_matrix = INPUT_ROTATION_MATRIX
+        self.lh1_rotation_matrix = INPUT_ROTATION_MATRIX
 
+        self._lh0_buffer = Buffer()
+        self._lh1_buffer = Buffer()
 
         # Initialize publishers and tf2 broadcasters
         self.range_publisher = self.create_publisher(Range, "/zrange", 10)
@@ -317,7 +347,11 @@ class CrazyfliePublisher(Node):
     
         # Initialize subscribers
         self.create_subscription(Twist,  "/cmd_vel", self.cmd_vel_callback, 1)
-        #TODO: Implement subscription to lighthouse node for up-to-date pose data
+        self.lh0_pose_listener = TransformListener(self._lh0_buffer, self)
+        self.lh1_pose_listener = TransformListener(self._lh1_buffer, self)
+        
+        # Create timer for pose listener
+        self._timer_lh_pose_update = self.create_timer(7.5, self._lh_pose_listener_callback)
 
         # Handle crazyflie connection
         self._cf = Crazyflie(rw_cache='./cache')
@@ -328,7 +362,7 @@ class CrazyfliePublisher(Node):
 
         # self._scf = SyncCrazyflie(self._link_uri, cf=self._cf)
 
-        self._lh_initialized = Event()
+        self._lh_initialized = False
         self._lh_config_writer = None
         self._cf.open_link(self._link_uri)
 
@@ -600,8 +634,49 @@ class CrazyfliePublisher(Node):
     # TODO: Confirm that we are getting correct data output in the lab. 
     def _init_lh_config_writer(self):
         calibs = {0: calib1, 1: calib0}
-        self._init_lh_config_writer = LighthouseConfigWriter(self._cf, self.lh_rotation_matrix, self._lh_config, calibs)
-        self._lh_initialized.set()
+        # TODO: Refactor the lh0_rotation matrix so we can pass in both rotation matrices
+        self.lh_config_writer = LighthouseConfigWriter(self._cf, self.lh0_rotation_matrix, self._lh_config, calibs)
+        self._lh_initialized = True
+    
+    def _lh_pose_listener_callback(self):
+        rotation_matrices = []
+        if self._lh_initialized is True:
+            try:
+                lh0_pose = self._lh0_buffer.lookup_transform(
+                    self._lh0_pose_frame,
+                    'map',
+                    rclpy.time.Time())
+                lh1_pose = self._lh1_buffer.lookup_transform(
+                    self._lh1_pose_frame,
+                    'map',
+                    rclpy.time.Time())
+            except Exception as e:
+                self.get_logger().warning(f"Error in lh0_pose_listener_callback: {e}")
+                return
+            x0 = lh0_pose.transform.translation.x
+            y0 = lh0_pose.transform.translation.y
+            z0 = lh0_pose.transform.translation.z
+            x1 = lh1_pose.transform.translation.x
+            y1 = lh1_pose.transform.translation.y
+            z1 = lh1_pose.transform.translation.z
+            qx0 = lh0_pose.transform.rotation.x
+            qy0 = lh0_pose.transform.rotation.y
+            qz0 = lh0_pose.transform.rotation.z
+            qw0 = lh0_pose.transform.rotation.w
+            qx1 = lh1_pose.transform.rotation.x
+            qy1 = lh1_pose.transform.rotation.y
+            qz1 = lh1_pose.transform.rotation.z
+            qw1 = lh1_pose.transform.rotation.w
+            temp_matrix_0= tf_transformations.quaternion_matrix([qx0, qy0, qz0, qw0])
+            temp_matrix_1 = tf_transformations.quaternion_matrix([qx1, qy1, qz1, qw1])
+            print(f"Temp matrix 0: {temp_matrix_0}")
+            rotation_matrices = [
+                temp_matrix_0[:3, :3],
+                temp_matrix_1[:3, :3]]
+            print(f"Rotation matrices: {rotation_matrices}")
+            self.lh_config_writer.update_rotation_matrices(rotation_matrices)
+            print();
+            # Update lighthouse pose
 
     # ! These are fine
     def _set_initial_position(self):
