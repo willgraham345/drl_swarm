@@ -61,25 +61,103 @@ def generate_launch_description():
     lh1_pose_frame = LaunchConfiguration('lh1_pose_frame')
     fly = LaunchConfiguration('fly')
     URI = LaunchConfiguration('URI')
-    print(f"swarm_config_yaml: {swarm_config_yaml.perform()}")
-    print(f"namespace: {namespace.value()}")
+    print(f"swarm_config_yaml: {swarm_config_yaml}")
+    print(f"namespace: {namespace}")
     # Declare and set launch arguments
 
     cf_instance_cmds = []
-    with open(swarm_config_yaml, 'r') as file:
+    with open(CONFIG_FILE_PATH, 'r') as file:
         config = yaml.safe_load(file)
-        for cf in config['robots']['crazyflies']:
-            cf_name = cf['name']
-            initial_translation = cf['translation']
-            initial_orientation = cf['orientation']
-            print(f"initial_translation: {initial_translation}")
-            print(f"First element of translation: f{initial_translation[0]}")
+        try:
+            for cf in config['robots']['crazyflies']:
+                cf_name = cf['name']
+                initial_translation = cf['translation']
+                initial_orientation = cf['orientation']
+                print(f"initial_translation: {initial_translation}")
+                print(f"First element of translation: f{initial_translation[0]}")
+        except:
+            print("No crazyflies found in the configuration file. Exiting.")
+        try:
+            for tb in config['robots']['turtlebots']:
+                tb_name = tb['name']
+                initial_translation = tb['translation']
+                initial_orientation = tb['orientation']
+                print(f"initial_translation: {initial_translation}")
+                print(f"First element of translation: f{initial_translation[0]}")
+        except:
+            print("No turtlebots found in the configuration file. Exiting.")
+
     cf_static_base_link_publisher = launch_ros.actions.Node(
         package = 'tf2_ros',
         executable = 'static_transform_publisher',
         output = 'screen',
-        arguments = [str(initial_translation[0]), str(initial_translation[1]), str(initial_translation[2]), '0', '0', '0', 'world', 'cf1/base_link']
+        arguments = [
+            str(initial_translation[0]),
+            str(initial_translation[1]),
+            str(initial_translation[2]),
+            '0',
+            '0',
+            '0',
+            'map', 'cf1/base_link']
     )
+    # tb0_static_base_link_publisher = launch_ros.actions.Node(
+    #     package = 'tf2_ros',
+    #     executable = 'static_transform_publisher',
+    #     output = 'screen',
+    #     arguments = [
+    #         str(initial_translation[0]),
+    #         str(initial_translation[1]),
+    #         str(initial_translation[2]),
+    #         '0',
+    #         '0',
+    #         '0',
+    #         'map', 'tb1/base_link']
+    # )
+    # tb0_base_link_to_lh = launch_ros.actions.Node(
+    #     package = 'tf2_ros',
+    #     executable = 'static_transform_publisher',
+    #     output = 'screen',
+    #     arguments = [
+    #         '3',
+    #         '4',
+    #         '5',
+    #         '0',
+    #         '0',
+    #         '0',
+    #         'tb1/base_link', 'tb1/lighthouse_pose']
+    # )
+    # tb1_static_base_link_publisher = launch_ros.actions.Node(
+    #     package = 'tf2_ros',
+    #     executable = 'static_transform_publisher',
+    #     output = 'screen',
+    #     arguments = [
+    #         str(initial_translation[0]),
+    #         str(initial_translation[1]),
+    #         str(initial_translation[2]),
+    #         '0',
+    #         '0',
+    #         '0',
+    #         'map', 'tb2/base_link']
+    # )
+    # tb1_base_link_to_lh = launch_ros.actions.Node(
+    #     package = 'tf2_ros',
+    #     executable = 'static_transform_publisher',
+    #     output = 'screen',
+    #     arguments = [
+    #         '0',
+    #         '0',
+    #         '0',
+    #         '0',
+    #         '0',
+    #         '0',
+    #         'tb1/base_link', 'tb1/lighthouse_pose']
+    # )
+    # transform_cmds = []
+    # transform_cmds.append(tb0_static_base_link_publisher)
+    # transform_cmds.append(tb0_base_link_to_lh)
+    # transform_cmds.append(tb1_static_base_link_publisher)
+    # transform_cmds.append(tb1_base_link_to_lh)
+
     cf_instance_cmds.append(cf_static_base_link_publisher)
     crazyflie_node = launch_ros.actions.Node(
         package='webots_pkg',
@@ -99,22 +177,24 @@ def generate_launch_description():
     cf_instance_cmds.append(crazyflie_node)
    
 
-
+    record_cmds = []
     foxglove_websocket = IncludeLaunchDescription(
         XMLLaunchDescriptionSource(
             [os.path.join(get_package_share_directory('foxglove_bridge'), 'launch', 'foxglove_bridge_launch.xml')]
         )
     )
+    record_cmds.append(foxglove_websocket)
 
 
     ld = LaunchDescription()
-    for dec in declare_cmds:
-        ld.add_action(dec)
-    ld.add_action(crazyflie_node)
-    ld.add_action(foxglove_websocket)
-
-    for cmd in cf_instance_cmds:
-        ld.add_action(cmd)
+    for declaration in declare_cmds:
+        ld.add_action(declaration)
+    for record in record_cmds:
+        ld.add_action(record)
+    for command in cf_instance_cmds:
+        ld.add_action(command)
+    # for transform in transform_cmds:
+    #     ld.add_action(transform)
 
     return ld
 
