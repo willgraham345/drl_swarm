@@ -1,74 +1,50 @@
-[INFO] [launch]: All log files can be found below /home/will/.ros/log/2024-02-22-12-24-45-419988-will-51947
-[INFO] [launch]: Default logging verbosity is set to INFO
-params_file: /home/will/drl_swarm/install/webots_pkg/share/webots_pkg/config/experiment_config.yaml
-[INFO] [cf_publisher-1]: process started with pid [51948]
-[INFO] [foxglove_bridge-2]: process started with pid [51950]
-[INFO] [static_transform_publisher-3]: process started with pid [51952]
-[INFO] [gnome-terminal-4]: process started with pid [51954]
-[static_transform_publisher-3] [WARN] [1708629885.554159827] []: Old-style arguments are deprecated; see --help for new-style arguments
-[foxglove_bridge-2] [INFO] [1708629885.557021396] [foxglove_bridge_component_manager]: Load Library: /opt/ros/humble/lib/libfoxglove_bridge_component.so
-[foxglove_bridge-2] [INFO] [1708629885.561667668] [foxglove_bridge_component_manager]: Found class: rclcpp_components::NodeFactoryTemplate<foxglove_bridge::FoxgloveBridge>
-[foxglove_bridge-2] [INFO] [1708629885.561706424] [foxglove_bridge_component_manager]: Instantiate class: rclcpp_components::NodeFactoryTemplate<foxglove_bridge::FoxgloveBridge>
-[static_transform_publisher-3] [INFO] [1708629885.562747515] [static_transform_publisher_xaUB0JCCnPjQimtl]: Spinning until stopped - publishing transform
-[static_transform_publisher-3] translation: ('-0.500000', '0.000000', '0.015000')
-[static_transform_publisher-3] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
-[static_transform_publisher-3] from 'world' to 'odom'
-[foxglove_bridge-2] [INFO] [1708629885.563037779] [foxglove_bridge]: Starting foxglove_bridge (humble, 0.7.4@) with WebSocket++/0.8.2
-[foxglove_bridge-2] [INFO] [1708629885.563318830] [foxglove_bridge]: [WS] Server running without TLS
-[foxglove_bridge-2] [INFO] [1708629885.563473677] [foxglove_bridge]: [WS] WebSocket server listening at ws://0.0.0.0:8765
-[foxglove_bridge-2] [INFO] [1708629885.563482903] [foxglove_bridge]: [WS] WebSocket server run loop started
-[INFO] [gnome-terminal-4]: process has finished cleanly [pid 51954]
-[cf_publisher-1] [INFO] [1708629886.293261455] [crazyflie_publisher]: Got fly parameter
-[cf_publisher-1] [INFO] [1708629886.293619109] [crazyflie_publisher]: Got URI parameter
-[cf_publisher-1] [INFO] [1708629886.293911249] [crazyflie_publisher]: Got config_file parameter
-[cf_publisher-1] [INFO] [1708629886.295748723] [crazyflie_publisher]: cf['translation']: [-0.5, 0, 0.015], type <class 'list'>
-[cf_publisher-1] [INFO] [1708629886.598248417] [crazyflie_publisher]: Resetting cf position estimator
-[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
-[static_transform_publisher-3] [INFO] [1708629895.289455417] [rclcpp]: signal_handler(signum=2)
-[foxglove_bridge-2] [INFO] [1708629895.289485201] [rclcpp]: signal_handler(signum=2)
-[cf_publisher-1] Traceback (most recent call last):
-[cf_publisher-1]   File "/home/will/drl_swarm/install/webots_pkg/lib/webots_pkg/cf_publisher", line 33, in <module>
-[cf_publisher-1]     sys.exit(load_entry_point('webots-pkg', 'console_scripts', 'cf_publisher')())
-[cf_publisher-1]   File "/home/will/drl_swarm/build/webots_pkg/webots_pkg/crazyflie_publisher.py", line 639, in main
-[cf_publisher-1]     rclpy.spin(crazyflie_publisher)
-[cf_publisher-1]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/__init__.py", line 222, in spin
-[cf_publisher-1]     executor.spin_once()
-[cf_publisher-1]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 739, in spin_once
-[cf_publisher-1]     self._spin_once_impl(timeout_sec)
-[cf_publisher-1]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 728, in _spin_once_impl
-[cf_publisher-1]     handler, entity, node = self.wait_for_ready_callbacks(timeout_sec=timeout_sec)
-[cf_publisher-1]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 711, in wait_for_ready_callbacks
-[cf_publisher-1]     return next(self._cb_iter)
-[cf_publisher-1]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 608, in _wait_for_ready_callbacks
-[cf_publisher-1]     wait_set.wait(timeout_nsec)
-[cf_publisher-1] KeyboardInterrupt
-[foxglove_bridge-2] [INFO] [1708629895.290350223] [foxglove_bridge]: Shutting down foxglove_bridge
-[cf_publisher-1] [WARN] [1708629895.342499673] [crazyflie_publisher]: Error in publishing odom message: Failed to publish: publisher's context is invalid, at ./src/rcl/publisher.c:389
-[cf_publisher-1] Failed to publish log message to rosout: publisher's context is invalid, at ./src/rcl/publisher.c:389
-[cf_publisher-1] [WARN] [1708629895.343242708] [crazyflie_publisher]: Error in publishing base_footprint transform: Failed to publish: publisher's context is invalid, at ./src/rcl/publisher.c:389
-[cf_publisher-1] Failed to publish log message to rosout: publisher's context is invalid, at ./src/rcl/publisher.c:389
-[cf_publisher-1] [WARN] [1708629895.343869468] [crazyflie_publisher]: Error in base_link transform publisher: Failed to publish: publisher's context is invalid, at ./src/rcl/publisher.c:389
-[cf_publisher-1] Failed to publish log message to rosout: publisher's context is invalid, at ./src/rcl/publisher.c:389
-[cf_publisher-1] [WARN] [1708629895.344311696] [crazyflie_publisher]: Error in range transform, not published to tf2
-[cf_publisher-1] Failed to publish log message to rosout: publisher's context is invalid, at ./src/rcl/publisher.c:389
-[cf_publisher-1] [WARN] [1708629895.344949780] [crazyflie_publisher]: Error in LH log data, not published to tf2
-[cf_publisher-1] Failed to publish log message to rosout: publisher's context is invalid, at ./src/rcl/publisher.c:389
-[INFO] [static_transform_publisher-3]: process has finished cleanly [pid 51952]
-[cf_publisher-1] [WARN] [1708629895.441521270] [crazyflie_publisher]: Error in publishing odom message: Failed to publish: publisher's context is invalid, at ./src/rcl/publisher.c:389
-[cf_publisher-1] Failed to publish log message to rosout: publisher's context is invalid, at ./src/rcl/publisher.c:389
-[cf_publisher-1] [WARN] [1708629895.441987549] [crazyflie_publisher]: Error in publishing base_footprint transform: Failed to publish: publisher's context is invalid, at ./src/rcl/publisher.c:389
-[cf_publisher-1] Failed to publish log message to rosout: publisher's context is invalid, at ./src/rcl/publisher.c:389
-[cf_publisher-1] [WARN] [1708629895.442403001] [crazyflie_publisher]: Error in base_link transform publisher: Failed to publish: publisher's context is invalid, at ./src/rcl/publisher.c:389
-[cf_publisher-1] Failed to publish log message to rosout: publisher's context is invalid, at ./src/rcl/publisher.c:389
-[cf_publisher-1] [WARN] [1708629895.442960242] [crazyflie_publisher]: Error in range transform, not published to tf2
-[cf_publisher-1] Failed to publish log message to rosout: publisher's context is invalid, at ./src/rcl/publisher.c:389
-[cf_publisher-1] [WARN] [1708629895.444336081] [crazyflie_publisher]: Error in LH log data, not published to tf2
-[cf_publisher-1] Failed to publish log message to rosout: publisher's context is invalid, at ./src/rcl/publisher.c:389
-[WARNING] [launch]: user interrupted with ctrl-c (SIGINT) again, ignoring...
-[cf_publisher-1] Exception ignored in: <module 'threading' from '/usr/lib/python3.10/threading.py'>
-[cf_publisher-1] Traceback (most recent call last):
-[cf_publisher-1]   File "/usr/lib/python3.10/threading.py", line 1567, in _shutdown
-[cf_publisher-1]     lock.acquire()
-[cf_publisher-1] KeyboardInterrupt: 
-[ERROR] [foxglove_bridge-2]: process has died [pid 51950, exit code -2, cmd '/opt/ros/humble/lib/foxglove_bridge/foxglove_bridge --ros-args --params-file /tmp/launch_params_5hf3d0cp --params-file /tmp/launch_params_woc7rux3 --params-file /tmp/launch_params_ts7l3rk6 --params-file /tmp/launch_params_wk095zfw --params-file /tmp/launch_params_ivg_7d0q --params-file /tmp/launch_params_2xwri3qt --params-file /tmp/launch_params__3fi6q_i --params-file /tmp/launch_params_4fb40825 --params-file /tmp/launch_params_id2ybri3 --params-file /tmp/launch_params_da0n3xu9 --params-file /tmp/launch_params_vm1t8l7s --params-file /tmp/launch_params_yn1wa930 --params-file /tmp/launch_params_yv47s9o7 --params-file /tmp/launch_params_bv6beoc2 --params-file /tmp/launch_params_naiee1os --params-file /tmp/launch_params_qjgqb5sk --params-file /tmp/launch_params_gm_a08g2'].
-[ERROR] [cf_publisher-1]: process has died [pid 51948, exit code -7, cmd '/home/will/drl_swarm/install/webots_pkg/lib/webots_pkg/cf_publisher --ros-args --params-file /tmp/launch_params_uodi_dfk'].
+[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.IncludeLaunchDescription'
+[INFO] [launch]: All log files can be found below /home/will/.ros/log/2024-03-20-14-20-55-940480-will-364095
+[INFO] [launch]: Default logging verbosity is set to DEBUG
+[DEBUG] [launch]: processing event: '<launch.events.include_launch_description.IncludeLaunchDescription object at 0x78bc669bd990>'
+[DEBUG] [launch]: processing event: '<launch.events.include_launch_description.IncludeLaunchDescription object at 0x78bc669bd990>' ✓ '<launch.event_handlers.on_include_launch_description.OnIncludeLaunchDescription object at 0x78bc669beda0>'
+[DEBUG] [launch]: An exception was raised in an async action/event
+[DEBUG] [launch]: Traceback (most recent call last):
+  File "/opt/ros/humble/lib/python3.10/site-packages/launch/launch_description_sources/any_launch_file_utilities.py", line 54, in get_launch_description_from_any_launch_file
+    return loader(launch_file_path)
+  File "/opt/ros/humble/lib/python3.10/site-packages/launch/launch_description_sources/python_launch_file_utilities.py", line 68, in get_launch_description_from_python_launch_file
+    return getattr(launch_file_module, 'generate_launch_description')()
+  File "/home/will/drl_swarm/install/webots_pkg/share/webots_pkg/launch/cf_publisher_launch.py", line 64, in generate_launch_description
+    print(f"swarm_config_yaml: {swarm_config_yaml.perform()}")
+TypeError: LaunchConfiguration.perform() missing 1 required positional argument: 'context'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/ros/humble/lib/python3.10/site-packages/launch/launch_service.py", line 336, in run_async
+    raise completed_tasks_exceptions[0]
+  File "/opt/ros/humble/lib/python3.10/site-packages/launch/launch_service.py", line 230, in _process_one_event
+    await self.__process_event(next_event)
+  File "/opt/ros/humble/lib/python3.10/site-packages/launch/launch_service.py", line 250, in __process_event
+    visit_all_entities_and_collect_futures(entity, self.__context))
+  File "/opt/ros/humble/lib/python3.10/site-packages/launch/utilities/visit_all_entities_and_collect_futures_impl.py", line 45, in visit_all_entities_and_collect_futures
+    futures_to_return += visit_all_entities_and_collect_futures(sub_entity, context)
+  File "/opt/ros/humble/lib/python3.10/site-packages/launch/utilities/visit_all_entities_and_collect_futures_impl.py", line 45, in visit_all_entities_and_collect_futures
+    futures_to_return += visit_all_entities_and_collect_futures(sub_entity, context)
+  File "/opt/ros/humble/lib/python3.10/site-packages/launch/utilities/visit_all_entities_and_collect_futures_impl.py", line 38, in visit_all_entities_and_collect_futures
+    sub_entities = entity.visit(context)
+  File "/opt/ros/humble/lib/python3.10/site-packages/launch/action.py", line 108, in visit
+    return self.execute(context)
+  File "/opt/ros/humble/lib/python3.10/site-packages/launch/actions/include_launch_description.py", line 148, in execute
+    launch_description = self.__launch_description_source.get_launch_description(context)
+  File "/opt/ros/humble/lib/python3.10/site-packages/launch/launch_description_source.py", line 84, in get_launch_description
+    self._get_launch_description(self.__expanded_location)
+  File "/opt/ros/humble/lib/python3.10/site-packages/launch/launch_description_sources/any_launch_description_source.py", line 53, in _get_launch_description
+    return get_launch_description_from_any_launch_file(location)
+  File "/opt/ros/humble/lib/python3.10/site-packages/launch/launch_description_sources/any_launch_file_utilities.py", line 57, in get_launch_description_from_any_launch_file
+    raise InvalidLaunchFileError(extension, likely_errors=exceptions)
+launch.invalid_launch_file_error.InvalidLaunchFileError: Caught multiple exceptions when trying to load file of format [py]:
+ - TypeError: LaunchConfiguration.perform() missing 1 required positional argument: 'context'
+ - InvalidFrontendLaunchFileError: The launch file may have a syntax error, or its format is unknown
+
+[ERROR] [launch]: Caught exception in launch (see debug for traceback): Caught multiple exceptions when trying to load file of format [py]:
+ - TypeError: LaunchConfiguration.perform() missing 1 required positional argument: 'context'
+ - InvalidFrontendLaunchFileError: The launch file may have a syntax error, or its format is unknown
+[DEBUG] [launch.launch_context]: emitting event: 'launch.events.Shutdown'
+[DEBUG] [launch]: processing event: '<launch.events.shutdown.Shutdown object at 0x78bc669bfeb0>'
+[DEBUG] [launch]: processing event: '<launch.events.shutdown.Shutdown object at 0x78bc669bfeb0>' ✓ '<launch.event_handlers.on_shutdown.OnShutdown object at 0x78bc669bfd30>'

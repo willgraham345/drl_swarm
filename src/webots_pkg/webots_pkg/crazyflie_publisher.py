@@ -85,8 +85,6 @@ ROTATION_MATRIX_90_PITCH_90_YAW = [
     [0.0, 0.0, 1.0],
     [-1.0, 0.0, 0.0],
 ]
-
-
 NOT_SURE_WHAT_ROTATION_MATRIX = [
     [0.0, 0.0, 1.0],
     [0.0, 1.0, 0.0],
@@ -188,6 +186,7 @@ def dict_to_lh_config(geos: dict, rotation_matrices: list[list[list[float]]]):
 
 class LighthouseConfigWriter:
     def __init__(self, cf, rotation_matrices, lh_config: dict, calibs: dict[int, LighthouseBsCalibration]):
+        # TODO: Refactor the lh0_rotation matrix so we can pass in both rotation matrices
         print(); print();
         print('Configuring lighthouse')
         print(); print()
@@ -284,35 +283,50 @@ class LighthouseConfigWriter:
         self.read_lh_geos_from_memory()
 
 class CrazyfliePublisher(Node):
+
     """
-    This class is a ROS2 node that publishes the position of the Crazyflie
-    :param link_uri: The URI of the Crazyflie to connect to
-    :type link_uri: str
+    Publisher node for controlling the Crazyflie drone.
+
+    This node initializes the necessary publishers, subscribers, and timers for controlling the Crazyflie drone.
+    It also handles the connection to the Crazyflie and sends flight commands if in flight mode.
+
+    Parameters:
+        - URI (str): The URI of the Crazyflie.
+        - fly (bool): Determines if the Crazyflie is in testing mode.
+        - config_file (str): The path to the configuration file.
+        - lh0_pose_frame (str): The frame ID for the pose of the first lighthouse.
+        - lh1_pose_frame (str): The frame ID for the pose of the second lighthouse.
     """
 
     def __init__(self):
 
-        # Initialize the Node with the name "crazyflie_publisher"
+        # ! Name node
         super().__init__("crazyflie_publisher") 
         self.get_logger().debug("Initializing CrazyfliePublisher")
 
-        # Declare and get parameters
+        # ! Declare parameters
         self.declare_parameter('URI', rclpy.Parameter.Type.STRING)
         self.declare_parameter('fly', rclpy.Parameter.Type.BOOL,
-            ParameterDescriptor(
-                description = "Determines if the crazyflie is in testing mode")
-        )
+            ParameterDescriptor(description = "Determines if the crazyflie is in testing mode"))
         self.declare_parameter('config_file', rclpy.Parameter.Type.STRING)
-        #TODO: Refactor to take dynamic number of turtlebots
+
+        #FUTURE_DEV: Refactor to take dynamic number of turtlebots
         self.declare_parameter(
-            'lh0_pose_frame',
-            'tb1/lighthouse_pose')
+            name='lh0_pose_frame',
+            value='tb1/lighthouse_pose')  # value will only be used if parameter not set
         self.declare_parameter(
-            'lh1_pose_frame',
-            'tb2/lighthouse_pose'
+            name='lh1_pose_frame',
+            value='tb2/lighthouse_pose') # value will only be used if parameter not set
+        self.declare_parameter(
+            name = 'initial_translation',
+            value = [0.0, 0.0, 0.0]
         )
+        self.declare_parameter(
+            name = 'initial_orientation_quaternion',
+            value = [0.0, 0.0, 0.0, 1.0]
+        )
+
         try: 
-            
             self._fly = self.get_parameter('fly').value
             self.get_logger().info("Got fly parameter")
             self._link_uri = self.get_parameter('URI').value
@@ -323,6 +337,10 @@ class CrazyfliePublisher(Node):
             self.get_logger().info("Got lh0_pose_frame parameter")
             self._lh1_pose_frame = self.get_parameter('lh1_pose_frame').value
             self.get_logger().info("Got lh1_pose_frame parameter")
+            self._initial_translation = self.get_parameter('initial_translation').value
+            self.get_logger().info("Got initial_translation parameter")
+            self._initial_orientation_quaternion = self.get_parameter('initial_orientation_quaternion').value
+            self.get_logger().info("Got initial_orientation_quaternion parameter")
         except Exception as e:
             self.get_logger().fatal(f"Error getting paramater value: {e}")
         
@@ -330,7 +348,6 @@ class CrazyfliePublisher(Node):
         # Initialize configuration of lh and cf
         self._read_config_data = False
         self._robot_config = None
-        self._initial_translation = self._read_cf_pos_from_config()
         self._lh_config = self._read_lh_geos_from_config()
         self.lh0_rotation_matrix = INPUT_ROTATION_MATRIX
         self.lh1_rotation_matrix = INPUT_ROTATION_MATRIX
@@ -362,8 +379,6 @@ class CrazyfliePublisher(Node):
 
         # self._scf = SyncCrazyflie(self._link_uri, cf=self._cf)
 
-        self._lh_initialized = False
-        self._lh_config_writer = None
         self._cf.open_link(self._link_uri)
 
 
@@ -371,9 +386,8 @@ class CrazyfliePublisher(Node):
         # Set initial position once connected
         self._set_initial_position()
 
-        self.get_logger().debug("Writing lighthouse config to memory")
-        self._init_lh_config_writer()
-        self.get_logger().debug("Lighthouse config written to memory")
+        self._lh_initialized = False
+        self._attempt_init_lh_config_writer()
 
         # Initialize ranges and timer for the laser scan
         self.ranges= [0.0, 0.0, 0.0, 0.0, 0.0]
@@ -631,10 +645,9 @@ class CrazyfliePublisher(Node):
             self.get_logger().warning("May need to recalibrate kalman filter values for lighthouse")
             print("Error in LH log data, not published to tf2")
     
-    # TODO: Confirm that we are getting correct data output in the lab. 
-    def _init_lh_config_writer(self):
+    def _attempt_init_lh_config_writer(self):
+        # TODO: Confirm that we are getting correct data output in the lab. 
         calibs = {0: calib1, 1: calib0}
-        # TODO: Refactor the lh0_rotation matrix so we can pass in both rotation matrices
         self.lh_config_writer = LighthouseConfigWriter(self._cf, self.lh0_rotation_matrix, self._lh_config, calibs)
         self._lh_initialized = True
     
@@ -694,6 +707,7 @@ class CrazyfliePublisher(Node):
         self._cf.param.set_value('kalman.resetEstimation', '0')
 
     def _get_config_data(self):
+        # TODO: Figure out if we really need to use this
         with open(self._config_file, 'r') as file:
             _robot_config= yaml.safe_load(file)
 
@@ -716,21 +730,6 @@ class CrazyfliePublisher(Node):
             basestation_number += 1
         self.get_logger().debug(f"geos: {geos}, type: {type(geos)}")
         return geos
-
-    
-    def _read_cf_pos_from_config(self):
-        """
-        Read crazyflie position from the given configuration parameter file and call crazyflie_config_writer.
-        """
-        if self._read_config_data == False:
-            self._get_config_data()
-        
-        for cf in self._robot_config['robots']['crazyflies']:
-            if cf['name'] == 'cf1':
-                self.get_logger().info(f"cf['translation']: {cf['translation']}, type {type(cf['translation'])}")
-                _initial_translation = [float(x) for x in cf['translation']]
-                # print(f"Initial translation: {_initial_translation}")
-        return _initial_translation
 
     def _disconnected():
         print('disconnected')
