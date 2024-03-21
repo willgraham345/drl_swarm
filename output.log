@@ -1,50 +1,351 @@
 [DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.IncludeLaunchDescription'
-[INFO] [launch]: All log files can be found below /home/will/.ros/log/2024-03-20-14-20-55-940480-will-364095
+[INFO] [launch]: All log files can be found below /home/will/.ros/log/2024-03-21-15-18-32-162080-will-Desktop-139736
 [INFO] [launch]: Default logging verbosity is set to DEBUG
-[DEBUG] [launch]: processing event: '<launch.events.include_launch_description.IncludeLaunchDescription object at 0x78bc669bd990>'
-[DEBUG] [launch]: processing event: '<launch.events.include_launch_description.IncludeLaunchDescription object at 0x78bc669bd990>' ✓ '<launch.event_handlers.on_include_launch_description.OnIncludeLaunchDescription object at 0x78bc669beda0>'
-[DEBUG] [launch]: An exception was raised in an async action/event
-[DEBUG] [launch]: Traceback (most recent call last):
-  File "/opt/ros/humble/lib/python3.10/site-packages/launch/launch_description_sources/any_launch_file_utilities.py", line 54, in get_launch_description_from_any_launch_file
-    return loader(launch_file_path)
-  File "/opt/ros/humble/lib/python3.10/site-packages/launch/launch_description_sources/python_launch_file_utilities.py", line 68, in get_launch_description_from_python_launch_file
-    return getattr(launch_file_module, 'generate_launch_description')()
-  File "/home/will/drl_swarm/install/webots_pkg/share/webots_pkg/launch/cf_publisher_launch.py", line 64, in generate_launch_description
-    print(f"swarm_config_yaml: {swarm_config_yaml.perform()}")
-TypeError: LaunchConfiguration.perform() missing 1 required positional argument: 'context'
-
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "/opt/ros/humble/lib/python3.10/site-packages/launch/launch_service.py", line 336, in run_async
-    raise completed_tasks_exceptions[0]
-  File "/opt/ros/humble/lib/python3.10/site-packages/launch/launch_service.py", line 230, in _process_one_event
-    await self.__process_event(next_event)
-  File "/opt/ros/humble/lib/python3.10/site-packages/launch/launch_service.py", line 250, in __process_event
-    visit_all_entities_and_collect_futures(entity, self.__context))
-  File "/opt/ros/humble/lib/python3.10/site-packages/launch/utilities/visit_all_entities_and_collect_futures_impl.py", line 45, in visit_all_entities_and_collect_futures
-    futures_to_return += visit_all_entities_and_collect_futures(sub_entity, context)
-  File "/opt/ros/humble/lib/python3.10/site-packages/launch/utilities/visit_all_entities_and_collect_futures_impl.py", line 45, in visit_all_entities_and_collect_futures
-    futures_to_return += visit_all_entities_and_collect_futures(sub_entity, context)
-  File "/opt/ros/humble/lib/python3.10/site-packages/launch/utilities/visit_all_entities_and_collect_futures_impl.py", line 38, in visit_all_entities_and_collect_futures
-    sub_entities = entity.visit(context)
-  File "/opt/ros/humble/lib/python3.10/site-packages/launch/action.py", line 108, in visit
-    return self.execute(context)
-  File "/opt/ros/humble/lib/python3.10/site-packages/launch/actions/include_launch_description.py", line 148, in execute
-    launch_description = self.__launch_description_source.get_launch_description(context)
-  File "/opt/ros/humble/lib/python3.10/site-packages/launch/launch_description_source.py", line 84, in get_launch_description
-    self._get_launch_description(self.__expanded_location)
-  File "/opt/ros/humble/lib/python3.10/site-packages/launch/launch_description_sources/any_launch_description_source.py", line 53, in _get_launch_description
-    return get_launch_description_from_any_launch_file(location)
-  File "/opt/ros/humble/lib/python3.10/site-packages/launch/launch_description_sources/any_launch_file_utilities.py", line 57, in get_launch_description_from_any_launch_file
-    raise InvalidLaunchFileError(extension, likely_errors=exceptions)
-launch.invalid_launch_file_error.InvalidLaunchFileError: Caught multiple exceptions when trying to load file of format [py]:
- - TypeError: LaunchConfiguration.perform() missing 1 required positional argument: 'context'
- - InvalidFrontendLaunchFileError: The launch file may have a syntax error, or its format is unknown
-
-[ERROR] [launch]: Caught exception in launch (see debug for traceback): Caught multiple exceptions when trying to load file of format [py]:
- - TypeError: LaunchConfiguration.perform() missing 1 required positional argument: 'context'
- - InvalidFrontendLaunchFileError: The launch file may have a syntax error, or its format is unknown
-[DEBUG] [launch.launch_context]: emitting event: 'launch.events.Shutdown'
-[DEBUG] [launch]: processing event: '<launch.events.shutdown.Shutdown object at 0x78bc669bfeb0>'
-[DEBUG] [launch]: processing event: '<launch.events.shutdown.Shutdown object at 0x78bc669bfeb0>' ✓ '<launch.event_handlers.on_shutdown.OnShutdown object at 0x78bc669bfd30>'
+[DEBUG] [launch]: processing event: '<launch.events.include_launch_description.IncludeLaunchDescription object at 0x7216c709b250>'
+[DEBUG] [launch]: processing event: '<launch.events.include_launch_description.IncludeLaunchDescription object at 0x7216c709b250>' ✓ '<launch.event_handlers.on_include_launch_description.OnIncludeLaunchDescription object at 0x7216c707c160>'
+swarm_config_yaml: <launch.substitutions.launch_configuration.LaunchConfiguration object at 0x7216c5773af0>
+namespace: <launch.substitutions.launch_configuration.LaunchConfiguration object at 0x7216c57738e0>
+initial_translation: [-0.5, 0, 0.015]
+First element of translation: f-0.5
+initial_translation: [0.859, -0.4427, 0.177]
+First element of translation: f0.859
+initial_translation: [0.858, 0.63, 0.186]
+First element of translation: f0.858
+[INFO] [foxglove_bridge-1]: process started with pid [139737]
+[DEBUG] [launch.launch_context]: emitting event: 'launch.events.process.ProcessStarted'
+[INFO] [static_transform_publisher-2]: process started with pid [139739]
+[DEBUG] [launch.launch_context]: emitting event: 'launch.events.process.ProcessStarted'
+[INFO] [cf_publisher-3]: process started with pid [139741]
+[DEBUG] [launch.launch_context]: emitting event: 'launch.events.process.ProcessStarted'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_started.ProcessStarted object at 0x7216c74cd660>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_started.ProcessStarted object at 0x7216c576d4e0>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_started.ProcessStarted object at 0x7216c576c430>'
+[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c74cd660>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c74cd660>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7216c57107f0>'
+[static_transform_publisher-2] [WARN] [1711055912.365430489] []: Old-style arguments are deprecated; see --help for new-style arguments
+[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c74cd660>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c74cd660>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7216c57107f0>'
+[static_transform_publisher-2] [INFO] [1711055912.711831471] [static_transform_publisher_QSpagxAnfuSGrH0G]: Spinning until stopped - publishing transform
+[static_transform_publisher-2] translation: ('0.858000', '0.630000', '0.186000')
+[static_transform_publisher-2] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-2] from 'map' to 'cf1/base_link'
+[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c74cd660>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c74cd660>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7216c72a44c0>'
+[foxglove_bridge-1] [INFO] [1711055912.718247310] [foxglove_bridge_component_manager]: Load Library: /opt/ros/humble/lib/libfoxglove_bridge_component.so
+[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c74cd660>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c74cd660>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7216c72a44c0>'
+[foxglove_bridge-1] [INFO] [1711055912.724201840] [foxglove_bridge_component_manager]: Found class: rclcpp_components::NodeFactoryTemplate<foxglove_bridge::FoxgloveBridge>
+[foxglove_bridge-1] [INFO] [1711055912.724233400] [foxglove_bridge_component_manager]: Instantiate class: rclcpp_components::NodeFactoryTemplate<foxglove_bridge::FoxgloveBridge>
+[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c74cd660>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c74cd660>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7216c72a44c0>'
+[foxglove_bridge-1] [INFO] [1711055912.727058512] [foxglove_bridge]: Starting foxglove_bridge (humble, 0.7.4@) with WebSocket++/0.8.2
+[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c576c280>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c576c280>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7216c72a44c0>'
+[foxglove_bridge-1] [INFO] [1711055912.727749080] [foxglove_bridge]: [WS] Server running without TLS
+[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c74cd660>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c74cd660>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7216c72a44c0>'
+[foxglove_bridge-1] [INFO] [1711055912.727926649] [foxglove_bridge]: [WS] WebSocket server listening at ws://0.0.0.0:8765
+[foxglove_bridge-1] [INFO] [1711055912.727929054] [foxglove_bridge]: [WS] WebSocket server run loop started
+[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c7098460>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c7098460>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7216c576f580>'
+[cf_publisher-3] [INFO] [1711055912.867293612] [cf1.crazyflie_publisher]: Got fly parameter
+[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c576f0a0>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c576f0a0>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7216c576f580>'
+[cf_publisher-3] [INFO] [1711055912.867785009] [cf1.crazyflie_publisher]: Got URI parameter
+[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c74cd660>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c74cd660>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7216c576f580>'
+[cf_publisher-3] [INFO] [1711055912.868195075] [cf1.crazyflie_publisher]: Got lh0_pose_frame parameter
+[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
+[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c7099c00>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c7099c00>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7216c576f580>'
+[cf_publisher-3] [INFO] [1711055912.868594331] [cf1.crazyflie_publisher]: Got lh1_pose_frame parameter
+[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c576ff10>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c576ff10>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7216c576f580>'
+[cf_publisher-3] [INFO] [1711055912.868988427] [cf1.crazyflie_publisher]: Got initial_translation parameter
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c576cf70>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c576cf70>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7216c576f580>'
+[cf_publisher-3] [INFO] [1711055912.869394280] [cf1.crazyflie_publisher]: Got initial_orientation_quaternion parameter
+[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c74cd660>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c74cd660>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7216c576f580>'
+[cf_publisher-3] [INFO] [1711055913.164898059] [cf1.crazyflie_publisher]: Resetting cf position estimator
+[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c74cd660>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c74cd660>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7216c576f580>'
+[cf_publisher-3] Error no LogEntry to handle id=1
+[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c74cd660>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c74cd660>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7216c576f580>'
+[cf_publisher-3] Error no LogEntry to handle id=2
+[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c74cd660>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c74cd660>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7216c72a44c0>'
+[foxglove_bridge-1] [INFO] [1711055913.239845299] [foxglove_bridge]: [WS] Client 127.0.0.1:45534 connected via /
+[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c74cd660>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c74cd660>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7216c72a44c0>'
+[foxglove_bridge-1] [INFO] [1711055914.587851155] [foxglove_bridge]: [WS] Subscribing to connection graph updates.
+[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c74cd660>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c74cd660>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7216c72a44c0>'
+[foxglove_bridge-1] [INFO] [1711055914.588918154] [foxglove_bridge]: Subscribing to topic "/tf" (tf2_msgs/msg/TFMessage) on channel 2
+[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStdout'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stdout.ProcessStdout object at 0x7216c74cd660>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stdout.ProcessStdout object at 0x7216c74cd660>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7216c576f580>'
+[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStdout'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stdout.ProcessStdout object at 0x7216c74cd660>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stdout.ProcessStdout object at 0x7216c74cd660>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7216c576f580>'
+[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c74cd660>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c74cd660>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7216c576f580>'
+[cf_publisher-3] Traceback (most recent call last):
+[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
+[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c74cd660>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c74cd660>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7216c576f580>'
+[cf_publisher-3]   File "/home/will/drl_swarm/install/webots_pkg/lib/webots_pkg/cf_publisher", line 33, in <module>
+[cf_publisher-3]     sys.exit(load_entry_point('webots-pkg', 'console_scripts', 'cf_publisher')())
+[cf_publisher-3]   File "/home/will/drl_swarm/build/webots_pkg/webots_pkg/crazyflie_publisher.py", line 789, in main
+[cf_publisher-3]     rclpy.spin(crazyflie_publisher)
+[cf_publisher-3]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/__init__.py", line 222, in spin
+[cf_publisher-3]     executor.spin_once()
+[cf_publisher-3]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 739, in spin_once
+[cf_publisher-3]     self._spin_once_impl(timeout_sec)
+[cf_publisher-3]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 736, in _spin_once_impl
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c7099c00>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c7099c00>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7216c576f580>'
+[cf_publisher-3]     raise handler.exception()
+[cf_publisher-3]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/task.py", line 239, in __call__
+[cf_publisher-3]     self._handler.send(None)
+[cf_publisher-3]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 437, in handler
+[cf_publisher-3]     await call_coroutine(entity, arg)
+[cf_publisher-3]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 351, in _execute_timer
+[cf_publisher-3]     await await_or_execute(tmr.callback)
+[cf_publisher-3]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 107, in await_or_execute
+[cf_publisher-3]     return callback(*args)
+[cf_publisher-3]   File "/home/will/drl_swarm/build/webots_pkg/webots_pkg/crazyflie_publisher.py", line 715, in _on_timer_lh_pose_callback
+[cf_publisher-3]     self.lh_pose_data.lh_poses[i].position = transforms[i].transform.translation
+[cf_publisher-3]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_pose.py", line 138, in position
+[cf_publisher-3]     assert \
+[cf_publisher-3] AssertionError: The 'position' field must be a sub message of type 'Point'
+[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStdout'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stdout.ProcessStdout object at 0x7216c7099c00>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stdout.ProcessStdout object at 0x7216c7099c00>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7216c576f580>'
+[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStdout'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stdout.ProcessStdout object at 0x7216c7099c00>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stdout.ProcessStdout object at 0x7216c7099c00>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7216c576f580>'
+[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStdout'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stdout.ProcessStdout object at 0x7216c7099c00>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stdout.ProcessStdout object at 0x7216c7099c00>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7216c576f580>'
+[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStdout'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stdout.ProcessStdout object at 0x7216c7099c00>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stdout.ProcessStdout object at 0x7216c7099c00>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7216c576f580>'
+[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStdout'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stdout.ProcessStdout object at 0x7216c7099c00>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stdout.ProcessStdout object at 0x7216c7099c00>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7216c576f580>'
+[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStdout'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stdout.ProcessStdout object at 0x7216c7099c00>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stdout.ProcessStdout object at 0x7216c7099c00>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7216c576f580>'
+[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStdout'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stdout.ProcessStdout object at 0x7216c7099c00>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stdout.ProcessStdout object at 0x7216c7099c00>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7216c576f580>'
+[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStdout'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stdout.ProcessStdout object at 0x7216c7099c00>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stdout.ProcessStdout object at 0x7216c7099c00>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7216c576f580>'
+[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c7099c00>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c7099c00>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7216c72a44c0>'
+[foxglove_bridge-1] [ERROR] [1711055933.282395265] [foxglove_bridge]: Exception when getting parameters: Failed to retrieve parameter names for node '/cf1/crazyflie_publisher'
+[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStdout'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stdout.ProcessStdout object at 0x7216c7099c00>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stdout.ProcessStdout object at 0x7216c7099c00>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7216c576f580>'
+[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStdout'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stdout.ProcessStdout object at 0x7216c7099c00>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stdout.ProcessStdout object at 0x7216c7099c00>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7216c576f580>'
+[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStdout'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stdout.ProcessStdout object at 0x7216c7099c00>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stdout.ProcessStdout object at 0x7216c7099c00>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7216c576f580>'
+[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStdout'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stdout.ProcessStdout object at 0x7216c7099c00>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stdout.ProcessStdout object at 0x7216c7099c00>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7216c576f580>'
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.Shutdown'
+[DEBUG] [launch]: processing event: '<launch.events.shutdown.Shutdown object at 0x7216c576c280>'
+[DEBUG] [launch]: processing event: '<launch.events.shutdown.Shutdown object at 0x7216c576c280>' ✓ '<launch.event_handlers.on_shutdown.OnShutdown object at 0x7216c576f850>'
+[DEBUG] [launch]: processing event: '<launch.events.shutdown.Shutdown object at 0x7216c576c280>' ✓ '<launch.event_handlers.on_shutdown.OnShutdown object at 0x7216c57126b0>'
+[DEBUG] [launch]: processing event: '<launch.events.shutdown.Shutdown object at 0x7216c576c280>' ✓ '<launch.event_handlers.on_shutdown.OnShutdown object at 0x7216c72a4310>'
+[DEBUG] [launch]: processing event: '<launch.events.shutdown.Shutdown object at 0x7216c576c280>' ✓ '<launch.event_handlers.on_shutdown.OnShutdown object at 0x7216c709ab90>'
+[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
+[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
+[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
+[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c576f820>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c576f820>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7216c72a44c0>'
+[foxglove_bridge-1] [INFO] [1711055941.485262407] [rclcpp]: signal_handler(signum=2)
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c576cf70>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c576cf70>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7216c57107f0>'
+[static_transform_publisher-2] [INFO] [1711055941.485262341] [rclcpp]: signal_handler(signum=2)
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c576c700>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c576c700>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7216c576f580>'
+[cf_publisher-3] Exception ignored in: <module 'threading' from '/usr/lib/python3.10/threading.py'>
+[cf_publisher-3] Traceback (most recent call last):
+[cf_publisher-3]   File "/usr/lib/python3.10/threading.py", line 1567, in _shutdown
+[cf_publisher-3]     lock.acquire()
+[cf_publisher-3] KeyboardInterrupt: 
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c57e2950>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c57e2950>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7216c72a44c0>'
+[foxglove_bridge-1] [INFO] [1711055941.486444723] [foxglove_bridge]: Shutting down foxglove_bridge
+[foxglove_bridge-1] [INFO] [1711055941.486463374] [foxglove_bridge]: [WS] Stopping WebSocket server
+[foxglove_bridge-1] [INFO] [1711055941.486487501] [foxglove_bridge]: [WS] Closing 1 client connection(s)
+[foxglove_bridge-1] [INFO] [1711055941.486494955] [foxglove_bridge]: [WS] asio handle_accept error: asio.system:125 (Operation aborted.)
+[foxglove_bridge-1] [INFO] [1711055941.486509871] [foxglove_bridge]: [WS] Error getting remote endpoint: asio.system:9 (Bad file descriptor)
+[foxglove_bridge-1] [INFO] [1711055941.486519480] [foxglove_bridge]: [WS] asio async_shutdown error: asio.system:9 (Bad file descriptor)
+[foxglove_bridge-1] [ERROR] [1711055941.486524456] [foxglove_bridge]: [WS] handle_accept error: Operation aborted.
+[foxglove_bridge-1] [INFO] [1711055941.486526644] [foxglove_bridge]: [WS] Stopping acceptance of new connections because the underlying transport is no longer listening.
+[foxglove_bridge-1] [INFO] [1711055941.486673980] [foxglove_bridge]: [WS] Client 127.0.0.1:45534 disconnected
+[foxglove_bridge-1] [INFO] [1711055941.486677258] [foxglove_bridge]: [WS] WebSocket server run loop stopped
+[foxglove_bridge-1] [INFO] [1711055941.487284611] [foxglove_bridge]: Unsubscribing from topic "/tf" (tf2_msgs/msg/TFMessage) on channel 2
+[foxglove_bridge-1] [INFO] [1711055941.487336912] [foxglove_bridge]: [WS] Unsubscribing from parameter '/cf1/crazyflie_publisher.use_sim_time'.
+[foxglove_bridge-1] [INFO] [1711055941.487339881] [foxglove_bridge]: [WS] Unsubscribing from parameter '/cf1/crazyflie_publisher.fly'.
+[foxglove_bridge-1] [INFO] [1711055941.487341110] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_chKTLmnLpZPgfRfy.qos_overrides./parameter_events.publisher.depth'.
+[foxglove_bridge-1] [INFO] [1711055941.487342390] [foxglove_bridge]: [WS] Unsubscribing from parameter '/cf1/crazyflie_publisher.lh0_pose_frame'.
+[foxglove_bridge-1] [INFO] [1711055941.487343442] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_D0vm8blISuH7Yicv.qos_overrides./parameter_events.publisher.depth'.
+[foxglove_bridge-1] [INFO] [1711055941.487344453] [foxglove_bridge]: [WS] Unsubscribing from parameter '/cf1/crazyflie_publisher.initial_translation'.
+[foxglove_bridge-1] [INFO] [1711055941.487345461] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_U1i48Jy3Oi4Tjx1b.qos_overrides./parameter_events.publisher.depth'.
+[foxglove_bridge-1] [INFO] [1711055941.487346612] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_hb62gG634VXN58W8.rotation.x'.
+[foxglove_bridge-1] [INFO] [1711055941.487347654] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_chKTLmnLpZPgfRfy.qos_overrides./parameter_events.publisher.reliability'.
+[foxglove_bridge-1] [INFO] [1711055941.487348737] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_QSpagxAnfuSGrH0G.rotation.w'.
+[foxglove_bridge-1] [INFO] [1711055941.487349746] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_chKTLmnLpZPgfRfy.qos_overrides./tf_static.publisher.reliability'.
+[foxglove_bridge-1] [INFO] [1711055941.487350829] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_chKTLmnLpZPgfRfy.rotation.x'.
+[foxglove_bridge-1] [INFO] [1711055941.487351847] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_chKTLmnLpZPgfRfy.rotation.z'.
+[foxglove_bridge-1] [INFO] [1711055941.487352819] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_chKTLmnLpZPgfRfy.translation.z'.
+[foxglove_bridge-1] [INFO] [1711055941.487353780] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_U1i48Jy3Oi4Tjx1b.rotation.z'.
+[foxglove_bridge-1] [INFO] [1711055941.487354832] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_hb62gG634VXN58W8.qos_overrides./parameter_events.publisher.depth'.
+[foxglove_bridge-1] [INFO] [1711055941.487355867] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_U1i48Jy3Oi4Tjx1b.rotation.x'.
+[foxglove_bridge-1] [INFO] [1711055941.487356879] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_hb62gG634VXN58W8.qos_overrides./parameter_events.publisher.durability'.
+[foxglove_bridge-1] [INFO] [1711055941.487357901] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_chKTLmnLpZPgfRfy.use_sim_time'.
+[foxglove_bridge-1] [INFO] [1711055941.487358959] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_QSpagxAnfuSGrH0G.rotation.y'.
+[foxglove_bridge-1] [INFO] [1711055941.487361047] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_D0vm8blISuH7Yicv.translation.z'.
+[foxglove_bridge-1] [INFO] [1711055941.487362131] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_hb62gG634VXN58W8.qos_overrides./tf_static.publisher.history'.
+[foxglove_bridge-1] [INFO] [1711055941.487363165] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_chKTLmnLpZPgfRfy.translation.x'.
+[foxglove_bridge-1] [INFO] [1711055941.487364206] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_hb62gG634VXN58W8.qos_overrides./tf_static.publisher.reliability'.
+[foxglove_bridge-1] [INFO] [1711055941.487365238] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_D0vm8blISuH7Yicv.rotation.z'.
+[foxglove_bridge-1] [INFO] [1711055941.487366242] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_hb62gG634VXN58W8.rotation.w'.
+[foxglove_bridge-1] [INFO] [1711055941.487367228] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_hb62gG634VXN58W8.translation.x'.
+[foxglove_bridge-1] [INFO] [1711055941.487368271] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_hb62gG634VXN58W8.rotation.y'.
+[foxglove_bridge-1] [INFO] [1711055941.487369311] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_hb62gG634VXN58W8.rotation.z'.
+[foxglove_bridge-1] [INFO] [1711055941.487370305] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_U1i48Jy3Oi4Tjx1b.child_frame_id'.
+[foxglove_bridge-1] [INFO] [1711055941.487371304] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_024KOI0tS4J4tady.rotation.w'.
+[foxglove_bridge-1] [INFO] [1711055941.487372413] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_QSpagxAnfuSGrH0G.qos_overrides./tf_static.publisher.depth'.
+[foxglove_bridge-1] [INFO] [1711055941.487373475] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_hb62gG634VXN58W8.qos_overrides./parameter_events.publisher.reliability'.
+[foxglove_bridge-1] [INFO] [1711055941.487374498] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_D0vm8blISuH7Yicv.child_frame_id'.
+[foxglove_bridge-1] [INFO] [1711055941.487375507] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_hb62gG634VXN58W8.qos_overrides./tf_static.publisher.depth'.
+[foxglove_bridge-1] [INFO] [1711055941.487376581] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_024KOI0tS4J4tady.qos_overrides./parameter_events.publisher.reliability'.
+[foxglove_bridge-1] [INFO] [1711055941.487377614] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_024KOI0tS4J4tady.rotation.z'.
+[foxglove_bridge-1] [INFO] [1711055941.487378611] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_chKTLmnLpZPgfRfy.frame_id'.
+[foxglove_bridge-1] [INFO] [1711055941.487379587] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_chKTLmnLpZPgfRfy.qos_overrides./parameter_events.publisher.history'.
+[foxglove_bridge-1] [INFO] [1711055941.487381146] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_chKTLmnLpZPgfRfy.translation.y'.
+[foxglove_bridge-1] [INFO] [1711055941.487382815] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_D0vm8blISuH7Yicv.qos_overrides./parameter_events.publisher.reliability'.
+[foxglove_bridge-1] [INFO] [1711055941.487384286] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_D0vm8blISuH7Yicv.qos_overrides./tf_static.publisher.depth'.
+[foxglove_bridge-1] [INFO] [1711055941.487385696] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_hb62gG634VXN58W8.translation.z'.
+[foxglove_bridge-1] [INFO] [1711055941.487387190] [foxglove_bridge]: [WS] Unsubscribing from parameter '/cf1/crazyflie_publisher.lh1_pose_frame'.
+[foxglove_bridge-1] [INFO] [1711055941.487388681] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_QSpagxAnfuSGrH0G.rotation.x'.
+[foxglove_bridge-1] [INFO] [1711055941.487390204] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_QSpagxAnfuSGrH0G.qos_overrides./tf_static.publisher.reliability'.
+[foxglove_bridge-1] [INFO] [1711055941.487392876] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_hb62gG634VXN58W8.frame_id'.
+[foxglove_bridge-1] [INFO] [1711055941.487394567] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_D0vm8blISuH7Yicv.qos_overrides./tf_static.publisher.history'.
+[foxglove_bridge-1] [INFO] [1711055941.487396188] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_D0vm8blISuH7Yicv.rotation.w'.
+[foxglove_bridge-1] [INFO] [1711055941.487397801] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_chKTLmnLpZPgfRfy.qos_overrides./parameter_events.publisher.durability'.
+[foxglove_bridge-1] [INFO] [1711055941.487399579] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_QSpagxAnfuSGrH0G.qos_overrides./parameter_events.publisher.history'.
+[foxglove_bridge-1] [INFO] [1711055941.487401330] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_D0vm8blISuH7Yicv.rotation.y'.
+[foxglove_bridge-1] [INFO] [1711055941.487402854] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_024KOI0tS4J4tady.qos_overrides./tf_static.publisher.history'.
+[foxglove_bridge-1] [INFO] [1711055941.487404328] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_D0vm8blISuH7Yicv.rotation.x'.
+[foxglove_bridge-1] [INFO] [1711055941.487405814] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_024KOI0tS4J4tady.translation.z'.
+[foxglove_bridge-1] [INFO] [1711055941.487407370] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_chKTLmnLpZPgfRfy.qos_overrides./tf_static.publisher.history'.
+[foxglove_bridge-1] [INFO] [1711055941.487408884] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_024KOI0tS4J4tady.qos_overrides./parameter_events.publisher.history'.
+[foxglove_bridge-1] [INFO] [1711055941.487410489] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_QSpagxAnfuSGrH0G.qos_overrides./tf_static.publisher.history'.
+[foxglove_bridge-1] [INFO] [1711055941.487412152] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_QSpagxAnfuSGrH0G.qos_overrides./parameter_events.publisher.depth'.
+[foxglove_bridge-1] [INFO] [1711055941.487413692] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_024KOI0tS4J4tady.translation.x'.
+[foxglove_bridge-1] [INFO] [1711055941.487415162] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_024KOI0tS4J4tady.qos_overrides./tf_static.publisher.reliability'.
+[foxglove_bridge-1] [INFO] [1711055941.487416708] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_D0vm8blISuH7Yicv.translation.y'.
+[foxglove_bridge-1] [INFO] [1711055941.487418236] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_QSpagxAnfuSGrH0G.frame_id'.
+[foxglove_bridge-1] [INFO] [1711055941.487419900] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_QSpagxAnfuSGrH0G.translation.x'.
+[foxglove_bridge-1] [INFO] [1711055941.487421651] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_U1i48Jy3Oi4Tjx1b.qos_overrides./tf_static.publisher.depth'.
+[foxglove_bridge-1] [INFO] [1711055941.487423126] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_024KOI0tS4J4tady.rotation.x'.
+[foxglove_bridge-1] [INFO] [1711055941.487424582] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_024KOI0tS4J4tady.use_sim_time'.
+[foxglove_bridge-1] [INFO] [1711055941.487426138] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_D0vm8blISuH7Yicv.frame_id'.
+[foxglove_bridge-1] [INFO] [1711055941.487427605] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_024KOI0tS4J4tady.rotation.y'.
+[foxglove_bridge-1] [INFO] [1711055941.487429137] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_U1i48Jy3Oi4Tjx1b.qos_overrides./parameter_events.publisher.history'.
+[foxglove_bridge-1] [INFO] [1711055941.487430795] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_D0vm8blISuH7Yicv.translation.x'.
+[foxglove_bridge-1] [INFO] [1711055941.487433395] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_QSpagxAnfuSGrH0G.translation.z'.
+[foxglove_bridge-1] [INFO] [1711055941.487435167] [foxglove_bridge]: [WS] Unsubscribing from parameter '/cf1/crazyflie_publisher.initial_orientation_quaternion'.
+[foxglove_bridge-1] [INFO] [1711055941.487436892] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_D0vm8blISuH7Yicv.qos_overrides./tf_static.publisher.reliability'.
+[foxglove_bridge-1] [INFO] [1711055941.487438660] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_024KOI0tS4J4tady.qos_overrides./tf_static.publisher.depth'.
+[foxglove_bridge-1] [INFO] [1711055941.487440627] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_024KOI0tS4J4tady.qos_overrides./parameter_events.publisher.durability'.
+[foxglove_bridge-1] [INFO] [1711055941.487441728] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_QSpagxAnfuSGrH0G.qos_overrides./parameter_events.publisher.reliability'.
+[foxglove_bridge-1] [INFO] [1711055941.487442734] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_024KOI0tS4J4tady.qos_overrides./parameter_events.publisher.depth'.
+[foxglove_bridge-1] [INFO] [1711055941.487443719] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_hb62gG634VXN58W8.child_frame_id'.
+[foxglove_bridge-1] [INFO] [1711055941.487444915] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_024KOI0tS4J4tady.translation.y'.
+[foxglove_bridge-1] [INFO] [1711055941.487446555] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_U1i48Jy3Oi4Tjx1b.rotation.y'.
+[foxglove_bridge-1] [INFO] [1711055941.487448200] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_U1i48Jy3Oi4Tjx1b.qos_overrides./parameter_events.publisher.reliability'.
+[foxglove_bridge-1] [INFO] [1711055941.487449675] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_024KOI0tS4J4tady.frame_id'.
+[foxglove_bridge-1] [INFO] [1711055941.487451204] [foxglove_bridge]: [WS] Unsubscribing from parameter '/cf1/crazyflie_publisher.URI'.
+[foxglove_bridge-1] [INFO] [1711055941.487452735] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_U1i48Jy3Oi4Tjx1b.qos_overrides./tf_static.publisher.reliability'.
+[foxglove_bridge-1] [INFO] [1711055941.487454284] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_024KOI0tS4J4tady.child_frame_id'.
+[foxglove_bridge-1] [INFO] [1711055941.487455892] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_chKTLmnLpZPgfRfy.rotation.y'.
+[foxglove_bridge-1] [INFO] [1711055941.487457742] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_U1i48Jy3Oi4Tjx1b.use_sim_time'.
+[foxglove_bridge-1] [INFO] [1711055941.487459575] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_chKTLmnLpZPgfRfy.child_frame_id'.
+[foxglove_bridge-1] [INFO] [1711055941.487461382] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_U1i48Jy3Oi4Tjx1b.translation.y'.
+[foxglove_bridge-1] [INFO] [1711055941.487463185] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_D0vm8blISuH7Yicv.use_sim_time'.
+[foxglove_bridge-1] [INFO] [1711055941.487464687] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_QSpagxAnfuSGrH0G.use_sim_time'.
+[foxglove_bridge-1] [INFO] [1711055941.487466287] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_D0vm8blISuH7Yicv.qos_overrides./parameter_events.publisher.durability'.
+[foxglove_bridge-1] [INFO] [1711055941.487467932] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_U1i48Jy3Oi4Tjx1b.translation.x'.
+[foxglove_bridge-1] [INFO] [1711055941.487469244] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_U1i48Jy3Oi4Tjx1b.rotation.w'.
+[foxglove_bridge-1] [INFO] [1711055941.487470773] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_U1i48Jy3Oi4Tjx1b.qos_overrides./tf_static.publisher.history'.
+[foxglove_bridge-1] [INFO] [1711055941.487472332] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_chKTLmnLpZPgfRfy.qos_overrides./tf_static.publisher.depth'.
+[foxglove_bridge-1] [INFO] [1711055941.487474783] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_D0vm8blISuH7Yicv.qos_overrides./parameter_events.publisher.history'.
+[foxglove_bridge-1] [INFO] [1711055941.487476577] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_U1i48Jy3Oi4Tjx1b.qos_overrides./parameter_events.publisher.durability'.
+[foxglove_bridge-1] [INFO] [1711055941.487478446] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_hb62gG634VXN58W8.qos_overrides./parameter_events.publisher.history'.
+[foxglove_bridge-1] [INFO] [1711055941.487480000] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_QSpagxAnfuSGrH0G.qos_overrides./parameter_events.publisher.durability'.
+[foxglove_bridge-1] [INFO] [1711055941.487481481] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_QSpagxAnfuSGrH0G.translation.y'.
+[foxglove_bridge-1] [INFO] [1711055941.487483042] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_chKTLmnLpZPgfRfy.rotation.w'.
+[foxglove_bridge-1] [INFO] [1711055941.487484781] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_QSpagxAnfuSGrH0G.child_frame_id'.
+[foxglove_bridge-1] [INFO] [1711055941.487486361] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_hb62gG634VXN58W8.use_sim_time'.
+[foxglove_bridge-1] [INFO] [1711055941.487487830] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_QSpagxAnfuSGrH0G.rotation.z'.
+[foxglove_bridge-1] [INFO] [1711055941.487489429] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_U1i48Jy3Oi4Tjx1b.frame_id'.
+[foxglove_bridge-1] [INFO] [1711055941.487491226] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_U1i48Jy3Oi4Tjx1b.translation.z'.
+[foxglove_bridge-1] [INFO] [1711055941.487492936] [foxglove_bridge]: [WS] Unsubscribing from parameter '/static_transform_publisher_hb62gG634VXN58W8.translation.y'.
+[foxglove_bridge-1] [INFO] [1711055941.490318407] [foxglove_bridge]: [WS] Unsubscribing from connection graph updates.
+[DEBUG] [launch.launch_context]: emitting event synchronously: 'launch.events.process.ProcessStderr'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c576da20>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_stderr.ProcessStderr object at 0x7216c576da20>' ✓ '<launch.event_handlers.on_process_io.OnProcessIO object at 0x7216c72a44c0>'
+[foxglove_bridge-1] [INFO] [1711055941.496577987] [foxglove_bridge]: [WS] All WebSocket connections closed
+[foxglove_bridge-1] [INFO] [1711055941.496589472] [foxglove_bridge]: [WS] Waiting for WebSocket server run loop to terminate
+[foxglove_bridge-1] [INFO] [1711055941.496614776] [foxglove_bridge]: [WS] WebSocket server run loop terminated
+[foxglove_bridge-1] [INFO] [1711055941.496660451] [foxglove_bridge]: Shutdown complete
+[ERROR] [cf_publisher-3]: process has died [pid 139741, exit code -7, cmd '/home/will/drl_swarm/install/webots_pkg/lib/webots_pkg/cf_publisher --ros-args -r __ns:=/cf1 --params-file /tmp/launch_params_krzs4wo0'].
+[DEBUG] [launch.launch_context]: emitting event: 'launch.events.process.ProcessExited'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_exited.ProcessExited object at 0x7216c576c700>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_exited.ProcessExited object at 0x7216c576c700>' ✓ '<launch.event_handlers.on_process_exit.OnProcessExit object at 0x7216c576fd90>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_exited.ProcessExited object at 0x7216c576c700>' ✓ '<launch.event_handlers.on_process_exit.OnProcessExit object at 0x7216c576fd00>'
+[INFO] [static_transform_publisher-2]: process has finished cleanly [pid 139739]
+[DEBUG] [launch.launch_context]: emitting event: 'launch.events.process.ProcessExited'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_exited.ProcessExited object at 0x7216c5706ec0>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_exited.ProcessExited object at 0x7216c5706ec0>' ✓ '<launch.event_handlers.on_process_exit.OnProcessExit object at 0x7216c576f640>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_exited.ProcessExited object at 0x7216c5706ec0>' ✓ '<launch.event_handlers.on_process_exit.OnProcessExit object at 0x7216c57128f0>'
+[INFO] [foxglove_bridge-1]: process has finished cleanly [pid 139737]
+[DEBUG] [launch.launch_context]: emitting event: 'launch.events.process.ProcessExited'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_exited.ProcessExited object at 0x7216c5771de0>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_exited.ProcessExited object at 0x7216c5771de0>' ✓ '<launch.event_handlers.on_process_exit.OnProcessExit object at 0x7216c74cd9c0>'
+[DEBUG] [launch]: processing event: '<launch.events.process.process_exited.ProcessExited object at 0x7216c5771de0>' ✓ '<launch.event_handlers.on_process_exit.OnProcessExit object at 0x7216c72a5750>'

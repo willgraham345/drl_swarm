@@ -5,8 +5,8 @@ from rclpy.node import Node
 from rcl_interfaces.msg import ParameterDescriptor
 import time
 from std_msgs.msg import String
-from geometry_msgs.msg import Pose
 import tf_transformations
+from tf2_ros import TransformException 
 from tf2_ros.transform_broadcaster import TransformBroadcaster
 from tf2_ros.transform_listener import TransformListener
 from tf2_ros.buffer import Buffer
@@ -15,7 +15,7 @@ from geometry_msgs.msg import TransformStamped
 from sensor_msgs.msg import Range
 from sensor_msgs.msg import LaserScan
 from nav_msgs.msg import Odometry
-from geometry_msgs.msg import Twist
+from geometry_msgs.msg import Twist, Pose, Point, Quaternion
 
 import cflib.crtp
 from cflib.crazyflie import Crazyflie
@@ -184,16 +184,60 @@ def dict_to_lh_config(geos: dict, rotation_matrices: list[list[list[float]]]):
         lh_config[bs] = bs_geo
     return lh_config
 
+class LighthouseData:
+    #     """
+    #     Initializes a new instance of the LighthousePoses class.
+
+    #     Args:
+    #         basestation_tf2: dict with keys as tf2 frame IDs, and basestation n0 as value
+    #         lh_poses (list[Pose]): A list of lighthouse poses.
+        
+    #     Example: 
+    #     LighthousePoses(
+    #         0: {'lh_pose': "tb1/lighthouse_pose", 'pose': [x, y, z, qx, qy, qz, qw]}
+    #         1: {'lh_pose': "tb2/lighthouse_pose", 'pose': [x, y, z, qx, qy, qz, qw]}
+    #         )
+    #     """
+
+    def __init__(self, lh_tf2_frames: list[str]):
+        for frame in lh_tf2_frames:
+            if not isinstance(frame, str):
+                raise ValueError("lh_tf2_frames must be a list of strings")
+
+        self.lh_frames = {}
+        self.lh_poses = {}
+        for i in range(len(lh_tf2_frames)):
+            self.lh_frames[i] = lh_tf2_frames[i]
+            self.lh_poses[i] = Pose(position = Point(x=0.0, y=0.0, z=0.0),
+                                    orientation = Quaternion(x = 0.0, y = 0.0, z = 0.0, w = 1.0))
+
+    def set_pose(self, input_pose: dict[int, Pose]):
+        for bs, pose in input_pose.items():
+            self.lh_poses[bs] = pose
+    
+    def get_lh_config(self):
+        lh_config = {}
+        for bs, pose in self.lh_poses.items():
+            bs_geo = LighthouseBsGeometry()
+            bs_geo.origin = [pose.position.x, pose.position.y, pose.position.z]
+            temp_rot_matrix = tf_transformations.quaternion_matrix([
+                pose.orientation.x,
+                pose.orientation.y,
+                pose.orientation.z,
+                pose.orientation.w
+                ])
+            bs_geo.rotation_matrix = temp_rot_matrix[:3, :3]
+            bs_geo.valid = True
+            lh_config[bs] = bs_geo
+        return lh_config
+
 class LighthouseConfigWriter:
-    def __init__(self, cf, rotation_matrices, lh_config: dict, calibs: dict[int, LighthouseBsCalibration]):
+    def __init__(self, cf, calibs: dict[int, LighthouseBsCalibration]):
         # TODO: Refactor the lh0_rotation matrix so we can pass in both rotation matrices
         print(); print();
         print('Configuring lighthouse')
         print(); print()
         self._cf = cf
-        self.lh_rotation_matrices = rotation_matrices
-        self._lh_config = lh_config
-        self._calibs_on_cf = False
         self._calibs = calibs
         self._read_write_event = Event()
         self._lh_helper = LighthouseMemHelper(self._cf)
@@ -201,21 +245,22 @@ class LighthouseConfigWriter:
 
 
         # * Write lighthouse geometries to memory, output results to console.
-        self.write_lh_geos_to_memory()
-        self.read_lh_geos_from_memory()
-        # * Check if calibs have been written to memory. If not, write them. If they are there, read them out
-        try:
-            self.read_lh_calibs_from_memory()
-        except:
-            self.write_lh_calibs_to_memory()
-            self.read_lh_calibs_from_memory()
-        print(); print();
-        print('Lighthouse configuration complete')
-        print(); print()
+        # self.write_lh_geos_to_memory()
+        # self.read_lh_geos_from_memory()
+        # # * Check if calibs have been written to memory. If not, write them. If they are there, read them out
+        # try:
+        #     self.read_lh_calibs_from_memory()
+        # except:
+        #     self.write_lh_calibs_to_memory()
+        #     self.read_lh_calibs_from_memory()
+        # print(); print();
+        # print('Lighthouse configuration complete')
+        # print(); print()
 
-    def write_lh_geos_to_memory(self):
+
+    def write_lh_geos_to_memory(self, lh_config):
         try:
-            self._lh_helper.write_geos(dict_to_lh_config(self._lh_config, self.lh_rotation_matrices), self._lh_geo_data_written_callback)
+            self._lh_helper.write_geos(lh_config, self._lh_geo_data_written_callback)
             self._read_write_event.wait()
             self._read_write_event.clear()
 
@@ -304,12 +349,10 @@ class CrazyfliePublisher(Node):
         super().__init__("crazyflie_publisher") 
         self.get_logger().debug("Initializing CrazyfliePublisher")
 
-        # ! Declare parameters
+        # ! Declare and getparameters
         self.declare_parameter('URI', rclpy.Parameter.Type.STRING)
         self.declare_parameter('fly', rclpy.Parameter.Type.BOOL,
             ParameterDescriptor(description = "Determines if the crazyflie is in testing mode"))
-        self.declare_parameter('config_file', rclpy.Parameter.Type.STRING)
-
         #FUTURE_DEV: Refactor to take dynamic number of turtlebots
         self.declare_parameter(
             name='lh0_pose_frame',
@@ -325,15 +368,12 @@ class CrazyfliePublisher(Node):
             name = 'initial_orientation_quaternion',
             value = [0.0, 0.0, 0.0, 1.0]
         )
-
         try: 
             self._fly = self.get_parameter('fly').value
             self.get_logger().info("Got fly parameter")
             self._link_uri = self.get_parameter('URI').value
             self.get_logger().info("Got URI parameter")
-            self._config_file =  self.get_parameter('config_file').value
-            self.get_logger().info("Got config_file parameter")
-            self._lh0_pose_frame = self.get_parameter('lh0_pose_frame').value 
+            self._lh0_pose_frame = self.get_parameter('lh0_pose_frame').value
             self.get_logger().info("Got lh0_pose_frame parameter")
             self._lh1_pose_frame = self.get_parameter('lh1_pose_frame').value
             self.get_logger().info("Got lh1_pose_frame parameter")
@@ -345,30 +385,26 @@ class CrazyfliePublisher(Node):
             self.get_logger().fatal(f"Error getting paramater value: {e}")
         
 
-        # Initialize configuration of lh and cf
+        # ! Initialize class members, subscribers, and publishers
+        self.ranges= [0.0, 0.0, 0.0, 0.0, 0.0]
+        self.tf_buffers = {0: Buffer(), 1: Buffer()}
+        self.lh_pose_data = LighthouseData([self._lh0_pose_frame, self._lh1_pose_frame])
         self._read_config_data = False
         self._robot_config = None
-        self._lh_config = self._read_lh_geos_from_config()
-        self.lh0_rotation_matrix = INPUT_ROTATION_MATRIX
-        self.lh1_rotation_matrix = INPUT_ROTATION_MATRIX
+        self._lh_config_writer_initialized = False
 
-        self._lh0_buffer = Buffer()
-        self._lh1_buffer = Buffer()
 
         # Initialize publishers and tf2 broadcasters
         self.range_publisher = self.create_publisher(Range, "/zrange", 10)
         self.laser_publisher = self.create_publisher(LaserScan, "/scan", 10)
         self.odom_publisher = self.create_publisher(Odometry,  "/odom", 10)
-        # self.lh_publisher = self.create_publisher(Pose, "/lighthouse_pose", 10)
         self.tfbr = TransformBroadcaster(self)
     
-        # Initialize subscribers
+        # Create subscribers and listeners
         self.create_subscription(Twist,  "/cmd_vel", self.cmd_vel_callback, 1)
-        self.lh0_pose_listener = TransformListener(self._lh0_buffer, self)
-        self.lh1_pose_listener = TransformListener(self._lh1_buffer, self)
+        self.lh0_pose_listener = TransformListener(self.tf_buffers[0], self)
+        self.lh1_pose_listener = TransformListener(self.tf_buffers[1], self)
         
-        # Create timer for pose listener
-        self._timer_lh_pose_update = self.create_timer(7.5, self._lh_pose_listener_callback)
 
         # Handle crazyflie connection
         self._cf = Crazyflie(rw_cache='./cache')
@@ -379,22 +415,18 @@ class CrazyfliePublisher(Node):
 
         # self._scf = SyncCrazyflie(self._link_uri, cf=self._cf)
 
+        
+        # ! Start workflow
         self._cf.open_link(self._link_uri)
-
-
-
-        # Set initial position once connected
         self._set_initial_position()
-
-        self._lh_initialized = False
-        self._attempt_init_lh_config_writer()
-
-        # Initialize ranges and timer for the laser scan
-        self.ranges= [0.0, 0.0, 0.0, 0.0, 0.0]
         self.create_timer(1.0/30.0, self.publish_laserscan_data)
+        self._timer_lh_pose_update = self.create_timer(2.5, self._on_timer_lh_pose_callback)
+        # Create timer for pose listener
+        self._init_lh_config_writer()
 
 
         # Send flight commands if in flight mode
+        # ! Flight loop
         if self._fly == True:
             timer_period = 0.1  # seconds
             self.create_timer(timer_period, self.sendHoverCommand)
@@ -645,51 +677,95 @@ class CrazyfliePublisher(Node):
             self.get_logger().warning("May need to recalibrate kalman filter values for lighthouse")
             print("Error in LH log data, not published to tf2")
     
-    def _attempt_init_lh_config_writer(self):
+    def _init_lh_config_writer(self):
+        """
+        Initializes the LighthouseConfigWriter class with the necessary data. Reads from self.lh_pose_data
+
+        Members:
+        - self.lh_config_writer
+        """
         # TODO: Confirm that we are getting correct data output in the lab. 
         calibs = {0: calib1, 1: calib0}
-        self.lh_config_writer = LighthouseConfigWriter(self._cf, self.lh0_rotation_matrix, self._lh_config, calibs)
-        self._lh_initialized = True
-    
-    def _lh_pose_listener_callback(self):
-        rotation_matrices = []
-        if self._lh_initialized is True:
-            try:
-                lh0_pose = self._lh0_buffer.lookup_transform(
-                    self._lh0_pose_frame,
-                    'map',
-                    rclpy.time.Time())
-                lh1_pose = self._lh1_buffer.lookup_transform(
-                    self._lh1_pose_frame,
-                    'map',
-                    rclpy.time.Time())
-            except Exception as e:
-                self.get_logger().warning(f"Error in lh0_pose_listener_callback: {e}")
-                return
-            x0 = lh0_pose.transform.translation.x
-            y0 = lh0_pose.transform.translation.y
-            z0 = lh0_pose.transform.translation.z
-            x1 = lh1_pose.transform.translation.x
-            y1 = lh1_pose.transform.translation.y
-            z1 = lh1_pose.transform.translation.z
-            qx0 = lh0_pose.transform.rotation.x
-            qy0 = lh0_pose.transform.rotation.y
-            qz0 = lh0_pose.transform.rotation.z
-            qw0 = lh0_pose.transform.rotation.w
-            qx1 = lh1_pose.transform.rotation.x
-            qy1 = lh1_pose.transform.rotation.y
-            qz1 = lh1_pose.transform.rotation.z
-            qw1 = lh1_pose.transform.rotation.w
-            temp_matrix_0= tf_transformations.quaternion_matrix([qx0, qy0, qz0, qw0])
-            temp_matrix_1 = tf_transformations.quaternion_matrix([qx1, qy1, qz1, qw1])
-            print(f"Temp matrix 0: {temp_matrix_0}")
-            rotation_matrices = [
-                temp_matrix_0[:3, :3],
-                temp_matrix_1[:3, :3]]
-            print(f"Rotation matrices: {rotation_matrices}")
-            self.lh_config_writer.update_rotation_matrices(rotation_matrices)
-            print();
-            # Update lighthouse pose
+        self.lh_config_writer = LighthouseConfigWriter(self._cf, calibs)
+        self._lh_config_writer_initialized = True
+
+    def _on_timer_lh_pose_callback(self):
+        transforms = []
+        try:
+            i = 0
+            for bs, buffer in self.tf_buffers.items():
+                global_frame = 'map'
+                des_frame = self.lh_pose_data.lh_frames[i]
+                now = rclpy.time.Time()
+                trans = buffer.lookup_transform(
+                    des_frame,
+                    global_frame,
+                    now)
+                transforms.append(trans)
+        except TransformException as ex:
+            self.get_logger().warning(
+                f'Could not transform {des_frame} to {global_frame}: {ex}')
+            # TODO: Run this with the following being published:
+            """
+            ros2 run tf2_ros static_transform_publisher --x x --y y --z z --yaw yaw --pitch pitch --roll roll --frame-id frame_id --child-frame-id child_frame_id
+            """
+            return
+        
+        # Update lighthouse data with new pose
+        for i in range(len(transforms)):
+            self.lh_pose_data.lh_poses[i].position = Point(
+                x = transforms[i].transform.translation.x,
+                y = transforms[i].transform.translation.y,
+                z = transforms[i].transform.translation.z)
+            self.lh_pose_data.lh_poses[i].orientation = Quaternion(
+                x = transforms[i].transform.rotation.x,
+                y = transforms[i].transform.rotation.y,
+                z = transforms[i].transform.rotation.z,
+                w = transforms[i].transform.rotation.w)
+
+        print(f"lh_pose_data: {self.lh_pose_data.lh_poses}")
+        # Update lighthouse data in memory
+        lh_config = self.lh_pose_data.get_lh_config()
+        self.lh_config_writer.write_lh_geos_to_memory(lh_config)
+        self.lh_config_writer.read_lh_geos_from_memory()
+
+        # if self._lh_initialized is True:
+        #     try:
+        #         lh0_pose = self._lh0_buffer.lookup_transform(
+        #             self._lh0_pose_frame,
+        #             'map',
+        #             rclpy.time.Time())
+        #         lh1_pose = self._lh1_buffer.lookup_transform(
+        #             self._lh1_pose_frame,
+        #             'map',
+        #             rclpy.time.Time())
+        #     except Exception as e:
+        #         self.get_logger().warning(f"Error in lh0_pose_listener_callback: {e}")
+        #         return
+        #     x0 = lh0_pose.transform.translation.x
+        #     y0 = lh0_pose.transform.translation.y
+        #     z0 = lh0_pose.transform.translation.z
+        #     x1 = lh1_pose.transform.translation.x
+        #     y1 = lh1_pose.transform.translation.y
+        #     z1 = lh1_pose.transform.translation.z
+        #     qx0 = lh0_pose.transform.rotation.x
+        #     qy0 = lh0_pose.transform.rotation.y
+        #     qz0 = lh0_pose.transform.rotation.z
+        #     qw0 = lh0_pose.transform.rotation.w
+        #     qx1 = lh1_pose.transform.rotation.x
+        #     qy1 = lh1_pose.transform.rotation.y
+        #     qz1 = lh1_pose.transform.rotation.z
+        #     qw1 = lh1_pose.transform.rotation.w
+        #     temp_matrix_0= tf_transformations.quaternion_matrix([qx0, qy0, qz0, qw0])
+        #     temp_matrix_1 = tf_transformations.quaternion_matrix([qx1, qy1, qz1, qw1])
+        #     print(f"Temp matrix 0: {temp_matrix_0}")
+        #     rotation_matrices = [
+        #         temp_matrix_0[:3, :3],
+        #         temp_matrix_1[:3, :3]]
+        #     print(f"Rotation matrices: {rotation_matrices}")
+        #     self.lh_config_writer.update_rotation_matrices(rotation_matrices)
+        #     print();
+        #     # Update lighthouse pose
 
     # ! These are fine
     def _set_initial_position(self):
@@ -705,31 +781,6 @@ class CrazyfliePublisher(Node):
         self._cf.param.set_value('kalman.resetEstimation', '1')
         time.sleep(0.1)
         self._cf.param.set_value('kalman.resetEstimation', '0')
-
-    def _get_config_data(self):
-        # TODO: Figure out if we really need to use this
-        with open(self._config_file, 'r') as file:
-            _robot_config= yaml.safe_load(file)
-
-        self.read_config_data = True
-        self._robot_config = _robot_config
-
-
-    def _read_lh_geos_from_config(self):
-        """
-        Read lighthouse geometries from the given configuration parameter file and call lighthouse_config_writer.
-        """
-        if self._read_config_data == False:
-            self._get_config_data()
-    
-        geos = {}
-        basestation_number = 0 # ! Important: Can't be initialized at 1, or lighthouseMemHelper won't work.
-        for tb in self._robot_config['robots']['turtlebots']:
-            geos[basestation_number] = tb['translation']
-            self.get_logger().debug(f"tb['translation']: {tb['translation']}, type {type(tb['translation'])}")
-            basestation_number += 1
-        self.get_logger().debug(f"geos: {geos}, type: {type(geos)}")
-        return geos
 
     def _disconnected():
         print('disconnected')
