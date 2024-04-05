@@ -7,7 +7,7 @@
 
 
 """
-This file launches a single instance of a webots_world file specified in the launch configuration
+This file launches a single instance of a webots_world file specified in the launch configuration. There may be some broken dependencies as there are active branches of development. Be sure to check the launch parameters before assuming the entire file is broken. 
 
 Usage: ros2 launch webots_pkg webots_world_launch.py world:=<world_name>
 

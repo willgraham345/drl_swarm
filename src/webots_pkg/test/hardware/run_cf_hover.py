@@ -5,7 +5,7 @@
 # /_/ /_/ /_/\__,_/_/\__/_/_/   \____/_.___/\____/\__/  /____/ |__/|__/\__,_/_/  /_/ /_/ /_/____/  
 
 """
-This script is used to test the Crazyflie's hover function, and should be used in a scripting setup.
+This script is used to test the Crazyflie's hover function. Invoked from command line (see Usage)
 
 Make sure that the initial position of the crazyflie is roughly 1/2 a meter down on x axis from lighthouses.
 
@@ -16,15 +16,12 @@ Author: Will Graham
 #RUN_TEST: Test if this code works
 
 import sys
-import os
 import logging
 import time
-import json
 import cflib.crtp
 from cflib.crazyflie import Crazyflie
 from cflib.crazyflie.log import LogConfig
 from cflib.crazyflie.syncCrazyflie import SyncCrazyflie
-from cflib.crazyflie.extpos import Extpos
 from cflib.positioning.motion_commander import MotionCommander
 from cflib.utils import uri_helper
 

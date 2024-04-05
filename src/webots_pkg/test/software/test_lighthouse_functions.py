@@ -6,6 +6,8 @@
 
 """
 This file is used to test the functions in webots_pkg/lighthouse_functions.py
+
+Deprecated. 
 Usage: pytest -v test_lighthouse_functions.py
 
 Author: Will Graham
@@ -15,7 +17,6 @@ Author: Will Graham
 
 import os
 import sys
-import pytest
 import time
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))

@@ -6,6 +6,11 @@
 
 """
 This file is used to test the functions in webots_pkg/lighthouse_classes.py
+Deprecated, and doesn't work with current implementation of the lighthouse classes. We realized that the Crazyflie instance needed to be housed within the Ros2 node. As such, we moved the crazyflie-publisher to be the new and main implementation of the crazyflie node. 
+
+I kept this in as an example of how testing can be performd, in case it is useful. 
+
+
 Usage: pytest -v test_lighthouse_classes.py
 
 Author: Will Graham
@@ -15,18 +20,12 @@ Author: Will Graham
 
 import os
 import sys
-import pytest
 import time
-from unittest.mock import Mock, patch
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
-from webots_pkg.lighthouse_classes import ReadLHMem, WriteLHGeoMem, WriteLHMem,SyncCrazyflie_WriteLh
-from cflib.crazyflie import Crazyflie
+from webots_pkg.lighthouse_classes import SyncCrazyflie_WriteLh
 
 import cflib.crtp
-from cflib.crazyflie.mem import LighthouseBsGeometry
-from cflib.utils import uri_helper
-import pytest
 
 LH_Z_OFFSET = 0.1
 

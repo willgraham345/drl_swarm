@@ -5,15 +5,13 @@
 # /_/ /_/ /_/\__,_/_/\__/_/_/   \____/_.___/\____/\__/  /____/ |__/|__/\__,_/_/  /_/ /_/ /_/____/  import os
 
 """
-Test to confirm computer is correctly connected to Crazyflie
+Test to confirm computer is correctly connected to Crazyflie with Crazyradio.
 
 Author: Will Graham"""
 
 import sys
 import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
-from webots_pkg.lighthouse_classes import ReadLHMem, WriteLHGeoMem, WriteLHMem
-from cflib.crazyflie import Crazyflie
 
 
 import cflib.crtp 
@@ -24,7 +22,6 @@ from cflib.utils import uri_helper
 
 def is_stm_connected(radio_uri = "radio://0/80/2M/E7E7E7E7E7"):
     cf_transmitting = False
-    transmission_correct = False
     cflib.crtp.init_drivers()
     radioUri = uri_helper.uri_from_env(radio_uri)
     link = cflib.crtp.get_link_driver(radioUri)

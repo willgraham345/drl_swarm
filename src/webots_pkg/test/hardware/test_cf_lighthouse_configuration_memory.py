@@ -5,7 +5,8 @@
 # /_/ /_/ /_/\__,_/_/\__/_/_/   \____/_.___/\____/\__/  /____/ |__/|__/\__,_/_/  /_/ /_/ /_/____/  
 
 """
-This test ensures that the modified cffirmware has been written to the cf and that the cf is correctly configured to use our lighthouse system.
+This test ensures that the modified cffirmware has been written to the cf and that the cf is correctly configured to use our lighthouse system. Outputs lighthouse confiugration to command line.
+
 Usage: pytest -v test_pre_launch_cf_lighthouse_configuration.py
 
 Author: Will Graham
@@ -13,22 +14,12 @@ Author: Will Graham
 
 import os
 import sys
-import pytest
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
-from webots_pkg.lighthouse_classes import ReadLHMem, WriteLHGeoMem, WriteLHMem
-from cflib.crazyflie import Crazyflie
+from webots_pkg.lighthouse_classes import ReadLHMem
 
 import cflib.crtp  # noqa
-from cflib.crazyflie import Crazyflie
-from cflib.crazyflie.log import LogConfig
-from cflib.crazyflie.syncCrazyflie import SyncCrazyflie
-from cflib.crazyflie.syncLogger import SyncLogger
-from cflib.crazyflie.mem import LighthouseBsGeometry
-from cflib.crazyflie.mem import LighthouseMemHelper
-from cflib.crazyflie.syncCrazyflie import SyncCrazyflie
 from cflib.utils import uri_helper
-import pytest
 
 ROTATION_MATRIX = [
     [0.0, 0.0, -1.0],

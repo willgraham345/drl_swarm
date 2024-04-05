@@ -2,11 +2,10 @@
 '''
 Package providing helper classes and functions for performing graph search operations for planning.
 '''
-import sys
 import numpy as np
 import heapq
 import matplotlib.pyplot as plotter
-from math import hypot, sqrt
+from math import sqrt
 
 _DEBUG = False
 _DEBUG_END = True

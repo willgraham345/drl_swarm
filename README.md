@@ -9,11 +9,11 @@ Things left to do before handing over to Dan
   - [ ] webots_pkg
     - [x] config 
     - [x] hardware_sim_config
-    - [ ] launch
-    - [ ] maps
-    - [ ] params
-    - [ ] resource
-    - [ ] test
+    - [x] launch
+    - [x] maps
+    - [x] params
+    - [x] resource
+    - [x] test
     - [ ] webots_pkg
     - [ ] worlds
     - [ ] package.xml
@@ -41,7 +41,7 @@ Things left to do before handing over to Dan
 
 ## Repo `src/` Folders
 ### `webots_pkg`
-- The main source for development. All launch files can be found here
+- The main source for development. All launch files can be found here, and more information can be found in the section below:
 #### Files of Note
 ### `mocap` & `mocap_msgs` & `mocap4ros2_vicon`
 - Open-source ROS2 tool used to interface with Vicon motion capture system in Large Robotics Lab. 
@@ -57,6 +57,32 @@ Things left to do before handing over to Dan
 - Results from our Vicon tests, primarily conducted through configuration of the `src/webots_pkg/launch/cf_localization_launch.py` launch file.
 - Figures, plotting scripts, and csv files of outputs are listed in here. Can be useful when further tested is necessary.
   - As an additional note, Foxglove studio is a helpful software for livestreaming and viewing ROS2 outputs. You'll find these servers referenced throughout some of the launch files. 
+
+## Webots `webots_pkg` folder explanation
+### `config`
+- Holds the configuration yamls used within a few of the launch files. The idea was to create this folder so configuration for experimentation and simulation can be changed on the fly. These yamls can be read and implemented as Ros2 launch parameters.
+
+### `hardware_sim_config`
+- This was used to write configuration from files in the `config`, to webots world files in the `world` directory. Webots world files are a *almost* a json, but don't have the first item enclosed in brackets. This folder has the workaround functions necessary for writing a swarm configuration to the Webots world file.
+
+### `launch`
+- Standard ros2 launch file folder. For more informatino on this, read tutorials on the [ROS2 Tutorials] (https://docs.ros.org/en/humble/Tutorials/Intermediate/Launch/Launch-Main.html)
+
+### `maps` & `params`
+- Used for nav2 parameters. I wasn't able to get far enough to implement this in a consistent manner.
+
+### `resource`
+- Folder that is used to hold additional configuraiton files, specifically robot urdf files. There is also a `graph_search.py` that was used for a Motion Planning Course. May be useful in exploration development.
+
+### `test`
+- Folder that housed useful sofware/hardware testing files. Useful for making sure hardware is working correctly before testing and as a way to debug active issues. Typically invoked via command line outside directly as a python file. The best file here is the `reset_cf.py` that lets a user reset a Crazyflie using a Crazyradio. 
+
+### `webots_pkg`
+- Where *all* of the Ros2 nodes are implemented. This will be discussed in depth in the docs. 
+
+### `worlds`
+- World files for the webots simulator. 
+
 
 ----------
 # Environment Setup

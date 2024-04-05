@@ -7,7 +7,9 @@
 
 
 """
-This file launches a single instance of a webots_world file specified in the launch configuration
+This file launches a single instance of a webots_world file specified in the launch configuration. It is still in development and doesn't quite work. It is based on the example from nav2 in this link: https://github.com/arshadlab/turtlebot3_multi_robot/blob/master/launch/gazebo_multi_nav2_world.launch.py
+
+I wasn't able to find better examples.
 
 Usage: ros2 launch webots_pkg webots_world_launch.py world:=<world_name>
 

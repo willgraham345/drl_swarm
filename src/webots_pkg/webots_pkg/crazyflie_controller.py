@@ -3,14 +3,9 @@ from rclpy.node import Node
 import sys
 import math
 
-from std_msgs.msg import String
 import time
-from geometry_msgs.msg import Pose
 import tf_transformations
-from tf2_ros import TransformBroadcaster
-from geometry_msgs.msg import TransformStamped
 from sensor_msgs.msg import Range
-from sensor_msgs.msg import LaserScan
 from nav_msgs.msg import Odometry, OccupancyGrid
 from geometry_msgs.msg import Twist
 from visualization_msgs.msg import MarkerArray, Marker
@@ -23,10 +18,48 @@ import graph_search
 
 class CrazyflieControllerNode(Node):
     """
-    This class is a ROS2 node that controls the crazyflie in the webots simulation
-    :param Node: ROS2 node
-    :type Node: class:'rclpy.node.Node'
+    This class is a ROS2 node that controls the crazyflie in the webots simulation. Works hand in hand with the graph_search.py file to plan a path to the goal. Deprecated in favor of Nav2 platform.
 
+    Args:
+        Node (rclpy.node.Node): ROS2 node.
+
+    Attributes:
+        cmd_vel_publisher_ (rclpy.publisher.Publisher): Publisher for commanding velocity.
+        odom_subscriber_ (rclpy.subscription.Subscription): Subscriber for odometry data.
+        map_subscriber_ (rclpy.subscription.Subscription): Subscriber for occupancy grid map.
+        marker_publisher_ (rclpy.publisher.Publisher): Publisher for visualization marker.
+        range_subscriber_ (rclpy.subscription.Subscription): Subscriber for front range sensor data.
+        range_right_subscriber_ (rclpy.subscription.Subscription): Subscriber for right range sensor data.
+        range_back_subscriber_ (rclpy.subscription.Subscription): Subscriber for back range sensor data.
+        range_left_subscriber_ (rclpy.subscription.Subscription): Subscriber for left range sensor data.
+        occ_grid (int): Occupancy grid data.
+        occ_grid_origin (numpy.array): Origin of the occupancy grid.
+        occ_grid_cpm (float): Conversion factor from cells per meter to occupancy grid.
+        resolution (float): Resolution of the occupancy grid.
+        x (float): X position from odometry.
+        y (float): Y position from odometry.
+        z (float): Z position from odometry.
+        roll (float): Roll angle from odometry.
+        pitch (float): Pitch angle from odometry.
+        yaw (float): Yaw angle from odometry.
+        vr (float): Linear velocity.
+        wr (float): Angular velocity.
+        kx (float): Proportional gain for x error.
+        ky (float): Proportional gain for y error.
+        kt (float): Proportional gain for theta error.
+        iters (int): Iteration count.
+        yaw_init (float): Initial yaw angle.
+        xlim (float): X limit for velocity.
+        ylim (float): Y limit for velocity.
+        tlim (float): Theta limit for velocity.
+        theta_err_old (float): Previous theta error.
+        x_err_old (float): Previous x error.
+        y_err_old (float): Previous y error.
+        past_time (float): Previous time.
+        goal (list): Goal position.
+        path (list): Path to the goal.
+        path_complete (bool): Flag indicating if the path is complete.
+        old_goal (list): Previous goal position.
     """
 
     def __init__(self):
@@ -82,6 +115,15 @@ class CrazyflieControllerNode(Node):
         self.old_goal = [0, 0]
 
     def odom_callback(self, odom: Odometry):
+        """
+        Callback function for odometry data in ros node.
+
+        Args:
+            odom (Odometry): Odometry data.
+        
+        Returns:
+            None
+        """
 
         # get odometry infor
         q = [0,0,0,0]
@@ -93,9 +135,6 @@ class CrazyflieControllerNode(Node):
         q[2] = odom.pose.pose.orientation.z
         q[3] = odom.pose.pose.orientation.w
         self.roll, self.pitch, self.yaw = tf_transformations.euler_from_quaternion(q)
-        # self.get_logger().info('yaw: ' + str(self.yaw))
-
-        # self.get_logger().info(str([self.x, self.y]))
 
         # help init orientation for controller 
         if self.iters == 0:
@@ -104,7 +143,6 @@ class CrazyflieControllerNode(Node):
             self.iters = 2
 
         self.iters+=1
-
 
         if not len(self.path) > 1:
             goal_dist = self.check_distance([self.x,self.y],np.array(self.goal)/self.occ_grid_cpm + self.occ_grid_origin)
@@ -210,7 +248,15 @@ class CrazyflieControllerNode(Node):
         self.cmd_vel_publisher_.publish(cmd)
 
     def map_callback(self, msg: OccupancyGrid):
-        
+        """
+        Callback function for map data in ros node.
+
+        Args:
+            msg (OccupancyGrid): Occupancy grid data.
+        Returns:
+            None
+        """
+
         # # get the data
         self.occ_grid = np.array(msg.data).reshape((msg.info.height, msg.info.width))
         self.occ_grid_origin = np.array((msg.info.origin.position.x, msg.info.origin.position.y))
@@ -260,6 +306,12 @@ class CrazyflieControllerNode(Node):
             # self.get_logger().info(str(self.path))
 
     def find_path(self):
+        '''
+        finds the path to the goal using the bfs algorithm
+
+        Returns:
+            path (list): path to the goal
+        '''
 
         # self.get_logger().info('origin: ' + str(self.occ_grid_origin))
 
@@ -284,10 +336,29 @@ class CrazyflieControllerNode(Node):
         return res[0][0]
     
     def check_distance(self, pt1, pt2):
+        '''
+        checks the distance between two points
+
+        Args:
+            pt1 (list): point 1
+            pt2 (list): point 2
+
+        Returns:
+            ans (float): distance between two points
+        '''
         ans = np.sqrt((pt1[0]-pt2[0])**2 + (pt1[1]-pt2[1])**2)
         return ans
     
     def check_near(self, coords):
+        '''
+        checks the neighbors of a cell
+
+        Args:
+            coords (list): coordinates of the cell
+        
+        Returns:
+            neighbors (list): list of neighbors
+        '''
 
         if coords[0] > 0 and coords[1] > 0 and coords[0] < 199 and coords[1] < 199:
             neighbors = []
@@ -305,6 +376,12 @@ class CrazyflieControllerNode(Node):
         return neighbors
     
     def publish_array(self):
+        '''
+        Publishes marker array to visualize the path
+
+        Returns:
+            None
+        '''
         if len(self.path) > 0:
             msg = MarkerArray()
             msg.markers.clear()
@@ -319,6 +396,12 @@ class CrazyflieControllerNode(Node):
                 self.marker_publisher_.publish(msg)
 
     def update_planner(self):
+        '''
+        Updates the planner
+
+        Returns:
+            None
+        '''
 
         # send command to the drone
         cmd = Twist()
