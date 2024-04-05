@@ -1,25 +1,26 @@
-import launch
 import launch_ros
 import yaml
 import os
-
 from launch import LaunchDescription
-
 from launch_xml.launch_description_sources import XMLLaunchDescriptionSource
 from ament_index_python.packages import get_package_share_directory
 from launch.actions import IncludeLaunchDescription
-from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import Command, LaunchConfiguration
-from launch.actions import DeclareLaunchArgument
 
 
+# MACROS used in generating the launch description
 PACKAGE_DIR = get_package_share_directory('webots_pkg')
 CONFIG_FILE_PATH = os.path.abspath(os.path.join(PACKAGE_DIR, 'config', 'experiment_config.yaml'))
 
 def generate_launch_description():
-    # simple_mapper_node = launch_ros.actions.Node(
-    #     package='webots_pkg',
-    #     executable='simple_mapper')
+    """
+    Creates a launch description for testing the cf_publisher node with fly set to False. Can be used to test the localization of a local Crazyflie.
+
+    Usage:
+        ros2 launch webots_pkg cf_localization_launch.py > output.log
+        ros2 launch webots_pkg cf_localization_launch.py
+    Returns:
+        A LaunchDescription object containing the actions to be executed.
+    """
     
     foxglove_websocket = IncludeLaunchDescription(
         XMLLaunchDescriptionSource(

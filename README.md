@@ -7,8 +7,8 @@ You will find docs in the `docs/` folder, with an HTML that can be launched.
 Things left to do before handing over to Dan
 - [ ] Lint all files
   - [ ] webots_pkg
-    - [ ] config
-    - [ ] hardware_sim_config
+    - [x] config 
+    - [x] hardware_sim_config
     - [ ] launch
     - [ ] maps
     - [ ] params
@@ -19,6 +19,19 @@ Things left to do before handing over to Dan
     - [ ] package.xml
     - [ ] setup.py
 - [ ] Make docs for repo using Sphinx
+  - [ ] webots_pkg
+    - [ ] config 
+    - [ ] hardware_sim_config
+    - [ ] launch
+    - [ ] maps
+    - [ ] params
+    - [ ] resource
+    - [ ] test
+    - [ ] webots_pkg
+    - [ ] worlds
+    - [ ] package.xml
+    - [ ] setup.py
+- [ ] Make docs for re
 - [ ] Create a markdown guide, or possible an html listed in docs
 - [ ] Create guide for installing requirements to the repo
   - [ ] Python

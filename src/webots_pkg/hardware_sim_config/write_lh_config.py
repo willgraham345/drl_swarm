@@ -5,35 +5,27 @@
 # /_/ /_/ /_/\__,_/_/\__/_/_/   \____/_.___/\____/\__/  /____/ |__/|__/\__,_/_/  /_/ /_/ /_/____/  
 
 """
-This file is used to write the lighthouse rotation matrices and starting position origins to the Crazyflie embedded memory 
+This script is an example of how to write a lighthouse configuration to a Crazyflie.
+
 Usage: python3 write_lh_config.py
 
 Author: Will Graham
 """
 
-
-
 import os
 import sys
 import argparse
-import pytest
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from webots_pkg.lighthouse_classes import ReadLHMem, WriteLHGeoMem, WriteLHMem
-from cflib.crazyflie import Crazyflie
+from webots_pkg.lighthouse_classes import WriteLHGeoMem
 
 import cflib.crtp
 from cflib.crazyflie.mem import LighthouseBsGeometry
-from cflib.utils import uri_helper
-import tf_transformations
-import rclpy
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from webots_pkg.lighthouse_node import LighthousePose
 
 # ...
 # Define the z offset value here
 Z_OFFSET = 0.09  
-
 
 ROTATION_MATRIX = [
     [0.0, 0.0, -1.0],
@@ -41,10 +33,13 @@ ROTATION_MATRIX = [
     [1.0, 0.0, 0.0],]
 # ...
 
-
-
-
 def parse_arguments():
+    """
+    Parse command line arguments.
+
+    Returns:
+        args (argparse.Namespace): Parsed arguments.
+    """
     parser = argparse.ArgumentParser(description='Process integer pairs and save them into lists.')
     parser.add_argument('-uri', type=str, help='URI of the Crazyflie to connect to', required=False, default="radio://0/80/2M/E7E7E7E7E7")
     parser.add_argument('--bs0', nargs=2, type=float, required=True, help='First pair of integers')
@@ -73,6 +68,9 @@ def parse_arguments():
     return args
 
 def main():
+    """
+    Main function to write lighthouse configuration to Crazyflie.
+    """
     args = parse_arguments()
 
     cflib.crtp.init_drivers(args.uri)
@@ -94,7 +92,6 @@ def main():
         print("bs_geo.origin: {}".format(bs_geo.origin))
         print("bs_geo.rotation_matrix: {}".format(bs_geo.rotation_matrix))
     
-
 
 if __name__ == '__main__':
     main()

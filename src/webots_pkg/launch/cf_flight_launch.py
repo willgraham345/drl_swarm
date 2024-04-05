@@ -1,4 +1,3 @@
-import launch
 import launch_ros
 import os
 import yaml
@@ -7,21 +6,23 @@ from launch import LaunchDescription
 from launch_xml.launch_description_sources import XMLLaunchDescriptionSource
 from ament_index_python.packages import get_package_share_directory
 from launch.actions import IncludeLaunchDescription, ExecuteProcess
-from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import Command, LaunchConfiguration
-from launch.actions import DeclareLaunchArgument
 
 
 PACKAGE_DIR = get_package_share_directory('webots_pkg')
 CONFIG_FILE_PATH = (os.path.join(PACKAGE_DIR, 'config', 'experiment_config.yaml'))
 
 def generate_launch_description():
-    # pkg_share = get_package_share_directory('crazyflie_ros2_simple_mapper')
+    """
+    ROS2 launch function for testing the cf_publisher node with fly set to True.
 
+    Usage:
+        ros2 launch webots_pkg cf_flight_launch.py
 
-    # simple_mapper_node = launch_ros.actions.Node(
-    #     package='webots_pkg',
-    #     executable='simple_mapper')
+    Returns:
+        ld (LaunchDescription): The launch description object.
+    """
+    
+    # Launch the foxglove websocket server for the Foxglove Studio GUI
     foxglove_websocket = IncludeLaunchDescription(
         XMLLaunchDescriptionSource(
             [os.path.join(get_package_share_directory('foxglove_bridge'), 'launch', 'foxglove_bridge_launch.xml')]
@@ -31,6 +32,7 @@ def generate_launch_description():
     print(f'params_file: {params_file}')
 
 
+    # Check to make sure other parameters are correctly set. 
     crazyflie_node = launch_ros.actions.Node(
         package='webots_pkg',
         executable='cf_publisher',
@@ -40,7 +42,7 @@ def generate_launch_description():
              'config_file': CONFIG_FILE_PATH,
             }
         ],
-        )
+    )
 
     with open(params_file, 'r') as file:
         config = yaml.safe_load(file)
@@ -48,6 +50,7 @@ def generate_launch_description():
             if cf['name'] == 'cf1':
                 initial_translation = [float(x) for x in cf['translation']]
 
+    # Publish a static transform between the world and odom frames
     static_tf_publisher = launch_ros.actions.Node(
         package = 'tf2_ros',
         executable = 'static_transform_publisher',
@@ -55,6 +58,7 @@ def generate_launch_description():
         arguments = [str(initial_translation[0]), str(initial_translation[1]), str(initial_translation[2]), '0', '0', '0', 'world', 'odom']
     )
 
+    # Launch the teleop_twist_keyboard node for manual control
     teleop_twist_node = ExecuteProcess(
         cmd=['gnome-terminal', '--', 'ros2', 'run', 'teleop_twist_keyboard', 'teleop_twist_keyboard'],
         output='screen'

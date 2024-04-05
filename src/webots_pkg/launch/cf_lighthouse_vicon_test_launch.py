@@ -1,22 +1,25 @@
-import launch
 import launch_ros
 import yaml
 import os
-
 from launch import LaunchDescription
-
 from launch_xml.launch_description_sources import XMLLaunchDescriptionSource
 from ament_index_python.packages import get_package_share_directory
 from launch.actions import IncludeLaunchDescription, ExecuteProcess
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import Command, LaunchConfiguration
-from launch.actions import DeclareLaunchArgument
 
-
+# MACROS used in generating the launch description
 PACKAGE_DIR = get_package_share_directory('webots_pkg')
 CONFIG_FILE_PATH = os.path.abspath(os.path.join(PACKAGE_DIR, 'config', 'experiment_config.yaml'))
 
 def generate_launch_description():
+    """
+    Generates the launch description for testing and outputting lighthouse data compared to Vicon data. Generates a rosbag with all topics recorded.
+
+    Usage: 
+        ros2 launch webots_pkg cf_lighthouse_vicon_test_launch.py
+    Returns:
+        ld (LaunchDescription): The launch description object.
+    """
     # * Include launch description from  mocap_vicon_driver
     mocap_pkg_dir = get_package_share_directory('mocap_vicon_driver')
 

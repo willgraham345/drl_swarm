@@ -102,11 +102,12 @@ def generate_launch_description():
     )
     
 
-    # Define commands for launching Nav2 instances
+    ########## ! Define commands for launching Nav2 instances ##########
     robots = swarm.get_robots_dict_list() #tested and working
     nav_instances_cmds = []
     for robot in robots:
         params_file = LaunchConfiguration(f"{robot['name']}_params_file")
+
         group = GroupAction(
             [
                 IncludeLaunchDescription(
@@ -175,7 +176,7 @@ def generate_launch_description():
 
         nav_instances_cmds.append(group)
     
-    # Add static transforms from world to odoms
+    ########## ! Add static transforms from world to odoms##########
     for robot in robots:
         map_to_odom = Node(
             package='tf2_ros',
@@ -194,7 +195,7 @@ def generate_launch_description():
         nav_instances_cmds.append(odom_to_base_link)
 
 
-    # Declare launch arguments
+    ########## ! Declare launch arguments ##########
     declaration_cmds = [
         DeclareLaunchArgument('log-level', default_value='debug', description='The log level to use'),
         DeclareLaunchArgument('world', default_value="apartment_nocf.wbt", description='The world file to be launched'),
