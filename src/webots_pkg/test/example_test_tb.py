@@ -14,7 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Test the `webots_ros2_turtlebot` package."""
 
 # Launch the test locally: launch_test src/webots_ros2/webots_ros2_tests/test/test_system_turtlebot.py
 

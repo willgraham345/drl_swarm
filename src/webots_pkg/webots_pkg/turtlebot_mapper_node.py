@@ -5,7 +5,6 @@ from rclpy.node import Node
 from sensor_msgs.msg import LaserScan
 from nav_msgs.msg import OccupancyGrid, MapMetaData
 import numpy as np
-import math
 import logging
 
 

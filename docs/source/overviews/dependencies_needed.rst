@@ -1,5 +1,6 @@
 Dependencies for the project
-=====================
+============================
+
 1. Installation of Nav2: https://navigation.ros.org/build_instructions/index.html
         Nav2 Base Page: https://navigation.ros.org/index.html
         Nav2 Plugin Tutorial: https://navigation.ros.org/plugin_tutorials/index.html

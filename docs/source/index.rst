@@ -20,16 +20,15 @@ Documentation Table of Contents
 .. toctree::
    :maxdepth: 7
 
-   start_here
-   repo_structure_overview
-   api_overview
-   environment_setup
-   dependencies_needed
+   overviews/start_here
+   overviews/environment_setup
+   overviews/repo_structure_overview
+   webots_pkg
 
 
 
-.. Indices and tables
-.. ==================
-.. * :ref:`genindex`
-.. * :ref:`modindex`
-.. * :ref:`search`
+Indices and tables
+==================
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`

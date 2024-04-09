@@ -97,7 +97,6 @@ ZEROS = [
 ]
 
 INPUT_ROTATION_MATRIX = [ZEROS, ZEROS]    
-'''
 # calib0 = LighthouseBsCalibration()
 # calib0.sweeps[0].tilt = -0.049844
 # calib0.sweeps[0].phase = 0.000000
@@ -133,45 +132,44 @@ INPUT_ROTATION_MATRIX = [ZEROS, ZEROS]
 # calib1.sweeps[1].ogeemag = 0.039339
 # calib1.uid = 0xE72CEE73
 # calib1.valid = True
-'''
 
 
 # * Lab Calib results
-calib0 = LighthouseBsCalibration()
-calib0.sweeps[0].curve = -0.0113677978515625
-calib0.sweeps[0].gibmag = -0.0039215087890625
-calib0.sweeps[0].gibphase = 0.4111328125
-calib0.sweeps[0].ogeemag = -0.2215576171875
-calib0.sweeps[0].ogeephase = 2.173828125
-calib0.sweeps[0].phase = 0.0
-calib0.sweeps[0].tilt = -0.05035400390625
-calib0.sweeps[1].curve= 0.2939453125
-calib0.sweeps[1].gibmag= -0.005096435546875
-calib0.sweeps[1].gibphase= 1.09375
-calib0.sweeps[1].ogeemag= -0.08184814453125
-calib0.sweeps[1].ogeephase= 2.353515625
-calib0.sweeps[1].phase= -0.00424957275390625
-calib0.sweeps[1].tilt= 0.04296875
-calib0.uid = 1043017066
-calib0.valid = True
+# calib0 = LighthouseBsCalibration()
+# calib0.sweeps[0].curve = -0.0113677978515625
+# calib0.sweeps[0].gibmag = -0.0039215087890625
+# calib0.sweeps[0].gibphase = 0.4111328125
+# calib0.sweeps[0].ogeemag = -0.2215576171875
+# calib0.sweeps[0].ogeephase = 2.173828125
+# calib0.sweeps[0].phase = 0.0
+# calib0.sweeps[0].tilt = -0.05035400390625
+# calib0.sweeps[1].curve= 0.2939453125
+# calib0.sweeps[1].gibmag= -0.005096435546875
+# calib0.sweeps[1].gibphase= 1.09375
+# calib0.sweeps[1].ogeemag= -0.08184814453125
+# calib0.sweeps[1].ogeephase= 2.353515625
+# calib0.sweeps[1].phase= -0.00424957275390625
+# calib0.sweeps[1].tilt= 0.04296875
+# calib0.uid = 1043017066
+# calib0.valid = True
 
-calib1 = LighthouseBsCalibration()
-calib1.sweeps[0].curve = 0.055908203125
-calib1.sweeps[0].gibmag = 0.0010480880737304688
-calib1.sweeps[0].gibphase = 1.150390625
-calib1.sweeps[0].ogeemag = -0.31884765625
-calib1.sweeps[0].ogeephase = 1.3759765625
-calib1.sweeps[0].phase = 0.0
-calib1.sweeps[0].tilt = -0.049285888671875
-calib1.sweeps[1].curve = 0.194091796875
-calib1.sweeps[1].gibmag = -0.0020427703857421875
-calib1.sweeps[1].gibphase = 0.232177734375
-calib1.sweeps[1].ogeemag = -0.2666015625
-calib1.sweeps[1].ogeephase = 2.095703125
-calib1.sweeps[1].phase = -0.00547027587890625
-calib1.sweeps[1].tilt = 0.04638671875
-calib1.uid = 3821474937
-calib1.valid = True
+# calib1 = LighthouseBsCalibration()
+# calib1.sweeps[0].curve = 0.055908203125
+# calib1.sweeps[0].gibmag = 0.0010480880737304688
+# calib1.sweeps[0].gibphase = 1.150390625
+# calib1.sweeps[0].ogeemag = -0.31884765625
+# calib1.sweeps[0].ogeephase = 1.3759765625
+# calib1.sweeps[0].phase = 0.0
+# calib1.sweeps[0].tilt = -0.049285888671875
+# calib1.sweeps[1].curve = 0.194091796875
+# calib1.sweeps[1].gibmag = -0.0020427703857421875
+# calib1.sweeps[1].gibphase = 0.232177734375
+# calib1.sweeps[1].ogeemag = -0.2666015625
+# calib1.sweeps[1].ogeephase = 2.095703125
+# calib1.sweeps[1].phase = -0.00547027587890625
+# calib1.sweeps[1].tilt = 0.04638671875
+# calib1.uid = 3821474937
+# calib1.valid = True
 
 def dict_to_lh_config(geos: dict, rotation_matrices: list[list[list[float]]]):
     print(rotation_matrices)
@@ -185,19 +183,19 @@ def dict_to_lh_config(geos: dict, rotation_matrices: list[list[list[float]]]):
     return lh_config
 
 class LighthouseData:
-    #     """
-    #     Initializes a new instance of the LighthousePoses class.
+    """
+    Initializes a new instance of the LighthousePoses class.
 
-    #     Args:
-    #         basestation_tf2: dict with keys as tf2 frame IDs, and basestation n0 as value
-    #         lh_poses (list[Pose]): A list of lighthouse poses.
-        
-    #     Example: 
-    #     LighthousePoses(
-    #         0: {'lh_pose': "tb1/lighthouse_pose", 'pose': [x, y, z, qx, qy, qz, qw]}
-    #         1: {'lh_pose': "tb2/lighthouse_pose", 'pose': [x, y, z, qx, qy, qz, qw]}
-    #         )
-    #     """
+    Args:
+        basestation_tf2: dict with keys as tf2 frame IDs, and basestation n0 as value
+        lh_poses (list[Pose]): A list of lighthouse poses.
+    
+    Example: 
+    LighthousePoses(
+        0: {'lh_pose': "tb1/lighthouse_pose", 'pose': [x, y, z, qx, qy, qz, qw]}
+        1: {'lh_pose': "tb2/lighthouse_pose", 'pose': [x, y, z, qx, qy, qz, qw]}
+        )
+    """
 
     def __init__(self, lh_tf2_frames: list[str]):
         for frame in lh_tf2_frames:

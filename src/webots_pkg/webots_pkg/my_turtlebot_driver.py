@@ -8,16 +8,16 @@ from tf2_ros import TransformBroadcaster
 
 HALF_DISTANCE_BETWEEN_WHEELS = 0.045
 WHEEL_RADIUS = 0.025
-# USE THIS!!!!
-# https://cyberbotics.com/doc/reference/lidar?tab-language=python
+
 class MyTurtlebotDriver():
-    """
-    This class is a driver for the Turtlebot3 robot.
+    """This class is a driver for the Turtlebot3 robot.
+
     :param webots_node: the instance of the WebotsNode class
     :type webots_node: WebotsNode
     :param properties: the properties of the robot
     :type properties: dict
     :return: the instance of the MyTurtlebotDriver class
+
     :rtype: MyTurtlebotDriver
     """
     def init(self, webots_node, properties):

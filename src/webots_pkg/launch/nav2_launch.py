@@ -6,8 +6,7 @@
 # /_/ /_/ /_/\__,_/_/\__/_/_/   \____/_.___/\____/\__/  /____/ |__/|__/\__,_/_/  /_/ /_/ /_/____/  
 
 
-"""
-This file launches a single instance of a webots_world file specified in the launch configuration. It is still in development and doesn't quite work. It is based on the example from nav2 in this link: https://github.com/arshadlab/turtlebot3_multi_robot/blob/master/launch/gazebo_multi_nav2_world.launch.py
+"""This file launches a single instance of a webots_world file specified in the launch configuration. It is still in development and doesn't quite work. It is based on the example from nav2 in this link: https://github.com/arshadlab/turtlebot3_multi_robot/blob/master/launch/gazebo_multi_nav2_world.launch.py
 
 I wasn't able to find better examples.
 
@@ -48,8 +47,7 @@ PACKAGE_DIR = get_package_share_directory('webots_pkg')
 ROBOT_CONFIG_FILE_PATH = os.path.abspath(os.path.join(PACKAGE_DIR, 'config', 'webots_config_no_cf.yaml'))
 
 def generate_launch_description():
-    """
-    launch multiple robots within webots from the given launch arguments
+    """launch multiple robots within webots from the given launch arguments
 
     Args:
         robot: dict of robot name, x, y, yaw, and controller
