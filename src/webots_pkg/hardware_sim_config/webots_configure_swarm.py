@@ -22,7 +22,7 @@ def define_swarm():
     Define the swarm configuration.
 
     Returns:
-        swarm (Swarm): The swarm object with defined configuration.
+        swarm (Swarm): The :class:`Swarm` object with defined configuration.
     """
     cf1 = cf("cf1", [-1, -1, 0.015])
     cf2 = cf("cf2", [-2, -2, 0.015])
@@ -37,7 +37,7 @@ def write_swarm_to_json(swarm):
     Write the swarm configuration to a JSON file.
 
     Args:
-        swarm (Swarm): The swarm object with defined configuration.
+        swarm (Swarm): The swarm object:class:`Swarm` with defined configuration.
     """
     # TODO: Implement the function to write the swarm configuration to a JSON file
     pass
