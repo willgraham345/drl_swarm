@@ -1,5 +1,5 @@
 Development Environment Setup
-=================
+=============================
 
 VSCode Extensions
 -----------------

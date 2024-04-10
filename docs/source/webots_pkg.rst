@@ -1,17 +1,18 @@
 webots\_pkg package
 ===================
 
-Submodules
+Class and Functions
 ----------
 
-.. autoclass:: webots_pkg.crazyflie_controller.CrazyflieController
-   :members:
-   :undoc-members:
-   :show-inheritance:
+
+.. deprecated:: 0.0
+   This was deprecated in favor of using Nav2 as the controlling documentation
 
 .. autoclass:: webots_pkg.crazyflie_controller.CrazyflieControllerNode
    :members:
    :undoc-members:
+   :show-inheritance:
+
 
 .. automodule:: webots_pkg.crazyflie_publisher
    :members:
@@ -77,7 +78,7 @@ Submodules
 Module contents
 ---------------
 
-.. automodule:: webots_pkg.webots_pkg
+.. automodule:: webots_pkg
    :members:
    :undoc-members:
    :show-inheritance:

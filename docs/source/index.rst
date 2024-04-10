@@ -24,6 +24,7 @@ Documentation Table of Contents
    overviews/environment_setup
    overviews/repo_structure_overview
    webots_pkg
+   modules
 
 
 
