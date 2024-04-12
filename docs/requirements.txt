@@ -1,7 +1,7 @@
-action-msgs==1.2.1
-action-tutorials-interfaces==0.20.3
-action-tutorials-py==0.20.3
-actionlib-msgs==4.2.3
+# action-msgs==1.2.1
+# action-tutorials-interfaces==0.20.3
+# action-tutorials-py==0.20.3
+# actionlib-msgs==4.2.3
 alabaster==0.7.16
 ament-cmake-test==1.3.8
 ament-copyright==0.12.10
