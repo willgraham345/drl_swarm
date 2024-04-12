@@ -1,32 +1,21 @@
-name: Sphinx build
+name: Pull Request Docs Check
 
-on: push
+on: [pull_request]
 
 jobs:
   build:
+
     runs-on: ubuntu-latest
+
     steps:
-    - uses: actions/checkout@v4
-
-    - name: Set up Python
-      uses: actions/setup-python@v2
+    - uses: actions/checkout@v1
+    # Standard drop-in approach that should work for most people.
+    - uses: ammaraskar/sphinx-action@master
       with:
-        python-version: '3.x'
-        cache: 'pip'
-    - run : pip install -r docs/requirements.txt
-
-    - name: Build HTML
-      uses: ammaraskar/sphinx-action@master
-
-    - name: Upload artifacts
-      uses: actions/upload-artifact@v4
+        docs-folder: "docs/"
+    # Great extra actions to compose with:
+    # Create an artifact of the html output.
+    - uses: actions/upload-artifact@v1
       with:
-        name: html-docs
-        path: docs/build/html/
-
-    - name: Deploy
-      uses: peaceiris/actions-gh-pages@v3
-      if: github.ref == 'refs/heads/main'
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: docs/build/html
+        name: DocumentationHTML
+        path: docs/_build/html/
