@@ -33,36 +33,36 @@ certifi==2024.2.2
 cflib==0.1.25.1
 chardet==4.0.0
 charset-normalizer==3.3.2
-colcon-argcomplete==0.3.3
-colcon-bash==0.5.0
-colcon-cd==0.2.1
-colcon-cmake==0.2.28
-colcon-common-extensions==0.3.0
-colcon-core==0.16.0
-colcon-defaults==0.2.8
-colcon-devtools==0.3.0
-colcon-installed-package-information==0.2.1
-colcon-library-path==0.2.1
-colcon-metadata==0.2.5
-colcon-notification==0.3.0
-colcon-output==0.2.13
-colcon-override-check==0.0.1
-colcon-package-information==0.4.0
-colcon-package-selection==0.2.10
-colcon-parallel-executor==0.3.0
-colcon-pkg-config==0.1.0
-colcon-powershell==0.4.0
-colcon-python-setup-py==0.2.8
-colcon-recursive-crawl==0.2.3
-colcon-ros==0.4.1
-colcon-test-result==0.3.8
-colcon-zsh==0.5.0
+# colcon-argcomplete==0.3.3
+# colcon-bash==0.5.0
+# colcon-cd==0.2.1
+# colcon-cmake==0.2.28
+# colcon-common-extensions==0.3.0
+# colcon-core==0.16.0
+# colcon-defaults==0.2.8
+# colcon-devtools==0.3.0
+# colcon-installed-package-information==0.2.1
+# colcon-library-path==0.2.1
+# colcon-metadata==0.2.5
+# colcon-notification==0.3.0
+# colcon-output==0.2.13
+# colcon-override-check==0.0.1
+# colcon-package-information==0.4.0
+# colcon-package-selection==0.2.10
+# colcon-parallel-executor==0.3.0
+# colcon-pkg-config==0.1.0
+# colcon-powershell==0.4.0
+# colcon-python-setup-py==0.2.8
+# colcon-recursive-crawl==0.2.3
+# colcon-ros==0.4.1
+# colcon-test-result==0.3.8
+# colcon-zsh==0.5.0
 command-not-found==0.3
 composition-interfaces==1.2.1
-control-msgs==4.4.0
-controller==2023.1.1
-controller-manager==2.40.0
-controller-manager-msgs==2.40.0
+# control-msgs==4.4.0
+# controller==2023.1.1
+# controller-manager==2.40.0
+# controller-manager-msgs==2.40.0
 cov-core==1.15.0
 coverage==6.2
 cryptography==3.4.8
@@ -99,7 +99,7 @@ fonttools==4.29.1
 fs==2.4.12
 gast==0.5.2
 generate-parameter-library-py==0.3.8
-geometry-msgs==4.2.3
+# geometry-msgs==4.2.3
 html5lib==1.1
 httplib2==0.20.2
 idna==3.6
