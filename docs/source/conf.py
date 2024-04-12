@@ -15,8 +15,8 @@ import sys
 sys.path.insert(0, os.path.abspath('../'))
 sys.path.insert(0, os.path.abspath('../../'))
 sys.path.insert(0, os.path.abspath('../../src/webots_pkg/'))
-
-
+sys.path.insert(0, os.path.abspath('../../src/webots_pkg/launch/'))
+# sys.path.insert(0, os.path.abspath('../../src/webots_pkg/launch/'))
 # -- Project information -----------------------------------------------------
 
 project = 'drl_swarm'
@@ -38,11 +38,20 @@ extensions = [
     'sphinx.ext.imgconverter',
     'sphinx.ext.todo',
     'sphinx.ext.viewcode',
+    'sphinx.ext.autosummary',
 ]
 napoleon_google_docstring = True
 napoleonn_include_init_with_doc = True
 napoleon_include_private_with_doc = True
 napoleon_include_special_with_doc = True
+
+autodoc_default_options = {
+    'members': True,
+    # 'show-inheritance': True,
+    'special-members': '__init__',
+    'undoc-members': True,
+}
+
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

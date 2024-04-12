@@ -22,8 +22,6 @@ Documentation Table of Contents
 
    overviews/start_here
    overviews/environment_setup
-   overviews/repo_structure_overview
-   webots_pkg
    modules
 
 

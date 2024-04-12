@@ -1,5 +1,5 @@
-webots_pkg
-==========
+Modules
+=======
 
 .. toctree::
    :maxdepth: 4
