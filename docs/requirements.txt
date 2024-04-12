@@ -28,7 +28,7 @@ blinker==1.4
 breathe==4.35.0
 bresenham==0.2.1
 Brotli==1.0.9
-builtin-interfaces==1.2.1
+# builtin-interfaces==1.2.1
 catkin-pkg==1.0.0
 catkin-pkg-modules==1.0.0
 certifi==2024.2.2
