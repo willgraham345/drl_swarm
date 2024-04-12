@@ -71,7 +71,7 @@ cycler==0.11.0
 dbus-python==1.2.18
 decorator==4.4.2
 defusedxml==0.7.1
-demo-nodes-py==0.20.3
+# demo-nodes-py==0.20.3
 deprecation==2.1.0
 diagnostic-msgs==4.2.3
 distlib==0.3.7
