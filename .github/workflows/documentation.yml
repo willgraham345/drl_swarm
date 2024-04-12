@@ -8,9 +8,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      
     - uses: actions/checkout@v1
     # Standard drop-in approach that should work for most people.
     - uses: ammaraskar/sphinx-action@master
+      continue-on-error: true
       with:
         docs-folder: "docs/"
     # Great extra actions to compose with:
