@@ -236,7 +236,6 @@ rosbag2-py==0.15.9
 rosdep==0.22.2
 rosdep-modules==0.22.2
 rosdistro-modules==0.9.0
-rosdoc2 @ file:///home/will/rosdoc2
 rosgraph-msgs==1.2.1
 rosidl-adapter==3.1.5
 rosidl-cli==3.1.5
