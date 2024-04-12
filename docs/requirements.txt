@@ -14,7 +14,7 @@
 # ament-pep257==0.12.10
 # ament-uncrustify==0.12.10
 # ament-xmllint==0.12.10
-angles==1.15.0
+# angles==1.15.0
 appdirs==1.4.4
 argcomplete==1.8.1
 asttokens==2.4.1
