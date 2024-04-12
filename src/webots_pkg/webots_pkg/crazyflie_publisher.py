@@ -189,9 +189,9 @@ class LighthouseData:
     Args:
         basestation_tf2: dict with keys as tf2 frame IDs, and basestation n0 as value
         lh_poses (list[Pose]): A list of lighthouse poses.
-    
+
     Example: 
-    LighthousePoses(
+        LighthousePoses(
         0: {'lh_pose': "tb1/lighthouse_pose", 'pose': [x, y, z, qx, qy, qz, qw]}
         1: {'lh_pose': "tb2/lighthouse_pose", 'pose': [x, y, z, qx, qy, qz, qw]}
         )

@@ -8,12 +8,9 @@ from ament_index_python.packages import get_package_share_directory
 from launch.actions import IncludeLaunchDescription, ExecuteProcess
 
 
-PACKAGE_DIR = get_package_share_directory('webots_pkg')
-CONFIG_FILE_PATH = (os.path.join(PACKAGE_DIR, 'config', 'experiment_config.yaml'))
 
 def generate_launch_description():
-    """
-    ROS2 launch function for testing the cf_publisher node with fly set to True.
+    """ROS2 launch function for testing the cf_publisher node with fly set to True.
 
     Usage:
         ros2 launch webots_pkg cf_flight_launch.py
@@ -22,7 +19,8 @@ def generate_launch_description():
         ld (LaunchDescription): The launch description object.
     """
     
-    # Launch the foxglove websocket server for the Foxglove Studio GUI
+    PACKAGE_DIR = get_package_share_directory('webots_pkg')
+    CONFIG_FILE_PATH = (os.path.join(PACKAGE_DIR, 'config', 'experiment_config.yaml'))
     foxglove_websocket = IncludeLaunchDescription(
         XMLLaunchDescriptionSource(
             [os.path.join(get_package_share_directory('foxglove_bridge'), 'launch', 'foxglove_bridge_launch.xml')]
@@ -71,7 +69,3 @@ def generate_launch_description():
     ld.add_action(teleop_twist_node)
 
     return ld
-
-
-if __name__ == 'main':
-    generate_launch_description()

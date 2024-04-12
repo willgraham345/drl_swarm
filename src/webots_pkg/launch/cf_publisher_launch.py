@@ -1,4 +1,3 @@
-import launch
 import launch_ros
 import yaml
 import os
@@ -8,15 +7,14 @@ from launch import LaunchDescription
 from launch_xml.launch_description_sources import XMLLaunchDescriptionSource
 from ament_index_python.packages import get_package_share_directory
 from launch.actions import IncludeLaunchDescription
-from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import Command, LaunchConfiguration
+from launch.substitutions import LaunchConfiguration
 from launch.actions import DeclareLaunchArgument
 
 
-PACKAGE_DIR = get_package_share_directory('webots_pkg')
-CONFIG_FILE_PATH = os.path.abspath(os.path.join(PACKAGE_DIR, 'config', 'experiment_config.yaml'))
 
 def generate_launch_description():
+    PACKAGE_DIR = get_package_share_directory('webots_pkg')
+    CONFIG_FILE_PATH = os.path.abspath(os.path.join(PACKAGE_DIR, 'config', 'experiment_config.yaml'))
     swarm_config_yaml_arg = DeclareLaunchArgument(
         'swarm_config_yaml',
         default_value=str(CONFIG_FILE_PATH),
@@ -197,6 +195,3 @@ def generate_launch_description():
     #     ld.add_action(transform)
 
     return ld
-
-if __name__ == '__main__':
-    generate_launch_description()

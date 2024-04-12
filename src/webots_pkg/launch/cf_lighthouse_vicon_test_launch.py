@@ -7,9 +7,6 @@ from ament_index_python.packages import get_package_share_directory
 from launch.actions import IncludeLaunchDescription, ExecuteProcess
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 
-# MACROS used in generating the launch description
-PACKAGE_DIR = get_package_share_directory('webots_pkg')
-CONFIG_FILE_PATH = os.path.abspath(os.path.join(PACKAGE_DIR, 'config', 'experiment_config.yaml'))
 
 def generate_launch_description():
     """
@@ -17,9 +14,14 @@ def generate_launch_description():
 
     Usage: 
         ros2 launch webots_pkg cf_lighthouse_vicon_test_launch.py
+
     Returns:
         ld (LaunchDescription): The launch description object.
     """
+
+    # MACROS used in generating the launch description
+    PACKAGE_DIR = get_package_share_directory('webots_pkg')
+    CONFIG_FILE_PATH = os.path.abspath(os.path.join(PACKAGE_DIR, 'config', 'experiment_config.yaml'))
     # * Include launch description from  mocap_vicon_driver
     mocap_pkg_dir = get_package_share_directory('mocap_vicon_driver')
 
@@ -87,6 +89,3 @@ def generate_launch_description():
     ld.add_action(record_all_nodes)
 
     return ld
-
-if __name__ == '__main__':
-    generate_launch_description()

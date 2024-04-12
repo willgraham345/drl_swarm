@@ -1,4 +1,3 @@
-import launch
 import launch_ros
 import yaml
 import os
@@ -8,17 +7,15 @@ from launch import LaunchDescription
 from launch_xml.launch_description_sources import XMLLaunchDescriptionSource
 from ament_index_python.packages import get_package_share_directory
 from launch.actions import IncludeLaunchDescription
-from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import Command, LaunchConfiguration
-from launch.actions import DeclareLaunchArgument
 
-
-PACKAGE_DIR = get_package_share_directory('webots_pkg')
-CONFIG_FILE_PATH = os.path.abspath(os.path.join(PACKAGE_DIR, 'config', 'experiment_config.yaml'))
 
 def generate_launch_description():
+    """
+    Creates a launch description for testing the turtlebot_publisher node with fly set to False. Can be used to test the localization of a local Turtlebot."""
 
 
+    PACKAGE_DIR = get_package_share_directory('webots_pkg')
+    CONFIG_FILE_PATH = os.path.abspath(os.path.join(PACKAGE_DIR, 'config', 'experiment_config.yaml'))
     starting_translations = []
     starting_orientations = []
     with open(CONFIG_FILE_PATH, 'r') as file:
@@ -103,6 +100,3 @@ def generate_launch_description():
     ld.add_action(foxglove_websocket)
 
     return ld
-
-if __name__ == '__main__':
-    generate_launch_description()

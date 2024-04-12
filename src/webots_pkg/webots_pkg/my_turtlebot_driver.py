@@ -10,7 +10,7 @@ HALF_DISTANCE_BETWEEN_WHEELS = 0.045
 WHEEL_RADIUS = 0.025
 
 class MyTurtlebotDriver():
-    """This class is a driver for the Turtlebot3 robot.
+    """This class is a driver for the Turtlebot3 robot in Webots.
 
     :param webots_node: the instance of the WebotsNode class
     :type webots_node: WebotsNode

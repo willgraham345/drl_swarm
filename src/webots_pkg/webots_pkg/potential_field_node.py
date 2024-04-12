@@ -16,7 +16,13 @@ import array
 from math import atan2, pi, sqrt, exp
 
 
-class potentialField(Node): # MODIFY NAME
+class PotentialFieldNode(Node):
+    """
+    A class representing a potential field node. Was used in motion planning class project. This was a workaround when we weren't able to get Nav2 to work. 
+
+    This node is responsible for controlling multiple robots using a potential field algorithm.
+    """
+
     def __init__(self):
         super().__init__("potential_field") # MODIFY NAME
         #self.cf_frame = self.declare_parameter('cf_frame', 'cf1').get_parameter_value().string_value
@@ -157,7 +163,7 @@ class potentialField(Node): # MODIFY NAME
 
 def main(args=None):
     rclpy.init(args=None)
-    node = potentialField()
+    node = PotentialFieldNode()
     #rclpy.spin(node)
     node.run()
     rclpy.shutdown()

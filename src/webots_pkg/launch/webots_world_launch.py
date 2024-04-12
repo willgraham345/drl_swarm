@@ -40,10 +40,6 @@ from launch.substitutions.path_join_substitution import PathJoinSubstitution
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from webots_pkg.swarm_classes import tb 
 from config.config_readers import import_webots_swarm_config
-DIR_PATH = os.path.dirname(__file__)
-WORLD_FILES = 'apartment.wbt'
-PACKAGE_DIR = get_package_share_directory('webots_pkg')
-ROBOT_CONFIG_FILE_PATH = os.path.abspath(os.path.join(PACKAGE_DIR, 'config', 'webots_config_no_cf.yaml'))
 
 def generate_launch_description():
     """
@@ -56,6 +52,10 @@ def generate_launch_description():
         LaunchDescription: The launch description for the webots world
     """
     # Macro config
+    DIR_PATH = os.path.dirname(__file__)
+    WORLD_FILES = 'apartment.wbt'
+    PACKAGE_DIR = get_package_share_directory('webots_pkg')
+    ROBOT_CONFIG_FILE_PATH = os.path.abspath(os.path.join(PACKAGE_DIR, 'config', 'webots_config_no_cf.yaml'))
     ########## ! "Macro" config ##########
     bringup_dir = get_package_share_directory('nav2_bringup')
     launch_dir = os.path.join(bringup_dir, 'launch')

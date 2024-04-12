@@ -15,13 +15,19 @@ from geometry_msgs.msg import Pose
 from geometry_msgs.msg import TransformStamped
 
 class LighthousePose(Node):
+    """
+    Represents a node that handles the pose of a lighthouse in a ROS system.
+
+    Quick disclaimer, this was never really used. Just a quick example of what was thinking could be implemented.
+
+    """
+
     def __init__(self):
         super().__init__('LighthousePose')
         print("LighthousePose initializing")
 
         # Create a static transform broadcaster
         self.static_broadcaster = StaticTransformBroadcaster(self)
-
 
         # Add in subscription to turtlebot, with a static transform
         self.subscription = self.create_subscription(
@@ -45,8 +51,18 @@ class LighthousePose(Node):
         self.tf_broadcaster_TB_2_LH = StaticTransformBroadcaster(self)
         self.tf_broadcaster_LH_2_TB = StaticTransformBroadcaster(self)
 
-
     def turtlebot_pose_callback(self, msg, turtlebot_namespace, lighthouse_namespace):
+        """
+        Callback function for the turtlebot pose subscription.
+
+        Args:
+            msg (Pose): The turtlebot's pose message.
+            turtlebot_namespace (str): The namespace of the turtlebot.
+            lighthouse_namespace (str): The namespace of the lighthouse.
+
+        Returns:
+            None
+        """
         # Create a transform from the turtlebot's pose
         transform = TransformStamped()
         transform.header.stamp = self.get_clock().now().to_msg()

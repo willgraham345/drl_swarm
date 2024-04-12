@@ -6,14 +6,6 @@
 # /_/ /_/ /_/\__,_/_/\__/_/_/   \____/_.___/\____/\__/  /____/ |__/|__/\__,_/_/  /_/ /_/ /_/____/  
 
 
-"""This file launches a single instance of a webots_world file specified in the launch configuration. It is still in development and doesn't quite work. It is based on the example from nav2 in this link: https://github.com/arshadlab/turtlebot3_multi_robot/blob/master/launch/gazebo_multi_nav2_world.launch.py
-
-I wasn't able to find better examples.
-
-Usage: ros2 launch webots_pkg webots_world_launch.py world:=<world_name>
-
-Author: Will Graham
-"""
 
 
 import os
@@ -41,13 +33,15 @@ from launch.substitutions.path_join_substitution import PathJoinSubstitution
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from webots_pkg.swarm_classes import tb 
 from config.config_readers import import_webots_swarm_config
-DIR_PATH = os.path.dirname(__file__)
-WORLD_FILES = 'apartment.wbt'
-PACKAGE_DIR = get_package_share_directory('webots_pkg')
-ROBOT_CONFIG_FILE_PATH = os.path.abspath(os.path.join(PACKAGE_DIR, 'config', 'webots_config_no_cf.yaml'))
 
 def generate_launch_description():
-    """launch multiple robots within webots from the given launch arguments
+    """This file launches a single instance of a webots_world file specified in the launch configuration. It is still in development and doesn't quite work. It is based on the example from nav2 in this link: https://github.com/arshadlab/turtlebot3_multi_robot/blob/master/launch/gazebo_multi_nav2_world.launch.py
+
+    I wasn't able to find better examples.
+
+    Usage:
+        ros2 launch webots_pkg webots_world_launch.py world:=<world_name>
+        launch multiple robots within webots from the given launch arguments
 
     Args:
         robot: dict of robot name, x, y, yaw, and controller
@@ -56,6 +50,10 @@ def generate_launch_description():
         LaunchDescription: The launch description for the webots world
     """
     # Macro config
+    DIR_PATH = os.path.dirname(__file__)
+    WORLD_FILES = 'apartment.wbt'
+    PACKAGE_DIR = get_package_share_directory('webots_pkg')
+    ROBOT_CONFIG_FILE_PATH = os.path.abspath(os.path.join(PACKAGE_DIR, 'config', 'webots_config_no_cf.yaml'))
     ########## ! "Macro" config ##########
     bringup_dir = get_package_share_directory('nav2_bringup')
     launch_dir = os.path.join(bringup_dir, 'launch')

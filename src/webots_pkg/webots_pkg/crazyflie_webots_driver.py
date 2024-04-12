@@ -19,7 +19,7 @@ from geometry_msgs.msg import TransformStamped
 
 # Change this path to your crazyflie-firmware folder
 sys.path.append('/home/will/crazyflie-firmware/build')
-import cffirmware
+# import cffirmware
 
 
 class CrazyflieWebotsDriver():

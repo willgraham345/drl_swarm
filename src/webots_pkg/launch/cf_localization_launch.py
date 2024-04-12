@@ -7,9 +7,6 @@ from ament_index_python.packages import get_package_share_directory
 from launch.actions import IncludeLaunchDescription
 
 
-# MACROS used in generating the launch description
-PACKAGE_DIR = get_package_share_directory('webots_pkg')
-CONFIG_FILE_PATH = os.path.abspath(os.path.join(PACKAGE_DIR, 'config', 'experiment_config.yaml'))
 
 def generate_launch_description():
     """
@@ -18,10 +15,15 @@ def generate_launch_description():
     Usage:
         ros2 launch webots_pkg cf_localization_launch.py > output.log
         ros2 launch webots_pkg cf_localization_launch.py
+
     Returns:
         A LaunchDescription object containing the actions to be executed.
+
     """
     
+    # MACROS used in generating the launch description
+    PACKAGE_DIR = get_package_share_directory('webots_pkg')
+    CONFIG_FILE_PATH = os.path.abspath(os.path.join(PACKAGE_DIR, 'config', 'experiment_config.yaml'))
     foxglove_websocket = IncludeLaunchDescription(
         XMLLaunchDescriptionSource(
             [os.path.join(get_package_share_directory('foxglove_bridge'), 'launch', 'foxglove_bridge_launch.xml')]
@@ -96,6 +98,3 @@ def generate_launch_description():
         ld.add_action(cmd)
 
     return ld
-
-if __name__ == '__main__':
-    generate_launch_description()
