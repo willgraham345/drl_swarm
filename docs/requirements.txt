@@ -66,7 +66,7 @@ charset-normalizer==3.3.2
 cov-core==1.15.0
 coverage==6.2
 cryptography==3.4.8
-cv-bridge==3.2.1
+# cv-bridge==3.2.1
 cycler==0.11.0
 dbus-python==1.2.18
 decorator==4.4.2
