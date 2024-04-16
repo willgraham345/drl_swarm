@@ -6,4 +6,4 @@ build:
       python: "3.8"
     commands: 
       - mkdir --parents _readthedocs/html/
-      - cp --recursive pre_built_html/* _readthedocs/html/
+      - cp --recursive docs/pre_built_html/* _readthedocs/html/
