@@ -10,13 +10,16 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 
 def generate_launch_description():
     """
-    Generates the launch description for testing and outputting lighthouse data compared to Vicon data. Generates a rosbag with all topics recorded.
+    This will launch a Ros2 system that will connect with a crazyflie using the default URI, with it's initial position populated with values from the `src/webots_pkg/config/experiment_config.yaml` file. These initial position values will also be used in creating a static transformer between the 'world' and 'odom' frames (this is required for the crazyflie to publish correctly). It will also launch a foxglove websocket and vicon driver to record the data. Data is recorded and sent to a default rosbag file.
 
     Usage: 
-        ros2 launch webots_pkg cf_lighthouse_vicon_test_launch.py
+        `$ ros2 launch webots_pkg cf_lighthouse_vicon_test_launch.py`
+
+    Args:
+        None
 
     Returns:
-        ld (LaunchDescription): The launch description object.
+        ld (LaunchDescription): The launch description object, invoked by the Usage.
     """
 
     # MACROS used in generating the launch description

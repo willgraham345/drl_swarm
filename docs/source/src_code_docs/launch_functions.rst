@@ -21,15 +21,6 @@ Each of the following modules define a launch function that can be used to launc
     :exclude-members: __init__, __module__, __main__
 
 
-`src/webots_pkg/launch/cf_localization_launch.py`
--------------------------------------------------
-.. automodule:: cf_localization_launch
-    :members:
-    :undoc-members:
-    :show-inheritance:
-    :inherited-members:
-    :exclude-members: __init__, __module__, __main__
-
 `src/webots_pkg/launch/cf_publisher_launch.py`
 ----------------------------------------------
 .. automodule:: cf_publisher_launch

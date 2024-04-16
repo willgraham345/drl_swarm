@@ -44,7 +44,7 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../overviews/start_here.html">Start Here</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../overviews/environment_setup.html">Environment Setup</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Source Code Descriptions</a></li>
 </ul>
 
         </div>
@@ -86,13 +86,16 @@
 <a class="viewcode-back" href="../src_code_docs/launch_functions.html#cf_lighthouse_vicon_test_launch.generate_launch_description">[docs]</a>
 <span class="k">def</span> <span class="nf">generate_launch_description</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Generates the launch description for testing and outputting lighthouse data compared to Vicon data. Generates a rosbag with all topics recorded.</span>
+<span class="sd">    This will launch a Ros2 system that will connect with a crazyflie using the default URI, with it&#39;s initial position populated with values from the `src/webots_pkg/config/experiment_config.yaml` file. These initial position values will also be used in creating a static transformer between the &#39;world&#39; and &#39;odom&#39; frames (this is required for the crazyflie to publish correctly). It will also launch a foxglove websocket and vicon driver to record the data. Data is recorded and sent to a default rosbag file.</span>
 
 <span class="sd">    Usage: </span>
-<span class="sd">        ros2 launch webots_pkg cf_lighthouse_vicon_test_launch.py</span>
+<span class="sd">        `$ ros2 launch webots_pkg cf_lighthouse_vicon_test_launch.py`</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        None</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        ld (LaunchDescription): The launch description object.</span>
+<span class="sd">        ld (LaunchDescription): The launch description object, invoked by the Usage.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># MACROS used in generating the launch description</span>

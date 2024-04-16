@@ -44,7 +44,7 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../overviews/start_here.html">Start Here</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../overviews/environment_setup.html">Environment Setup</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Source Code Descriptions</a></li>
 </ul>
 
         </div>
@@ -87,7 +87,20 @@
 <a class="viewcode-back" href="../src_code_docs/launch_functions.html#transforms_launch.generate_launch_description">[docs]</a>
 <span class="k">def</span> <span class="nf">generate_launch_description</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Creates a launch description for testing the turtlebot_publisher node with fly set to False. Can be used to test the localization of a local Turtlebot.&quot;&quot;&quot;</span>
+<span class="sd">    This will launch a Ros2 system that will connect with two turtlebots using the default URI, with it&#39;s initial position populated with values from the `src/webots_pkg/config/experiment_config.yaml` file. These initial position values will also be used in creating a static transformer between the &#39;world&#39; and &#39;odom&#39; frames (this is required for the turtlebots to publish correctly). It will also launch a foxglove websocket to record the data. Data is recorded and sent to a default rosbag file. A possible dependency for launching more complex systems with multiple robots.</span>
+
+<span class="sd">    Usage:</span>
+<span class="sd">        `$ ros2 launch webots_pkg transforms_launch.py`</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        None</span>
+<span class="sd">    </span>
+<span class="sd">    Note:</span>
+<span class="sd">        Depends on the `src/webots_pkg/config/experiment_config.yaml` file to populate the initial position of the robots and swarm.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        ld (LaunchDescription): The launch description object, invoked by the Usage.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
 
     <span class="n">PACKAGE_DIR</span> <span class="o">=</span> <span class="n">get_package_share_directory</span><span class="p">(</span><span class="s1">&#39;webots_pkg&#39;</span><span class="p">)</span>

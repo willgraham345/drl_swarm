@@ -43,7 +43,7 @@ from config.config_readers import import_webots_swarm_config
 
 def generate_launch_description():
     """
-    launch multiple robots within webots from the given launch arguments
+    Launches a single instance of a webots world file specified in the launch configuration. This was the starting point for the multi-robot launch file attempted in the nav2_launch.py file.
 
     Args:
         robot: dict of robot name, x, y, yaw, and controller

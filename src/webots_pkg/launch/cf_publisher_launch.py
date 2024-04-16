@@ -13,6 +13,26 @@ from launch.actions import DeclareLaunchArgument
 
 
 def generate_launch_description():
+    """
+    A verbose example of launching the cf_publisher node with a variety of launch parameters set. Additionally, this will publish a static transform between the world and the base_link of the crazyflie. This also reads in starting position from the experiment configuration file and sets the initial position of the crazyflie to that value. This is useful for testing the localization of a crazyflie in use with two lighthouse basestations.
+    
+    Usage:
+        `$ ros2 launch webots_pkg cf_publisher_launch.py`
+        `$ ros2 run webots_pkg cf_publisher --ros-args --fly:=True`
+        `$ ros2 run webots_pkg cf_publisher --ros-args --URI:=radio://0/90/2M/E7E7E7E7E8`
+    
+    Args:
+        LaunchConfiguration:
+            swarm_config_yaml_arg (str): The path to the experiment configuration file. Default is 'config/experiment_config.yaml'.
+            namespace_arg (str): The namespace to apply to the nodes. Default is ''.
+            lh0_pose_frame_arg (str): The frame ID for the first lighthouse pose. Default is 'tb1/lighthouse_pose'.
+            lh1_pose_frame_arg (str): The frame ID for the second lighthouse pose. Default is 'tb2/lighthouse_pose'.
+            fly_arg (str): Whether to start the Crazyflie in flight mode. Default is 'False'.
+            URI_arg (str): The URI of the Crazyflie. Default is 'radio://0/80/2M/E7E7E7E7E7'.
+
+    Returns:
+        ld (LaunchDescription): The launch description object, invoked by the Usage. 
+    """
     PACKAGE_DIR = get_package_share_directory('webots_pkg')
     CONFIG_FILE_PATH = os.path.abspath(os.path.join(PACKAGE_DIR, 'config', 'experiment_config.yaml'))
     swarm_config_yaml_arg = DeclareLaunchArgument(
@@ -98,63 +118,6 @@ def generate_launch_description():
             '0',
             'map', 'cf1/base_link']
     )
-    # tb0_static_base_link_publisher = launch_ros.actions.Node(
-    #     package = 'tf2_ros',
-    #     executable = 'static_transform_publisher',
-    #     output = 'screen',
-    #     arguments = [
-    #         str(initial_translation[0]),
-    #         str(initial_translation[1]),
-    #         str(initial_translation[2]),
-    #         '0',
-    #         '0',
-    #         '0',
-    #         'map', 'tb1/base_link']
-    # )
-    # tb0_base_link_to_lh = launch_ros.actions.Node(
-    #     package = 'tf2_ros',
-    #     executable = 'static_transform_publisher',
-    #     output = 'screen',
-    #     arguments = [
-    #         '3',
-    #         '4',
-    #         '5',
-    #         '0',
-    #         '0',
-    #         '0',
-    #         'tb1/base_link', 'tb1/lighthouse_pose']
-    # )
-    # tb1_static_base_link_publisher = launch_ros.actions.Node(
-    #     package = 'tf2_ros',
-    #     executable = 'static_transform_publisher',
-    #     output = 'screen',
-    #     arguments = [
-    #         str(initial_translation[0]),
-    #         str(initial_translation[1]),
-    #         str(initial_translation[2]),
-    #         '0',
-    #         '0',
-    #         '0',
-    #         'map', 'tb2/base_link']
-    # )
-    # tb1_base_link_to_lh = launch_ros.actions.Node(
-    #     package = 'tf2_ros',
-    #     executable = 'static_transform_publisher',
-    #     output = 'screen',
-    #     arguments = [
-    #         '0',
-    #         '0',
-    #         '0',
-    #         '0',
-    #         '0',
-    #         '0',
-    #         'tb1/base_link', 'tb1/lighthouse_pose']
-    # )
-    # transform_cmds = []
-    # transform_cmds.append(tb0_static_base_link_publisher)
-    # transform_cmds.append(tb0_base_link_to_lh)
-    # transform_cmds.append(tb1_static_base_link_publisher)
-    # transform_cmds.append(tb1_base_link_to_lh)
 
     cf_instance_cmds.append(cf_static_base_link_publisher)
     crazyflie_node = launch_ros.actions.Node(
@@ -191,7 +154,5 @@ def generate_launch_description():
         ld.add_action(record)
     for command in cf_instance_cmds:
         ld.add_action(command)
-    # for transform in transform_cmds:
-    #     ld.add_action(transform)
 
     return ld

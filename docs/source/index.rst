@@ -18,7 +18,7 @@ I recommend getting started with the `start_here` page, as it will give you a go
 Documentation Table of Contents
 -------------------------------
 .. toctree::
-   :maxdepth: 7
+   :maxdepth: 1
 
    overviews/start_here
    overviews/environment_setup

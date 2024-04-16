@@ -44,7 +44,7 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../overviews/start_here.html">Start Here</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../overviews/environment_setup.html">Environment Setup</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Source Code Descriptions</a></li>
 </ul>
 
         </div>
@@ -89,6 +89,26 @@
 <div class="viewcode-block" id="generate_launch_description">
 <a class="viewcode-back" href="../src_code_docs/launch_functions.html#cf_publisher_launch.generate_launch_description">[docs]</a>
 <span class="k">def</span> <span class="nf">generate_launch_description</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A verbose example of launching the cf_publisher node with a variety of launch parameters set. Additionally, this will publish a static transform between the world and the base_link of the crazyflie. This also reads in starting position from the experiment configuration file and sets the initial position of the crazyflie to that value. This is useful for testing the localization of a crazyflie in use with two lighthouse basestations.</span>
+<span class="sd">    </span>
+<span class="sd">    Usage:</span>
+<span class="sd">        `$ ros2 launch webots_pkg cf_publisher_launch.py`</span>
+<span class="sd">        `$ ros2 run webots_pkg cf_publisher --ros-args --fly:=True`</span>
+<span class="sd">        `$ ros2 run webots_pkg cf_publisher --ros-args --URI:=radio://0/90/2M/E7E7E7E7E8`</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        LaunchConfiguration:</span>
+<span class="sd">            swarm_config_yaml_arg (str): The path to the experiment configuration file. Default is &#39;config/experiment_config.yaml&#39;.</span>
+<span class="sd">            namespace_arg (str): The namespace to apply to the nodes. Default is &#39;&#39;.</span>
+<span class="sd">            lh0_pose_frame_arg (str): The frame ID for the first lighthouse pose. Default is &#39;tb1/lighthouse_pose&#39;.</span>
+<span class="sd">            lh1_pose_frame_arg (str): The frame ID for the second lighthouse pose. Default is &#39;tb2/lighthouse_pose&#39;.</span>
+<span class="sd">            fly_arg (str): Whether to start the Crazyflie in flight mode. Default is &#39;False&#39;.</span>
+<span class="sd">            URI_arg (str): The URI of the Crazyflie. Default is &#39;radio://0/80/2M/E7E7E7E7E7&#39;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ld (LaunchDescription): The launch description object, invoked by the Usage. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">PACKAGE_DIR</span> <span class="o">=</span> <span class="n">get_package_share_directory</span><span class="p">(</span><span class="s1">&#39;webots_pkg&#39;</span><span class="p">)</span>
     <span class="n">CONFIG_FILE_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PACKAGE_DIR</span><span class="p">,</span> <span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="s1">&#39;experiment_config.yaml&#39;</span><span class="p">))</span>
     <span class="n">swarm_config_yaml_arg</span> <span class="o">=</span> <span class="n">DeclareLaunchArgument</span><span class="p">(</span>
@@ -174,63 +194,6 @@
             <span class="s1">&#39;0&#39;</span><span class="p">,</span>
             <span class="s1">&#39;map&#39;</span><span class="p">,</span> <span class="s1">&#39;cf1/base_link&#39;</span><span class="p">]</span>
     <span class="p">)</span>
-    <span class="c1"># tb0_static_base_link_publisher = launch_ros.actions.Node(</span>
-    <span class="c1">#     package = &#39;tf2_ros&#39;,</span>
-    <span class="c1">#     executable = &#39;static_transform_publisher&#39;,</span>
-    <span class="c1">#     output = &#39;screen&#39;,</span>
-    <span class="c1">#     arguments = [</span>
-    <span class="c1">#         str(initial_translation[0]),</span>
-    <span class="c1">#         str(initial_translation[1]),</span>
-    <span class="c1">#         str(initial_translation[2]),</span>
-    <span class="c1">#         &#39;0&#39;,</span>
-    <span class="c1">#         &#39;0&#39;,</span>
-    <span class="c1">#         &#39;0&#39;,</span>
-    <span class="c1">#         &#39;map&#39;, &#39;tb1/base_link&#39;]</span>
-    <span class="c1"># )</span>
-    <span class="c1"># tb0_base_link_to_lh = launch_ros.actions.Node(</span>
-    <span class="c1">#     package = &#39;tf2_ros&#39;,</span>
-    <span class="c1">#     executable = &#39;static_transform_publisher&#39;,</span>
-    <span class="c1">#     output = &#39;screen&#39;,</span>
-    <span class="c1">#     arguments = [</span>
-    <span class="c1">#         &#39;3&#39;,</span>
-    <span class="c1">#         &#39;4&#39;,</span>
-    <span class="c1">#         &#39;5&#39;,</span>
-    <span class="c1">#         &#39;0&#39;,</span>
-    <span class="c1">#         &#39;0&#39;,</span>
-    <span class="c1">#         &#39;0&#39;,</span>
-    <span class="c1">#         &#39;tb1/base_link&#39;, &#39;tb1/lighthouse_pose&#39;]</span>
-    <span class="c1"># )</span>
-    <span class="c1"># tb1_static_base_link_publisher = launch_ros.actions.Node(</span>
-    <span class="c1">#     package = &#39;tf2_ros&#39;,</span>
-    <span class="c1">#     executable = &#39;static_transform_publisher&#39;,</span>
-    <span class="c1">#     output = &#39;screen&#39;,</span>
-    <span class="c1">#     arguments = [</span>
-    <span class="c1">#         str(initial_translation[0]),</span>
-    <span class="c1">#         str(initial_translation[1]),</span>
-    <span class="c1">#         str(initial_translation[2]),</span>
-    <span class="c1">#         &#39;0&#39;,</span>
-    <span class="c1">#         &#39;0&#39;,</span>
-    <span class="c1">#         &#39;0&#39;,</span>
-    <span class="c1">#         &#39;map&#39;, &#39;tb2/base_link&#39;]</span>
-    <span class="c1"># )</span>
-    <span class="c1"># tb1_base_link_to_lh = launch_ros.actions.Node(</span>
-    <span class="c1">#     package = &#39;tf2_ros&#39;,</span>
-    <span class="c1">#     executable = &#39;static_transform_publisher&#39;,</span>
-    <span class="c1">#     output = &#39;screen&#39;,</span>
-    <span class="c1">#     arguments = [</span>
-    <span class="c1">#         &#39;0&#39;,</span>
-    <span class="c1">#         &#39;0&#39;,</span>
-    <span class="c1">#         &#39;0&#39;,</span>
-    <span class="c1">#         &#39;0&#39;,</span>
-    <span class="c1">#         &#39;0&#39;,</span>
-    <span class="c1">#         &#39;0&#39;,</span>
-    <span class="c1">#         &#39;tb1/base_link&#39;, &#39;tb1/lighthouse_pose&#39;]</span>
-    <span class="c1"># )</span>
-    <span class="c1"># transform_cmds = []</span>
-    <span class="c1"># transform_cmds.append(tb0_static_base_link_publisher)</span>
-    <span class="c1"># transform_cmds.append(tb0_base_link_to_lh)</span>
-    <span class="c1"># transform_cmds.append(tb1_static_base_link_publisher)</span>
-    <span class="c1"># transform_cmds.append(tb1_base_link_to_lh)</span>
 
     <span class="n">cf_instance_cmds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cf_static_base_link_publisher</span><span class="p">)</span>
     <span class="n">crazyflie_node</span> <span class="o">=</span> <span class="n">launch_ros</span><span class="o">.</span><span class="n">actions</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span>
@@ -267,8 +230,6 @@
         <span class="n">ld</span><span class="o">.</span><span class="n">add_action</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">command</span> <span class="ow">in</span> <span class="n">cf_instance_cmds</span><span class="p">:</span>
         <span class="n">ld</span><span class="o">.</span><span class="n">add_action</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
-    <span class="c1"># for transform in transform_cmds:</span>
-    <span class="c1">#     ld.add_action(transform)</span>
 
     <span class="k">return</span> <span class="n">ld</span></div>
 

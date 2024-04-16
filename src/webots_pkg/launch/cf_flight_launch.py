@@ -10,15 +10,19 @@ from launch.actions import IncludeLaunchDescription, ExecuteProcess
 
 
 def generate_launch_description():
-    """ROS2 launch function for testing the cf_publisher node with fly set to True.
+    """
+    Ros2 launch function to test flying a cf_publisher node with the `fly` node parameter set to `True`. This essentially runs the cf_publisher node with added visualization and control nodes.
 
     Usage:
-        ros2 launch webots_pkg cf_flight_launch.py
+        `$ ros2 launch webots_pkg cf_flight_launch.py`
+        `$ ros2 run webots_pkg cf_publisher --ros-args --fly:=True`
+
+    Args:
+        params_file (str): The path to the experiment configuration file. Default is 'config/experiment_config.yaml'.
 
     Returns:
-        ld (LaunchDescription): The launch description object.
-    """
-    
+        ld (LaunchDescription): The launch description object, invoked by the Usage.
+    """   
     PACKAGE_DIR = get_package_share_directory('webots_pkg')
     CONFIG_FILE_PATH = (os.path.join(PACKAGE_DIR, 'config', 'experiment_config.yaml'))
     foxglove_websocket = IncludeLaunchDescription(

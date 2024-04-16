@@ -44,7 +44,7 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../overviews/start_here.html">Start Here</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../overviews/environment_setup.html">Environment Setup</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Source Code Descriptions</a></li>
 </ul>
 
         </div>
@@ -86,15 +86,19 @@
 <div class="viewcode-block" id="generate_launch_description">
 <a class="viewcode-back" href="../src_code_docs/launch_functions.html#cf_flight_launch.generate_launch_description">[docs]</a>
 <span class="k">def</span> <span class="nf">generate_launch_description</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;ROS2 launch function for testing the cf_publisher node with fly set to True.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Ros2 launch function to test flying a cf_publisher node with the `fly` node parameter set to `True`. This essentially runs the cf_publisher node with added visualization and control nodes.</span>
 
 <span class="sd">    Usage:</span>
-<span class="sd">        ros2 launch webots_pkg cf_flight_launch.py</span>
+<span class="sd">        `$ ros2 launch webots_pkg cf_flight_launch.py`</span>
+<span class="sd">        `$ ros2 run webots_pkg cf_publisher --ros-args --fly:=True`</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        params_file (str): The path to the experiment configuration file. Default is &#39;config/experiment_config.yaml&#39;.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        ld (LaunchDescription): The launch description object.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    
+<span class="sd">        ld (LaunchDescription): The launch description object, invoked by the Usage.</span>
+<span class="sd">    &quot;&quot;&quot;</span>   
     <span class="n">PACKAGE_DIR</span> <span class="o">=</span> <span class="n">get_package_share_directory</span><span class="p">(</span><span class="s1">&#39;webots_pkg&#39;</span><span class="p">)</span>
     <span class="n">CONFIG_FILE_PATH</span> <span class="o">=</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PACKAGE_DIR</span><span class="p">,</span> <span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="s1">&#39;experiment_config.yaml&#39;</span><span class="p">))</span>
     <span class="n">foxglove_websocket</span> <span class="o">=</span> <span class="n">IncludeLaunchDescription</span><span class="p">(</span>

@@ -11,7 +11,20 @@ from launch.actions import IncludeLaunchDescription
 
 def generate_launch_description():
     """
-    Creates a launch description for testing the turtlebot_publisher node with fly set to False. Can be used to test the localization of a local Turtlebot."""
+    This will launch a Ros2 system that will connect with two turtlebots using the default URI, with it's initial position populated with values from the `src/webots_pkg/config/experiment_config.yaml` file. These initial position values will also be used in creating a static transformer between the 'world' and 'odom' frames (this is required for the turtlebots to publish correctly). It will also launch a foxglove websocket to record the data. Data is recorded and sent to a default rosbag file. A possible dependency for launching more complex systems with multiple robots.
+
+    Usage:
+        `$ ros2 launch webots_pkg transforms_launch.py`
+
+    Args:
+        None
+    
+    Note:
+        Depends on the `src/webots_pkg/config/experiment_config.yaml` file to populate the initial position of the robots and swarm.
+    
+    Returns:
+        ld (LaunchDescription): The launch description object, invoked by the Usage.
+    """
 
 
     PACKAGE_DIR = get_package_share_directory('webots_pkg')

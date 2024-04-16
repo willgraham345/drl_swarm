@@ -51,7 +51,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="environment_setup.html">Environment Setup</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Source Code Descriptions</a></li>
 </ul>
 
         </div>
@@ -93,11 +93,34 @@
 </dd>
 </dl>
 </li>
+<li><dl class="simple">
+<dt><strong>Lighthouse Positioning System</strong>: You should have a basic understanding of how the lighthouse positioning system works. The links below have been the most helpful to me on learning and understanding the system.</dt><dd><ul>
+<li><p><a class="reference external" href="https://www.bitcraze.io/documentation/system/positioning/ligthouse-positioning-system/">Lighthouse Positioning System</a></p></li>
+<li><dl class="simple">
+<dt><a class="reference external" href="https://www.bitcraze.io/documentation/repository/crazyflie-firmware/master/functional-areas/lighthouse/system_overview/">Lighthouse System Overview</a></dt><dd><ul>
+<li><p>The best link as far as the math and theory behind the system. Make sure to click on all links within this section.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><a class="reference external" href="https://www.bitcraze.io/documentation/tutorials/getting-started-with-lighthouse/">Getting Started with the Lighthouse System</a></dt><dd><ul>
+<li><p>Has useful info on using the crazyflie client.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
 </ul>
 </div></blockquote>
 </section>
 <section id="where-i-left-off">
 <h2>Where I left off<a class="headerlink" href="#where-i-left-off" title="Link to this heading"></a></h2>
+<p>Where I attempted to modify the source code: <a class="reference external" href="https://github.com/bitcraze/crazyflie-firmware/blob/9e7e697906eced761d5fd27be4f5d866654da250/src/modules/src/lighthouse/lighthouse_position_est.c#L207-L214">lighthouse-position-est source code change</a></p>
+<p>This needs to be removed for yaw estimation to correctly be performed: <a class="reference external" href="https://github.com/bitcraze/crazyflie-firmware/blob/master/src/utils/src/lighthouse/lighthouse_geometry.c#L169-L201">yaw calculation</a></p>
 <p>I wasn’t able to figure out how to get the crazyflie to fly with the inverted lighthouse sensor. I built jigs to hold the Crazyflie aboove the lighthouse basestations to make sure that I was getting the correct position calculations from the lighthouse. I tried nearly every rotation matrix, and wasn’t ever able to get the data to agree with the Vicon data. I always had one or two of the axes negative (i.e. displacements in one of the axes was negative). This typically manifested as having a correct displacement for the x and y, with a negative displacement for the z.</p>
 <p>I also tried to put a negative sign on a few various locations but didn’t have much luck.</p>
 <p>I built testing features and Ros2 launch scripts into the repository that you can repurpose to new testing.</p>

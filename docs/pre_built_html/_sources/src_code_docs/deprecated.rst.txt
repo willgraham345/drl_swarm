@@ -1,4 +1,4 @@
-Depracated Docs
+Deprecated Docs
 ===============
 These classes, functions, nodes, and anything else are left in this repository as work that may or may not be helpful. These objects shouldn't be necessary for compilation or running the package. If they return any errors delete the modules
 

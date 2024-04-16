@@ -44,7 +44,7 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../overviews/start_here.html">Start Here</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../overviews/environment_setup.html">Environment Setup</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Source Code Descriptions</a></li>
 </ul>
 
         </div>
@@ -113,14 +113,20 @@
 <span class="k">def</span> <span class="nf">generate_launch_description</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;This file launches a single instance of a webots_world file specified in the launch configuration. It is still in development and doesn&#39;t quite work. It is based on the example from nav2 in this link: https://github.com/arshadlab/turtlebot3_multi_robot/blob/master/launch/gazebo_multi_nav2_world.launch.py</span>
 
-<span class="sd">    I wasn&#39;t able to find better examples.</span>
 
 <span class="sd">    Usage:</span>
-<span class="sd">        ros2 launch webots_pkg webots_world_launch.py world:=&lt;world_name&gt;</span>
-<span class="sd">        launch multiple robots within webots from the given launch arguments</span>
+<span class="sd">        `$ ros2 launch webots_pkg webots_world_launch.py`</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        robot: dict of robot name, x, y, yaw, and controller</span>
+<span class="sd">        LaunchConfiguration:</span>
+<span class="sd">            world (str): The world file to be launched. Default is &#39;apartment_nocf.wbt&#39;.</span>
+<span class="sd">            map (str): Full path of the map file to be used for localization and planning. Default is &#39;maps/map.yaml&#39;.</span>
+<span class="sd">            autostart (str): Whether to autostart the nav2 stack. Default is &#39;true&#39;.</span>
+<span class="sd">            params_file (str): Full path to the ROS2 parameters file to use for all launched nodes. Default is &#39;params/nav2_params_nocf.yaml&#39;.</span>
+<span class="sd">            use_robot_state_pub (str): Whether to use the robot state publisher. Default is &#39;true&#39;.</span>
+<span class="sd">            rviz_config (str): Full path to the RViz config file to use. Default is &#39;rviz/nav2_default_view.rviz&#39;.</span>
+<span class="sd">            use_rviz (str): Whether to launch RViz. Default is &#39;false&#39;.</span>
+<span class="sd">            log_settings (str): Whether to log settings. Default is &#39;true&#39;.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        LaunchDescription: The launch description for the webots world</span>

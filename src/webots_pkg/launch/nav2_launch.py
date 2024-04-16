@@ -37,14 +37,20 @@ from config.config_readers import import_webots_swarm_config
 def generate_launch_description():
     """This file launches a single instance of a webots_world file specified in the launch configuration. It is still in development and doesn't quite work. It is based on the example from nav2 in this link: https://github.com/arshadlab/turtlebot3_multi_robot/blob/master/launch/gazebo_multi_nav2_world.launch.py
 
-    I wasn't able to find better examples.
 
     Usage:
-        ros2 launch webots_pkg webots_world_launch.py world:=<world_name>
-        launch multiple robots within webots from the given launch arguments
+        `$ ros2 launch webots_pkg webots_world_launch.py`
 
     Args:
-        robot: dict of robot name, x, y, yaw, and controller
+        LaunchConfiguration:
+            world (str): The world file to be launched. Default is 'apartment_nocf.wbt'.
+            map (str): Full path of the map file to be used for localization and planning. Default is 'maps/map.yaml'.
+            autostart (str): Whether to autostart the nav2 stack. Default is 'true'.
+            params_file (str): Full path to the ROS2 parameters file to use for all launched nodes. Default is 'params/nav2_params_nocf.yaml'.
+            use_robot_state_pub (str): Whether to use the robot state publisher. Default is 'true'.
+            rviz_config (str): Full path to the RViz config file to use. Default is 'rviz/nav2_default_view.rviz'.
+            use_rviz (str): Whether to launch RViz. Default is 'false'.
+            log_settings (str): Whether to log settings. Default is 'true'.
 
     Returns:
         LaunchDescription: The launch description for the webots world

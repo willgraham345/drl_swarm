@@ -5,13 +5,12 @@ Dependencies for the project
         Nav2 Base Page: https://navigation.ros.org/index.html
         Nav2 Plugin Tutorial: https://navigation.ros.org/plugin_tutorials/index.html
         
-3. Installation of ROS 2 Galactic: https://docs.ros.org/en/galactic/Installation.html
-4. Installation of ROS 2 Humble: https://docs.ros.org/en/humble/Installation.html
-5. Crazyflie Firmware: https://github.com/bitcraze/crazyflie-firmware
-6. Crazyradio Firmware: https://github.com/bitcraze/crazyradio-firmware
-7. Crazyflie Python Client: https://github.com/bitcraze/crazyflie-clients-python
-8. Crazyflie Python Library: https://github.com/bitcraze/crazyflie-lib-python
-9. WeBots Installation: https://www.cyberbotics.com/doc/guide/installation-procedure
+3. Installation of ROS 2 Humble: https://docs.ros.org/en/humble/Installation.html
+4. Crazyflie Firmware: https://github.com/bitcraze/crazyflie-firmware
+5. Crazyradio Firmware: https://github.com/bitcraze/crazyradio-firmware
+6. Crazyflie Python Client: https://github.com/bitcraze/crazyflie-clients-python
+7. Crazyflie Python Library: https://github.com/bitcraze/crazyflie-lib-python
+8. WeBots Installation: https://www.cyberbotics.com/doc/guide/installation-procedure
 
 Install using "Installing the Debian Package with the Advanced Packaging Tool (APT)". Not Snap!
 
