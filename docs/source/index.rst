@@ -11,8 +11,7 @@ If you are reading this repository, you are likely a new research assistant for 
 
 Much of my time as a research assistant was spent trying to make sense of Ros2, Bitcraze's documentation, and existing open-source solutions. This was often a frustrating and unorganized process in an area I had no prior experience. The goal of this documentation and repository is to enable faster and more efficient progress fo the next person who takes on this project. If you have any questions, I'm more than happy to help as my email is in the `README.md` file. 
 
-I recommend getting started with the `start_here` page, as it will give you a good overview of the repository and what you can expect to find here. Good luck!!
-
+I recommend getting started with the :doc:`Start Here <overviews/start_here>` page, as it will give you a good overview of the repository and what you can expect to find here. Good luck!!
 
 
 Documentation Table of Contents
