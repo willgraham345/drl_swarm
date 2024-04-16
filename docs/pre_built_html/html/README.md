@@ -1,0 +1,1 @@
+Entry point to the docs is in the `index.html` file. Open that with any browser and documentation will be in an easy-to-read format.

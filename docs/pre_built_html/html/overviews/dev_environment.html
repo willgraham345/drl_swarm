@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Development Environment Setup &mdash; drl_swarm 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Dependencies for the project" href="dependencies_needed.html" />
+    <link rel="prev" title="Environment Setup" href="environment_setup.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            drl_swarm
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="start_here.html">Start Here</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="environment_setup.html">Environment Setup</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Development Environment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#vscode-extensions">VSCode Extensions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dependencies-needed-for-the-program">Dependencies needed for the program</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#helpful-tools-and-software-for-development">Helpful Tools and Software for Development</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="dependencies_needed.html">Needed Dependencies</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Modules</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">drl_swarm</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="environment_setup.html">Environment Setup</a></li>
+      <li class="breadcrumb-item active">Development Environment Setup</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/overviews/dev_environment.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="development-environment-setup">
+<h1>Development Environment Setup<a class="headerlink" href="#development-environment-setup" title="Link to this heading"></a></h1>
+<section id="vscode-extensions">
+<h2>VSCode Extensions<a class="headerlink" href="#vscode-extensions" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><dl class="simple">
+<dt><strong>ROS</strong></dt><dd><ul class="simple">
+<li><p>Id: ms-iot.vscode-ros</p></li>
+<li><p>Description: Develop Robot Operating System (ROS) with Visual Studio Code.</p></li>
+<li><p>Version: 0.9.6</p></li>
+<li><p>Publisher: Microsoft</p></li>
+<li><p><a class="reference external" href="https://marketplace.visualstudio.com/items?itemName=ms-iot.vscode-ros">Ros VS Marketplace Link</a></p></li>
+<li><p>Can’t stress how helpful this extension is. It will let you set up Intellisense with different Ros2 packages. This is absolutely a must.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Error Lens</dt><dd><ul class="simple">
+<li><p>Id: usernamehw.errorlens</p></li>
+<li><p>Description: Improve highlighting of errors, warnings and other language diagnostics.</p></li>
+<li><p>Version: 3.16.0</p></li>
+<li><p>Publisher: Alexander</p></li>
+<li><p><cite>Error Lens VS Marketplace Link &lt;https://marketplace.visualstudio.com/items?itemName=usernamehw.errorlens&gt;</cite></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Better Comments</dt><dd><ul class="simple">
+<li><p>Id: aaron-bond.better-comments</p></li>
+<li><p>Description: Improve your code commenting by annotating with alert, informational, TODOs, and more!</p></li>
+<li><p>Version: 3.0.2</p></li>
+<li><p>Publisher: Aaron Bond</p></li>
+<li><p><cite>Better Comments VS Marketplace Link &lt;https://marketplace.visualstudio.com/items?itemName=aaron-bond.better-comments&gt;</cite></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>TODO Tree</dt><dd><ul class="simple">
+<li><p>Id: Gruntfuggly.todo-tree</p></li>
+<li><p>Description: Show TODO, FIXME, etc. comment tags in a tree view</p></li>
+<li><p>Version: 0.0.226</p></li>
+<li><p>Publisher: Gruntfuggly</p></li>
+<li><p><cite>TODO Tree VS Marketplace Link &lt;https://marketplace.visualstudio.com/items?itemName=Gruntfuggly.todo-tree&gt;</cite></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ol>
+</section>
+<section id="dependencies-needed-for-the-program">
+<h2>Dependencies needed for the program<a class="headerlink" href="#dependencies-needed-for-the-program" title="Link to this heading"></a></h2>
+<p><strong>ROS 2 Packages</strong>
+Installed with apt, make sure to replace $ROS_DISTRO with your ROS 2 distribution (e.g. foxy, galactic, etc.):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>sudo apt-get install ros-$ROS_DISTRO-tf-transformations
+sudo apt install ros-$ROS_DISTRO-navigation2 ros-$ROS_DISTRO-nav2-bringup &#39;~ros-$ROS_DISTRO-turtlebot3-.*&#39;
+sudo apt-get install ros-$ROS_DISTRO-webots-ros2
+</pre></div>
+</div>
+<p><strong>Python</strong>
+Should be installed:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip3</span> <span class="n">install</span> <span class="n">xacro</span>
+<span class="n">sudo</span> <span class="n">pip3</span> <span class="n">install</span> <span class="n">transforms3d</span>
+<span class="n">pip3</span> <span class="n">install</span> <span class="n">bresenham</span>
+</pre></div>
+</div>
+</section>
+<section id="helpful-tools-and-software-for-development">
+<h2>Helpful Tools and Software for Development<a class="headerlink" href="#helpful-tools-and-software-for-development" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><dl class="simple">
+<dt>Foxglove Studio</dt><dd><ul class="simple">
+<li><dl class="simple">
+<dt>Description: Foxglove Studio is a free, open-source tool for visualizing and interacting with robotics data. Imagine a better rviz2.</dt><dd><ul>
+<li><p>You will find some of the ros2 launch scripts to have foxglove websockets embedded as nodes. This is to allow for real-time visualization of the robot’s state. If you don’t want to use foxglove, these can be commented out.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>Follow install instructions from the website: <cite>Foxglove Studio Website &lt;https://foxglove.dev/studio/&gt;</cite></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ol>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="environment_setup.html" class="btn btn-neutral float-left" title="Environment Setup" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="dependencies_needed.html" class="btn btn-neutral float-right" title="Dependencies for the project" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Will Graham.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

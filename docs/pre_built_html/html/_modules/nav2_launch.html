@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nav2_launch &mdash; drl_swarm 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            drl_swarm
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../overviews/start_here.html">Start Here</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overviews/environment_setup.html">Environment Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Modules</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">drl_swarm</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">nav2_launch</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for nav2_launch</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1">#                     ____  _            __          __                                            </span>
+<span class="c1">#    ____ ___  __  __/ / /_(_)________  / /_  ____  / /_   ______      ______ __________ ___  _____</span>
+<span class="c1">#   / __ `__ \/ / / / / __/ / ___/ __ \/ __ \/ __ \/ __/  / ___/ | /| / / __ `/ ___/ __ `__ \/ ___/</span>
+<span class="c1">#  / / / / / / /_/ / / /_/ / /  / /_/ / /_/ / /_/ / /_   (__  )| |/ |/ / /_/ / /  / / / / / (__  ) </span>
+<span class="c1"># /_/ /_/ /_/\__,_/_/\__/_/_/   \____/_.___/\____/\__/  /____/ |__/|__/\__,_/_/  /_/ /_/ /_/____/  </span>
+
+
+
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">launch</span> <span class="kn">import</span> <span class="n">LaunchDescription</span>
+<span class="kn">import</span> <span class="nn">launch</span>
+<span class="kn">from</span> <span class="nn">launch.actions</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">DeclareLaunchArgument</span><span class="p">,</span>
+    <span class="n">ExecuteProcess</span><span class="p">,</span>
+    <span class="n">GroupAction</span><span class="p">,</span>
+    <span class="n">IncludeLaunchDescription</span><span class="p">,</span>
+    <span class="n">LogInfo</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">launch.conditions</span> <span class="kn">import</span> <span class="n">IfCondition</span>
+<span class="kn">from</span> <span class="nn">launch.substitutions</span> <span class="kn">import</span> <span class="n">LaunchConfiguration</span><span class="p">,</span> <span class="n">TextSubstitution</span>
+<span class="kn">from</span> <span class="nn">launch.launch_description_sources</span> <span class="kn">import</span> <span class="n">PythonLaunchDescriptionSource</span>
+<span class="kn">from</span> <span class="nn">launch_xml.launch_description_sources</span> <span class="kn">import</span> <span class="n">XMLLaunchDescriptionSource</span>
+<span class="kn">from</span> <span class="nn">ament_index_python.packages</span> <span class="kn">import</span> <span class="n">get_package_share_directory</span>
+<span class="kn">from</span> <span class="nn">webots_ros2_driver.webots_launcher</span> <span class="kn">import</span> <span class="n">WebotsLauncher</span>
+<span class="kn">from</span> <span class="nn">launch_ros.actions</span> <span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">from</span> <span class="nn">launch.substitutions.path_join_substitution</span> <span class="kn">import</span> <span class="n">PathJoinSubstitution</span>
+
+
+<span class="c1"># MACROS</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">)))</span>
+<span class="kn">from</span> <span class="nn">webots_pkg.swarm_classes</span> <span class="kn">import</span> <span class="n">tb</span> 
+<span class="kn">from</span> <span class="nn">config.config_readers</span> <span class="kn">import</span> <span class="n">import_webots_swarm_config</span>
+
+<div class="viewcode-block" id="generate_launch_description">
+<a class="viewcode-back" href="../src_code_docs/launch_functions.html#nav2_launch.generate_launch_description">[docs]</a>
+<span class="k">def</span> <span class="nf">generate_launch_description</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This file launches a single instance of a webots_world file specified in the launch configuration. It is still in development and doesn&#39;t quite work. It is based on the example from nav2 in this link: https://github.com/arshadlab/turtlebot3_multi_robot/blob/master/launch/gazebo_multi_nav2_world.launch.py</span>
+
+<span class="sd">    I wasn&#39;t able to find better examples.</span>
+
+<span class="sd">    Usage:</span>
+<span class="sd">        ros2 launch webots_pkg webots_world_launch.py world:=&lt;world_name&gt;</span>
+<span class="sd">        launch multiple robots within webots from the given launch arguments</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        robot: dict of robot name, x, y, yaw, and controller</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        LaunchDescription: The launch description for the webots world</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Macro config</span>
+    <span class="n">DIR_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
+    <span class="n">WORLD_FILES</span> <span class="o">=</span> <span class="s1">&#39;apartment.wbt&#39;</span>
+    <span class="n">PACKAGE_DIR</span> <span class="o">=</span> <span class="n">get_package_share_directory</span><span class="p">(</span><span class="s1">&#39;webots_pkg&#39;</span><span class="p">)</span>
+    <span class="n">ROBOT_CONFIG_FILE_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PACKAGE_DIR</span><span class="p">,</span> <span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="s1">&#39;webots_config_no_cf.yaml&#39;</span><span class="p">))</span>
+    <span class="c1">########## ! &quot;Macro&quot; config ##########</span>
+    <span class="n">bringup_dir</span> <span class="o">=</span> <span class="n">get_package_share_directory</span><span class="p">(</span><span class="s1">&#39;nav2_bringup&#39;</span><span class="p">)</span>
+    <span class="n">launch_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">bringup_dir</span><span class="p">,</span> <span class="s1">&#39;launch&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Set configuration</span>
+    <span class="n">swarm</span> <span class="o">=</span> <span class="n">import_webots_swarm_config</span><span class="p">(</span><span class="n">ROBOT_CONFIG_FILE_PATH</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;turtlebots&quot;</span><span class="p">:</span> <span class="n">tb</span><span class="p">})</span>
+    <span class="n">world</span> <span class="o">=</span> <span class="n">LaunchConfiguration</span><span class="p">(</span><span class="s1">&#39;world&#39;</span><span class="p">)</span>
+    <span class="n">map_yaml_file</span> <span class="o">=</span> <span class="n">LaunchConfiguration</span><span class="p">(</span><span class="s1">&#39;map&#39;</span><span class="p">)</span> <span class="c1"># Full path of the map file to be used for localization and planning</span>
+    <span class="n">autostart</span> <span class="o">=</span> <span class="n">LaunchConfiguration</span><span class="p">(</span><span class="s1">&#39;autostart&#39;</span><span class="p">)</span> <span class="c1"># Whether to autostart the nav2 stack</span>
+    <span class="n">params_file</span> <span class="o">=</span> <span class="n">LaunchConfiguration</span><span class="p">(</span><span class="s1">&#39;params_file&#39;</span><span class="p">)</span> <span class="c1"># Full path to the ROS2 parameters file to use for all launched nodes</span>
+    <span class="n">use_robot_state_pub</span> <span class="o">=</span> <span class="n">LaunchConfiguration</span><span class="p">(</span><span class="s1">&#39;use_robot_state_pub&#39;</span><span class="p">)</span> <span class="c1"># Whether to use the robot state publisher</span>
+    <span class="n">rviz_config_file</span> <span class="o">=</span> <span class="n">LaunchConfiguration</span><span class="p">(</span><span class="s1">&#39;rviz_config&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Simulation and foxglove settings</span>
+    <span class="n">rviz_config_file</span> <span class="o">=</span> <span class="n">LaunchConfiguration</span><span class="p">(</span><span class="s1">&#39;rviz_config&#39;</span><span class="p">)</span>
+    <span class="n">use_rviz</span> <span class="o">=</span> <span class="n">LaunchConfiguration</span><span class="p">(</span><span class="s1">&#39;use_rviz&#39;</span><span class="p">)</span>
+    <span class="n">log_settings</span> <span class="o">=</span> <span class="n">LaunchConfiguration</span><span class="p">(</span><span class="s1">&#39;log_settings&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;true&#39;</span><span class="p">)</span>
+
+
+    <span class="c1"># Definine nodes for webots and foxglove</span>
+    <span class="n">webots</span> <span class="o">=</span> <span class="n">WebotsLauncher</span><span class="p">(</span>
+        <span class="n">world</span><span class="o">=</span><span class="n">PathJoinSubstitution</span><span class="p">([</span><span class="n">PACKAGE_DIR</span><span class="p">,</span> <span class="s1">&#39;worlds&#39;</span><span class="p">,</span> <span class="s1">&#39;configured_worlds&#39;</span><span class="p">,</span> <span class="n">world</span><span class="p">]),</span>
+        <span class="n">ros2_supervisor</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+    
+    <span class="n">foxglove_websocket</span> <span class="o">=</span> <span class="n">IncludeLaunchDescription</span><span class="p">(</span>
+        <span class="n">XMLLaunchDescriptionSource</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">get_package_share_directory</span><span class="p">(</span><span class="s1">&#39;foxglove_bridge&#39;</span><span class="p">),</span> <span class="s1">&#39;launch&#39;</span><span class="p">,</span> <span class="s1">&#39;foxglove_bridge_launch.xml&#39;</span><span class="p">)]</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">launch_handler</span> <span class="o">=</span> <span class="n">launch</span><span class="o">.</span><span class="n">actions</span><span class="o">.</span><span class="n">RegisterEventHandler</span><span class="p">(</span>
+        <span class="n">event_handler</span><span class="o">=</span><span class="n">launch</span><span class="o">.</span><span class="n">event_handlers</span><span class="o">.</span><span class="n">OnProcessStart</span><span class="p">(</span>
+            <span class="n">target_action</span><span class="o">=</span><span class="n">webots</span><span class="p">,</span>
+            <span class="n">on_start</span><span class="o">=</span><span class="p">[</span>
+                <span class="n">LogInfo</span><span class="p">(</span><span class="n">msg</span><span class="o">=</span><span class="s1">&#39;Webots sim has started, spawning can now be performed!&#39;</span><span class="p">)</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">event_handler</span> <span class="o">=</span> <span class="n">launch</span><span class="o">.</span><span class="n">actions</span><span class="o">.</span><span class="n">RegisterEventHandler</span><span class="p">(</span>
+        <span class="n">event_handler</span><span class="o">=</span><span class="n">launch</span><span class="o">.</span><span class="n">event_handlers</span><span class="o">.</span><span class="n">OnProcessExit</span><span class="p">(</span>
+            <span class="n">target_action</span><span class="o">=</span><span class="n">webots</span><span class="p">,</span>
+            <span class="n">on_exit</span><span class="o">=</span><span class="p">[</span><span class="n">launch</span><span class="o">.</span><span class="n">actions</span><span class="o">.</span><span class="n">EmitEvent</span><span class="p">(</span><span class="n">event</span><span class="o">=</span><span class="n">launch</span><span class="o">.</span><span class="n">events</span><span class="o">.</span><span class="n">Shutdown</span><span class="p">())],</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+    
+
+    <span class="c1">########## ! Define commands for launching Nav2 instances ##########</span>
+    <span class="n">robots</span> <span class="o">=</span> <span class="n">swarm</span><span class="o">.</span><span class="n">get_robots_dict_list</span><span class="p">()</span> <span class="c1">#tested and working</span>
+    <span class="n">nav_instances_cmds</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">robot</span> <span class="ow">in</span> <span class="n">robots</span><span class="p">:</span>
+        <span class="n">params_file</span> <span class="o">=</span> <span class="n">LaunchConfiguration</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">robot</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">_params_file&quot;</span><span class="p">)</span>
+
+        <span class="n">group</span> <span class="o">=</span> <span class="n">GroupAction</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">IncludeLaunchDescription</span><span class="p">(</span>
+                    <span class="n">PythonLaunchDescriptionSource</span><span class="p">(</span>
+                        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">launch_dir</span><span class="p">,</span> <span class="s1">&#39;rviz_launch.py&#39;</span><span class="p">)</span>
+                    <span class="p">),</span>
+                    <span class="n">condition</span><span class="o">=</span><span class="n">IfCondition</span><span class="p">(</span><span class="n">use_rviz</span><span class="p">),</span>
+                    <span class="n">launch_arguments</span><span class="o">=</span><span class="p">{</span>
+                        <span class="s1">&#39;namespace&#39;</span><span class="p">:</span> <span class="n">TextSubstitution</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="n">robot</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]),</span>
+                        <span class="s1">&#39;use_namespace&#39;</span><span class="p">:</span> <span class="s1">&#39;True&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;rviz_config&#39;</span><span class="p">:</span> <span class="n">rviz_config_file</span><span class="p">,</span>
+                    <span class="p">}</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span>
+                <span class="p">),</span>
+                <span class="n">IncludeLaunchDescription</span><span class="p">(</span>
+                    <span class="n">PythonLaunchDescriptionSource</span><span class="p">(</span>
+                        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">bringup_dir</span><span class="p">,</span> <span class="s1">&#39;launch&#39;</span><span class="p">,</span> <span class="s1">&#39;tb3_simulation_launch.py&#39;</span><span class="p">)</span>
+                    <span class="p">),</span>
+                    <span class="n">launch_arguments</span><span class="o">=</span><span class="p">{</span>
+                        <span class="s1">&#39;namespace&#39;</span><span class="p">:</span> <span class="n">robot</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span>
+                        <span class="s1">&#39;use_namespace&#39;</span><span class="p">:</span> <span class="s1">&#39;True&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;map&#39;</span><span class="p">:</span> <span class="n">map_yaml_file</span><span class="p">,</span>
+                        <span class="s1">&#39;use_sim_time&#39;</span><span class="p">:</span> <span class="s1">&#39;True&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;params_file&#39;</span><span class="p">:</span> <span class="n">params_file</span><span class="p">,</span>
+                        <span class="s1">&#39;use_rviz&#39;</span><span class="p">:</span> <span class="s1">&#39;False&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;use_simulator&#39;</span><span class="p">:</span> <span class="s1">&#39;False&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;headless&#39;</span><span class="p">:</span> <span class="s1">&#39;False&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;use_robot_state_pub&#39;</span><span class="p">:</span> <span class="n">use_robot_state_pub</span><span class="p">,</span>
+                        <span class="s1">&#39;x_pose&#39;</span><span class="p">:</span> <span class="n">TextSubstitution</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">robot</span><span class="p">[</span><span class="s1">&#39;x_pose&#39;</span><span class="p">])),</span>
+                        <span class="s1">&#39;y_pose&#39;</span><span class="p">:</span> <span class="n">TextSubstitution</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">robot</span><span class="p">[</span><span class="s1">&#39;y_pose&#39;</span><span class="p">])),</span>
+                        <span class="s1">&#39;z_pose&#39;</span><span class="p">:</span> <span class="n">TextSubstitution</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">robot</span><span class="p">[</span><span class="s1">&#39;z_pose&#39;</span><span class="p">])),</span>
+                        <span class="s1">&#39;roll&#39;</span><span class="p">:</span> <span class="n">TextSubstitution</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">robot</span><span class="p">[</span><span class="s1">&#39;roll&#39;</span><span class="p">])),</span>
+                        <span class="s1">&#39;pitch&#39;</span><span class="p">:</span> <span class="n">TextSubstitution</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">robot</span><span class="p">[</span><span class="s1">&#39;pitch&#39;</span><span class="p">])),</span>
+                        <span class="s1">&#39;yaw&#39;</span><span class="p">:</span> <span class="n">TextSubstitution</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">robot</span><span class="p">[</span><span class="s1">&#39;yaw&#39;</span><span class="p">])),</span>
+                        <span class="s1">&#39;robot_name&#39;</span><span class="p">:</span> <span class="n">TextSubstitution</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="n">robot</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]),</span>
+                    <span class="p">}</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span>
+                <span class="p">),</span>
+                <span class="n">LogInfo</span><span class="p">(</span>
+                    <span class="n">condition</span><span class="o">=</span><span class="n">IfCondition</span><span class="p">(</span><span class="n">log_settings</span><span class="p">),</span>
+                    <span class="n">msg</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Launching &#39;</span><span class="p">,</span> <span class="n">robot</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]],</span>
+                <span class="p">),</span>
+                <span class="n">LogInfo</span><span class="p">(</span>
+                    <span class="n">condition</span><span class="o">=</span><span class="n">IfCondition</span><span class="p">(</span><span class="n">log_settings</span><span class="p">),</span>
+                    <span class="n">msg</span><span class="o">=</span><span class="p">[</span><span class="n">robot</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="s1">&#39; map yaml: &#39;</span><span class="p">,</span> <span class="n">map_yaml_file</span><span class="p">],</span>
+                <span class="p">),</span>
+                <span class="n">LogInfo</span><span class="p">(</span>
+                    <span class="n">condition</span><span class="o">=</span><span class="n">IfCondition</span><span class="p">(</span><span class="n">log_settings</span><span class="p">),</span>
+                    <span class="n">msg</span><span class="o">=</span><span class="p">[</span><span class="n">robot</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="s1">&#39; params yaml: &#39;</span><span class="p">,</span> <span class="n">params_file</span><span class="p">],</span>
+                <span class="p">),</span>
+                <span class="n">LogInfo</span><span class="p">(</span>
+                    <span class="n">condition</span><span class="o">=</span><span class="n">IfCondition</span><span class="p">(</span><span class="n">log_settings</span><span class="p">),</span>
+                    <span class="n">msg</span><span class="o">=</span><span class="p">[</span><span class="n">robot</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="s1">&#39; rviz config file: &#39;</span><span class="p">,</span> <span class="n">rviz_config_file</span><span class="p">],</span>
+                <span class="p">),</span>
+                <span class="n">LogInfo</span><span class="p">(</span>
+                    <span class="n">condition</span><span class="o">=</span><span class="n">IfCondition</span><span class="p">(</span><span class="n">log_settings</span><span class="p">),</span>
+                    <span class="n">msg</span><span class="o">=</span><span class="p">[</span>
+                        <span class="n">robot</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span>
+                        <span class="s1">&#39; using robot state pub: &#39;</span><span class="p">,</span>
+                    <span class="p">],</span>
+                <span class="p">),</span>
+                <span class="n">LogInfo</span><span class="p">(</span>
+                    <span class="n">condition</span><span class="o">=</span><span class="n">IfCondition</span><span class="p">(</span><span class="n">log_settings</span><span class="p">),</span>
+                    <span class="n">msg</span><span class="o">=</span><span class="p">[</span><span class="n">robot</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="s1">&#39; autostart: &#39;</span><span class="p">,</span> <span class="n">autostart</span><span class="p">],</span>
+                <span class="p">)</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="n">nav_instances_cmds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
+    
+    <span class="c1">########## ! Add static transforms from world to odoms##########</span>
+    <span class="k">for</span> <span class="n">robot</span> <span class="ow">in</span> <span class="n">robots</span><span class="p">:</span>
+        <span class="n">map_to_odom</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span>
+            <span class="n">package</span><span class="o">=</span><span class="s1">&#39;tf2_ros&#39;</span><span class="p">,</span>
+            <span class="n">executable</span><span class="o">=</span><span class="s1">&#39;static_transform_publisher&#39;</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;static_transform_publisher_</span><span class="si">{</span><span class="n">robot</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+            <span class="n">output</span><span class="o">=</span><span class="s1">&#39;screen&#39;</span><span class="p">,</span>
+            <span class="n">arguments</span><span class="o">=</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">robot</span><span class="p">[</span><span class="s1">&#39;x_pose&#39;</span><span class="p">]),</span> <span class="nb">str</span><span class="p">(</span><span class="n">robot</span><span class="p">[</span><span class="s1">&#39;y_pose&#39;</span><span class="p">]),</span> <span class="nb">str</span><span class="p">(</span><span class="n">robot</span><span class="p">[</span><span class="s1">&#39;z_pose&#39;</span><span class="p">]),</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;map&#39;</span><span class="p">,</span> <span class="s1">&#39;odom&#39;</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">odom_to_base_link</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span>
+            <span class="n">package</span><span class="o">=</span><span class="s1">&#39;tf2_ros&#39;</span><span class="p">,</span>
+            <span class="n">executable</span><span class="o">=</span><span class="s1">&#39;static_transform_publisher&#39;</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;static_transform_publisher_</span><span class="si">{</span><span class="n">robot</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+            <span class="n">output</span><span class="o">=</span><span class="s1">&#39;screen&#39;</span><span class="p">,</span>
+            <span class="n">arguments</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;odom&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">robot</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1">/base_link&#39;</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">nav_instances_cmds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">odom_to_base_link</span><span class="p">)</span>
+
+
+    <span class="c1">########## ! Declare launch arguments ##########</span>
+    <span class="n">declaration_cmds</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">DeclareLaunchArgument</span><span class="p">(</span><span class="s1">&#39;log-level&#39;</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="s1">&#39;debug&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;The log level to use&#39;</span><span class="p">),</span>
+        <span class="n">DeclareLaunchArgument</span><span class="p">(</span><span class="s1">&#39;world&#39;</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="s2">&quot;apartment_nocf.wbt&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;The world file to be launched&#39;</span><span class="p">),</span>
+        <span class="n">DeclareLaunchArgument</span><span class="p">(</span><span class="s1">&#39;map&#39;</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PACKAGE_DIR</span><span class="p">,</span> <span class="s1">&#39;maps&#39;</span><span class="p">,</span> <span class="s1">&#39;map.yaml&#39;</span><span class="p">),</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Full path to map file to load&#39;</span><span class="p">),</span>
+        <span class="n">DeclareLaunchArgument</span><span class="p">(</span><span class="s1">&#39;params_file&#39;</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PACKAGE_DIR</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">,</span> <span class="s1">&#39;nav2_params_nocf.yaml&#39;</span><span class="p">),</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Full path to the ROS2 parameters file to use for all launched nodes&#39;</span><span class="p">),</span>
+        <span class="n">DeclareLaunchArgument</span><span class="p">(</span><span class="s1">&#39;rviz_config&#39;</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">bringup_dir</span><span class="p">,</span> <span class="s1">&#39;rviz&#39;</span><span class="p">,</span> <span class="s1">&#39;nav2_default_view.rviz&#39;</span><span class="p">),</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Full path to the RViz config file to use&#39;</span><span class="p">),</span>
+        <span class="n">DeclareLaunchArgument</span><span class="p">(</span><span class="s1">&#39;use_robot_state_pub&#39;</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="s1">&#39;true&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Whether to use the robot state publisher&#39;</span><span class="p">),</span>
+        <span class="n">DeclareLaunchArgument</span><span class="p">(</span><span class="s1">&#39;autostart&#39;</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="s1">&#39;true&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Whether to autostart the nav2 stack&#39;</span><span class="p">),</span>
+        <span class="n">DeclareLaunchArgument</span><span class="p">(</span><span class="s1">&#39;use_rviz&#39;</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="s1">&#39;false&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Whether to launch RViz&#39;</span><span class="p">),</span>
+        <span class="n">DeclareLaunchArgument</span><span class="p">(</span><span class="s1">&#39;log_settings&#39;</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="s1">&#39;true&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Whether to log settings&#39;</span><span class="p">),</span>
+    <span class="p">]</span>
+
+    <span class="n">robot_params_declaration_cmds</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">DeclareLaunchArgument</span><span class="p">(</span><span class="s2">&quot;tb1_params_file&quot;</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PACKAGE_DIR</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">,</span> <span class="s1">&#39;tb1_params.yaml&#39;</span><span class="p">),</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Full path to the ROS2 parameters file to use for tb1&quot;</span><span class="p">),</span>
+        <span class="n">DeclareLaunchArgument</span><span class="p">(</span><span class="s2">&quot;tb2_params_file&quot;</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PACKAGE_DIR</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">,</span> <span class="s1">&#39;tb2_params.yaml&#39;</span><span class="p">),</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Full path to the ROS2 parameters file to use for tb2&quot;</span><span class="p">),</span>
+    <span class="p">]</span>
+    <span class="c1"># TODO: bringup_cmd_group initialization (see the multi robot launch file)</span>
+    
+    <span class="n">bag_cmd</span> <span class="o">=</span> <span class="n">ExecuteProcess</span><span class="p">(</span>
+        <span class="n">cmd</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;ros2&#39;</span><span class="p">,</span> <span class="s1">&#39;bag&#39;</span><span class="p">,</span> <span class="s1">&#39;record&#39;</span><span class="p">,</span> <span class="s1">&#39;-a&#39;</span><span class="p">],</span>
+        <span class="n">output</span><span class="o">=</span><span class="s1">&#39;screen&#39;</span>
+    <span class="p">)</span>
+
+    <span class="n">ld</span> <span class="o">=</span> <span class="n">LaunchDescription</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">declaration</span> <span class="ow">in</span> <span class="n">declaration_cmds</span><span class="p">:</span>
+        <span class="n">ld</span><span class="o">.</span><span class="n">add_action</span><span class="p">(</span><span class="n">declaration</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">declaration</span> <span class="ow">in</span> <span class="n">robot_params_declaration_cmds</span><span class="p">:</span>
+        <span class="n">ld</span><span class="o">.</span><span class="n">add_action</span><span class="p">(</span><span class="n">declaration</span><span class="p">)</span>
+    <span class="n">ld</span><span class="o">.</span><span class="n">add_action</span><span class="p">(</span><span class="n">bag_cmd</span><span class="p">)</span>
+    <span class="n">ld</span><span class="o">.</span><span class="n">add_action</span><span class="p">(</span><span class="n">webots</span><span class="p">)</span>
+    <span class="n">ld</span><span class="o">.</span><span class="n">add_action</span><span class="p">(</span><span class="n">webots</span><span class="o">.</span><span class="n">_supervisor</span><span class="p">)</span>
+    <span class="n">ld</span><span class="o">.</span><span class="n">add_action</span><span class="p">(</span><span class="n">foxglove_websocket</span><span class="p">)</span>
+    <span class="n">ld</span><span class="o">.</span><span class="n">add_action</span><span class="p">(</span><span class="n">launch_handler</span><span class="p">)</span>
+    <span class="n">ld</span><span class="o">.</span><span class="n">add_action</span><span class="p">(</span><span class="n">event_handler</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">simulation_instance_cmd</span> <span class="ow">in</span> <span class="n">nav_instances_cmds</span><span class="p">:</span>
+        <span class="n">ld</span><span class="o">.</span><span class="n">add_action</span><span class="p">(</span><span class="n">simulation_instance_cmd</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ld</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Will Graham.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

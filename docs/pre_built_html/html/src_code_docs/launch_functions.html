@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ros2 Launch Functions Defined in /src/webots_pkg/launch &mdash; drl_swarm 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Depracated Docs" href="deprecated.html" />
+    <link rel="prev" title="Classes and Nodes in /src/webots_pkg/webots_pkg" href="classes.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            drl_swarm
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overviews/start_here.html">Start Here</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overviews/environment_setup.html">Environment Setup</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../modules.html">Modules</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../webots_pkg.html"><cite>/src/webots_pkg</cite> Background and Explanation</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../webots_pkg.html#table-of-contents-for-repository">Table of Contents for Repository</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="classes.html">Classes and Nodes in <cite>/src/webots_pkg/webots_pkg</cite></a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Ros2 Launch Functions Defined in <cite>/src/webots_pkg/launch</cite></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-cf_flight_launch"><cite>src/webots_pkg/launch/cf_flight_launch.py</cite></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-cf_lighthouse_vicon_test_launch"><cite>src/webots_pkg/launch/cf_lighthouse_vicon_test_launch.py</cite></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-cf_localization_launch"><cite>src/webots_pkg/launch/cf_localization_launch.py</cite></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-cf_publisher_launch"><cite>src/webots_pkg/launch/cf_publisher_launch.py</cite></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-nav2_launch"><cite>src/webots_pkg/launch/nav2_launch</cite></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-transforms_launch"><cite>src/webots_pkg/launch/transforms_launch.py</cite></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-webots_world_launch"><cite>src/webots_pkg/launch/webots_world_launch.py</cite></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="deprecated.html">Depracated Docs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">drl_swarm</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../modules.html">Modules</a></li>
+          <li class="breadcrumb-item"><a href="../webots_pkg.html"><cite>/src/webots_pkg</cite> Background and Explanation</a></li>
+      <li class="breadcrumb-item active">Ros2 Launch Functions Defined in <cite>/src/webots_pkg/launch</cite></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/src_code_docs/launch_functions.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="ros2-launch-functions-defined-in-src-webots-pkg-launch">
+<h1>Ros2 Launch Functions Defined in <cite>/src/webots_pkg/launch</cite><a class="headerlink" href="#ros2-launch-functions-defined-in-src-webots-pkg-launch" title="Link to this heading"></a></h1>
+<p>Each of the following modules define a launch function that can be used to launch the corresponding ROS2 package. The launch functions are used in the launch files in the <cite>launch</cite> directory of the package.</p>
+<section id="module-cf_flight_launch">
+<span id="src-webots-pkg-launch-cf-flight-launch-py"></span><h2><cite>src/webots_pkg/launch/cf_flight_launch.py</cite><a class="headerlink" href="#module-cf_flight_launch" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="cf_flight_launch.generate_launch_description">
+<span class="sig-prename descclassname"><span class="pre">cf_flight_launch.</span></span><span class="sig-name descname"><span class="pre">generate_launch_description</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cf_flight_launch.html#generate_launch_description"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cf_flight_launch.generate_launch_description" title="Link to this definition"></a></dt>
+<dd><p>ROS2 launch function for testing the cf_publisher node with fly set to True.</p>
+<dl class="simple">
+<dt>Usage:</dt><dd><p>ros2 launch webots_pkg cf_flight_launch.py</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The launch description object.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>ld (LaunchDescription)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-cf_lighthouse_vicon_test_launch">
+<span id="src-webots-pkg-launch-cf-lighthouse-vicon-test-launch-py"></span><h2><cite>src/webots_pkg/launch/cf_lighthouse_vicon_test_launch.py</cite><a class="headerlink" href="#module-cf_lighthouse_vicon_test_launch" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="cf_lighthouse_vicon_test_launch.generate_launch_description">
+<span class="sig-prename descclassname"><span class="pre">cf_lighthouse_vicon_test_launch.</span></span><span class="sig-name descname"><span class="pre">generate_launch_description</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cf_lighthouse_vicon_test_launch.html#generate_launch_description"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cf_lighthouse_vicon_test_launch.generate_launch_description" title="Link to this definition"></a></dt>
+<dd><p>Generates the launch description for testing and outputting lighthouse data compared to Vicon data. Generates a rosbag with all topics recorded.</p>
+<dl class="simple">
+<dt>Usage:</dt><dd><p>ros2 launch webots_pkg cf_lighthouse_vicon_test_launch.py</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The launch description object.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>ld (LaunchDescription)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-cf_localization_launch">
+<span id="src-webots-pkg-launch-cf-localization-launch-py"></span><h2><cite>src/webots_pkg/launch/cf_localization_launch.py</cite><a class="headerlink" href="#module-cf_localization_launch" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="cf_localization_launch.generate_launch_description">
+<span class="sig-prename descclassname"><span class="pre">cf_localization_launch.</span></span><span class="sig-name descname"><span class="pre">generate_launch_description</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cf_localization_launch.html#generate_launch_description"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cf_localization_launch.generate_launch_description" title="Link to this definition"></a></dt>
+<dd><p>Creates a launch description for testing the cf_publisher node with fly set to False. Can be used to test the localization of a local Crazyflie.</p>
+<dl class="simple">
+<dt>Usage:</dt><dd><p>ros2 launch webots_pkg cf_localization_launch.py &gt; output.log
+ros2 launch webots_pkg cf_localization_launch.py</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A LaunchDescription object containing the actions to be executed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-cf_publisher_launch">
+<span id="src-webots-pkg-launch-cf-publisher-launch-py"></span><h2><cite>src/webots_pkg/launch/cf_publisher_launch.py</cite><a class="headerlink" href="#module-cf_publisher_launch" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="cf_publisher_launch.generate_launch_description">
+<span class="sig-prename descclassname"><span class="pre">cf_publisher_launch.</span></span><span class="sig-name descname"><span class="pre">generate_launch_description</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cf_publisher_launch.html#generate_launch_description"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cf_publisher_launch.generate_launch_description" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-nav2_launch">
+<span id="src-webots-pkg-launch-nav2-launch"></span><h2><cite>src/webots_pkg/launch/nav2_launch</cite><a class="headerlink" href="#module-nav2_launch" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="nav2_launch.generate_launch_description">
+<span class="sig-prename descclassname"><span class="pre">nav2_launch.</span></span><span class="sig-name descname"><span class="pre">generate_launch_description</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nav2_launch.html#generate_launch_description"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nav2_launch.generate_launch_description" title="Link to this definition"></a></dt>
+<dd><p>This file launches a single instance of a webots_world file specified in the launch configuration. It is still in development and doesn’t quite work. It is based on the example from nav2 in this link: <a class="reference external" href="https://github.com/arshadlab/turtlebot3_multi_robot/blob/master/launch/gazebo_multi_nav2_world.launch.py">https://github.com/arshadlab/turtlebot3_multi_robot/blob/master/launch/gazebo_multi_nav2_world.launch.py</a></p>
+<p>I wasn’t able to find better examples.</p>
+<dl class="simple">
+<dt>Usage:</dt><dd><p>ros2 launch webots_pkg webots_world_launch.py world:=&lt;world_name&gt;
+launch multiple robots within webots from the given launch arguments</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>robot</strong> – dict of robot name, x, y, yaw, and controller</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The launch description for the webots world</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>LaunchDescription</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-transforms_launch">
+<span id="src-webots-pkg-launch-transforms-launch-py"></span><h2><cite>src/webots_pkg/launch/transforms_launch.py</cite><a class="headerlink" href="#module-transforms_launch" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="transforms_launch.generate_launch_description">
+<span class="sig-prename descclassname"><span class="pre">transforms_launch.</span></span><span class="sig-name descname"><span class="pre">generate_launch_description</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/transforms_launch.html#generate_launch_description"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#transforms_launch.generate_launch_description" title="Link to this definition"></a></dt>
+<dd><p>Creates a launch description for testing the turtlebot_publisher node with fly set to False. Can be used to test the localization of a local Turtlebot.</p>
+</dd></dl>
+
+</section>
+<section id="module-webots_world_launch">
+<span id="src-webots-pkg-launch-webots-world-launch-py"></span><h2><cite>src/webots_pkg/launch/webots_world_launch.py</cite><a class="headerlink" href="#module-webots_world_launch" title="Link to this heading"></a></h2>
+<p>This file launches a single instance of a webots_world file specified in the launch configuration. There may be some broken dependencies as there are active branches of development. Be sure to check the launch parameters before assuming the entire file is broken.</p>
+<p>Usage: ros2 launch webots_pkg webots_world_launch.py world:=&lt;world_name&gt;</p>
+<p>Author: Will Graham</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="webots_world_launch.generate_launch_description">
+<span class="sig-prename descclassname"><span class="pre">webots_world_launch.</span></span><span class="sig-name descname"><span class="pre">generate_launch_description</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/webots_world_launch.html#generate_launch_description"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webots_world_launch.generate_launch_description" title="Link to this definition"></a></dt>
+<dd><p>launch multiple robots within webots from the given launch arguments</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>robot</strong> – dict of robot name, x, y, yaw, and controller</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The launch description for the webots world</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>LaunchDescription</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="classes.html" class="btn btn-neutral float-left" title="Classes and Nodes in /src/webots_pkg/webots_pkg" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="deprecated.html" class="btn btn-neutral float-right" title="Depracated Docs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Will Graham.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

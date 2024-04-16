@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cf_publisher_launch &mdash; drl_swarm 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            drl_swarm
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../overviews/start_here.html">Start Here</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overviews/environment_setup.html">Environment Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Modules</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">drl_swarm</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">cf_publisher_launch</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for cf_publisher_launch</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">launch_ros</span>
+<span class="kn">import</span> <span class="nn">yaml</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">from</span> <span class="nn">launch</span> <span class="kn">import</span> <span class="n">LaunchDescription</span>
+
+<span class="kn">from</span> <span class="nn">launch_xml.launch_description_sources</span> <span class="kn">import</span> <span class="n">XMLLaunchDescriptionSource</span>
+<span class="kn">from</span> <span class="nn">ament_index_python.packages</span> <span class="kn">import</span> <span class="n">get_package_share_directory</span>
+<span class="kn">from</span> <span class="nn">launch.actions</span> <span class="kn">import</span> <span class="n">IncludeLaunchDescription</span>
+<span class="kn">from</span> <span class="nn">launch.substitutions</span> <span class="kn">import</span> <span class="n">LaunchConfiguration</span>
+<span class="kn">from</span> <span class="nn">launch.actions</span> <span class="kn">import</span> <span class="n">DeclareLaunchArgument</span>
+
+
+
+<div class="viewcode-block" id="generate_launch_description">
+<a class="viewcode-back" href="../src_code_docs/launch_functions.html#cf_publisher_launch.generate_launch_description">[docs]</a>
+<span class="k">def</span> <span class="nf">generate_launch_description</span><span class="p">():</span>
+    <span class="n">PACKAGE_DIR</span> <span class="o">=</span> <span class="n">get_package_share_directory</span><span class="p">(</span><span class="s1">&#39;webots_pkg&#39;</span><span class="p">)</span>
+    <span class="n">CONFIG_FILE_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PACKAGE_DIR</span><span class="p">,</span> <span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="s1">&#39;experiment_config.yaml&#39;</span><span class="p">))</span>
+    <span class="n">swarm_config_yaml_arg</span> <span class="o">=</span> <span class="n">DeclareLaunchArgument</span><span class="p">(</span>
+        <span class="s1">&#39;swarm_config_yaml&#39;</span><span class="p">,</span>
+        <span class="n">default_value</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">CONFIG_FILE_PATH</span><span class="p">),</span>
+        <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Full path to the experiment configuration file to use&#39;</span>
+    <span class="p">)</span>
+    <span class="n">namespace_arg</span> <span class="o">=</span> <span class="n">DeclareLaunchArgument</span><span class="p">(</span>
+        <span class="s1">&#39;namespace&#39;</span><span class="p">,</span>
+        <span class="n">default_value</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Namespace to apply to the nodes&#39;</span>
+    <span class="p">)</span>
+    <span class="n">lh0_pose_frame_arg</span> <span class="o">=</span> <span class="n">DeclareLaunchArgument</span><span class="p">(</span>
+        <span class="s1">&#39;lh0_pose_frame&#39;</span><span class="p">,</span>
+        <span class="n">default_value</span><span class="o">=</span><span class="s1">&#39;tb1/lighthouse_pose&#39;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Frame ID for the first lighthouse pose&#39;</span>
+    <span class="p">)</span>
+    <span class="n">lh1_pose_frame_arg</span> <span class="o">=</span> <span class="n">DeclareLaunchArgument</span><span class="p">(</span>
+        <span class="s1">&#39;lh1_pose_frame&#39;</span><span class="p">,</span>
+        <span class="n">default_value</span><span class="o">=</span><span class="s1">&#39;tb2/lighthouse_pose&#39;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Frame ID for the second lighthouse pose&#39;</span>
+    <span class="p">)</span>
+    <span class="n">fly_arg</span> <span class="o">=</span> <span class="n">DeclareLaunchArgument</span><span class="p">(</span>
+        <span class="s1">&#39;fly&#39;</span><span class="p">,</span>
+        <span class="n">default_value</span><span class="o">=</span><span class="s1">&#39;False&#39;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Whether to start the Crazyflie in flight mode&#39;</span>
+    <span class="p">)</span>
+    <span class="n">URI_arg</span> <span class="o">=</span> <span class="n">DeclareLaunchArgument</span><span class="p">(</span>
+        <span class="s1">&#39;URI&#39;</span><span class="p">,</span>
+        <span class="n">default_value</span><span class="o">=</span><span class="s1">&#39;radio://0/80/2M/E7E7E7E7E7&#39;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s1">&#39;URI of the Crazyflie&#39;</span>
+    <span class="p">)</span>
+    <span class="n">declare_cmds</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">swarm_config_yaml_arg</span><span class="p">,</span>
+        <span class="n">namespace_arg</span><span class="p">,</span>
+        <span class="n">lh0_pose_frame_arg</span><span class="p">,</span>
+        <span class="n">lh1_pose_frame_arg</span><span class="p">,</span>
+        <span class="n">fly_arg</span><span class="p">,</span>
+        <span class="n">URI_arg</span>
+    <span class="p">]</span>
+    <span class="n">swarm_config_yaml</span> <span class="o">=</span> <span class="n">LaunchConfiguration</span><span class="p">(</span><span class="s1">&#39;swarm_config_yaml&#39;</span><span class="p">)</span>
+    <span class="n">namespace</span> <span class="o">=</span> <span class="n">LaunchConfiguration</span><span class="p">(</span><span class="s1">&#39;namespace&#39;</span><span class="p">)</span>
+    <span class="n">lh0_pose_frame</span> <span class="o">=</span> <span class="n">LaunchConfiguration</span><span class="p">(</span><span class="s1">&#39;lh0_pose_frame&#39;</span><span class="p">)</span>
+    <span class="n">lh1_pose_frame</span> <span class="o">=</span> <span class="n">LaunchConfiguration</span><span class="p">(</span><span class="s1">&#39;lh1_pose_frame&#39;</span><span class="p">)</span>
+    <span class="n">fly</span> <span class="o">=</span> <span class="n">LaunchConfiguration</span><span class="p">(</span><span class="s1">&#39;fly&#39;</span><span class="p">)</span>
+    <span class="n">URI</span> <span class="o">=</span> <span class="n">LaunchConfiguration</span><span class="p">(</span><span class="s1">&#39;URI&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;swarm_config_yaml: </span><span class="si">{</span><span class="n">swarm_config_yaml</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;namespace: </span><span class="si">{</span><span class="n">namespace</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="c1"># Declare and set launch arguments</span>
+
+    <span class="n">cf_instance_cmds</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">CONFIG_FILE_PATH</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">cf</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;robots&#39;</span><span class="p">][</span><span class="s1">&#39;crazyflies&#39;</span><span class="p">]:</span>
+                <span class="n">cf_name</span> <span class="o">=</span> <span class="n">cf</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+                <span class="n">initial_translation</span> <span class="o">=</span> <span class="n">cf</span><span class="p">[</span><span class="s1">&#39;translation&#39;</span><span class="p">]</span>
+                <span class="n">initial_orientation</span> <span class="o">=</span> <span class="n">cf</span><span class="p">[</span><span class="s1">&#39;orientation&#39;</span><span class="p">]</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;initial_translation: </span><span class="si">{</span><span class="n">initial_translation</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;First element of translation: f</span><span class="si">{</span><span class="n">initial_translation</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No crazyflies found in the configuration file. Exiting.&quot;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">tb</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;robots&#39;</span><span class="p">][</span><span class="s1">&#39;turtlebots&#39;</span><span class="p">]:</span>
+                <span class="n">tb_name</span> <span class="o">=</span> <span class="n">tb</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+                <span class="n">initial_translation</span> <span class="o">=</span> <span class="n">tb</span><span class="p">[</span><span class="s1">&#39;translation&#39;</span><span class="p">]</span>
+                <span class="n">initial_orientation</span> <span class="o">=</span> <span class="n">tb</span><span class="p">[</span><span class="s1">&#39;orientation&#39;</span><span class="p">]</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;initial_translation: </span><span class="si">{</span><span class="n">initial_translation</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;First element of translation: f</span><span class="si">{</span><span class="n">initial_translation</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No turtlebots found in the configuration file. Exiting.&quot;</span><span class="p">)</span>
+
+    <span class="n">cf_static_base_link_publisher</span> <span class="o">=</span> <span class="n">launch_ros</span><span class="o">.</span><span class="n">actions</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span>
+        <span class="n">package</span> <span class="o">=</span> <span class="s1">&#39;tf2_ros&#39;</span><span class="p">,</span>
+        <span class="n">executable</span> <span class="o">=</span> <span class="s1">&#39;static_transform_publisher&#39;</span><span class="p">,</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="s1">&#39;screen&#39;</span><span class="p">,</span>
+        <span class="n">arguments</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="nb">str</span><span class="p">(</span><span class="n">initial_translation</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+            <span class="nb">str</span><span class="p">(</span><span class="n">initial_translation</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+            <span class="nb">str</span><span class="p">(</span><span class="n">initial_translation</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span>
+            <span class="s1">&#39;0&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;0&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;0&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;map&#39;</span><span class="p">,</span> <span class="s1">&#39;cf1/base_link&#39;</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="c1"># tb0_static_base_link_publisher = launch_ros.actions.Node(</span>
+    <span class="c1">#     package = &#39;tf2_ros&#39;,</span>
+    <span class="c1">#     executable = &#39;static_transform_publisher&#39;,</span>
+    <span class="c1">#     output = &#39;screen&#39;,</span>
+    <span class="c1">#     arguments = [</span>
+    <span class="c1">#         str(initial_translation[0]),</span>
+    <span class="c1">#         str(initial_translation[1]),</span>
+    <span class="c1">#         str(initial_translation[2]),</span>
+    <span class="c1">#         &#39;0&#39;,</span>
+    <span class="c1">#         &#39;0&#39;,</span>
+    <span class="c1">#         &#39;0&#39;,</span>
+    <span class="c1">#         &#39;map&#39;, &#39;tb1/base_link&#39;]</span>
+    <span class="c1"># )</span>
+    <span class="c1"># tb0_base_link_to_lh = launch_ros.actions.Node(</span>
+    <span class="c1">#     package = &#39;tf2_ros&#39;,</span>
+    <span class="c1">#     executable = &#39;static_transform_publisher&#39;,</span>
+    <span class="c1">#     output = &#39;screen&#39;,</span>
+    <span class="c1">#     arguments = [</span>
+    <span class="c1">#         &#39;3&#39;,</span>
+    <span class="c1">#         &#39;4&#39;,</span>
+    <span class="c1">#         &#39;5&#39;,</span>
+    <span class="c1">#         &#39;0&#39;,</span>
+    <span class="c1">#         &#39;0&#39;,</span>
+    <span class="c1">#         &#39;0&#39;,</span>
+    <span class="c1">#         &#39;tb1/base_link&#39;, &#39;tb1/lighthouse_pose&#39;]</span>
+    <span class="c1"># )</span>
+    <span class="c1"># tb1_static_base_link_publisher = launch_ros.actions.Node(</span>
+    <span class="c1">#     package = &#39;tf2_ros&#39;,</span>
+    <span class="c1">#     executable = &#39;static_transform_publisher&#39;,</span>
+    <span class="c1">#     output = &#39;screen&#39;,</span>
+    <span class="c1">#     arguments = [</span>
+    <span class="c1">#         str(initial_translation[0]),</span>
+    <span class="c1">#         str(initial_translation[1]),</span>
+    <span class="c1">#         str(initial_translation[2]),</span>
+    <span class="c1">#         &#39;0&#39;,</span>
+    <span class="c1">#         &#39;0&#39;,</span>
+    <span class="c1">#         &#39;0&#39;,</span>
+    <span class="c1">#         &#39;map&#39;, &#39;tb2/base_link&#39;]</span>
+    <span class="c1"># )</span>
+    <span class="c1"># tb1_base_link_to_lh = launch_ros.actions.Node(</span>
+    <span class="c1">#     package = &#39;tf2_ros&#39;,</span>
+    <span class="c1">#     executable = &#39;static_transform_publisher&#39;,</span>
+    <span class="c1">#     output = &#39;screen&#39;,</span>
+    <span class="c1">#     arguments = [</span>
+    <span class="c1">#         &#39;0&#39;,</span>
+    <span class="c1">#         &#39;0&#39;,</span>
+    <span class="c1">#         &#39;0&#39;,</span>
+    <span class="c1">#         &#39;0&#39;,</span>
+    <span class="c1">#         &#39;0&#39;,</span>
+    <span class="c1">#         &#39;0&#39;,</span>
+    <span class="c1">#         &#39;tb1/base_link&#39;, &#39;tb1/lighthouse_pose&#39;]</span>
+    <span class="c1"># )</span>
+    <span class="c1"># transform_cmds = []</span>
+    <span class="c1"># transform_cmds.append(tb0_static_base_link_publisher)</span>
+    <span class="c1"># transform_cmds.append(tb0_base_link_to_lh)</span>
+    <span class="c1"># transform_cmds.append(tb1_static_base_link_publisher)</span>
+    <span class="c1"># transform_cmds.append(tb1_base_link_to_lh)</span>
+
+    <span class="n">cf_instance_cmds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cf_static_base_link_publisher</span><span class="p">)</span>
+    <span class="n">crazyflie_node</span> <span class="o">=</span> <span class="n">launch_ros</span><span class="o">.</span><span class="n">actions</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span>
+        <span class="n">package</span><span class="o">=</span><span class="s1">&#39;webots_pkg&#39;</span><span class="p">,</span>
+        <span class="n">executable</span><span class="o">=</span><span class="s1">&#39;cf_publisher&#39;</span><span class="p">,</span>
+        <span class="n">namespace</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">cf_name</span><span class="p">),</span>
+        <span class="n">parameters</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">{</span>
+            <span class="s1">&#39;fly&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s1">&#39;URI&#39;</span><span class="p">:</span> <span class="s1">&#39;radio://0/80/2M/E7E7E7E7E7&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;lh0_pose_frame&#39;</span><span class="p">:</span> <span class="s1">&#39;tb1/lighthouse_pose&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;lh1_pose_frame&#39;</span><span class="p">:</span> <span class="s1">&#39;tb2/lighthouse_pose&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;initial_translation&#39;</span><span class="p">:</span> <span class="n">initial_translation</span><span class="p">,</span>
+            <span class="s1">&#39;initial_orientation&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+            <span class="p">}</span>
+        <span class="p">],</span>
+    <span class="p">)</span>
+    <span class="n">cf_instance_cmds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">crazyflie_node</span><span class="p">)</span>
+   
+
+    <span class="n">record_cmds</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">foxglove_websocket</span> <span class="o">=</span> <span class="n">IncludeLaunchDescription</span><span class="p">(</span>
+        <span class="n">XMLLaunchDescriptionSource</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">get_package_share_directory</span><span class="p">(</span><span class="s1">&#39;foxglove_bridge&#39;</span><span class="p">),</span> <span class="s1">&#39;launch&#39;</span><span class="p">,</span> <span class="s1">&#39;foxglove_bridge_launch.xml&#39;</span><span class="p">)]</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">record_cmds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">foxglove_websocket</span><span class="p">)</span>
+
+
+    <span class="n">ld</span> <span class="o">=</span> <span class="n">LaunchDescription</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">declaration</span> <span class="ow">in</span> <span class="n">declare_cmds</span><span class="p">:</span>
+        <span class="n">ld</span><span class="o">.</span><span class="n">add_action</span><span class="p">(</span><span class="n">declaration</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">record_cmds</span><span class="p">:</span>
+        <span class="n">ld</span><span class="o">.</span><span class="n">add_action</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">command</span> <span class="ow">in</span> <span class="n">cf_instance_cmds</span><span class="p">:</span>
+        <span class="n">ld</span><span class="o">.</span><span class="n">add_action</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+    <span class="c1"># for transform in transform_cmds:</span>
+    <span class="c1">#     ld.add_action(transform)</span>
+
+    <span class="k">return</span> <span class="n">ld</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Will Graham.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

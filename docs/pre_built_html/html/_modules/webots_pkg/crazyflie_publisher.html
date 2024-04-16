@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>webots_pkg.crazyflie_publisher &mdash; drl_swarm 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            drl_swarm
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../overviews/start_here.html">Start Here</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../overviews/environment_setup.html">Environment Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Modules</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">drl_swarm</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">webots_pkg.crazyflie_publisher</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for webots_pkg.crazyflie_publisher</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">threading</span> <span class="kn">import</span> <span class="n">Event</span>
+<span class="kn">import</span> <span class="nn">yaml</span>
+<span class="kn">import</span> <span class="nn">rclpy</span>
+<span class="kn">from</span> <span class="nn">rclpy.node</span> <span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">from</span> <span class="nn">rcl_interfaces.msg</span> <span class="kn">import</span> <span class="n">ParameterDescriptor</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">std_msgs.msg</span> <span class="kn">import</span> <span class="n">String</span>
+<span class="kn">import</span> <span class="nn">tf_transformations</span>
+<span class="kn">from</span> <span class="nn">tf2_ros</span> <span class="kn">import</span> <span class="n">TransformException</span> 
+<span class="kn">from</span> <span class="nn">tf2_ros.transform_broadcaster</span> <span class="kn">import</span> <span class="n">TransformBroadcaster</span>
+<span class="kn">from</span> <span class="nn">tf2_ros.transform_listener</span> <span class="kn">import</span> <span class="n">TransformListener</span>
+<span class="kn">from</span> <span class="nn">tf2_ros.buffer</span> <span class="kn">import</span> <span class="n">Buffer</span>
+<span class="kn">from</span> <span class="nn">tf2_ros.static_transform_broadcaster</span> <span class="kn">import</span> <span class="n">StaticTransformBroadcaster</span>
+<span class="kn">from</span> <span class="nn">geometry_msgs.msg</span> <span class="kn">import</span> <span class="n">TransformStamped</span>
+<span class="kn">from</span> <span class="nn">sensor_msgs.msg</span> <span class="kn">import</span> <span class="n">Range</span>
+<span class="kn">from</span> <span class="nn">sensor_msgs.msg</span> <span class="kn">import</span> <span class="n">LaserScan</span>
+<span class="kn">from</span> <span class="nn">nav_msgs.msg</span> <span class="kn">import</span> <span class="n">Odometry</span>
+<span class="kn">from</span> <span class="nn">geometry_msgs.msg</span> <span class="kn">import</span> <span class="n">Twist</span><span class="p">,</span> <span class="n">Pose</span><span class="p">,</span> <span class="n">Point</span><span class="p">,</span> <span class="n">Quaternion</span>
+
+<span class="kn">import</span> <span class="nn">cflib.crtp</span>
+<span class="kn">from</span> <span class="nn">cflib.crazyflie</span> <span class="kn">import</span> <span class="n">Crazyflie</span>
+<span class="kn">from</span> <span class="nn">cflib.crazyflie.log</span> <span class="kn">import</span> <span class="n">LogConfig</span>
+<span class="kn">from</span> <span class="nn">cflib.utils</span> <span class="kn">import</span> <span class="n">uri_helper</span>
+<span class="kn">from</span> <span class="nn">cflib.crazyflie.mem</span> <span class="kn">import</span> <span class="n">LighthouseMemHelper</span>
+<span class="kn">from</span> <span class="nn">cflib.crazyflie.mem</span> <span class="kn">import</span> <span class="n">LighthouseBsGeometry</span><span class="p">,</span> <span class="n">LighthouseBsCalibration</span>
+<span class="kn">from</span> <span class="nn">cflib.crazyflie.syncCrazyflie</span> <span class="kn">import</span> <span class="n">SyncCrazyflie</span>
+<span class="kn">from</span> <span class="nn">cflib.positioning.motion_commander</span> <span class="kn">import</span> <span class="n">MotionCommander</span>
+<span class="kn">from</span> <span class="nn">cflib.localization.lighthouse_types</span> <span class="kn">import</span> <span class="n">LhCfPoseSample</span>
+
+<span class="kn">import</span> <span class="nn">math</span>
+
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">pi</span>
+
+<span class="k">def</span> <span class="nf">radians</span><span class="p">(</span><span class="n">degrees</span><span class="p">):</span>  
+    <span class="k">return</span> <span class="n">degrees</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.0</span>
+
+<span class="n">ROTATION_MATRIX_90_PITCH</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
+    <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+    <span class="p">[</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+<span class="p">]</span>
+
+<span class="n">ROTATION_MATRIX_NEG_90_PITCH</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">],</span>
+    <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+    <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+<span class="p">]</span>
+<span class="n">NO_ROTATION_MATRIX</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+    <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+    <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]</span>
+<span class="p">]</span>
+
+<span class="n">ROTATION_MATRIX_90_PITCH_180_ROLL</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">],</span>
+    <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+    <span class="p">[</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+<span class="p">]</span>
+
+<span class="n">ROTATION_MATRIX_NEG_90_PITCH_180_ROLL</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
+    <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+    <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+<span class="p">]</span>
+
+<span class="n">ROTATION_MATRIX_90_PITCH_180_YAW</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
+    <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+    <span class="p">[</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+<span class="p">]</span>
+
+<span class="n">ROTATION_MATRIX_NEG_90_PITCH_180_YAW</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
+    <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+    <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+<span class="p">]</span>
+<span class="n">ROTATION_MATRIX_90_PITCH_180_YAW</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">],</span>
+    <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+    <span class="p">[</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+<span class="p">]</span>
+
+<span class="n">ROTATION_MATRIX_90_PITCH_90_YAW</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+    <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
+    <span class="p">[</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+<span class="p">]</span>
+<span class="n">NOT_SURE_WHAT_ROTATION_MATRIX</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
+    <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+    <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+<span class="p">]</span>
+<span class="n">ZEROS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+    <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+    <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+<span class="p">]</span>
+
+<span class="n">INPUT_ROTATION_MATRIX</span> <span class="o">=</span> <span class="p">[</span><span class="n">ZEROS</span><span class="p">,</span> <span class="n">ZEROS</span><span class="p">]</span>    
+<span class="c1"># calib0 = LighthouseBsCalibration()</span>
+<span class="c1"># calib0.sweeps[0].tilt = -0.049844</span>
+<span class="c1"># calib0.sweeps[0].phase = 0.000000</span>
+<span class="c1"># calib0.sweeps[0].curve = -0.477082</span>
+<span class="c1"># calib0.sweeps[0].gibphase = 1.870844</span>
+<span class="c1"># calib0.sweeps[0].gibmag = -0.006574</span>
+<span class="c1"># calib0.sweeps[0].ogeephase = 1.916343</span>
+<span class="c1"># calib0.sweeps[0].ogeemag = 0.110889</span>
+<span class="c1"># calib0.sweeps[1].tilt = 0.048504</span>
+<span class="c1"># calib0.sweeps[1].phase = 0.004812</span>
+<span class="c1"># calib0.sweeps[1].curve = 0.545917</span>
+<span class="c1"># calib0.sweeps[1].gibphase = 2.412284</span>
+<span class="c1"># calib0.sweeps[1].gibmag = -0.006277</span>
+<span class="c1"># calib0.sweeps[1].ogeephase = 3.063375</span>
+<span class="c1"># calib0.sweeps[1].ogeemag = 0.202656</span>
+<span class="c1"># calib0.uid = 0x2C0DCDCD</span>
+<span class="c1"># calib0.valid = True</span>
+
+<span class="c1"># calib1 = LighthouseBsCalibration()</span>
+<span class="c1"># calib1.sweeps[0].tilt = -0.048398</span>
+<span class="c1"># calib1.sweeps[0].phase = 0.000000</span>
+<span class="c1"># calib1.sweeps[0].curve = 0.155712</span>
+<span class="c1"># calib1.sweeps[0].gibphase = 1.315732</span>
+<span class="c1"># calib1.sweeps[0].gibmag = -0.002849</span>
+<span class="c1"># calib1.sweeps[0].ogeephase = 1.291309</span>
+<span class="c1"># calib1.sweeps[0].ogeemag = -0.108465</span>
+<span class="c1"># calib1.sweeps[1].tilt = 0.047573</span>
+<span class="c1"># calib1.sweeps[1].phase = -0.005821</span>
+<span class="c1"># calib1.sweeps[1].curve = 0.246296</span>
+<span class="c1"># calib1.sweeps[1].gibphase = 1.344470</span>
+<span class="c1"># calib1.sweeps[1].gibmag = -0.005334</span>
+<span class="c1"># calib1.sweeps[1].ogeephase = 1.408694</span>
+<span class="c1"># calib1.sweeps[1].ogeemag = 0.039339</span>
+<span class="c1"># calib1.uid = 0xE72CEE73</span>
+<span class="c1"># calib1.valid = True</span>
+
+
+<span class="c1"># * Lab Calib results</span>
+<span class="c1"># calib0 = LighthouseBsCalibration()</span>
+<span class="c1"># calib0.sweeps[0].curve = -0.0113677978515625</span>
+<span class="c1"># calib0.sweeps[0].gibmag = -0.0039215087890625</span>
+<span class="c1"># calib0.sweeps[0].gibphase = 0.4111328125</span>
+<span class="c1"># calib0.sweeps[0].ogeemag = -0.2215576171875</span>
+<span class="c1"># calib0.sweeps[0].ogeephase = 2.173828125</span>
+<span class="c1"># calib0.sweeps[0].phase = 0.0</span>
+<span class="c1"># calib0.sweeps[0].tilt = -0.05035400390625</span>
+<span class="c1"># calib0.sweeps[1].curve= 0.2939453125</span>
+<span class="c1"># calib0.sweeps[1].gibmag= -0.005096435546875</span>
+<span class="c1"># calib0.sweeps[1].gibphase= 1.09375</span>
+<span class="c1"># calib0.sweeps[1].ogeemag= -0.08184814453125</span>
+<span class="c1"># calib0.sweeps[1].ogeephase= 2.353515625</span>
+<span class="c1"># calib0.sweeps[1].phase= -0.00424957275390625</span>
+<span class="c1"># calib0.sweeps[1].tilt= 0.04296875</span>
+<span class="c1"># calib0.uid = 1043017066</span>
+<span class="c1"># calib0.valid = True</span>
+
+<span class="c1"># calib1 = LighthouseBsCalibration()</span>
+<span class="c1"># calib1.sweeps[0].curve = 0.055908203125</span>
+<span class="c1"># calib1.sweeps[0].gibmag = 0.0010480880737304688</span>
+<span class="c1"># calib1.sweeps[0].gibphase = 1.150390625</span>
+<span class="c1"># calib1.sweeps[0].ogeemag = -0.31884765625</span>
+<span class="c1"># calib1.sweeps[0].ogeephase = 1.3759765625</span>
+<span class="c1"># calib1.sweeps[0].phase = 0.0</span>
+<span class="c1"># calib1.sweeps[0].tilt = -0.049285888671875</span>
+<span class="c1"># calib1.sweeps[1].curve = 0.194091796875</span>
+<span class="c1"># calib1.sweeps[1].gibmag = -0.0020427703857421875</span>
+<span class="c1"># calib1.sweeps[1].gibphase = 0.232177734375</span>
+<span class="c1"># calib1.sweeps[1].ogeemag = -0.2666015625</span>
+<span class="c1"># calib1.sweeps[1].ogeephase = 2.095703125</span>
+<span class="c1"># calib1.sweeps[1].phase = -0.00547027587890625</span>
+<span class="c1"># calib1.sweeps[1].tilt = 0.04638671875</span>
+<span class="c1"># calib1.uid = 3821474937</span>
+<span class="c1"># calib1.valid = True</span>
+
+<span class="k">def</span> <span class="nf">dict_to_lh_config</span><span class="p">(</span><span class="n">geos</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">rotation_matrices</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">rotation_matrices</span><span class="p">)</span>
+    <span class="n">lh_config</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">bs</span><span class="p">,</span> <span class="n">origin</span> <span class="ow">in</span> <span class="n">geos</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">bs_geo</span> <span class="o">=</span> <span class="n">LighthouseBsGeometry</span><span class="p">()</span>
+        <span class="n">bs_geo</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="n">origin</span>
+        <span class="n">bs_geo</span><span class="o">.</span><span class="n">rotation_matrix</span> <span class="o">=</span> <span class="n">rotation_matrices</span><span class="p">[</span><span class="n">bs</span><span class="p">]</span>
+        <span class="n">bs_geo</span><span class="o">.</span><span class="n">valid</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">lh_config</span><span class="p">[</span><span class="n">bs</span><span class="p">]</span> <span class="o">=</span> <span class="n">bs_geo</span>
+    <span class="k">return</span> <span class="n">lh_config</span>
+
+<div class="viewcode-block" id="LighthouseData">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#webots_pkg.crazyflie_publisher.LighthouseData">[docs]</a>
+<span class="k">class</span> <span class="nc">LighthouseData</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Initializes a new instance of the LighthousePoses class.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        basestation_tf2: dict with keys as tf2 frame IDs, and basestation n0 as value</span>
+<span class="sd">        lh_poses (list[Pose]): A list of lighthouse poses.</span>
+
+<span class="sd">    Example: </span>
+<span class="sd">        LighthousePoses(</span>
+<span class="sd">        0: {&#39;lh_pose&#39;: &quot;tb1/lighthouse_pose&quot;, &#39;pose&#39;: [x, y, z, qx, qy, qz, qw]}</span>
+<span class="sd">        1: {&#39;lh_pose&#39;: &quot;tb2/lighthouse_pose&quot;, &#39;pose&#39;: [x, y, z, qx, qy, qz, qw]}</span>
+<span class="sd">        )</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="LighthouseData.__init__">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#webots_pkg.crazyflie_publisher.LighthouseData.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lh_tf2_frames</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+        <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="n">lh_tf2_frames</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;lh_tf2_frames must be a list of strings&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lh_frames</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lh_poses</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lh_tf2_frames</span><span class="p">)):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lh_frames</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">lh_tf2_frames</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lh_poses</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">Pose</span><span class="p">(</span><span class="n">position</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mf">0.0</span><span class="p">),</span>
+                                    <span class="n">orientation</span> <span class="o">=</span> <span class="n">Quaternion</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="LighthouseData.set_pose">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#webots_pkg.crazyflie_publisher.LighthouseData.set_pose">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_pose</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_pose</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Pose</span><span class="p">]):</span>
+        <span class="k">for</span> <span class="n">bs</span><span class="p">,</span> <span class="n">pose</span> <span class="ow">in</span> <span class="n">input_pose</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lh_poses</span><span class="p">[</span><span class="n">bs</span><span class="p">]</span> <span class="o">=</span> <span class="n">pose</span></div>
+
+    
+<div class="viewcode-block" id="LighthouseData.get_lh_config">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#webots_pkg.crazyflie_publisher.LighthouseData.get_lh_config">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_lh_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">lh_config</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">bs</span><span class="p">,</span> <span class="n">pose</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">lh_poses</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">bs_geo</span> <span class="o">=</span> <span class="n">LighthouseBsGeometry</span><span class="p">()</span>
+            <span class="n">bs_geo</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="p">[</span><span class="n">pose</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">pose</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">pose</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">z</span><span class="p">]</span>
+            <span class="n">temp_rot_matrix</span> <span class="o">=</span> <span class="n">tf_transformations</span><span class="o">.</span><span class="n">quaternion_matrix</span><span class="p">([</span>
+                <span class="n">pose</span><span class="o">.</span><span class="n">orientation</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
+                <span class="n">pose</span><span class="o">.</span><span class="n">orientation</span><span class="o">.</span><span class="n">y</span><span class="p">,</span>
+                <span class="n">pose</span><span class="o">.</span><span class="n">orientation</span><span class="o">.</span><span class="n">z</span><span class="p">,</span>
+                <span class="n">pose</span><span class="o">.</span><span class="n">orientation</span><span class="o">.</span><span class="n">w</span>
+                <span class="p">])</span>
+            <span class="n">bs_geo</span><span class="o">.</span><span class="n">rotation_matrix</span> <span class="o">=</span> <span class="n">temp_rot_matrix</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+            <span class="n">bs_geo</span><span class="o">.</span><span class="n">valid</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">lh_config</span><span class="p">[</span><span class="n">bs</span><span class="p">]</span> <span class="o">=</span> <span class="n">bs_geo</span>
+        <span class="k">return</span> <span class="n">lh_config</span></div>
+</div>
+
+
+<div class="viewcode-block" id="LighthouseConfigWriter">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#webots_pkg.crazyflie_publisher.LighthouseConfigWriter">[docs]</a>
+<span class="k">class</span> <span class="nc">LighthouseConfigWriter</span><span class="p">:</span>
+<div class="viewcode-block" id="LighthouseConfigWriter.__init__">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#webots_pkg.crazyflie_publisher.LighthouseConfigWriter.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cf</span><span class="p">,</span> <span class="n">calibs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">LighthouseBsCalibration</span><span class="p">]):</span>
+        <span class="c1"># TODO: Refactor the lh0_rotation matrix so we can pass in both rotation matrices</span>
+        <span class="nb">print</span><span class="p">();</span> <span class="nb">print</span><span class="p">();</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Configuring lighthouse&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">();</span> <span class="nb">print</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cf</span> <span class="o">=</span> <span class="n">cf</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_calibs</span> <span class="o">=</span> <span class="n">calibs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_read_write_event</span> <span class="o">=</span> <span class="n">Event</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lh_helper</span> <span class="o">=</span> <span class="n">LighthouseMemHelper</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cf</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_read_write_event</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span></div>
+
+
+
+        <span class="c1"># * Write lighthouse geometries to memory, output results to console.</span>
+        <span class="c1"># self.write_lh_geos_to_memory()</span>
+        <span class="c1"># self.read_lh_geos_from_memory()</span>
+        <span class="c1"># # * Check if calibs have been written to memory. If not, write them. If they are there, read them out</span>
+        <span class="c1"># try:</span>
+        <span class="c1">#     self.read_lh_calibs_from_memory()</span>
+        <span class="c1"># except:</span>
+        <span class="c1">#     self.write_lh_calibs_to_memory()</span>
+        <span class="c1">#     self.read_lh_calibs_from_memory()</span>
+        <span class="c1"># print(); print();</span>
+        <span class="c1"># print(&#39;Lighthouse configuration complete&#39;)</span>
+        <span class="c1"># print(); print()</span>
+
+
+<div class="viewcode-block" id="LighthouseConfigWriter.write_lh_geos_to_memory">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#webots_pkg.crazyflie_publisher.LighthouseConfigWriter.write_lh_geos_to_memory">[docs]</a>
+    <span class="k">def</span> <span class="nf">write_lh_geos_to_memory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lh_config</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_lh_helper</span><span class="o">.</span><span class="n">write_geos</span><span class="p">(</span><span class="n">lh_config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lh_geo_data_written_callback</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read_write_event</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read_write_event</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error writing lighthouse data to memory: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LighthouseConfigWriter.write_lh_calibs_to_memory">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#webots_pkg.crazyflie_publisher.LighthouseConfigWriter.write_lh_calibs_to_memory">[docs]</a>
+    <span class="k">def</span> <span class="nf">write_lh_calibs_to_memory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_lh_helper</span><span class="o">.</span><span class="n">write_calibs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_calibs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lh_calib_data_written_callback</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read_write_event</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read_write_event</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error writing lighthouse calibration to memory: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LighthouseConfigWriter.read_lh_geos_from_memory">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#webots_pkg.crazyflie_publisher.LighthouseConfigWriter.read_lh_geos_from_memory">[docs]</a>
+    <span class="k">def</span> <span class="nf">read_lh_geos_from_memory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Reading lighthouse data from memory&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lh_helper</span><span class="o">.</span><span class="n">read_all_geos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_lh_geo_read_callback</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_read_write_event</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_read_write_event</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span></div>
+
+    
+<div class="viewcode-block" id="LighthouseConfigWriter.read_lh_calibs_from_memory">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#webots_pkg.crazyflie_publisher.LighthouseConfigWriter.read_lh_calibs_from_memory">[docs]</a>
+    <span class="k">def</span> <span class="nf">read_lh_calibs_from_memory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Reading lighthouse calibration from memory&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lh_helper</span><span class="o">.</span><span class="n">read_all_calibs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_lh_calib_read_callback</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_read_write_event</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_read_write_event</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span></div>
+
+
+    <span class="k">def</span> <span class="nf">_lh_geo_read_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geo_data</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Lighthouse data read&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_calibs_on_cf</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">for</span> <span class="nb">id</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">geo_data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;---- Geometry for base station&#39;</span><span class="p">,</span> <span class="nb">id</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">dump</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">()</span>
+        <span class="c1"># print(geo_data)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_read_write_event</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
+    
+    <span class="k">def</span> <span class="nf">_lh_calib_read_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">calib_data</span><span class="p">):</span>
+        <span class="k">for</span> <span class="nb">id</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">calib_data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;---- Calibration data for base station&#39;</span><span class="p">,</span> <span class="nb">id</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">dump</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_read_write_event</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
+
+
+    <span class="k">def</span> <span class="nf">_lh_geo_data_written_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">success</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">success</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Lighthouse data correctly written to crazyflie&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Writing crazyflie lighthouse data failed&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_read_write_event</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
+    
+    <span class="k">def</span> <span class="nf">_lh_calib_data_written_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">success</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">success</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Lighthouse calibration data correctly written to crazyflie&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Writing crazyflie lighthouse calibration data failed&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_read_write_event</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
+
+<div class="viewcode-block" id="LighthouseConfigWriter.update_rotation_matrices">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#webots_pkg.crazyflie_publisher.LighthouseConfigWriter.update_rotation_matrices">[docs]</a>
+    <span class="k">def</span> <span class="nf">update_rotation_matrices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rotation_matrices</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lh_rotation_matrices</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_read_write_event</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lh_rotation_matrices</span> <span class="o">=</span> <span class="n">rotation_matrices</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">read_lh_geos_from_memory</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write_lh_geos_to_memory</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">read_lh_geos_from_memory</span><span class="p">()</span></div>
+</div>
+
+
+<div class="viewcode-block" id="CrazyfliePublisher">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#webots_pkg.crazyflie_publisher.CrazyfliePublisher">[docs]</a>
+<span class="k">class</span> <span class="nc">CrazyfliePublisher</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Publisher node for controlling the Crazyflie drone.</span>
+
+<span class="sd">    This node initializes the necessary publishers, subscribers, and timers for controlling the Crazyflie drone.</span>
+<span class="sd">    It also handles the connection to the Crazyflie and sends flight commands if in flight mode.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">        - URI (str): The URI of the Crazyflie.</span>
+<span class="sd">        - fly (bool): Determines if the Crazyflie is in testing mode.</span>
+<span class="sd">        - config_file (str): The path to the configuration file.</span>
+<span class="sd">        - lh0_pose_frame (str): The frame ID for the pose of the first lighthouse.</span>
+<span class="sd">        - lh1_pose_frame (str): The frame ID for the pose of the second lighthouse.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="CrazyfliePublisher.__init__">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#webots_pkg.crazyflie_publisher.CrazyfliePublisher.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="c1"># ! Name node</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;crazyflie_publisher&quot;</span><span class="p">)</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Initializing CrazyfliePublisher&quot;</span><span class="p">)</span>
+
+        <span class="c1"># ! Declare and getparameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">declare_parameter</span><span class="p">(</span><span class="s1">&#39;URI&#39;</span><span class="p">,</span> <span class="n">rclpy</span><span class="o">.</span><span class="n">Parameter</span><span class="o">.</span><span class="n">Type</span><span class="o">.</span><span class="n">STRING</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">declare_parameter</span><span class="p">(</span><span class="s1">&#39;fly&#39;</span><span class="p">,</span> <span class="n">rclpy</span><span class="o">.</span><span class="n">Parameter</span><span class="o">.</span><span class="n">Type</span><span class="o">.</span><span class="n">BOOL</span><span class="p">,</span>
+            <span class="n">ParameterDescriptor</span><span class="p">(</span><span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Determines if the crazyflie is in testing mode&quot;</span><span class="p">))</span>
+        <span class="c1">#FUTURE_DEV: Refactor to take dynamic number of turtlebots</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">declare_parameter</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;lh0_pose_frame&#39;</span><span class="p">,</span>
+            <span class="n">value</span><span class="o">=</span><span class="s1">&#39;tb1/lighthouse_pose&#39;</span><span class="p">)</span>  <span class="c1"># value will only be used if parameter not set</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">declare_parameter</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;lh1_pose_frame&#39;</span><span class="p">,</span>
+            <span class="n">value</span><span class="o">=</span><span class="s1">&#39;tb2/lighthouse_pose&#39;</span><span class="p">)</span> <span class="c1"># value will only be used if parameter not set</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">declare_parameter</span><span class="p">(</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;initial_translation&#39;</span><span class="p">,</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">declare_parameter</span><span class="p">(</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;initial_orientation_quaternion&#39;</span><span class="p">,</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span> 
+            <span class="bp">self</span><span class="o">.</span><span class="n">_fly</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_parameter</span><span class="p">(</span><span class="s1">&#39;fly&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Got fly parameter&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_link_uri</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_parameter</span><span class="p">(</span><span class="s1">&#39;URI&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Got URI parameter&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_lh0_pose_frame</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_parameter</span><span class="p">(</span><span class="s1">&#39;lh0_pose_frame&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Got lh0_pose_frame parameter&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_lh1_pose_frame</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_parameter</span><span class="p">(</span><span class="s1">&#39;lh1_pose_frame&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Got lh1_pose_frame parameter&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_initial_translation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_parameter</span><span class="p">(</span><span class="s1">&#39;initial_translation&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Got initial_translation parameter&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_initial_orientation_quaternion</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_parameter</span><span class="p">(</span><span class="s1">&#39;initial_orientation_quaternion&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Got initial_orientation_quaternion parameter&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">fatal</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error getting paramater value: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+
+        <span class="c1"># ! Initialize class members, subscribers, and publishers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ranges</span><span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tf_buffers</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="n">Buffer</span><span class="p">(),</span> <span class="mi">1</span><span class="p">:</span> <span class="n">Buffer</span><span class="p">()}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lh_pose_data</span> <span class="o">=</span> <span class="n">LighthouseData</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">_lh0_pose_frame</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lh1_pose_frame</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_read_config_data</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_robot_config</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lh_config_writer_initialized</span> <span class="o">=</span> <span class="kc">False</span>
+
+
+        <span class="c1"># Initialize publishers and tf2 broadcasters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">range_publisher</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_publisher</span><span class="p">(</span><span class="n">Range</span><span class="p">,</span> <span class="s2">&quot;/zrange&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">laser_publisher</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_publisher</span><span class="p">(</span><span class="n">LaserScan</span><span class="p">,</span> <span class="s2">&quot;/scan&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">odom_publisher</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_publisher</span><span class="p">(</span><span class="n">Odometry</span><span class="p">,</span>  <span class="s2">&quot;/odom&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tfbr</span> <span class="o">=</span> <span class="n">TransformBroadcaster</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+    
+        <span class="c1"># Create subscribers and listeners</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">create_subscription</span><span class="p">(</span><span class="n">Twist</span><span class="p">,</span>  <span class="s2">&quot;/cmd_vel&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cmd_vel_callback</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lh0_pose_listener</span> <span class="o">=</span> <span class="n">TransformListener</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tf_buffers</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lh1_pose_listener</span> <span class="o">=</span> <span class="n">TransformListener</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tf_buffers</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="p">)</span>
+        
+
+        <span class="c1"># Handle crazyflie connection</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cf</span> <span class="o">=</span> <span class="n">Crazyflie</span><span class="p">(</span><span class="n">rw_cache</span><span class="o">=</span><span class="s1">&#39;./cache&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cf</span><span class="o">.</span><span class="n">connected</span><span class="o">.</span><span class="n">add_callback</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_connected</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cf</span><span class="o">.</span><span class="n">disconnected</span><span class="o">.</span><span class="n">add_callback</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_disconnected</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cf</span><span class="o">.</span><span class="n">connection_failed</span><span class="o">.</span><span class="n">add_callback</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_connection_failed</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cf</span><span class="o">.</span><span class="n">connection_lost</span><span class="o">.</span><span class="n">add_callback</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_connection_lost</span><span class="p">)</span>
+
+        <span class="c1"># self._scf = SyncCrazyflie(self._link_uri, cf=self._cf)</span>
+
+        
+        <span class="c1"># ! Start workflow</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cf</span><span class="o">.</span><span class="n">open_link</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_link_uri</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_initial_position</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">create_timer</span><span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="mf">30.0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">publish_laserscan_data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_timer_lh_pose_update</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_timer</span><span class="p">(</span><span class="mf">2.5</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_timer_lh_pose_callback</span><span class="p">)</span>
+        <span class="c1"># Create timer for pose listener</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_init_lh_config_writer</span><span class="p">()</span>
+
+
+        <span class="c1"># Send flight commands if in flight mode</span>
+        <span class="c1"># ! Flight loop</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fly</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">timer_period</span> <span class="o">=</span> <span class="mf">0.1</span>  <span class="c1"># seconds</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">create_timer</span><span class="p">(</span><span class="n">timer_period</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sendHoverCommand</span><span class="p">)</span>
+
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">hover</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s1">&#39;yaw&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s1">&#39;height&#39;</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">}</span>
+
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cf</span><span class="o">.</span><span class="n">commander</span><span class="o">.</span><span class="n">send_hover_setpoint</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">hover</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">hover</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">hover</span><span class="p">[</span><span class="s1">&#39;yaw&#39;</span><span class="p">],</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">hover</span><span class="p">[</span><span class="s1">&#39;height&#39;</span><span class="p">])</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cf</span><span class="o">.</span><span class="n">param</span><span class="o">.</span><span class="n">request_update_of_all_params</span><span class="p">()</span></div>
+
+        
+
+    <span class="k">def</span> <span class="nf">_connected</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">link_uri</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lg_stab</span> <span class="o">=</span> <span class="n">LogConfig</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Stabilizer&#39;</span><span class="p">,</span> <span class="n">period_in_ms</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lg_stab</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="s1">&#39;stateEstimate.x&#39;</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lg_stab</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="s1">&#39;stateEstimate.y&#39;</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lg_stab</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="s1">&#39;stateEstimate.z&#39;</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lg_stab</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="s1">&#39;stabilizer.roll&#39;</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lg_stab</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="s1">&#39;stabilizer.pitch&#39;</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lg_stab</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="s1">&#39;stabilizer.yaw&#39;</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lg_range</span> <span class="o">=</span> <span class="n">LogConfig</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Range&#39;</span><span class="p">,</span> <span class="n">period_in_ms</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lg_range</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="s1">&#39;range.zrange&#39;</span><span class="p">,</span> <span class="s1">&#39;uint16_t&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lg_range</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="s1">&#39;range.front&#39;</span><span class="p">,</span> <span class="s1">&#39;uint16_t&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lg_range</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="s1">&#39;range.right&#39;</span><span class="p">,</span> <span class="s1">&#39;uint16_t&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lg_range</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="s1">&#39;range.left&#39;</span><span class="p">,</span> <span class="s1">&#39;uint16_t&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lg_range</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="s1">&#39;range.back&#39;</span><span class="p">,</span> <span class="s1">&#39;uint16_t&#39;</span><span class="p">)</span>
+    
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lh_pose</span> <span class="o">=</span> <span class="n">LogConfig</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Lighthouse&#39;</span><span class="p">,</span> <span class="n">period_in_ms</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lh_pose</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="s1">&#39;lighthouse.x&#39;</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lh_pose</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="s1">&#39;lighthouse.y&#39;</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lh_pose</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="s1">&#39;lighthouse.z&#39;</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cf</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">add_config</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_lg_stab</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_lg_stab</span><span class="o">.</span><span class="n">data_received_cb</span><span class="o">.</span><span class="n">add_callback</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stab_log_data</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_lg_stab</span><span class="o">.</span><span class="n">error_cb</span><span class="o">.</span><span class="n">add_callback</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stab_log_error</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_lg_stab</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cf</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">add_config</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_lg_range</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_lg_range</span><span class="o">.</span><span class="n">data_received_cb</span><span class="o">.</span><span class="n">add_callback</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_range_log_data</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_lg_range</span><span class="o">.</span><span class="n">error_cb</span><span class="o">.</span><span class="n">add_callback</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_range_log_error</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_lg_range</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cf</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">add_config</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_lh_pose</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_lh_pose</span><span class="o">.</span><span class="n">data_received_cb</span><span class="o">.</span><span class="n">add_callback</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_lh_log_data</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_lh_pose</span><span class="o">.</span><span class="n">error_cb</span><span class="o">.</span><span class="n">add_callback</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_lh_log_error</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_lh_pose</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        
+
+        <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="o">.</span><span class="n">fatal</span><span class="p">(</span><span class="s1">&#39;Could not start log configuration,&#39;</span>
+                  <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> not found in TOC&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)))</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="o">.</span><span class="n">fatal</span><span class="p">(</span><span class="s1">&#39;Could not add Stabilizer log config, bad configuration.&#39;</span><span class="p">)</span>
+
+        <span class="c1"># except Exception as e:</span>
+            <span class="c1"># self.get_logger().fatal(f&quot;Error reading lighthouse geometries from config file: {e}&quot;)</span>
+
+<div class="viewcode-block" id="CrazyfliePublisher.sendHoverCommand">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#webots_pkg.crazyflie_publisher.CrazyfliePublisher.sendHoverCommand">[docs]</a>
+    <span class="k">def</span> <span class="nf">sendHoverCommand</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">hover_height</span> <span class="o">=</span>  <span class="bp">self</span><span class="o">.</span><span class="n">hover</span><span class="p">[</span><span class="s1">&#39;height&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">hover</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]</span><span class="o">*</span><span class="mf">0.1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cf</span><span class="o">.</span><span class="n">commander</span><span class="o">.</span><span class="n">send_hover_setpoint</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">hover</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">hover</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">hover</span><span class="p">[</span><span class="s1">&#39;yaw&#39;</span><span class="p">],</span>
+            <span class="n">hover_height</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hover</span><span class="p">[</span><span class="s1">&#39;height&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hover_height</span></div>
+
+
+<div class="viewcode-block" id="CrazyfliePublisher.cmd_vel_callback">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#webots_pkg.crazyflie_publisher.CrazyfliePublisher.cmd_vel_callback">[docs]</a>
+    <span class="k">def</span> <span class="nf">cmd_vel_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">twist</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">target_twist</span> <span class="o">=</span> <span class="n">twist</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">hover</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">twist</span><span class="o">.</span><span class="n">linear</span><span class="o">.</span><span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hover</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">twist</span><span class="o">.</span><span class="n">linear</span><span class="o">.</span><span class="n">y</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hover</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">twist</span><span class="o">.</span><span class="n">linear</span><span class="o">.</span><span class="n">z</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hover</span><span class="p">[</span><span class="s1">&#39;yaw&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">twist</span><span class="o">.</span><span class="n">angular</span><span class="o">.</span><span class="n">z</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CrazyfliePublisher.publish_laserscan_data">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#webots_pkg.crazyflie_publisher.CrazyfliePublisher.publish_laserscan_data">[docs]</a>
+    <span class="k">def</span> <span class="nf">publish_laserscan_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="n">LaserScan</span><span class="p">()</span>
+            <span class="n">msg</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">stamp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_clock</span><span class="p">()</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">to_msg</span><span class="p">()</span>
+            <span class="n">msg</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">frame_id</span> <span class="o">=</span> <span class="s1">&#39;base_link&#39;</span>
+            <span class="n">msg</span><span class="o">.</span><span class="n">range_min</span> <span class="o">=</span> <span class="mf">0.01</span>
+            <span class="n">msg</span><span class="o">.</span><span class="n">range_max</span> <span class="o">=</span> <span class="mf">3.49</span>
+            <span class="n">msg</span><span class="o">.</span><span class="n">ranges</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ranges</span>
+            <span class="n">msg</span><span class="o">.</span><span class="n">angle_min</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="mi">2</span><span class="o">*</span><span class="n">pi</span>
+            <span class="n">msg</span><span class="o">.</span><span class="n">angle_max</span> <span class="o">=</span>  <span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="mi">2</span><span class="o">*</span><span class="n">pi</span>
+            <span class="n">msg</span><span class="o">.</span><span class="n">angle_increment</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span><span class="o">*</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">laser_publisher</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error in laser scan data, not published to tf2: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="CrazyfliePublisher._range_log_error">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#webots_pkg.crazyflie_publisher.CrazyfliePublisher._range_log_error">[docs]</a>
+    <span class="k">def</span> <span class="nf">_range_log_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logconf</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Callback from the log API when an error occurs&quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Error when logging </span><span class="si">%s</span><span class="s1">: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">logconf</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">msg</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Error when logging </span><span class="si">%s</span><span class="s1">: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">logconf</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">msg</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="CrazyfliePublisher._range_log_data">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#webots_pkg.crazyflie_publisher.CrazyfliePublisher._range_log_data">[docs]</a>
+    <span class="k">def</span> <span class="nf">_range_log_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">logconf</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Callback from a the log API when data arrives&quot;&quot;&quot;</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">t_range</span> <span class="o">=</span> <span class="n">TransformStamped</span><span class="p">()</span>
+            <span class="n">q</span> <span class="o">=</span> <span class="n">tf_transformations</span><span class="o">.</span><span class="n">quaternion_from_euler</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">radians</span><span class="p">(</span><span class="mi">90</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">t_range</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">stamp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_clock</span><span class="p">()</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">to_msg</span><span class="p">()</span>
+            <span class="n">t_range</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">frame_id</span> <span class="o">=</span> <span class="s1">&#39;base_link&#39;</span>
+            <span class="n">t_range</span><span class="o">.</span><span class="n">child_frame_id</span> <span class="o">=</span> <span class="s1">&#39;crazyflie_flowdeck&#39;</span>
+            <span class="n">t_range</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">rotation</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">t_range</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">rotation</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">t_range</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">rotation</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+            <span class="n">t_range</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">rotation</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tfbr</span><span class="o">.</span><span class="n">sendTransform</span><span class="p">(</span><span class="n">t_range</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error in range transform, not published to tf2: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">zrange</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;range.zrange&#39;</span><span class="p">))</span><span class="o">/</span><span class="mf">1000.0</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">Range</span><span class="p">()</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">stamp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_clock</span><span class="p">()</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">to_msg</span><span class="p">()</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">frame_id</span> <span class="o">=</span> <span class="s1">&#39;crazyflie_flowdeck&#39;</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">field_of_view</span> <span class="o">=</span> <span class="n">radians</span><span class="p">(</span><span class="mf">4.7</span><span class="p">)</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">radiation_type</span> <span class="o">=</span> <span class="n">Range</span><span class="p">()</span><span class="o">.</span><span class="n">INFRARED</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">min_range</span> <span class="o">=</span> <span class="mf">0.01</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">max_range</span> <span class="o">=</span> <span class="mf">3.5</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">range</span> <span class="o">=</span> <span class="n">zrange</span>
+        <span class="c1">##self.range_publisher.publish(msg)</span>
+
+        <span class="n">max_range</span> <span class="o">=</span> <span class="mf">3.49</span>
+        <span class="n">front_range</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;range.front&#39;</span><span class="p">))</span><span class="o">/</span><span class="mf">1000.0</span>
+        <span class="n">left_range</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;range.left&#39;</span><span class="p">))</span><span class="o">/</span><span class="mf">1000.0</span>
+        <span class="n">back_range</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;range.back&#39;</span><span class="p">))</span><span class="o">/</span><span class="mf">1000.0</span>
+        <span class="n">right_range</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;range.right&#39;</span><span class="p">))</span><span class="o">/</span><span class="mf">1000.0</span>
+        <span class="k">if</span> <span class="n">front_range</span> <span class="o">&gt;</span> <span class="n">max_range</span><span class="p">:</span>
+            <span class="n">front_range</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">left_range</span> <span class="o">&gt;</span> <span class="n">max_range</span><span class="p">:</span>
+            <span class="n">left_range</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">right_range</span> <span class="o">&gt;</span> <span class="n">max_range</span><span class="p">:</span>
+            <span class="n">right_range</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">back_range</span> <span class="o">&gt;</span> <span class="n">max_range</span><span class="p">:</span>
+            <span class="n">back_range</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)</span>  
+        <span class="bp">self</span><span class="o">.</span><span class="n">ranges</span> <span class="o">=</span> <span class="p">[</span><span class="n">back_range</span><span class="p">,</span> <span class="n">left_range</span><span class="p">,</span> <span class="n">front_range</span><span class="p">,</span> <span class="n">right_range</span><span class="p">,</span> <span class="n">back_range</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="CrazyfliePublisher._stab_log_error">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#webots_pkg.crazyflie_publisher.CrazyfliePublisher._stab_log_error">[docs]</a>
+    <span class="k">def</span> <span class="nf">_stab_log_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logconf</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Callback from the log API when an error occurs&quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Error when logging </span><span class="si">%s</span><span class="s1">: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">logconf</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">msg</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="CrazyfliePublisher._stab_log_data">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#webots_pkg.crazyflie_publisher.CrazyfliePublisher._stab_log_data">[docs]</a>
+    <span class="k">def</span> <span class="nf">_stab_log_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">logconf</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Callback from a the log API when data arrives&quot;&quot;&quot;</span>
+
+        <span class="c1"># for name, value in data.items():</span>
+        <span class="c1">#     print(f&#39;{name}: {value:3.3f} &#39;, end=&#39;&#39;)</span>
+        <span class="c1"># print()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;stab_data&#39;</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+
+        <span class="c1"># Get odometry values from crazyflie stability logger</span>
+        <span class="k">try</span><span class="p">:</span> 
+            <span class="n">x</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;stateEstimate.x&#39;</span><span class="p">)</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;stateEstimate.y&#39;</span><span class="p">)</span>
+            <span class="n">z</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;stateEstimate.z&#39;</span><span class="p">)</span>
+            <span class="n">roll</span> <span class="o">=</span> <span class="n">radians</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;stabilizer.roll&#39;</span><span class="p">))</span>
+            <span class="n">pitch</span> <span class="o">=</span> <span class="n">radians</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span> <span class="o">*</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;stabilizer.pitch&#39;</span><span class="p">))</span>
+            <span class="n">yaw</span> <span class="o">=</span> <span class="n">radians</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;stabilizer.yaw&#39;</span><span class="p">))</span>
+            
+            <span class="c1"># Create odometry message and publish to ROS2</span>
+            <span class="n">odom_msg</span> <span class="o">=</span> <span class="n">Odometry</span><span class="p">()</span>
+            <span class="n">odom_msg</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span>
+            <span class="n">odom_msg</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
+            <span class="n">odom_msg</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">z</span>
+            <span class="n">q</span> <span class="o">=</span> <span class="n">tf_transformations</span><span class="o">.</span><span class="n">quaternion_from_euler</span><span class="p">(</span><span class="n">roll</span><span class="p">,</span> <span class="n">pitch</span><span class="p">,</span> <span class="n">yaw</span><span class="p">)</span>
+            <span class="n">odom_msg</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">orientation</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">odom_msg</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">orientation</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">odom_msg</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">orientation</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+            <span class="n">odom_msg</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">orientation</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">odom_publisher</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">odom_msg</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error in publishing odom message: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+
+        <span class="c1"># Create tf2 transforms and send to tf2</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">q_base</span> <span class="o">=</span> <span class="n">tf_transformations</span><span class="o">.</span><span class="n">quaternion_from_euler</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">yaw</span><span class="p">)</span>
+            <span class="n">t_base</span> <span class="o">=</span> <span class="n">TransformStamped</span><span class="p">()</span>
+            <span class="n">t_base</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">stamp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_clock</span><span class="p">()</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">to_msg</span><span class="p">()</span>
+            <span class="n">t_base</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">frame_id</span> <span class="o">=</span> <span class="s1">&#39;odom&#39;</span>
+            <span class="n">t_base</span><span class="o">.</span><span class="n">child_frame_id</span> <span class="o">=</span> <span class="s1">&#39;base_footprint&#39;</span>
+            <span class="n">t_base</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">translation</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span>
+            <span class="n">t_base</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">translation</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
+            <span class="n">t_base</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">translation</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="n">t_base</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">rotation</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">q_base</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">t_base</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">rotation</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">q_base</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">t_base</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">rotation</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">q_base</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+            <span class="n">t_base</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">rotation</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="n">q_base</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tfbr</span><span class="o">.</span><span class="n">sendTransform</span><span class="p">(</span><span class="n">t_base</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error in publishing base_footprint transform: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Publish t_cf to tf2</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Create t_cf message, assigned values from the crazyflie stability logger </span>
+            <span class="n">t_cf</span> <span class="o">=</span> <span class="n">TransformStamped</span><span class="p">()</span>
+            <span class="n">q_cf</span> <span class="o">=</span> <span class="n">tf_transformations</span><span class="o">.</span><span class="n">quaternion_from_euler</span><span class="p">(</span><span class="n">roll</span><span class="p">,</span> <span class="n">pitch</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">t_cf</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">stamp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_clock</span><span class="p">()</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">to_msg</span><span class="p">()</span>
+            <span class="n">t_cf</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">frame_id</span> <span class="o">=</span> <span class="s1">&#39;base_footprint&#39;</span>
+            <span class="n">t_cf</span><span class="o">.</span><span class="n">child_frame_id</span> <span class="o">=</span> <span class="s1">&#39;base_link&#39;</span>
+            <span class="n">t_cf</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">translation</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="n">t_cf</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">translation</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="n">t_cf</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">translation</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">z</span>
+            <span class="n">t_cf</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">rotation</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">q_cf</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">t_cf</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">rotation</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">q_cf</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">t_cf</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">rotation</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">q_cf</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+            <span class="n">t_cf</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">rotation</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="n">q_cf</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tfbr</span><span class="o">.</span><span class="n">sendTransform</span><span class="p">(</span><span class="n">t_cf</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error in base_link transform publisher: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="CrazyfliePublisher._lh_log_error">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#webots_pkg.crazyflie_publisher.CrazyfliePublisher._lh_log_error">[docs]</a>
+    <span class="k">def</span> <span class="nf">_lh_log_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logconf</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Callback from the log API when an error occurs&quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Error when logging </span><span class="si">%s</span><span class="s1">: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">logconf</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">msg</span><span class="p">))</span></div>
+
+    
+<div class="viewcode-block" id="CrazyfliePublisher._lh_log_data">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#webots_pkg.crazyflie_publisher.CrazyfliePublisher._lh_log_data">[docs]</a>
+    <span class="k">def</span> <span class="nf">_lh_log_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">logconf</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Callback from a the log API when LH data arrives&quot;&quot;&quot;</span>
+        <span class="c1"># print to console</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+            <span class="c1"># Send to tf2</span>
+            <span class="n">t_lh</span> <span class="o">=</span> <span class="n">TransformStamped</span><span class="p">()</span>
+            <span class="n">t_lh</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">frame_id</span> <span class="o">=</span> <span class="s1">&#39;base_link&#39;</span>
+            <span class="n">t_lh</span><span class="o">.</span><span class="n">child_frame_id</span> <span class="o">=</span> <span class="s1">&#39;lighthouse&#39;</span>
+
+            <span class="n">x</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;lighthouse.x&#39;</span><span class="p">)</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;lighthouse.y&#39;</span><span class="p">)</span>
+            <span class="n">z</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;lighthouse.z&#39;</span><span class="p">)</span>
+            <span class="n">q</span> <span class="o">=</span> <span class="n">tf_transformations</span><span class="o">.</span><span class="n">quaternion_from_euler</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">t_lh</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">stamp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_clock</span><span class="p">()</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">to_msg</span><span class="p">()</span>
+            <span class="n">t_lh</span><span class="o">.</span><span class="n">child_frame_id</span> <span class="o">=</span> <span class="s1">&#39;lighthouse_link&#39;</span>
+            <span class="n">t_lh</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">translation</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span>
+            <span class="n">t_lh</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">translation</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
+            <span class="n">t_lh</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">translation</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">z</span>
+            <span class="n">t_lh</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">rotation</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">t_lh</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">rotation</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">t_lh</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">rotation</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+            <span class="n">t_lh</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">rotation</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tfbr</span><span class="o">.</span><span class="n">sendTransform</span><span class="p">(</span><span class="n">t_lh</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Error in LH log data, not published to tf2&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;May need to recalibrate kalman filter values for lighthouse&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error in LH log data, not published to tf2&quot;</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="CrazyfliePublisher._init_lh_config_writer">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#webots_pkg.crazyflie_publisher.CrazyfliePublisher._init_lh_config_writer">[docs]</a>
+    <span class="k">def</span> <span class="nf">_init_lh_config_writer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the LighthouseConfigWriter class with the necessary data. Reads from self.lh_pose_data</span>
+
+<span class="sd">        Members:</span>
+<span class="sd">        - self.lh_config_writer</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># TODO: Confirm that we are getting correct data output in the lab. </span>
+        <span class="n">calibs</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="n">calib1</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="n">calib0</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lh_config_writer</span> <span class="o">=</span> <span class="n">LighthouseConfigWriter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cf</span><span class="p">,</span> <span class="n">calibs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lh_config_writer_initialized</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+
+    <span class="k">def</span> <span class="nf">_on_timer_lh_pose_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">transforms</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">bs</span><span class="p">,</span> <span class="n">buffer</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tf_buffers</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">global_frame</span> <span class="o">=</span> <span class="s1">&#39;map&#39;</span>
+                <span class="n">des_frame</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lh_pose_data</span><span class="o">.</span><span class="n">lh_frames</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">now</span> <span class="o">=</span> <span class="n">rclpy</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">Time</span><span class="p">()</span>
+                <span class="n">trans</span> <span class="o">=</span> <span class="n">buffer</span><span class="o">.</span><span class="n">lookup_transform</span><span class="p">(</span>
+                    <span class="n">des_frame</span><span class="p">,</span>
+                    <span class="n">global_frame</span><span class="p">,</span>
+                    <span class="n">now</span><span class="p">)</span>
+                <span class="n">transforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">trans</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">TransformException</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;Could not transform </span><span class="si">{</span><span class="n">des_frame</span><span class="si">}</span><span class="s1"> to </span><span class="si">{</span><span class="n">global_frame</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">ex</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="c1"># TODO: Run this with the following being published:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            ros2 run tf2_ros static_transform_publisher --x x --y y --z z --yaw yaw --pitch pitch --roll roll --frame-id frame_id --child-frame-id child_frame_id</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">return</span>
+        
+        <span class="c1"># Update lighthouse data with new pose</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">transforms</span><span class="p">)):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lh_pose_data</span><span class="o">.</span><span class="n">lh_poses</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">transforms</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">translation</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="n">transforms</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">translation</span><span class="o">.</span><span class="n">y</span><span class="p">,</span>
+                <span class="n">z</span> <span class="o">=</span> <span class="n">transforms</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">translation</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lh_pose_data</span><span class="o">.</span><span class="n">lh_poses</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">orientation</span> <span class="o">=</span> <span class="n">Quaternion</span><span class="p">(</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">transforms</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">rotation</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="n">transforms</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">rotation</span><span class="o">.</span><span class="n">y</span><span class="p">,</span>
+                <span class="n">z</span> <span class="o">=</span> <span class="n">transforms</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">rotation</span><span class="o">.</span><span class="n">z</span><span class="p">,</span>
+                <span class="n">w</span> <span class="o">=</span> <span class="n">transforms</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">rotation</span><span class="o">.</span><span class="n">w</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;lh_pose_data: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">lh_pose_data</span><span class="o">.</span><span class="n">lh_poses</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="c1"># Update lighthouse data in memory</span>
+        <span class="n">lh_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lh_pose_data</span><span class="o">.</span><span class="n">get_lh_config</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lh_config_writer</span><span class="o">.</span><span class="n">write_lh_geos_to_memory</span><span class="p">(</span><span class="n">lh_config</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lh_config_writer</span><span class="o">.</span><span class="n">read_lh_geos_from_memory</span><span class="p">()</span>
+
+        <span class="c1"># if self._lh_initialized is True:</span>
+        <span class="c1">#     try:</span>
+        <span class="c1">#         lh0_pose = self._lh0_buffer.lookup_transform(</span>
+        <span class="c1">#             self._lh0_pose_frame,</span>
+        <span class="c1">#             &#39;map&#39;,</span>
+        <span class="c1">#             rclpy.time.Time())</span>
+        <span class="c1">#         lh1_pose = self._lh1_buffer.lookup_transform(</span>
+        <span class="c1">#             self._lh1_pose_frame,</span>
+        <span class="c1">#             &#39;map&#39;,</span>
+        <span class="c1">#             rclpy.time.Time())</span>
+        <span class="c1">#     except Exception as e:</span>
+        <span class="c1">#         self.get_logger().warning(f&quot;Error in lh0_pose_listener_callback: {e}&quot;)</span>
+        <span class="c1">#         return</span>
+        <span class="c1">#     x0 = lh0_pose.transform.translation.x</span>
+        <span class="c1">#     y0 = lh0_pose.transform.translation.y</span>
+        <span class="c1">#     z0 = lh0_pose.transform.translation.z</span>
+        <span class="c1">#     x1 = lh1_pose.transform.translation.x</span>
+        <span class="c1">#     y1 = lh1_pose.transform.translation.y</span>
+        <span class="c1">#     z1 = lh1_pose.transform.translation.z</span>
+        <span class="c1">#     qx0 = lh0_pose.transform.rotation.x</span>
+        <span class="c1">#     qy0 = lh0_pose.transform.rotation.y</span>
+        <span class="c1">#     qz0 = lh0_pose.transform.rotation.z</span>
+        <span class="c1">#     qw0 = lh0_pose.transform.rotation.w</span>
+        <span class="c1">#     qx1 = lh1_pose.transform.rotation.x</span>
+        <span class="c1">#     qy1 = lh1_pose.transform.rotation.y</span>
+        <span class="c1">#     qz1 = lh1_pose.transform.rotation.z</span>
+        <span class="c1">#     qw1 = lh1_pose.transform.rotation.w</span>
+        <span class="c1">#     temp_matrix_0= tf_transformations.quaternion_matrix([qx0, qy0, qz0, qw0])</span>
+        <span class="c1">#     temp_matrix_1 = tf_transformations.quaternion_matrix([qx1, qy1, qz1, qw1])</span>
+        <span class="c1">#     print(f&quot;Temp matrix 0: {temp_matrix_0}&quot;)</span>
+        <span class="c1">#     rotation_matrices = [</span>
+        <span class="c1">#         temp_matrix_0[:3, :3],</span>
+        <span class="c1">#         temp_matrix_1[:3, :3]]</span>
+        <span class="c1">#     print(f&quot;Rotation matrices: {rotation_matrices}&quot;)</span>
+        <span class="c1">#     self.lh_config_writer.update_rotation_matrices(rotation_matrices)</span>
+        <span class="c1">#     print();</span>
+        <span class="c1">#     # Update lighthouse pose</span>
+
+    <span class="c1"># ! These are fine</span>
+    <span class="k">def</span> <span class="nf">_set_initial_position</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># self._reset_position_estimator()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Resetting cf position estimator&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cf</span><span class="o">.</span><span class="n">param</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="s1">&#39;kalman.initialX&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initial_translation</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cf</span><span class="o">.</span><span class="n">param</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="s1">&#39;kalman.initialY&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initial_translation</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cf</span><span class="o">.</span><span class="n">param</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="s1">&#39;kalman.initialZ&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initial_translation</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="c1"># self._reset_position_estimator()</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_reset_position_estimator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cf</span><span class="o">.</span><span class="n">param</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="s1">&#39;kalman.resetEstimation&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">)</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cf</span><span class="o">.</span><span class="n">param</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="s1">&#39;kalman.resetEstimation&#39;</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_disconnected</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;disconnected&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_connection_failed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">link_uri</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;connection_failed&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_connection_lost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">link_uri</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;connection_lost&#39;</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+    <span class="n">cflib</span><span class="o">.</span><span class="n">crtp</span><span class="o">.</span><span class="n">init_drivers</span><span class="p">()</span>
+    <span class="n">rclpy</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">crazyflie_publisher</span> <span class="o">=</span> <span class="n">CrazyfliePublisher</span><span class="p">()</span>
+    <span class="n">rclpy</span><span class="o">.</span><span class="n">spin</span><span class="p">(</span><span class="n">crazyflie_publisher</span><span class="p">)</span>
+    <span class="n">crazyflie_publisher</span><span class="o">.</span><span class="n">destroy_node</span><span class="p">()</span>
+    <span class="n">rclpy</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
+    
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+
+
+
+<span class="c1"># For debugging as a normal python file</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">def main():</span>
+<span class="sd">    ls = launch.LaunchService()</span>
+<span class="sd">    ld = generate_launch_description()</span>
+<span class="sd">    ls.include_launch_description(ld)</span>
+<span class="sd">    return ls.run()</span>
+
+
+<span class="sd">if __name__ == &#39;__main__&#39;:</span>
+<span class="sd">    main()</span>
+<span class="sd">&quot;&quot;&quot;</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Will Graham.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

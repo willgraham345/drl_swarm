@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>webots_pkg.lighthouse_functions &mdash; drl_swarm 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            drl_swarm
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../overviews/start_here.html">Start Here</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../overviews/environment_setup.html">Environment Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Modules</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">drl_swarm</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">webots_pkg.lighthouse_functions</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for webots_pkg.lighthouse_functions</h1><div class="highlight"><pre>
+<span></span><span class="c1">#                     ____  _            __          __                                            </span>
+<span class="c1">#    ____ ___  __  __/ / /_(_)________  / /_  ____  / /_   ______      ______ __________ ___  _____</span>
+<span class="c1">#   / __ `__ \/ / / / / __/ / ___/ __ \/ __ \/ __ \/ __/  / ___/ | /| / / __ `/ ___/ __ `__ \/ ___/</span>
+<span class="c1">#  / / / / / / /_/ / / /_/ / /  / /_/ / /_/ / /_/ / /_   (__  )| |/ |/ / /_/ / /  / / / / / (__  ) </span>
+<span class="c1"># /_/ /_/ /_/\__,_/_/\__/_/_/   \____/_.___/\____/\__/  /____/ |__/|__/\__,_/_/  /_/ /_/ /_/____/  </span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Author: Will Graham</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="kn">import</span> <span class="nn">cflib.crtp</span>
+<span class="kn">from</span> <span class="nn">cflib.crazyflie</span> <span class="kn">import</span> <span class="n">Crazyflie</span>
+<span class="kn">from</span> <span class="nn">cflib.crazyflie.log</span> <span class="kn">import</span> <span class="n">LogConfig</span>
+<span class="kn">from</span> <span class="nn">cflib.crazyflie.syncCrazyflie</span> <span class="kn">import</span> <span class="n">SyncCrazyflie</span>
+<span class="kn">from</span> <span class="nn">cflib.crazyflie.syncLogger</span> <span class="kn">import</span> <span class="n">SyncLogger</span>
+<span class="kn">from</span> <span class="nn">cflib.utils</span> <span class="kn">import</span> <span class="n">uri_helper</span>
+
+
+<div class="viewcode-block" id="log_stab_callback">
+<a class="viewcode-back" href="../../src_code_docs/deprecated.html#webots_pkg.lighthouse_functions.log_stab_callback">[docs]</a>
+<span class="k">def</span> <span class="nf">log_stab_callback</span><span class="p">(</span><span class="n">timestamp</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">logconf</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Callback function for logging stabilization data. Works in conjunction with the simple_log_async function.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        timestamp (int): The timestamp of the log message.</span>
+<span class="sd">        data (str): The log message data.</span>
+<span class="sd">        logconf (LogConf): The log configuration object.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;[</span><span class="si">%d</span><span class="s1">][</span><span class="si">%s</span><span class="s1">]: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">timestamp</span><span class="p">,</span> <span class="n">logconf</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">data</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="simple_log_async">
+<a class="viewcode-back" href="../../src_code_docs/deprecated.html#webots_pkg.lighthouse_functions.simple_log_async">[docs]</a>
+<span class="k">def</span> <span class="nf">simple_log_async</span><span class="p">(</span><span class="n">scf</span><span class="p">,</span> <span class="n">logconf</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Asynchronously logs data using the provided log configuration.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        scf: The scf object representing the Crazyflie connection.</span>
+<span class="sd">        logconf: The log configuration to use for logging.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cf</span> <span class="o">=</span> <span class="n">scf</span><span class="o">.</span><span class="n">cf</span>
+    <span class="n">cf</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">add_config</span><span class="p">(</span><span class="n">logconf</span><span class="p">)</span>
+    <span class="n">logconf</span><span class="o">.</span><span class="n">data_received_cb</span><span class="o">.</span><span class="n">add_callback</span><span class="p">(</span><span class="n">log_stab_callback</span><span class="p">)</span>
+    <span class="n">logconf</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+    <span class="n">logconf</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="param_stab_est_callback">
+<a class="viewcode-back" href="../../src_code_docs/deprecated.html#webots_pkg.lighthouse_functions.param_stab_est_callback">[docs]</a>
+<span class="k">def</span> <span class="nf">param_stab_est_callback</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Callback function for parameter stability estimation. We won&#39;t use this function, but it is kept in case parameters are needed</span>
+<span class="sd">    Works in conjunction with the simple_param_async function.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name (str): The name of the parameter.</span>
+<span class="sd">        value (str): The value of the parameter.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The crazyflie has parameter &#39;</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">&#39; set at number: &#39;</span> <span class="o">+</span> <span class="n">value</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="simple_param_async">
+<a class="viewcode-back" href="../../src_code_docs/deprecated.html#webots_pkg.lighthouse_functions.simple_param_async">[docs]</a>
+<span class="k">def</span> <span class="nf">simple_param_async</span><span class="p">(</span><span class="n">scf</span><span class="p">,</span> <span class="n">groupstr</span><span class="p">,</span> <span class="n">namestr</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Asynchronously sets a parameter value in the Crazyflie firmware. </span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        scf (object): The Crazyflie connection object.</span>
+<span class="sd">        groupstr (str): The parameter group.</span>
+<span class="sd">        namestr (str): The parameter name.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cf</span> <span class="o">=</span> <span class="n">scf</span><span class="o">.</span><span class="n">cf</span>
+    <span class="n">full_name</span> <span class="o">=</span> <span class="n">groupstr</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="n">namestr</span>
+
+    <span class="n">cf</span><span class="o">.</span><span class="n">param</span><span class="o">.</span><span class="n">add_update_callback</span><span class="p">(</span><span class="n">group</span><span class="o">=</span><span class="n">groupstr</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">namestr</span><span class="p">,</span>
+                                 <span class="n">cb</span><span class="o">=</span><span class="n">param_stab_est_callback</span><span class="p">)</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">cf</span><span class="o">.</span><span class="n">param</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">full_name</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">cf</span><span class="o">.</span><span class="n">param</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">full_name</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_only_cf_kalman_pos">
+<a class="viewcode-back" href="../../src_code_docs/deprecated.html#webots_pkg.lighthouse_functions.get_only_cf_kalman_pos">[docs]</a>
+<span class="k">def</span> <span class="nf">get_only_cf_kalman_pos</span><span class="p">(</span><span class="n">radio_uri</span> <span class="o">=</span> <span class="s2">&quot;radio://0/80/2M/E7E7E7E7E7&quot;</span><span class="p">):</span>
+
+    <span class="n">uri</span> <span class="o">=</span> <span class="n">uri_helper</span><span class="o">.</span><span class="n">uri_from_env</span><span class="p">(</span><span class="n">radio_uri</span><span class="p">)</span>
+    <span class="n">cflib</span><span class="o">.</span><span class="n">crtp</span><span class="o">.</span><span class="n">init_drivers</span><span class="p">()</span>   
+    <span class="n">lg_pos</span> <span class="o">=</span> <span class="n">LogConfig</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Stabilizer&#39;</span><span class="p">,</span> <span class="n">period_in_ms</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+    <span class="n">lg_pos</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="s1">&#39;kalman.stateX&#39;</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+    <span class="n">lg_pos</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="s1">&#39;kalman.stateY&#39;</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+    <span class="n">lg_pos</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="s1">&#39;kalman.stateZ&#39;</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">SyncCrazyflie</span><span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="n">cf</span><span class="o">=</span><span class="n">Crazyflie</span><span class="p">(</span><span class="n">rw_cache</span><span class="o">=</span><span class="s1">&#39;./cache&#39;</span><span class="p">))</span> <span class="k">as</span> <span class="n">scf</span><span class="p">:</span>
+        <span class="n">simple_log_async</span><span class="p">(</span><span class="n">scf</span><span class="p">,</span> <span class="n">lg_pos</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_cf_pose_according_to_lh">
+<a class="viewcode-back" href="../../src_code_docs/deprecated.html#webots_pkg.lighthouse_functions.get_cf_pose_according_to_lh">[docs]</a>
+<span class="k">def</span> <span class="nf">get_cf_pose_according_to_lh</span><span class="p">(</span><span class="n">radio_uri</span> <span class="o">=</span> <span class="s2">&quot;radio://0/80/2M/E7E7E7E7E7&quot;</span><span class="p">):</span> <span class="c1">#FIXME: Determine if this is necessary. We want position from LH, not kalman</span>
+    <span class="n">uri</span> <span class="o">=</span> <span class="n">uri_helper</span><span class="o">.</span><span class="n">uri_from_env</span><span class="p">(</span><span class="n">radio_uri</span><span class="p">)</span>
+    <span class="n">cflib</span><span class="o">.</span><span class="n">crtp</span><span class="o">.</span><span class="n">init_drivers</span><span class="p">()</span>   
+    <span class="n">lg_pos</span> <span class="o">=</span> <span class="n">LogConfig</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Lighthouse Position&#39;</span><span class="p">,</span> <span class="n">period_in_ms</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+    <span class="n">lg_pos</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="s1">&#39;lighthouse.posX&#39;</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+    <span class="n">lg_pos</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="s1">&#39;lighthouse.posY&#39;</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+    <span class="n">lg_pos</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="s1">&#39;lighthouse.posZ&#39;</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+
+
+    <span class="c1"># ext_pose_config = LogConfig(name=&#39;ext_pos&#39;, period_in_ms=100)</span>
+    <span class="c1"># ext_pose_config.add_variable(&#39;ext_pos.X&#39;, &#39;float&#39;)</span>
+    <span class="c1"># ext_pose_config.add_variable(&#39;ext_pos.Y&#39;, &#39;float&#39;)</span>
+    <span class="c1"># ext_pose_config.add_variable(&#39;ext_pos.Z&#39;, &#39;float&#39;)</span>
+
+    <span class="k">with</span> <span class="n">SyncCrazyflie</span><span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="n">cf</span><span class="o">=</span><span class="n">Crazyflie</span><span class="p">(</span><span class="n">rw_cache</span><span class="o">=</span><span class="s1">&#39;./cache&#39;</span><span class="p">))</span> <span class="k">as</span> <span class="n">scf</span><span class="p">:</span>
+        <span class="n">simple_log_async</span><span class="p">(</span><span class="n">scf</span><span class="p">,</span> <span class="n">lg_pos</span><span class="p">)</span> </div>
+
+
+<div class="viewcode-block" id="compare_kalman_to_lh_pos">
+<a class="viewcode-back" href="../../src_code_docs/deprecated.html#webots_pkg.lighthouse_functions.compare_kalman_to_lh_pos">[docs]</a>
+<span class="k">def</span> <span class="nf">compare_kalman_to_lh_pos</span><span class="p">(</span><span class="n">radio_uri</span> <span class="o">=</span> <span class="s2">&quot;radio://0/80/2M/E7E7E7E7E7&quot;</span><span class="p">):</span>
+    <span class="n">uri</span> <span class="o">=</span> <span class="n">uri_helper</span><span class="o">.</span><span class="n">uri_from_env</span><span class="p">(</span><span class="n">radio_uri</span><span class="p">)</span>
+    <span class="n">cflib</span><span class="o">.</span><span class="n">crtp</span><span class="o">.</span><span class="n">init_drivers</span><span class="p">()</span>
+    <span class="n">log_config_kal_and_lh</span> <span class="o">=</span> <span class="n">LogConfig</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Stabilizer&#39;</span><span class="p">,</span> <span class="n">period_in_ms</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+    <span class="n">log_config_kal_and_lh</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="s1">&#39;kalman.stateX&#39;</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+    <span class="n">log_config_kal_and_lh</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="s1">&#39;kalman.stateY&#39;</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+    <span class="n">log_config_kal_and_lh</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="s1">&#39;kalman.stateZ&#39;</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+    <span class="n">log_config_kal_and_lh</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="s1">&#39;lighthouse.x&#39;</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+    <span class="n">log_config_kal_and_lh</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="s1">&#39;lighthouse.y&#39;</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+    <span class="n">log_config_kal_and_lh</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="s1">&#39;lighthouse.z&#39;</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+    <span class="n">log_config_lh_bs_delta</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="s1">&#39;lighthouse.bs_delta&#39;</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">SyncCrazyflie</span><span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="n">cf</span><span class="o">=</span><span class="n">Crazyflie</span><span class="p">(</span><span class="n">rw_cache</span><span class="o">=</span><span class="s1">&#39;./cache&#39;</span><span class="p">))</span> <span class="k">as</span> <span class="n">scf</span><span class="p">:</span>
+        <span class="n">simple_log_async</span><span class="p">(</span><span class="n">scf</span><span class="p">,</span> <span class="n">log_config_kal_and_lh</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_lh_bs_delta">
+<a class="viewcode-back" href="../../src_code_docs/deprecated.html#webots_pkg.lighthouse_functions.get_lh_bs_delta">[docs]</a>
+<span class="k">def</span> <span class="nf">get_lh_bs_delta</span><span class="p">(</span><span class="n">radio_uri</span> <span class="o">=</span> <span class="s2">&quot;radio://0/80/2M/E7E7E7E7E7&quot;</span><span class="p">):</span>
+    <span class="n">uri</span> <span class="o">=</span> <span class="n">uri_helper</span><span class="o">.</span><span class="n">uri_from_env</span><span class="p">(</span><span class="n">radio_uri</span><span class="p">)</span>
+    <span class="n">cflib</span><span class="o">.</span><span class="n">crtp</span><span class="o">.</span><span class="n">init_drivers</span><span class="p">()</span>
+    <span class="n">log_config_lh_bs_delta</span> <span class="o">=</span> <span class="n">LogConfig</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;lh_bs_delta&#39;</span><span class="p">,</span> <span class="n">period_in_ms</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">SyncCrazyflie</span><span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="n">cf</span><span class="o">=</span><span class="n">Crazyflie</span><span class="p">(</span><span class="n">rw_cache</span><span class="o">=</span><span class="s1">&#39;./cache&#39;</span><span class="p">))</span> <span class="k">as</span> <span class="n">scf</span><span class="p">:</span>
+        <span class="n">simple_log_async</span><span class="p">(</span><span class="n">scf</span><span class="p">,</span> <span class="n">log_config_lh_bs_delta</span><span class="p">)</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">get_only_cf_kalman_pos</span><span class="p">()</span>
+    <span class="n">get_cf_pose_according_to_lh</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Will Graham.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
