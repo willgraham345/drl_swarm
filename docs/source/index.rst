@@ -22,6 +22,7 @@ Documentation Table of Contents
    overviews/start_here
    overviews/environment_setup
    modules
+   build_new_docs/how_to_build_new_docs.rst
 
 
 

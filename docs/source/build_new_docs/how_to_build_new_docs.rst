@@ -1,0 +1,11 @@
+Guide on Updating This Documentation
+====================================
+
+This documentation is generated using the `Sphinx build system<https://www.sphinx-doc.org/en/master/tutorial/index.html>`_ to build an HTML, copied to a specific directory, and published to a ReadTheDocs website. The backend ReadTheDocs has been configured for you, and it will check on each push of the `master` branch if it is necessary to update the documentation. Familiarizing yourself with the build system of Sphinx is a must before progressing forward. 
+
+If you want to update the documentation, you need to follow the steps below:
+
+1. Make necessary changes to docstrings. These follow the Google Python style guide. You'll find these littered throughout the codebase, and you likely are already familiiar with them.
+2. Make sure docstrings are referenced within the `docs/source` directory using reStructuredText. You'll need to familirize yourself with the Sphinx build system if you have added additional classes/functions/nodes to the codebase.
+3. Go to the `docs` directory and run `make html`. This will build the HTML documentation in the `docs/build` directory.
+4. Copy the contents of the html to the `docs/pre_build_html`
