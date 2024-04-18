@@ -39,6 +39,8 @@ extensions = [
     'sphinx.ext.todo',
     'sphinx.ext.viewcode',
     'sphinx.ext.autosummary',
+    'sphinx.ext.autosectionlabel',
+    'myst_parser',
 ]
 napoleon_google_docstring = True
 napoleonn_include_init_with_doc = True

@@ -13,7 +13,7 @@ Much of my time as a research assistant was spent trying to make sense of Ros2, 
 
 I recommend getting started with the :doc:`Start Here <overviews/start_here>` page, as it will give you a good overview of the repository and what you can expect to find here. Good luck!!
 
-If you are wondering how to update this documentation or add new pages, check out the :doc:`How to Build New Docs <build_new_docs/how_to_build_new_docs>` page.
+If you are wondering how to update this documentation or add new pages, check out the :doc:`<build_new_docs/how_to_build_new_docs.rst>` page.
 
 
 Documentation Table of Contents
@@ -27,7 +27,7 @@ Documentation Table of Contents
    build_new_docs/how_to_build_new_docs.rst
 
 Indices and tables
-==================
+------------------
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`

@@ -1,5 +1,5 @@
-Guide on Updating This Documentation
-====================================
+How to Update Documentation
+===========================
 
 This documentation is generated using the `Sphinx build system <https://www.sphinx-doc.org/en/master/tutorial/index.html>`_ to build an HTML, copied to a specific directory, and published to a ReadTheDocs website. The backend ReadTheDocs has been configured for you, and it will check on each push of the `master` branch if it is necessary to update the documentation. Familiarizing yourself with the build system of Sphinx is a must before progressing forward. 
 
