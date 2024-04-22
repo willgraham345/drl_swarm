@@ -46,6 +46,7 @@ napoleon_google_docstring = True
 napoleonn_include_init_with_doc = True
 napoleon_include_private_with_doc = True
 napoleon_include_special_with_doc = True
+autosectionlabel_prefix_document = True
 
 autodoc_default_options = {
     'members': True,

@@ -197,15 +197,15 @@ class LighthouseData:
         )
     """
 
-    def __init__(self, lh_tf2_frames: list[str]):
-        for frame in lh_tf2_frames:
+    def __init__(self, LH_TF2_FRAMES: list[str]):
+        for frame in LH_TF2_FRAMES:
             if not isinstance(frame, str):
                 raise ValueError("lh_tf2_frames must be a list of strings")
 
         self.lh_frames = {}
         self.lh_poses = {}
-        for i in range(len(lh_tf2_frames)):
-            self.lh_frames[i] = lh_tf2_frames[i]
+        for i in range(len(LH_TF2_FRAMES)):
+            self.lh_frames[i] = LH_TF2_FRAMES[i]
             self.lh_poses[i] = Pose(position = Point(x=0.0, y=0.0, z=0.0),
                                     orientation = Quaternion(x = 0.0, y = 0.0, z = 0.0, w = 1.0))
 
@@ -371,9 +371,9 @@ class CrazyfliePublisher(Node):
             self.get_logger().info("Got fly parameter")
             self._link_uri = self.get_parameter('URI').value
             self.get_logger().info("Got URI parameter")
-            self._lh0_pose_frame = self.get_parameter('lh0_pose_frame').value
+            self.LH0_POSE_FRAME = self.get_parameter('lh0_pose_frame').value
             self.get_logger().info("Got lh0_pose_frame parameter")
-            self._lh1_pose_frame = self.get_parameter('lh1_pose_frame').value
+            self.LH1_POSE_FRAME = self.get_parameter('lh1_pose_frame').value
             self.get_logger().info("Got lh1_pose_frame parameter")
             self._initial_translation = self.get_parameter('initial_translation').value
             self.get_logger().info("Got initial_translation parameter")
@@ -386,7 +386,7 @@ class CrazyfliePublisher(Node):
         # ! Initialize class members, subscribers, and publishers
         self.ranges= [0.0, 0.0, 0.0, 0.0, 0.0]
         self.tf_buffers = {0: Buffer(), 1: Buffer()}
-        self.lh_pose_data = LighthouseData([self._lh0_pose_frame, self._lh1_pose_frame])
+        self.lh_pose_data = LighthouseData([self.LH0_POSE_FRAME, self.LH1_POSE_FRAME])
         self._read_config_data = False
         self._robot_config = None
         self._lh_config_writer_initialized = False
