@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>drl_pkg</name>
+  <version>0.0.0</version>
+  <description>Controlling package to launch heterogeneous multi-robo ROS2 system in both simulation and experimentation</description>
+  <maintainer email="willgraham345@gmail.com">will</maintainer>
+  <license>Apache License 2.0</license>
+
+
+  <depend>rclpy</depend>
+  <depend>launch</depend>/home/will/drl_swarm/build/drl_pkg
+  <depend>robot_state_publisher</depend>
+  <depend>geometry_msgs</depend>
+  <depend>webots_ros2_driver</depend>
+  <depend>sensor_msgs</depend>
+  <depend>nav_msgs</depend>
+  <depend>diff_drive_controller</depend>
+  <depend>controller_manager</depend>
+  <depend>tf2_ros</depend>
+  <depend>tf_transformations</depend>
+  <depend>builtin_interfaces</depend>
+  <depend>joint_state_broadcaster</depend>
+  <depend>rviz2</depend>
+  <depend>foxglove_bridge</depend>
+  <depend>teleop_twist_keyboard</depend>
+  
+
+
+  <test_depend>ament_copyright</test_depend>
+  <test_depend>ament_flake8</test_depend>
+  <test_depend>ament_pep257</test_depend>
+  <test_depend>python3-pytest</test_depend>
+  <test_depend>webots_ros2_tests</test_depend>
+  
+
+  <export>
+    <build_type>ament_python</build_type>
+    <rosdoc2>rosdoc2.yaml</rosdoc2>
+  </export>
+</package>

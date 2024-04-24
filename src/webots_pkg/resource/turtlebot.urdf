@@ -1,6 +1,0 @@
-<?xml version="1.0" ?>
-<robot name="TurtlebotBurger3">
-    <webots>
-        <plugin type="webots_pkg.my_turtlebot_driver.MyTurtlebotDriver" />
-    </webots>
-</robot>

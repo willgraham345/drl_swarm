@@ -3,5 +3,5 @@
 ```{toctree}
 :maxdepth: 4
 
-webots_pkg
+drl_pkg
 ```

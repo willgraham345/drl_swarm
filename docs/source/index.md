@@ -23,7 +23,7 @@ If you are wondering how to update this documentation or add new pages, check ou
 overviews/start_here
 overviews/environment_setup
 <Source Code Descriptions>
-webots_pkg
+drl_pkg
 build_new_docs/how_to_build_new_docs
 ```
 

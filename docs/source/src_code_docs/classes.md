@@ -3,38 +3,38 @@
 ## Experimental and Simulation
 
 ```{eval-rst}
-.. autoclass:: webots_pkg.crazyflie_publisher.LighthouseData
+.. autoclass:: drl_pkg.crazyflie_publisher.LighthouseData
 ```
 
 ```{eval-rst}
-.. autoclass:: webots_pkg.crazyflie_publisher.LighthouseConfigWriter
+.. autoclass:: drl_pkg.crazyflie_publisher.LighthouseConfigWriter
 ```
 
 ```{eval-rst}
-.. autoclass:: webots_pkg.crazyflie_publisher.CrazyfliePublisher
+.. autoclass:: drl_pkg.crazyflie_publisher.CrazyfliePublisher
 
 ```
 
 ## Simulation
 
 ```{eval-rst}
-.. autoclass:: webots_pkg.my_turtlebot_driver.MyTurtlebotDriver
+.. autoclass:: drl_pkg.my_turtlebot_driver.MyTurtlebotDriver
 ```
 
 ```{eval-rst}
-.. autoclass:: webots_pkg.potential_field_node.PotentialFieldNode
+.. autoclass:: drl_pkg.potential_field_node.PotentialFieldNode
 ```
 
 ```{eval-rst}
-.. autoclass:: webots_pkg.simple_mapper.SimpleMapper
+.. autoclass:: drl_pkg.simple_mapper.SimpleMapper
 ```
 
 ```{eval-rst}
-.. autoclass:: webots_pkg.swarm_classes.cf
+.. autoclass:: drl_pkg.swarm_classes.cf
 ```
 
 ```{eval-rst}
-.. autoclass:: webots_pkg.swarm_classes.tb
+.. autoclass:: drl_pkg.swarm_classes.tb
 ```
 
 ```{eval-rst}
