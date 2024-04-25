@@ -6,8 +6,11 @@
 # /_/ /_/ /_/\__,_/_/\__/_/_/   \____/_.___/\____/\__/  /____/ |__/|__/\__,_/_/  /_/ /_/ /_/____/  
 
 import os
+import math
 import json
 import typing
+import sys
+import warnings
 
 
 class cf():
@@ -24,10 +27,22 @@ class cf():
 
     """
     def __init__(self, name, start_position, URI_address=None, start_orientation=None):
+        assert isinstance(name, str), f"Name must be a string, not {name}"
+        assert isinstance(start_position, (list)), f"Start position must be a list or tuple, not {start_position}"
+        for coord in start_position:
+            assert isinstance(coord, (int, float)), f"Start position coordinates must be integers or floats, not {coord}"
+        if start_orientation is not None:
+            assert isinstance(start_orientation, (list)), f"Start orientation must be a list or tuple, not {start_orientation}"
+        if URI_address is not None:
+            assert isinstance(URI_address, str), f"URI address must be a string, not {URI_address}"
         self.name = name
         self.URI_address = URI_address
         self.start_position = start_position
         self.start_orientation = start_orientation
+    def get_yaw(self) -> float:
+        qw, qx, qy, qz = self.start_orientation
+        yaw = math.atan2(2.0 * (qy * qz + qw * qx), qw * qw - qx * qx - qy * qy + qz * qz)
+        return yaw
 
 
 class tb(): 
@@ -42,11 +57,24 @@ class tb():
     :param start_orientation: Starting orientation of turtlebot
     :type start_orientation: list
     """
-    def __init__(self, name, start_position, ROS2_address=None, start_orientation=None):
+    def __init__(self, name, start_position, ROS2_address=None, start_orientation: list =[0, 0, 0, 1]):
+        assert isinstance(name, str), "Name must be a string"
+        assert isinstance(start_position, (list)), "Start position must be a list or tuple"
+        assert isinstance(start_position, (list)), f"Start position must be a list or tuple, not {start_position}"
+        for coord in start_position:
+            assert isinstance(coord, (int, float)), f"Start position coordinates must be integers or floats, not {coord}"
+        if start_orientation is not None:
+            assert isinstance(start_orientation, (list)), f"Start orientation must be a list or tuple, not {start_orientation}"
+        if ROS2_address is not None:
+            assert isinstance(ROS2_address, str), f"URI address must be a string, not {ROS2_address}"
         self.name = name
         self.ROS2_address = ROS2_address
         self.start_position = start_position
         self.start_orientation = start_orientation
+    def get_yaw(self) -> float:
+        qw, qx, qy, qz = self.start_orientation
+        yaw = math.atan2(2.0 * (qy * qz + qw * qx), qw * qw - qx * qx - qy * qy + qz * qz)
+        return yaw
 
 class Swarm():
         """
@@ -76,11 +104,83 @@ class Swarm():
                 else:
                         self.world_file = world_file
         
-        def add_tb(self, tb):
-                self.turtlebots.append(tb)
+        def add_tb(self, tb_in):
+            assert isinstance(tb_in, tb), "Input must be an instance of tb class"
+            self.turtlebots.append(tb_in)
+            print(f"Added turtlebot {tb_in.name} to swarm, current turtlebots: {self.turtlebots}", file=sys.stdout)
+
+        def add_cf(self, cf_in):
+            assert isinstance(cf_in, cf), "Input must be an instance of cf class"
+            self.crazyflies.append(cf_in)
+            print(f"Added crazyflie {cf_in.name} to swarm, current crazyflies: {self.crazyflies}", file=sys.stdout)
+
+        def get_robot_str(self) -> str:
+            robots = {}
+            for tb in self.turtlebots:
+                robots[tb.name] = {
+                    "start_position": tb.start_position,
+                    "ROS2_address": tb.ROS2_address,
+                    "start_orientation": tb.start_orientation
+                }
+            for cf in self.crazyflies:
+                robots[cf.name] = {
+                    "start_position": cf.start_position,
+                    "URI_address": cf.URI_address,
+                    "start_orientation": cf.start_orientation
+                }
+            return json.dumps(robots, sort_keys=True, indent=2)
+
+        def get_robots_dict_list(self) -> dict:
+            robots = []
+            for tb in self.turtlebots:
+                robots.append({
+                    "name": tb.name,
+                    "x_pose": tb.start_position[0],
+                    "y_pose": tb.start_position[1],
+                    "z_pose": tb.start_position[2],
+                    "roll": tb.start_orientation[0],
+                    "pitch": tb.start_orientation[1],
+                    "yaw": tb.start_orientation[2]
+                })
+            for cf in self.crazyflies:
+                robots.append({
+                    "name": cf.name,
+                    "x": cf.start_position[0],
+                    "y": cf.start_position[1],
+                    "z": cf.start_position[2],
+                    "roll": cf.start_orientation[0],
+                    "pitch": cf.start_orientation[1],
+                    "yaw": cf.start_orientation[2]
+                })
+            return robots
         
-        def add_cf(self, cf):
-                self.crazyflies.append(cf)
+        def parse_multi_robot_pose(self) -> dict:
+            """
+            Parses the pose of multiple robots and returns a dictionary with their positions and orientations.
+            Example input: "robot1={x: 1.0, y: 1.0, yaw: 1.5707}; robot2={x: 1.0, y: 1.0, yaw: 1.5707}"
+            """
+            multirobots = {}
+            for tb in self.turtlebots:
+                pose_dict = {
+                    "x": tb.start_position[0],
+                    "y": tb.start_position[1],
+                    "z": tb.start_position[2],
+                    "roll": 0.0,
+                    "pitch": 0.0,
+                    "yaw": tb.get_yaw()
+                }
+                multirobots[tb.name] = pose_dict
+            for cf in self.crazyflies:
+                pose_dict = {
+                    "x": cf.start_position[0],
+                    "y": cf.start_position[1],
+                    "z": cf.start_position[2],
+                    "roll": 0.0,
+                    "pitch": 0.0,
+                    "yaw": cf.get_yaw()
+                }
+                multirobots[cf.name] = pose_dict
+            return multirobots
 
 
 

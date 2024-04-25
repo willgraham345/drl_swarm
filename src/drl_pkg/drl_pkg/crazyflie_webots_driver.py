@@ -135,7 +135,7 @@ class CrazyflieWebotsDriver():
 
     def cmd_vel_callback(self, twist):
         self.target_twist = twist
-    def publish_odometry(self, odom_msg): #TODO: Fix this publisher
+        """def publish_odometry(self, odom_msg): 
         #
         # odom = Odometry()
         # odom.header.stamp = Time(seconds=self.robot.getTime()).to_msg()
@@ -173,7 +173,7 @@ class CrazyflieWebotsDriver():
         # odom.twist.twist.angular.x = self.current_pose.angular[0]
         # odom.twist.twist.angular.y = self.current_pose.angular[1]
         # odom.twist.twist.angular.z = self.current_pose.angular[2]
-        self.odom_publisher.publish(odom_msg)
+        self.odom_publisher.publish(odom_msg)"""
     
     def step(self):
         rclpy.spin_once(self.__node, timeout_sec=0)
@@ -300,7 +300,7 @@ class CrazyflieWebotsDriver():
         motorPower_m3 =  cmd_thrust + cmd_roll - cmd_pitch + cmd_yaw
         motorPower_m4 =  cmd_thrust + cmd_roll + cmd_pitch - cmd_yaw
 
-        scaling = 1000 ##Todo, remove necessity of this scaling (SI units in firmware)
+        scaling = 1000
         self.__m1_motor.setVelocity(-motorPower_m1/scaling)
         self.__m2_motor.setVelocity(motorPower_m2/scaling)
         self.__m3_motor.setVelocity(-motorPower_m3/scaling)
