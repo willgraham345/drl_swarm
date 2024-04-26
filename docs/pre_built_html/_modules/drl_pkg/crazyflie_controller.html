@@ -1,22 +1,22 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="../../">
+<html class="writer-html5" lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>webots_pkg.crazyflie_controller &mdash; drl_swarm 1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+  <title>drl_pkg.crazyflie_controller &mdash; drl_swarm 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
 
   
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
-        <script src="../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -45,6 +45,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../../overviews/start_here.html">Start Here</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../overviews/environment_setup.html">Environment Setup</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../modules.html">Source Code Descriptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drl_pkg.html"><code class="docutils literal notranslate"><span class="pre">/src/drl_pkg</span></code> Background and Explanation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drl_pkg.html#table-of-contents-for-repository">Table of Contents for Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build_new_docs/how_to_build_new_docs.html">How to Update Documentation</a></li>
 </ul>
 
         </div>
@@ -62,7 +65,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">webots_pkg.crazyflie_controller</li>
+      <li class="breadcrumb-item active">drl_pkg.crazyflie_controller</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -71,7 +74,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for webots_pkg.crazyflie_controller</h1><div class="highlight"><pre>
+  <h1>Source code for drl_pkg.crazyflie_controller</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">rclpy</span>
 <span class="kn">from</span> <span class="nn">rclpy.node</span> <span class="kn">import</span> <span class="n">Node</span>
 <span class="kn">import</span> <span class="nn">sys</span>
@@ -87,12 +90,10 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="c1"># Change this path to your crazyflie-firmware folder</span>
-<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;/home/will/drl_swarm/src/webots_pkg/resource&#39;</span><span class="p">)</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;/home/will/drl_swarm/src/mrs_pkg/resource&#39;</span><span class="p">)</span>
 <span class="c1"># import graph_search</span>
 
-<div class="viewcode-block" id="CrazyflieControllerNode">
-<a class="viewcode-back" href="../../src_code_docs/deprecated.html#webots_pkg.crazyflie_controller.CrazyflieControllerNode">[docs]</a>
-<span class="k">class</span> <span class="nc">CrazyflieControllerNode</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+<div class="viewcode-block" id="CrazyflieControllerNode"><a class="viewcode-back" href="../../src_code_docs/deprecated.html#drl_pkg.crazyflie_controller.CrazyflieControllerNode">[docs]</a><span class="k">class</span> <span class="nc">CrazyflieControllerNode</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This class is a ROS2 node that controls the crazyflie in the webots simulation. Works hand in hand with the graph_search.py file to plan a path to the goal. Deprecated in favor of Nav2 platform.</span>
 
@@ -138,9 +139,7 @@
 <span class="sd">        old_goal (list): Previous goal position.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="CrazyflieControllerNode.__init__">
-<a class="viewcode-back" href="../../src_code_docs/deprecated.html#webots_pkg.crazyflie_controller.CrazyflieControllerNode.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CrazyflieControllerNode.__init__"><a class="viewcode-back" href="../../src_code_docs/deprecated.html#drl_pkg.crazyflie_controller.CrazyflieControllerNode.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;crazyflie_controller&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cmd_vel_publisher_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_publisher</span><span class="p">(</span>
             <span class="n">Twist</span><span class="p">,</span> <span class="s1">&#39;/cf1/cmd_vel&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
@@ -192,10 +191,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">path_complete</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">old_goal</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span></div>
 
-
-<div class="viewcode-block" id="CrazyflieControllerNode.odom_callback">
-<a class="viewcode-back" href="../../src_code_docs/deprecated.html#webots_pkg.crazyflie_controller.CrazyflieControllerNode.odom_callback">[docs]</a>
-    <span class="k">def</span> <span class="nf">odom_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">odom</span><span class="p">:</span> <span class="n">Odometry</span><span class="p">):</span>
+<div class="viewcode-block" id="CrazyflieControllerNode.odom_callback"><a class="viewcode-back" href="../../src_code_docs/deprecated.html#drl_pkg.crazyflie_controller.CrazyflieControllerNode.odom_callback">[docs]</a>    <span class="k">def</span> <span class="nf">odom_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">odom</span><span class="p">:</span> <span class="n">Odometry</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Callback function for odometry data in ros node.</span>
 
@@ -328,10 +324,7 @@
         <span class="n">cmd</span><span class="o">.</span><span class="n">angular</span><span class="o">.</span><span class="n">z</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">z_rot_cmd</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cmd_vel_publisher_</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="CrazyflieControllerNode.map_callback">
-<a class="viewcode-back" href="../../src_code_docs/deprecated.html#webots_pkg.crazyflie_controller.CrazyflieControllerNode.map_callback">[docs]</a>
-    <span class="k">def</span> <span class="nf">map_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="n">OccupancyGrid</span><span class="p">):</span>
+<div class="viewcode-block" id="CrazyflieControllerNode.map_callback"><a class="viewcode-back" href="../../src_code_docs/deprecated.html#drl_pkg.crazyflie_controller.CrazyflieControllerNode.map_callback">[docs]</a>    <span class="k">def</span> <span class="nf">map_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="n">OccupancyGrid</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Callback function for map data in ros node.</span>
 
@@ -384,15 +377,12 @@
 
             <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">find_path</span><span class="p">())</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">occ_grid_cpm</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">occ_grid_origin</span></div>
 
-
             <span class="c1"># z = np.zeros(np.shape(self.path))</span>
             <span class="c1"># self.path = np.append(self.path, z,1)</span>
 
             <span class="c1"># self.get_logger().info(str(self.path))</span>
 
-<div class="viewcode-block" id="CrazyflieControllerNode.find_path">
-<a class="viewcode-back" href="../../src_code_docs/deprecated.html#webots_pkg.crazyflie_controller.CrazyflieControllerNode.find_path">[docs]</a>
-    <span class="k">def</span> <span class="nf">find_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CrazyflieControllerNode.find_path"><a class="viewcode-back" href="../../src_code_docs/deprecated.html#drl_pkg.crazyflie_controller.CrazyflieControllerNode.find_path">[docs]</a>    <span class="k">def</span> <span class="nf">find_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        finds the path to the goal using the bfs algorithm</span>
 
@@ -421,11 +411,8 @@
         <span class="n">g</span><span class="o">.</span><span class="n">display_map</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
 
         <span class="k">return</span> <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span></div>
-
     
-<div class="viewcode-block" id="CrazyflieControllerNode.check_distance">
-<a class="viewcode-back" href="../../src_code_docs/deprecated.html#webots_pkg.crazyflie_controller.CrazyflieControllerNode.check_distance">[docs]</a>
-    <span class="k">def</span> <span class="nf">check_distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt1</span><span class="p">,</span> <span class="n">pt2</span><span class="p">):</span>
+<div class="viewcode-block" id="CrazyflieControllerNode.check_distance"><a class="viewcode-back" href="../../src_code_docs/deprecated.html#drl_pkg.crazyflie_controller.CrazyflieControllerNode.check_distance">[docs]</a>    <span class="k">def</span> <span class="nf">check_distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt1</span><span class="p">,</span> <span class="n">pt2</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        checks the distance between two points</span>
 
@@ -438,11 +425,8 @@
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">ans</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">pt1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">pt2</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">pt1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">pt2</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">ans</span></div>
-
     
-<div class="viewcode-block" id="CrazyflieControllerNode.check_near">
-<a class="viewcode-back" href="../../src_code_docs/deprecated.html#webots_pkg.crazyflie_controller.CrazyflieControllerNode.check_near">[docs]</a>
-    <span class="k">def</span> <span class="nf">check_near</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coords</span><span class="p">):</span>
+<div class="viewcode-block" id="CrazyflieControllerNode.check_near"><a class="viewcode-back" href="../../src_code_docs/deprecated.html#drl_pkg.crazyflie_controller.CrazyflieControllerNode.check_near">[docs]</a>    <span class="k">def</span> <span class="nf">check_near</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coords</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        checks the neighbors of a cell</span>
 
@@ -467,11 +451,8 @@
             <span class="n">neighbors</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
         <span class="k">return</span> <span class="n">neighbors</span></div>
-
     
-<div class="viewcode-block" id="CrazyflieControllerNode.publish_array">
-<a class="viewcode-back" href="../../src_code_docs/deprecated.html#webots_pkg.crazyflie_controller.CrazyflieControllerNode.publish_array">[docs]</a>
-    <span class="k">def</span> <span class="nf">publish_array</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CrazyflieControllerNode.publish_array"><a class="viewcode-back" href="../../src_code_docs/deprecated.html#drl_pkg.crazyflie_controller.CrazyflieControllerNode.publish_array">[docs]</a>    <span class="k">def</span> <span class="nf">publish_array</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Publishes marker array to visualize the path</span>
 
@@ -491,10 +472,7 @@
                 <span class="n">msg</span><span class="o">.</span><span class="n">markers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">marker</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">marker_publisher_</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="CrazyflieControllerNode.update_planner">
-<a class="viewcode-back" href="../../src_code_docs/deprecated.html#webots_pkg.crazyflie_controller.CrazyflieControllerNode.update_planner">[docs]</a>
-    <span class="k">def</span> <span class="nf">update_planner</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CrazyflieControllerNode.update_planner"><a class="viewcode-back" href="../../src_code_docs/deprecated.html#drl_pkg.crazyflie_controller.CrazyflieControllerNode.update_planner">[docs]</a>    <span class="k">def</span> <span class="nf">update_planner</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Updates the planner</span>
 
@@ -511,10 +489,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">path_complete</span> <span class="o">=</span> <span class="kc">True</span></div>
 
-
-<div class="viewcode-block" id="CrazyflieControllerNode.limit_velocity">
-<a class="viewcode-back" href="../../src_code_docs/deprecated.html#webots_pkg.crazyflie_controller.CrazyflieControllerNode.limit_velocity">[docs]</a>
-    <span class="k">def</span> <span class="nf">limit_velocity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vel</span><span class="p">,</span> <span class="n">limit</span><span class="p">):</span>
+<div class="viewcode-block" id="CrazyflieControllerNode.limit_velocity"><a class="viewcode-back" href="../../src_code_docs/deprecated.html#drl_pkg.crazyflie_controller.CrazyflieControllerNode.limit_velocity">[docs]</a>    <span class="k">def</span> <span class="nf">limit_velocity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vel</span><span class="p">,</span> <span class="n">limit</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">vel</span> <span class="o">&gt;</span> <span class="n">limit</span><span class="p">:</span>
             <span class="n">vel</span> <span class="o">=</span> <span class="n">limit</span>
         <span class="k">elif</span> <span class="n">vel</span> <span class="o">&lt;</span> <span class="o">-</span><span class="n">limit</span><span class="p">:</span>
@@ -522,11 +497,8 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">vel</span> <span class="o">=</span> <span class="n">vel</span>
         <span class="k">return</span> <span class="n">vel</span></div>
-
     
-<div class="viewcode-block" id="CrazyflieControllerNode.get_marker">
-<a class="viewcode-back" href="../../src_code_docs/deprecated.html#webots_pkg.crazyflie_controller.CrazyflieControllerNode.get_marker">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_marker</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CrazyflieControllerNode.get_marker"><a class="viewcode-back" href="../../src_code_docs/deprecated.html#drl_pkg.crazyflie_controller.CrazyflieControllerNode.get_marker">[docs]</a>    <span class="k">def</span> <span class="nf">get_marker</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">marker</span> <span class="o">=</span> <span class="n">Marker</span><span class="p">()</span>
         <span class="n">marker</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">frame_id</span> <span class="o">=</span> <span class="s1">&#39;\cf1\map&#39;</span>
         <span class="n">marker</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="mi">0</span>
@@ -550,11 +522,8 @@
         <span class="n">marker</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="mf">1.0</span>
 
         <span class="k">return</span> <span class="n">marker</span></div>
-
     
-<div class="viewcode-block" id="CrazyflieControllerNode.range_callback">
-<a class="viewcode-back" href="../../src_code_docs/deprecated.html#webots_pkg.crazyflie_controller.CrazyflieControllerNode.range_callback">[docs]</a>
-    <span class="k">def</span> <span class="nf">range_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="n">Range</span><span class="p">):</span>
+<div class="viewcode-block" id="CrazyflieControllerNode.range_callback"><a class="viewcode-back" href="../../src_code_docs/deprecated.html#drl_pkg.crazyflie_controller.CrazyflieControllerNode.range_callback">[docs]</a>    <span class="k">def</span> <span class="nf">range_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="n">Range</span><span class="p">):</span>
 
         <span class="k">if</span> <span class="n">msg</span><span class="o">.</span><span class="n">range</span> <span class="o">&lt;</span> <span class="mf">0.2</span><span class="p">:</span>
 
@@ -563,12 +532,9 @@
             <span class="n">cmd</span><span class="o">.</span><span class="n">linear</span><span class="o">.</span><span class="n">y</span><span class="o">=</span><span class="mf">0.05</span>
             <span class="n">cmd</span><span class="o">.</span><span class="n">angular</span><span class="o">.</span><span class="n">z</span><span class="o">=</span><span class="mf">0.0</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">cmd_vel_publisher_</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span></div>
-
             
 
-<div class="viewcode-block" id="CrazyflieControllerNode.range_callback_right">
-<a class="viewcode-back" href="../../src_code_docs/deprecated.html#webots_pkg.crazyflie_controller.CrazyflieControllerNode.range_callback_right">[docs]</a>
-    <span class="k">def</span> <span class="nf">range_callback_right</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="n">Range</span><span class="p">):</span>
+<div class="viewcode-block" id="CrazyflieControllerNode.range_callback_right"><a class="viewcode-back" href="../../src_code_docs/deprecated.html#drl_pkg.crazyflie_controller.CrazyflieControllerNode.range_callback_right">[docs]</a>    <span class="k">def</span> <span class="nf">range_callback_right</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="n">Range</span><span class="p">):</span>
 
         <span class="k">if</span> <span class="n">msg</span><span class="o">.</span><span class="n">range</span> <span class="o">&lt;</span> <span class="mf">0.2</span><span class="p">:</span>
 
@@ -577,12 +543,9 @@
             <span class="n">cmd</span><span class="o">.</span><span class="n">linear</span><span class="o">.</span><span class="n">y</span><span class="o">=</span><span class="mf">0.0</span>
             <span class="n">cmd</span><span class="o">.</span><span class="n">angular</span><span class="o">.</span><span class="n">z</span><span class="o">=</span><span class="mf">0.0</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">cmd_vel_publisher_</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span></div>
-
             
     
-<div class="viewcode-block" id="CrazyflieControllerNode.range_callback_left">
-<a class="viewcode-back" href="../../src_code_docs/deprecated.html#webots_pkg.crazyflie_controller.CrazyflieControllerNode.range_callback_left">[docs]</a>
-    <span class="k">def</span> <span class="nf">range_callback_left</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="n">Range</span><span class="p">):</span>
+<div class="viewcode-block" id="CrazyflieControllerNode.range_callback_left"><a class="viewcode-back" href="../../src_code_docs/deprecated.html#drl_pkg.crazyflie_controller.CrazyflieControllerNode.range_callback_left">[docs]</a>    <span class="k">def</span> <span class="nf">range_callback_left</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="n">Range</span><span class="p">):</span>
 
         <span class="k">if</span> <span class="n">msg</span><span class="o">.</span><span class="n">range</span> <span class="o">&lt;</span> <span class="mf">0.2</span><span class="p">:</span>
 
@@ -591,12 +554,9 @@
             <span class="n">cmd</span><span class="o">.</span><span class="n">linear</span><span class="o">.</span><span class="n">y</span><span class="o">=</span><span class="mf">0.0</span>
             <span class="n">cmd</span><span class="o">.</span><span class="n">angular</span><span class="o">.</span><span class="n">z</span><span class="o">=</span><span class="mf">0.0</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">cmd_vel_publisher_</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span></div>
-
             
 
-<div class="viewcode-block" id="CrazyflieControllerNode.range_callback_back">
-<a class="viewcode-back" href="../../src_code_docs/deprecated.html#webots_pkg.crazyflie_controller.CrazyflieControllerNode.range_callback_back">[docs]</a>
-    <span class="k">def</span> <span class="nf">range_callback_back</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="n">Range</span><span class="p">):</span>
+<div class="viewcode-block" id="CrazyflieControllerNode.range_callback_back"><a class="viewcode-back" href="../../src_code_docs/deprecated.html#drl_pkg.crazyflie_controller.CrazyflieControllerNode.range_callback_back">[docs]</a>    <span class="k">def</span> <span class="nf">range_callback_back</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="n">Range</span><span class="p">):</span>
 
         <span class="k">if</span> <span class="n">msg</span><span class="o">.</span><span class="n">range</span> <span class="o">&lt;</span> <span class="mf">0.2</span><span class="p">:</span>
 
@@ -604,9 +564,7 @@
             <span class="n">cmd</span><span class="o">.</span><span class="n">linear</span><span class="o">.</span><span class="n">x</span><span class="o">=</span><span class="mf">0.0</span>
             <span class="n">cmd</span><span class="o">.</span><span class="n">linear</span><span class="o">.</span><span class="n">y</span><span class="o">=-</span><span class="mf">0.05</span>
             <span class="n">cmd</span><span class="o">.</span><span class="n">angular</span><span class="o">.</span><span class="n">z</span><span class="o">=</span><span class="mf">0.0</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">cmd_vel_publisher_</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span></div>
-</div>
-
+            <span class="bp">self</span><span class="o">.</span><span class="n">cmd_vel_publisher_</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span></div></div>
             
 
 <span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>

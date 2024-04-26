@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Environment Setup &mdash; drl_swarm 1.0 documentation</title>
+  <title>Where I left off &mdash; drl_swarm 1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
 
@@ -20,9 +20,7 @@
         <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Development Environment Setup" href="dev_environment.html" />
-    <link rel="prev" title="Start Here" href="start_here.html" /> 
+    <link rel="search" title="Search" href="../search.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -44,14 +42,9 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="start_here.html">Start Here</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Environment Setup</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="dev_environment.html">Development Environment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dependencies_needed.html">Needed Dependencies</a></li>
-<li class="toctree-l2"><a class="reference internal" href="webots_how_to_guide.html">Guide on how to run Webots simulation</a></li>
-</ul>
-</li>
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../overviews/start_here.html">Start Here</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overviews/environment_setup.html">Environment Setup</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../modules.html">Source Code Descriptions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../drl_pkg.html"><code class="docutils literal notranslate"><span class="pre">/src/drl_pkg</span></code> Background and Explanation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../drl_pkg.html#table-of-contents-for-repository">Table of Contents for Repository</a></li>
@@ -72,9 +65,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Environment Setup</li>
+      <li class="breadcrumb-item active">Where I left off</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/overviews/environment_setup.md.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/where_i_left/where_i_left.md.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -82,35 +75,19 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="environment-setup">
-<h1>Environment Setup<a class="headerlink" href="#environment-setup" title="Permalink to this heading"></a></h1>
-<p>Links for how to setup the development environment and the dependencies needed for the project.</p>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="dev_environment.html">Development Environment</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="dev_environment.html#vscode-extensions">VSCode Extensions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dev_environment.html#dependencies-needed-for-the-program">Dependencies needed for the program</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dev_environment.html#helpful-tools-and-software-for-development">Helpful Tools and Software for Development</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="dependencies_needed.html">Needed Dependencies</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="dependencies_needed.html#webots">WeBots</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="webots_how_to_guide.html">Guide on how to run Webots simulation</a></li>
-</ul>
-</div>
-<p>Once you have this set up, I’d then recommend starting to read the <a class="reference internal" href="../drl_pkg.html"><span class="doc">/src/drl_pkg Background and Explanation</span></a> and attempting to run a few of the launch files to get a feel for how the simulation and the code works.</p>
-<p>After playing around with that code, please visit the <a class="reference internal" href="../where_i_left/where_i_left.html"><span class="doc">Where I left off</span></a> to see the current state of the project and the direction it needs to head.</p>
+  <section id="where-i-left-off">
+<h1>Where I left off<a class="headerlink" href="#where-i-left-off" title="Permalink to this heading"></a></h1>
+<p>Where I attempted to modify the source code: <a class="reference external" href="https://github.com/bitcraze/crazyflie-firmware/blob/9e7e697906eced761d5fd27be4f5d866654da250/src/modules/src/lighthouse/lighthouse_position_est.c#L207-L214">lighthouse-position-est source code change</a></p>
+<p>This needs to be removed for yaw estimation to correctly be performed: <a class="reference external" href="https://github.com/bitcraze/crazyflie-firmware/blob/master/src/utils/src/lighthouse/lighthouse_geometry.c#L169-L201">yaw calculation</a></p>
+<p>I wasn’t able to figure out how to get the crazyflie to fly with the inverted lighthouse sensor. I built jigs to hold the Crazyflie aboove the lighthouse basestations to make sure that I was getting the correct position calculations from the lighthouse. I tried nearly every rotation matrix, and wasn’t ever able to get the data to agree with the Vicon data. I always had one or two of the axes negative (i.e. displacements in one of the axes was negative). This typically manifested as having a correct displacement for the x and y, with a negative displacement for the z.</p>
+<p>I also tried to put a negative sign on a few various locations but didn’t have much luck.</p>
+<p>I built testing features and Ros2 launch scripts into the repository that you can repurpose to new testing.</p>
 </section>
 
 
            </div>
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="start_here.html" class="btn btn-neutral float-left" title="Start Here" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="dev_environment.html" class="btn btn-neutral float-right" title="Development Environment Setup" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-    </div>
+          <footer>
 
   <hr/>
 

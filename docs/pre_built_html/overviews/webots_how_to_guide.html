@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dependencies for the project &mdash; drl_swarm 1.0 documentation</title>
+  <title>How to launch and interact with the Webots package &mdash; drl_swarm 1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
 
@@ -21,8 +21,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="How to launch and interact with the Webots package" href="webots_how_to_guide.html" />
-    <link rel="prev" title="Development Environment Setup" href="dev_environment.html" /> 
+    <link rel="next" title="Source Code Descriptions" href="../modules.html" />
+    <link rel="prev" title="Dependencies for the project" href="dependencies_needed.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -48,11 +48,8 @@
 <li class="toctree-l1"><a class="reference internal" href="start_here.html">Start Here</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="environment_setup.html">Environment Setup</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="dev_environment.html">Development Environment</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Needed Dependencies</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#webots">WeBots</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="webots_how_to_guide.html">Guide on how to run Webots simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dependencies_needed.html">Needed Dependencies</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Guide on how to run Webots simulation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../modules.html">Source Code Descriptions</a></li>
@@ -76,9 +73,9 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="environment_setup.html">Environment Setup</a></li>
-      <li class="breadcrumb-item active">Dependencies for the project</li>
+      <li class="breadcrumb-item active">How to launch and interact with the Webots package</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/overviews/dependencies_needed.md.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/overviews/webots_how_to_guide.md.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -86,36 +83,23 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="dependencies-for-the-project">
-<h1>Dependencies for the project<a class="headerlink" href="#dependencies-for-the-project" title="Permalink to this heading"></a></h1>
+  <section id="how-to-launch-and-interact-with-the-webots-package">
+<h1>How to launch and interact with the Webots package<a class="headerlink" href="#how-to-launch-and-interact-with-the-webots-package" title="Permalink to this heading"></a></h1>
+<p>The only way to have Ros2 interact with Webots is from a launch file. Webots has Ros2 nodes and example launch files. This overview will show you how to:</p>
 <ol class="arabic simple">
-<li><p>Installation of Nav2: <a class="reference external" href="https://navigation.ros.org/build_instructions/index.html">https://navigation.ros.org/build_instructions/index.html</a>
-: Nav2 Base Page: <a class="reference external" href="https://navigation.ros.org/index.html">https://navigation.ros.org/index.html</a>
-Nav2 Plugin Tutorial: <a class="reference external" href="https://navigation.ros.org/plugin_tutorials/index.html">https://navigation.ros.org/plugin_tutorials/index.html</a></p></li>
+<li><p>Launch a webots world in simulation</p></li>
+<li><p>How to configure a webots world with robot protos placed.</p></li>
+<li><p>How to write a webots driver node to interact with the robot in the world.</p></li>
+<li><p>Progress on webots simulation</p></li>
 </ol>
-<ol class="arabic simple" start="3">
-<li><p>Installation of ROS 2 Humble: <a class="reference external" href="https://docs.ros.org/en/humble/Installation.html">https://docs.ros.org/en/humble/Installation.html</a></p></li>
-<li><p>Crazyflie Firmware: <a class="reference external" href="https://github.com/bitcraze/crazyflie-firmware">https://github.com/bitcraze/crazyflie-firmware</a></p></li>
-<li><p>Crazyradio Firmware: <a class="reference external" href="https://github.com/bitcraze/crazyradio-firmware">https://github.com/bitcraze/crazyradio-firmware</a></p></li>
-<li><p>Crazyflie Python Client: <a class="reference external" href="https://github.com/bitcraze/crazyflie-clients-python">https://github.com/bitcraze/crazyflie-clients-python</a></p></li>
-<li><p>Crazyflie Python Library: <a class="reference external" href="https://github.com/bitcraze/crazyflie-lib-python">https://github.com/bitcraze/crazyflie-lib-python</a></p></li>
-<li><p>WeBots Installation: <a class="reference external" href="https://www.cyberbotics.com/doc/guide/installation-procedure">https://www.cyberbotics.com/doc/guide/installation-procedure</a></p></li>
-</ol>
-<p>Install using “Installing the Debian Package with the Advanced Packaging Tool (APT)”. Not Snap!</p>
-<section id="webots">
-<h2>WeBots<a class="headerlink" href="#webots" title="Permalink to this heading"></a></h2>
-<ol class="arabic simple">
-<li><p>How to use WeBots in ROS2: <a class="reference external" href="https://www.cyberbotics.com/doc/guide/using-ros">https://www.cyberbotics.com/doc/guide/using-ros</a></p></li>
-</ol>
-</section>
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="dev_environment.html" class="btn btn-neutral float-left" title="Development Environment Setup" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="webots_how_to_guide.html" class="btn btn-neutral float-right" title="How to launch and interact with the Webots package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="dependencies_needed.html" class="btn btn-neutral float-left" title="Dependencies for the project" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../modules.html" class="btn btn-neutral float-right" title="Source Code Descriptions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

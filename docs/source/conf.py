@@ -14,8 +14,8 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath('../'))
 sys.path.insert(0, os.path.abspath('../../'))
-sys.path.insert(0, os.path.abspath('../../src/webots_pkg/'))
-sys.path.insert(0, os.path.abspath('../../src/webots_pkg/launch/'))
+sys.path.insert(0, os.path.abspath('../../src/drl_pkg/'))
+sys.path.insert(0, os.path.abspath('../../src/drl_pkg/launch/'))
 # sys.path.insert(0, os.path.abspath('../../src/webots_pkg/launch/'))
 # -- Project information -----------------------------------------------------
 

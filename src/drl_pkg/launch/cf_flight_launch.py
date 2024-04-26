@@ -11,14 +11,15 @@ from launch.actions import IncludeLaunchDescription, ExecuteProcess
 
 def generate_launch_description():
     """
-    Ros2 launch function to test flying a cf_publisher node with the `fly` node parameter set to `True`. This essentially runs the cf_publisher node with added visualization and control nodes.
+    Ros2 launch function to test flying a cf_publisher node with the `fly` node parameter set to `True`. This essentially runs the `drl_pkg.crazyflie_publisher.CrazyfliePublisher`. 
 
     Usage:
-        `$ ros2 launch drl_pkg cf_flight_launch.py`
-        `$ ros2 run drl_pkg cf_publisher --ros-args --fly:=True`
+        >>> ros2 launch drl_pkg cf_flight_launch.py
+        # With ros arguments (Parameters):
+        >>> ros2 run drl_pkg cf_publisher --ros-args --fly:=True
 
     Args:
-        params_file (str): The path to the experiment configuration file. Default is 'config/experiment_config.yaml'.
+        params_file (:obj:`str`, optional): The path to the experiment configuration file. Defaults to 'config/experiment_config.yaml'.
 
     Returns:
         ld (LaunchDescription): The launch description object, invoked by the Usage.

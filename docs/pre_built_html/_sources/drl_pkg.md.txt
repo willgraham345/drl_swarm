@@ -1,4 +1,4 @@
-# `/src/drl_pkg` Explanation and Table of Contents
+# `/src/drl_pkg` Background and Explanation
 
 Like a typical ROS repository, this repository will be comprised of a `/src`, `build/`, and `install/` folder. The `src/` folder will contain all of the source code for the repository, and the `build/` and `install/` folders will be used to build and install the repository, respectively. The `build/` and `install/` folders will be created when the repository is built for the first time after cloning and are ignored by the `.gitignore` file. We'll focus on the `src/` folder in-depth.
 
@@ -53,11 +53,11 @@ The only exception to this folder is the `data_analysis` folder, which is used t
 
 > - Where *all* of the Ros2 nodes are implemented. This will be discussed in depth in the docs.
 
-`worlds`
+### `worlds`
 
 World files for the webots simulator.
 
-## Repository Table of Contents
+# Table of Contents for Repository
 
 ```{toctree}
 :maxdepth: 1

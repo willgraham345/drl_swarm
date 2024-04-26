@@ -327,7 +327,7 @@ class LighthouseConfigWriter:
 
 class CrazyfliePublisher(Node):
 
-    """
+    """drl_pkg.crazyflie_publisher.crazyfliepublisher
     Publisher node for controlling the Crazyflie drone.
 
     This node initializes the necessary publishers, subscribers, and timers for controlling the Crazyflie drone.

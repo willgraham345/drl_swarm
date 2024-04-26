@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Environment Setup &mdash; drl_swarm 1.0 documentation</title>
+  <title>How to Update Documentation &mdash; drl_swarm 1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
 
@@ -21,8 +21,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Development Environment Setup" href="dev_environment.html" />
-    <link rel="prev" title="Start Here" href="start_here.html" /> 
+    <link rel="prev" title="Deprecated Docs" href="../src_code_docs/deprecated.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -45,17 +44,12 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="start_here.html">Start Here</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Environment Setup</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="dev_environment.html">Development Environment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dependencies_needed.html">Needed Dependencies</a></li>
-<li class="toctree-l2"><a class="reference internal" href="webots_how_to_guide.html">Guide on how to run Webots simulation</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../overviews/start_here.html">Start Here</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overviews/environment_setup.html">Environment Setup</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../modules.html">Source Code Descriptions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../drl_pkg.html"><code class="docutils literal notranslate"><span class="pre">/src/drl_pkg</span></code> Background and Explanation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../drl_pkg.html#table-of-contents-for-repository">Table of Contents for Repository</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../build_new_docs/how_to_build_new_docs.html">How to Update Documentation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">How to Update Documentation</a></li>
 </ul>
 
         </div>
@@ -72,9 +66,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Environment Setup</li>
+      <li class="breadcrumb-item active">How to Update Documentation</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/overviews/environment_setup.md.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/build_new_docs/how_to_build_new_docs.md.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -82,34 +76,25 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="environment-setup">
-<h1>Environment Setup<a class="headerlink" href="#environment-setup" title="Permalink to this heading"></a></h1>
-<p>Links for how to setup the development environment and the dependencies needed for the project.</p>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="dev_environment.html">Development Environment</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="dev_environment.html#vscode-extensions">VSCode Extensions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dev_environment.html#dependencies-needed-for-the-program">Dependencies needed for the program</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dev_environment.html#helpful-tools-and-software-for-development">Helpful Tools and Software for Development</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="dependencies_needed.html">Needed Dependencies</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="dependencies_needed.html#webots">WeBots</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="webots_how_to_guide.html">Guide on how to run Webots simulation</a></li>
-</ul>
-</div>
-<p>Once you have this set up, I’d then recommend starting to read the <a class="reference internal" href="../drl_pkg.html"><span class="doc">/src/drl_pkg Background and Explanation</span></a> and attempting to run a few of the launch files to get a feel for how the simulation and the code works.</p>
-<p>After playing around with that code, please visit the <a class="reference internal" href="../where_i_left/where_i_left.html"><span class="doc">Where I left off</span></a> to see the current state of the project and the direction it needs to head.</p>
+  <section id="how-to-update-documentation">
+<h1>How to Update Documentation<a class="headerlink" href="#how-to-update-documentation" title="Permalink to this heading"></a></h1>
+<p>This documentation is generated using the <a class="reference external" href="https://www.sphinx-doc.org/en/master/tutorial/index.html">Sphinx build system</a> to build an HTML, copied to a specific directory, and published to a ReadTheDocs website. The backend ReadTheDocs has been configured for you, and it will check on each push of the <code class="docutils literal notranslate"><span class="pre">master</span></code> branch if it is necessary to update the documentation. Familiarizing yourself with the build system of Sphinx is a must before progressing forward.</p>
+<p>As an additional note, there is a great guide on using MyST as the language for Sphinx to read. <a class="reference external" href="https://myst-parser.readthedocs.io/en/latest/index.html">MyST overview </a> is a great guide on how the language works and how to reference and build the documentation.</p>
+<p>If you want to update the documentation, you need to follow the steps below:</p>
+<ol class="arabic simple">
+<li><p>Make necessary changes to docstrings. These follow the Google Python style guide. You’ll find these littered throughout the codebase, and you likely are already familiiar with them.</p></li>
+<li><p>Make sure docstrings are referenced within the <code class="docutils literal notranslate"><span class="pre">docs/source</span></code> directory using reStructuredText. You’ll need to familirize yourself with the Sphinx build system if you have added additional classes/functions/nodes to the codebase.</p></li>
+<li><p>Go to the <code class="docutils literal notranslate"><span class="pre">docs</span></code> directory and run <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">html</span></code>. This will build the HTML documentation in the <code class="docutils literal notranslate"><span class="pre">docs/build</span></code> directory.</p></li>
+<li><p>Copy the contents of the html to the <code class="docutils literal notranslate"><span class="pre">docs/pre_build_html</span></code></p></li>
+</ol>
+<p>The ReadTheDocs has a webhook connected to the repository, and it will automatically update the documentation on each push to the <code class="docutils literal notranslate"><span class="pre">master</span></code> branch. Again, this is all built off of the <code class="docutils literal notranslate"><span class="pre">docs/source</span></code> rst files from the <code class="docutils literal notranslate"><span class="pre">index.rst</span></code> file. Sphinx has some great tutorials so I recommend using that to change the repository.</p>
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="start_here.html" class="btn btn-neutral float-left" title="Start Here" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="dev_environment.html" class="btn btn-neutral float-right" title="Development Environment Setup" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../src_code_docs/deprecated.html" class="btn btn-neutral float-left" title="Deprecated Docs" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

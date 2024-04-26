@@ -1,4 +1,4 @@
-# Classes/ROS2 Nodes in `/src/webots_pkg/webots_pkg`
+# Classes and Nodes in `/src/webots_pkg/webots_pkg`
 
 ## Experimental and Simulation
 
@@ -12,6 +12,7 @@
 
 ```{eval-rst}
 .. autoclass:: drl_pkg.crazyflie_publisher.CrazyfliePublisher
+
 ```
 
 ## Simulation

@@ -1,23 +1,23 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="../">
+<html class="writer-html5" lang="en">
 <head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Development Environment Setup &mdash; drl_swarm 1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
 
   
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=f2a433a1"></script>
-        <script src="../_static/doctools.js?v=888ff710"></script>
-        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -54,9 +54,13 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="dependencies_needed.html">Needed Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="webots_how_to_guide.html">Guide on how to run Webots simulation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../modules.html">Source Code Descriptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drl_pkg.html"><code class="docutils literal notranslate"><span class="pre">/src/drl_pkg</span></code> Background and Explanation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drl_pkg.html#table-of-contents-for-repository">Table of Contents for Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../build_new_docs/how_to_build_new_docs.html">How to Update Documentation</a></li>
 </ul>
 
         </div>
@@ -76,7 +80,7 @@
           <li class="breadcrumb-item"><a href="environment_setup.html">Environment Setup</a></li>
       <li class="breadcrumb-item active">Development Environment Setup</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/overviews/dev_environment.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/overviews/dev_environment.md.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -85,59 +89,51 @@
            <div itemprop="articleBody">
              
   <section id="development-environment-setup">
-<h1>Development Environment Setup<a class="headerlink" href="#development-environment-setup" title="Link to this heading"></a></h1>
+<h1>Development Environment Setup<a class="headerlink" href="#development-environment-setup" title="Permalink to this heading"></a></h1>
 <section id="vscode-extensions">
-<h2>VSCode Extensions<a class="headerlink" href="#vscode-extensions" title="Link to this heading"></a></h2>
+<h2>VSCode Extensions<a class="headerlink" href="#vscode-extensions" title="Permalink to this heading"></a></h2>
 <ol class="arabic simple">
-<li><dl class="simple">
-<dt><strong>ROS</strong></dt><dd><ul class="simple">
-<li><p>Id: ms-iot.vscode-ros</p></li>
+<li><p><strong>ROS</strong>
+: - Id: ms-iot.vscode-ros</p>
+<ul class="simple">
 <li><p>Description: Develop Robot Operating System (ROS) with Visual Studio Code.</p></li>
 <li><p>Version: 0.9.6</p></li>
 <li><p>Publisher: Microsoft</p></li>
 <li><p><a class="reference external" href="https://marketplace.visualstudio.com/items?itemName=ms-iot.vscode-ros">Ros VS Marketplace Link</a></p></li>
 <li><p>Can’t stress how helpful this extension is. It will let you set up Intellisense with different Ros2 packages. This is absolutely a must.</p></li>
 </ul>
-</dd>
-</dl>
 </li>
-<li><dl class="simple">
-<dt>Error Lens</dt><dd><ul class="simple">
-<li><p>Id: usernamehw.errorlens</p></li>
+<li><p>Error Lens
+: - Id: usernamehw.errorlens</p>
+<ul class="simple">
 <li><p>Description: Improve highlighting of errors, warnings and other language diagnostics.</p></li>
 <li><p>Version: 3.16.0</p></li>
 <li><p>Publisher: Alexander</p></li>
-<li><p><cite>Error Lens VS Marketplace Link &lt;https://marketplace.visualstudio.com/items?itemName=usernamehw.errorlens&gt;</cite></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Error</span> <span class="pre">Lens</span> <span class="pre">VS</span> <span class="pre">Marketplace</span> <span class="pre">Link</span> <span class="pre">&lt;https://marketplace.visualstudio.com/items?itemName=usernamehw.errorlens&gt;</span></code></p></li>
 </ul>
-</dd>
-</dl>
 </li>
-<li><dl class="simple">
-<dt>Better Comments</dt><dd><ul class="simple">
-<li><p>Id: aaron-bond.better-comments</p></li>
+<li><p>Better Comments
+: - Id: aaron-bond.better-comments</p>
+<ul class="simple">
 <li><p>Description: Improve your code commenting by annotating with alert, informational, TODOs, and more!</p></li>
 <li><p>Version: 3.0.2</p></li>
 <li><p>Publisher: Aaron Bond</p></li>
-<li><p><cite>Better Comments VS Marketplace Link &lt;https://marketplace.visualstudio.com/items?itemName=aaron-bond.better-comments&gt;</cite></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Better</span> <span class="pre">Comments</span> <span class="pre">VS</span> <span class="pre">Marketplace</span> <span class="pre">Link</span> <span class="pre">&lt;https://marketplace.visualstudio.com/items?itemName=aaron-bond.better-comments&gt;</span></code></p></li>
 </ul>
-</dd>
-</dl>
 </li>
-<li><dl class="simple">
-<dt>TODO Tree</dt><dd><ul class="simple">
-<li><p>Id: Gruntfuggly.todo-tree</p></li>
+<li><p>TODO Tree
+: - Id: Gruntfuggly.todo-tree</p>
+<ul class="simple">
 <li><p>Description: Show TODO, FIXME, etc. comment tags in a tree view</p></li>
 <li><p>Version: 0.0.226</p></li>
 <li><p>Publisher: Gruntfuggly</p></li>
-<li><p><cite>TODO Tree VS Marketplace Link &lt;https://marketplace.visualstudio.com/items?itemName=Gruntfuggly.todo-tree&gt;</cite></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TODO</span> <span class="pre">Tree</span> <span class="pre">VS</span> <span class="pre">Marketplace</span> <span class="pre">Link</span> <span class="pre">&lt;https://marketplace.visualstudio.com/items?itemName=Gruntfuggly.todo-tree&gt;</span></code></p></li>
 </ul>
-</dd>
-</dl>
 </li>
 </ol>
 </section>
 <section id="dependencies-needed-for-the-program">
-<h2>Dependencies needed for the program<a class="headerlink" href="#dependencies-needed-for-the-program" title="Link to this heading"></a></h2>
+<h2>Dependencies needed for the program<a class="headerlink" href="#dependencies-needed-for-the-program" title="Permalink to this heading"></a></h2>
 <p><strong>ROS 2 Packages</strong>
 Installed with apt, make sure to replace $ROS_DISTRO with your ROS 2 distribution (e.g. foxy, galactic, etc.):</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>sudo apt-get install ros-$ROS_DISTRO-tf-transformations
@@ -154,21 +150,14 @@ Should be installed:</p>
 </div>
 </section>
 <section id="helpful-tools-and-software-for-development">
-<h2>Helpful Tools and Software for Development<a class="headerlink" href="#helpful-tools-and-software-for-development" title="Link to this heading"></a></h2>
+<h2>Helpful Tools and Software for Development<a class="headerlink" href="#helpful-tools-and-software-for-development" title="Permalink to this heading"></a></h2>
 <ol class="arabic simple">
-<li><dl class="simple">
-<dt>Foxglove Studio</dt><dd><ul class="simple">
-<li><dl class="simple">
-<dt>Description: Foxglove Studio is a free, open-source tool for visualizing and interacting with robotics data. Imagine a better rviz2.</dt><dd><ul>
-<li><p>You will find some of the ros2 launch scripts to have foxglove websockets embedded as nodes. This is to allow for real-time visualization of the robot’s state. If you don’t want to use foxglove, these can be commented out.</p></li>
+<li><p>Foxglove Studio
+: - Description: Foxglove Studio is a free, open-source tool for visualizing and interacting with robotics data. Imagine a better rviz2.
+: - You will find some of the ros2 launch scripts to have foxglove websockets embedded as nodes. This is to allow for real-time visualization of the robot’s state. If you don’t want to use foxglove, these can be commented out.</p>
+<ul class="simple">
+<li><p>Follow install instructions from the website: <code class="docutils literal notranslate"><span class="pre">Foxglove</span> <span class="pre">Studio</span> <span class="pre">Website</span> <span class="pre">&lt;https://foxglove.dev/studio/&gt;</span></code></p></li>
 </ul>
-</dd>
-</dl>
-</li>
-<li><p>Follow install instructions from the website: <cite>Foxglove Studio Website &lt;https://foxglove.dev/studio/&gt;</cite></p></li>
-</ul>
-</dd>
-</dl>
 </li>
 </ol>
 </section>
