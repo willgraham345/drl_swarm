@@ -1,22 +1,22 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>cf_publisher_launch &mdash; drl_swarm 1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
 
   
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
@@ -44,9 +44,7 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../overviews/start_here.html">Start Here</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../overviews/environment_setup.html">Environment Setup</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules.html">Source Code Descriptions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../drl_pkg.html"><code class="docutils literal notranslate"><span class="pre">/src/drl_pkg</span></code> Background and Explanation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../drl_pkg.html#table-of-contents-for-repository">Table of Contents for Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drl_pkg.html"><code class="docutils literal notranslate"><span class="pre">/src/drl_pkg</span></code> Explanation and Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../build_new_docs/how_to_build_new_docs.html">How to Update Documentation</a></li>
 </ul>
 
@@ -89,29 +87,31 @@
 
 
 
-<div class="viewcode-block" id="generate_launch_description"><a class="viewcode-back" href="../src_code_docs/launch_functions.html#cf_publisher_launch.generate_launch_description">[docs]</a><span class="k">def</span> <span class="nf">generate_launch_description</span><span class="p">():</span>
+<div class="viewcode-block" id="generate_launch_description">
+<a class="viewcode-back" href="../src_code_docs/launch_functions.html#cf_publisher_launch.generate_launch_description">[docs]</a>
+<span class="k">def</span> <span class="nf">generate_launch_description</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A verbose example of launching the cf_publisher node with a variety of launch parameters set. Additionally, this will publish a static transform between the world and the base_link of the crazyflie. This also reads in starting position from the experiment configuration file and sets the initial position of the crazyflie to that value. This is useful for testing the localization of a crazyflie in use with two lighthouse basestations.</span>
-<span class="sd">    </span>
+
 <span class="sd">    Usage:</span>
-<span class="sd">        `$ ros2 launch drl_pkg cf_publisher_launch.py`</span>
-<span class="sd">        `$ ros2 run drl_pkg cf_publisher --ros-args --fly:=True`</span>
-<span class="sd">        `$ ros2 run drl_pkg cf_publisher --ros-args --URI:=radio://0/90/2M/E7E7E7E7E8`</span>
-<span class="sd">    </span>
+<span class="sd">        &gt;&gt;&gt; ros2 launch drl_pkg cf_publisher_launch.py`</span>
+<span class="sd">        &gt;&gt;&gt; ros2 run drl_pkg cf_publisher --ros-args --fly:=True`</span>
+<span class="sd">        &gt;&gt;&gt; ros2 run drl_pkg cf_publisher --ros-args --URI:=radio://0/90/2M/E7E7E7E7E8`</span>
+
 <span class="sd">    Args:</span>
-<span class="sd">        LaunchConfiguration:</span>
-<span class="sd">            swarm_config_yaml_arg (str): The path to the experiment configuration file. Default is &#39;config/experiment_config.yaml&#39;.</span>
-<span class="sd">            namespace_arg (str): The namespace to apply to the nodes. Default is &#39;&#39;.</span>
-<span class="sd">            lh0_pose_frame_arg (str): The frame ID for the first lighthouse pose. Default is &#39;tb1/lighthouse_pose&#39;.</span>
-<span class="sd">            lh1_pose_frame_arg (str): The frame ID for the second lighthouse pose. Default is &#39;tb2/lighthouse_pose&#39;.</span>
-<span class="sd">            fly_arg (str): Whether to start the Crazyflie in flight mode. Default is &#39;False&#39;.</span>
-<span class="sd">            URI_arg (str): The URI of the Crazyflie. Default is &#39;radio://0/80/2M/E7E7E7E7E7&#39;.</span>
+<span class="sd">        :obj:`swarm_config_yaml_arg` (:obj:`str`): The path to the experiment configuration file. Default is &#39;config/experiment_config.yaml&#39;.</span>
+<span class="sd">        :obj:`namespace_arg` (:obj:`str`): The namespace to apply to the nodes. Default is &#39;&#39;.</span>
+<span class="sd">        :obj:`lh0_pose_frame_arg` (:obj:`str`): The frame ID for the first lighthouse pose. Default is &#39;tb1/lighthouse_pose&#39;.</span>
+<span class="sd">        :obj:`lh1_pose_frame_arg` (:obj:`str`): The frame ID for the second lighthouse pose. Default is &#39;tb2/lighthouse_pose&#39;.</span>
+<span class="sd">        :obj:`fly_arg` (:obj:`str`): Whether to start the Crazyflie in flight mode. Default is &#39;False&#39;.</span>
+<span class="sd">        :obj:`URI_arg` (:obj:`str`): The URI of the Crazyflie. Default is &#39;radio://0/80/2M/E7E7E7E7E7&#39;.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        ld (LaunchDescription): The launch description object, invoked by the Usage. </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">PACKAGE_DIR</span> <span class="o">=</span> <span class="n">get_package_share_directory</span><span class="p">(</span><span class="s1">&#39;drl_pkg&#39;</span><span class="p">)</span>
     <span class="n">CONFIG_FILE_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PACKAGE_DIR</span><span class="p">,</span> <span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="s1">&#39;experiment_config.yaml&#39;</span><span class="p">))</span>
+    <span class="c1"># TODO: Change this config file path to be a parameter passed into the launch file</span>
     <span class="n">swarm_config_yaml_arg</span> <span class="o">=</span> <span class="n">DeclareLaunchArgument</span><span class="p">(</span>
         <span class="s1">&#39;swarm_config_yaml&#39;</span><span class="p">,</span>
         <span class="n">default_value</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">CONFIG_FILE_PATH</span><span class="p">),</span>
@@ -161,6 +161,7 @@
     <span class="c1"># Declare and set launch arguments</span>
 
     <span class="n">cf_instance_cmds</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># TODO: See if I can remove this and use the config file instead.</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">CONFIG_FILE_PATH</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
@@ -233,6 +234,7 @@
         <span class="n">ld</span><span class="o">.</span><span class="n">add_action</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">ld</span></div>
+
 </pre></div>
 
            </div>

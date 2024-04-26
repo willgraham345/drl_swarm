@@ -1,22 +1,22 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>drl_pkg.crazyflie_publisher &mdash; drl_swarm 1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
 
   
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -44,9 +44,7 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../overviews/start_here.html">Start Here</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../overviews/environment_setup.html">Environment Setup</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Source Code Descriptions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../drl_pkg.html"><code class="docutils literal notranslate"><span class="pre">/src/drl_pkg</span></code> Background and Explanation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../drl_pkg.html#table-of-contents-for-repository">Table of Contents for Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drl_pkg.html"><code class="docutils literal notranslate"><span class="pre">/src/drl_pkg</span></code> Explanation and Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../build_new_docs/how_to_build_new_docs.html">How to Update Documentation</a></li>
 </ul>
 
@@ -259,7 +257,9 @@
         <span class="n">lh_config</span><span class="p">[</span><span class="n">bs</span><span class="p">]</span> <span class="o">=</span> <span class="n">bs_geo</span>
     <span class="k">return</span> <span class="n">lh_config</span>
 
-<div class="viewcode-block" id="LighthouseData"><a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.crazyflie_publisher.LighthouseData">[docs]</a><span class="k">class</span> <span class="nc">LighthouseData</span><span class="p">:</span>
+<div class="viewcode-block" id="LighthouseData">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.crazyflie_publisher.LighthouseData">[docs]</a>
+<span class="k">class</span> <span class="nc">LighthouseData</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Initializes a new instance of the LighthousePoses class.</span>
 
@@ -274,7 +274,9 @@
 <span class="sd">        )</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="LighthouseData.__init__"><a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.crazyflie_publisher.LighthouseData.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">LH_TF2_FRAMES</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+<div class="viewcode-block" id="LighthouseData.__init__">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.crazyflie_publisher.LighthouseData.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">LH_TF2_FRAMES</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
         <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="n">LH_TF2_FRAMES</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;lh_tf2_frames must be a list of strings&quot;</span><span class="p">)</span>
@@ -286,11 +288,17 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">lh_poses</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">Pose</span><span class="p">(</span><span class="n">position</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mf">0.0</span><span class="p">),</span>
                                     <span class="n">orientation</span> <span class="o">=</span> <span class="n">Quaternion</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="LighthouseData.set_pose"><a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.crazyflie_publisher.LighthouseData.set_pose">[docs]</a>    <span class="k">def</span> <span class="nf">set_pose</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_pose</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Pose</span><span class="p">]):</span>
+
+<div class="viewcode-block" id="LighthouseData.set_pose">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.crazyflie_publisher.LighthouseData.set_pose">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_pose</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_pose</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Pose</span><span class="p">]):</span>
         <span class="k">for</span> <span class="n">bs</span><span class="p">,</span> <span class="n">pose</span> <span class="ow">in</span> <span class="n">input_pose</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">lh_poses</span><span class="p">[</span><span class="n">bs</span><span class="p">]</span> <span class="o">=</span> <span class="n">pose</span></div>
+
     
-<div class="viewcode-block" id="LighthouseData.get_lh_config"><a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.crazyflie_publisher.LighthouseData.get_lh_config">[docs]</a>    <span class="k">def</span> <span class="nf">get_lh_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="LighthouseData.get_lh_config">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.crazyflie_publisher.LighthouseData.get_lh_config">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_lh_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">lh_config</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">bs</span><span class="p">,</span> <span class="n">pose</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">lh_poses</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">bs_geo</span> <span class="o">=</span> <span class="n">LighthouseBsGeometry</span><span class="p">()</span>
@@ -304,10 +312,16 @@
             <span class="n">bs_geo</span><span class="o">.</span><span class="n">rotation_matrix</span> <span class="o">=</span> <span class="n">temp_rot_matrix</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span>
             <span class="n">bs_geo</span><span class="o">.</span><span class="n">valid</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="n">lh_config</span><span class="p">[</span><span class="n">bs</span><span class="p">]</span> <span class="o">=</span> <span class="n">bs_geo</span>
-        <span class="k">return</span> <span class="n">lh_config</span></div></div>
+        <span class="k">return</span> <span class="n">lh_config</span></div>
+</div>
 
-<div class="viewcode-block" id="LighthouseConfigWriter"><a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.crazyflie_publisher.LighthouseConfigWriter">[docs]</a><span class="k">class</span> <span class="nc">LighthouseConfigWriter</span><span class="p">:</span>
-<div class="viewcode-block" id="LighthouseConfigWriter.__init__"><a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.crazyflie_publisher.LighthouseConfigWriter.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cf</span><span class="p">:</span> <span class="n">Crazyflie</span><span class="p">,</span> <span class="n">calibs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">LighthouseBsCalibration</span><span class="p">]):</span>
+
+<div class="viewcode-block" id="LighthouseConfigWriter">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.crazyflie_publisher.LighthouseConfigWriter">[docs]</a>
+<span class="k">class</span> <span class="nc">LighthouseConfigWriter</span><span class="p">:</span>
+<div class="viewcode-block" id="LighthouseConfigWriter.__init__">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.crazyflie_publisher.LighthouseConfigWriter.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cf</span><span class="p">:</span> <span class="n">Crazyflie</span><span class="p">,</span> <span class="n">calibs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">LighthouseBsCalibration</span><span class="p">]):</span>
         <span class="c1"># TODO: Refactor the lh0_rotation matrix so we can pass in both rotation matrices</span>
         <span class="nb">print</span><span class="p">();</span> <span class="nb">print</span><span class="p">();</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Configuring lighthouse&#39;</span><span class="p">)</span>
@@ -317,6 +331,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_read_write_event</span> <span class="o">=</span> <span class="n">Event</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">LH_HELPER</span> <span class="o">=</span> <span class="n">LighthouseMemHelper</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_CF</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_read_write_event</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span></div>
+
 
 
         <span class="c1"># * Write lighthouse geometries to memory, output results to console.</span>
@@ -333,7 +348,9 @@
         <span class="c1"># print(); print()</span>
 
 
-<div class="viewcode-block" id="LighthouseConfigWriter.write_lh_geos_to_memory"><a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.crazyflie_publisher.LighthouseConfigWriter.write_lh_geos_to_memory">[docs]</a>    <span class="k">def</span> <span class="nf">write_lh_geos_to_memory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lh_config</span><span class="p">):</span>
+<div class="viewcode-block" id="LighthouseConfigWriter.write_lh_geos_to_memory">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.crazyflie_publisher.LighthouseConfigWriter.write_lh_geos_to_memory">[docs]</a>
+    <span class="k">def</span> <span class="nf">write_lh_geos_to_memory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lh_config</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">LH_HELPER</span><span class="o">.</span><span class="n">write_geos</span><span class="p">(</span><span class="n">lh_config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lh_geo_data_written_callback</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_read_write_event</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
@@ -342,7 +359,10 @@
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error writing lighthouse data to memory: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="LighthouseConfigWriter.write_lh_calibs_to_memory"><a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.crazyflie_publisher.LighthouseConfigWriter.write_lh_calibs_to_memory">[docs]</a>    <span class="k">def</span> <span class="nf">write_lh_calibs_to_memory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="LighthouseConfigWriter.write_lh_calibs_to_memory">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.crazyflie_publisher.LighthouseConfigWriter.write_lh_calibs_to_memory">[docs]</a>
+    <span class="k">def</span> <span class="nf">write_lh_calibs_to_memory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">LH_HELPER</span><span class="o">.</span><span class="n">write_calibs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_calibs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lh_calib_data_written_callback</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_read_write_event</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
@@ -350,17 +370,24 @@
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error writing lighthouse calibration to memory: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="LighthouseConfigWriter.read_lh_geos_from_memory"><a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.crazyflie_publisher.LighthouseConfigWriter.read_lh_geos_from_memory">[docs]</a>    <span class="k">def</span> <span class="nf">read_lh_geos_from_memory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="LighthouseConfigWriter.read_lh_geos_from_memory">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.crazyflie_publisher.LighthouseConfigWriter.read_lh_geos_from_memory">[docs]</a>
+    <span class="k">def</span> <span class="nf">read_lh_geos_from_memory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Reading lighthouse data from memory&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">LH_HELPER</span><span class="o">.</span><span class="n">read_all_geos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_lh_geo_read_callback</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_read_write_event</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_read_write_event</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span></div>
+
     
-<div class="viewcode-block" id="LighthouseConfigWriter.read_lh_calibs_from_memory"><a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.crazyflie_publisher.LighthouseConfigWriter.read_lh_calibs_from_memory">[docs]</a>    <span class="k">def</span> <span class="nf">read_lh_calibs_from_memory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="LighthouseConfigWriter.read_lh_calibs_from_memory">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.crazyflie_publisher.LighthouseConfigWriter.read_lh_calibs_from_memory">[docs]</a>
+    <span class="k">def</span> <span class="nf">read_lh_calibs_from_memory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Reading lighthouse calibration from memory&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">LH_HELPER</span><span class="o">.</span><span class="n">read_all_calibs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_lh_calib_read_callback</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_read_write_event</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_read_write_event</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span></div>
+
 
     <span class="k">def</span> <span class="nf">_lh_geo_read_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geo_data</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Lighthouse data read&quot;</span><span class="p">)</span>
@@ -394,17 +421,23 @@
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Writing crazyflie lighthouse calibration data failed&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_read_write_event</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
 
-<div class="viewcode-block" id="LighthouseConfigWriter.update_rotation_matrices"><a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.crazyflie_publisher.LighthouseConfigWriter.update_rotation_matrices">[docs]</a>    <span class="k">def</span> <span class="nf">update_rotation_matrices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rotation_matrices</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]):</span>
+<div class="viewcode-block" id="LighthouseConfigWriter.update_rotation_matrices">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.crazyflie_publisher.LighthouseConfigWriter.update_rotation_matrices">[docs]</a>
+    <span class="k">def</span> <span class="nf">update_rotation_matrices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rotation_matrices</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lh_rotation_matrices</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_read_write_event</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lh_rotation_matrices</span> <span class="o">=</span> <span class="n">rotation_matrices</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">read_lh_geos_from_memory</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">write_lh_geos_to_memory</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">read_lh_geos_from_memory</span><span class="p">()</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">read_lh_geos_from_memory</span><span class="p">()</span></div>
+</div>
 
-<div class="viewcode-block" id="CrazyfliePublisher"><a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.crazyflie_publisher.CrazyfliePublisher">[docs]</a><span class="k">class</span> <span class="nc">CrazyfliePublisher</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
 
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="CrazyfliePublisher">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.crazyflie_publisher.CrazyfliePublisher">[docs]</a>
+<span class="k">class</span> <span class="nc">CrazyfliePublisher</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;drl_pkg.crazyflie_publisher.crazyfliepublisher</span>
 <span class="sd">    Publisher node for controlling the Crazyflie drone.</span>
 
 <span class="sd">    This node initializes the necessary publishers, subscribers, and timers for controlling the Crazyflie drone.</span>
@@ -418,7 +451,9 @@
 <span class="sd">        - lh1_pose_frame (str): The frame ID for the pose of the second lighthouse.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="CrazyfliePublisher.__init__"><a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.crazyflie_publisher.CrazyfliePublisher.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CrazyfliePublisher.__init__">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.crazyflie_publisher.CrazyfliePublisher.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
         <span class="c1"># ! Name node</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;crazyflie_publisher&quot;</span><span class="p">)</span> 
@@ -515,6 +550,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">hover</span><span class="p">[</span><span class="s1">&#39;height&#39;</span><span class="p">])</span>
         
         <span class="bp">self</span><span class="o">.</span><span class="n">_cf</span><span class="o">.</span><span class="n">param</span><span class="o">.</span><span class="n">request_update_of_all_params</span><span class="p">()</span></div>
+
         
 
     <span class="k">def</span> <span class="nf">_connected</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">link_uri</span><span class="p">:</span><span class="nb">str</span><span class="p">):</span>
@@ -562,14 +598,19 @@
         <span class="c1"># except Exception as e:</span>
             <span class="c1"># self.get_logger().fatal(f&quot;Error reading lighthouse geometries from config file: {e}&quot;)</span>
 
-<div class="viewcode-block" id="CrazyfliePublisher.sendHoverCommand"><a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.crazyflie_publisher.CrazyfliePublisher.sendHoverCommand">[docs]</a>    <span class="k">def</span> <span class="nf">sendHoverCommand</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CrazyfliePublisher.sendHoverCommand">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.crazyflie_publisher.CrazyfliePublisher.sendHoverCommand">[docs]</a>
+    <span class="k">def</span> <span class="nf">sendHoverCommand</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">hover_height</span> <span class="o">=</span>  <span class="bp">self</span><span class="o">.</span><span class="n">hover</span><span class="p">[</span><span class="s1">&#39;height&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">hover</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]</span><span class="o">*</span><span class="mf">0.1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_cf</span><span class="o">.</span><span class="n">commander</span><span class="o">.</span><span class="n">send_hover_setpoint</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">hover</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">hover</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">hover</span><span class="p">[</span><span class="s1">&#39;yaw&#39;</span><span class="p">],</span>
             <span class="n">hover_height</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hover</span><span class="p">[</span><span class="s1">&#39;height&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hover_height</span></div>
 
-<div class="viewcode-block" id="CrazyfliePublisher.cmd_vel_callback"><a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.crazyflie_publisher.CrazyfliePublisher.cmd_vel_callback">[docs]</a>    <span class="k">def</span> <span class="nf">cmd_vel_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">twist</span><span class="p">:</span> <span class="n">Twist</span><span class="p">):</span>
+
+<div class="viewcode-block" id="CrazyfliePublisher.cmd_vel_callback">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.crazyflie_publisher.CrazyfliePublisher.cmd_vel_callback">[docs]</a>
+    <span class="k">def</span> <span class="nf">cmd_vel_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">twist</span><span class="p">:</span> <span class="n">Twist</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">target_twist</span> <span class="o">=</span> <span class="n">twist</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">hover</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">twist</span><span class="o">.</span><span class="n">linear</span><span class="o">.</span><span class="n">x</span>
@@ -577,7 +618,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">hover</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">twist</span><span class="o">.</span><span class="n">linear</span><span class="o">.</span><span class="n">z</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hover</span><span class="p">[</span><span class="s1">&#39;yaw&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">twist</span><span class="o">.</span><span class="n">angular</span><span class="o">.</span><span class="n">z</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="CrazyfliePublisher.publish_laserscan_data"><a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.crazyflie_publisher.CrazyfliePublisher.publish_laserscan_data">[docs]</a>    <span class="k">def</span> <span class="nf">publish_laserscan_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="CrazyfliePublisher.publish_laserscan_data">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.crazyflie_publisher.CrazyfliePublisher.publish_laserscan_data">[docs]</a>
+    <span class="k">def</span> <span class="nf">publish_laserscan_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
         <span class="k">try</span><span class="p">:</span>
             <span class="n">msg</span> <span class="o">=</span> <span class="n">LaserScan</span><span class="p">()</span>
@@ -594,12 +638,18 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error in laser scan data, not published to tf2: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="CrazyfliePublisher._range_log_error"><a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.crazyflie_publisher.CrazyfliePublisher._range_log_error">[docs]</a>    <span class="k">def</span> <span class="nf">_range_log_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logconf</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+
+<div class="viewcode-block" id="CrazyfliePublisher._range_log_error">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.crazyflie_publisher.CrazyfliePublisher._range_log_error">[docs]</a>
+    <span class="k">def</span> <span class="nf">_range_log_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logconf</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Callback from the log API when an error occurs&quot;&quot;&quot;</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Error when logging </span><span class="si">%s</span><span class="s1">: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">logconf</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">msg</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Error when logging </span><span class="si">%s</span><span class="s1">: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">logconf</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">msg</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="CrazyfliePublisher._range_log_data"><a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.crazyflie_publisher.CrazyfliePublisher._range_log_data">[docs]</a>    <span class="k">def</span> <span class="nf">_range_log_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">logconf</span><span class="p">):</span>
+
+<div class="viewcode-block" id="CrazyfliePublisher._range_log_data">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.crazyflie_publisher.CrazyfliePublisher._range_log_data">[docs]</a>
+    <span class="k">def</span> <span class="nf">_range_log_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">logconf</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Callback from a the log API when data arrives&quot;&quot;&quot;</span>
         
         <span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
@@ -644,11 +694,17 @@
             <span class="n">back_range</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)</span>  
         <span class="bp">self</span><span class="o">.</span><span class="n">ranges</span> <span class="o">=</span> <span class="p">[</span><span class="n">back_range</span><span class="p">,</span> <span class="n">left_range</span><span class="p">,</span> <span class="n">front_range</span><span class="p">,</span> <span class="n">right_range</span><span class="p">,</span> <span class="n">back_range</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="CrazyfliePublisher._stab_log_error"><a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.crazyflie_publisher.CrazyfliePublisher._stab_log_error">[docs]</a>    <span class="k">def</span> <span class="nf">_stab_log_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logconf</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+
+<div class="viewcode-block" id="CrazyfliePublisher._stab_log_error">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.crazyflie_publisher.CrazyfliePublisher._stab_log_error">[docs]</a>
+    <span class="k">def</span> <span class="nf">_stab_log_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logconf</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Callback from the log API when an error occurs&quot;&quot;&quot;</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Error when logging </span><span class="si">%s</span><span class="s1">: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">logconf</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">msg</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="CrazyfliePublisher._stab_log_data"><a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.crazyflie_publisher.CrazyfliePublisher._stab_log_data">[docs]</a>    <span class="k">def</span> <span class="nf">_stab_log_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">logconf</span><span class="p">):</span>
+
+<div class="viewcode-block" id="CrazyfliePublisher._stab_log_data">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.crazyflie_publisher.CrazyfliePublisher._stab_log_data">[docs]</a>
+    <span class="k">def</span> <span class="nf">_stab_log_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">logconf</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Callback from a the log API when data arrives&quot;&quot;&quot;</span>
 
         <span class="c1"># for name, value in data.items():</span>
@@ -716,12 +772,18 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">tfbr</span><span class="o">.</span><span class="n">sendTransform</span><span class="p">(</span><span class="n">t_cf</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error in base_link transform publisher: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
     
-<div class="viewcode-block" id="CrazyfliePublisher._lh_log_error"><a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.crazyflie_publisher.CrazyfliePublisher._lh_log_error">[docs]</a>    <span class="k">def</span> <span class="nf">_lh_log_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logconf</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+<div class="viewcode-block" id="CrazyfliePublisher._lh_log_error">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.crazyflie_publisher.CrazyfliePublisher._lh_log_error">[docs]</a>
+    <span class="k">def</span> <span class="nf">_lh_log_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logconf</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Callback from the log API when an error occurs&quot;&quot;&quot;</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Error when logging </span><span class="si">%s</span><span class="s1">: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">logconf</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">msg</span><span class="p">))</span></div>
+
     
-<div class="viewcode-block" id="CrazyfliePublisher._lh_log_data"><a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.crazyflie_publisher.CrazyfliePublisher._lh_log_data">[docs]</a>    <span class="k">def</span> <span class="nf">_lh_log_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">logconf</span><span class="p">):</span>
+<div class="viewcode-block" id="CrazyfliePublisher._lh_log_data">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.crazyflie_publisher.CrazyfliePublisher._lh_log_data">[docs]</a>
+    <span class="k">def</span> <span class="nf">_lh_log_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">logconf</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Callback from a the log API when LH data arrives&quot;&quot;&quot;</span>
         <span class="c1"># print to console</span>
 
@@ -751,8 +813,11 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Error in LH log data, not published to tf2&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;May need to recalibrate kalman filter values for lighthouse&quot;</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error in LH log data, not published to tf2&quot;</span><span class="p">)</span></div>
+
     
-<div class="viewcode-block" id="CrazyfliePublisher._init_lh_config_writer"><a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.crazyflie_publisher.CrazyfliePublisher._init_lh_config_writer">[docs]</a>    <span class="k">def</span> <span class="nf">_init_lh_config_writer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CrazyfliePublisher._init_lh_config_writer">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.crazyflie_publisher.CrazyfliePublisher._init_lh_config_writer">[docs]</a>
+    <span class="k">def</span> <span class="nf">_init_lh_config_writer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the LighthouseConfigWriter class with the necessary data. Reads from self.lh_pose_data</span>
 
@@ -763,6 +828,7 @@
         <span class="n">calibs</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="n">calib1</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="n">calib0</span><span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lh_config_writer</span> <span class="o">=</span> <span class="n">LighthouseConfigWriter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cf</span><span class="p">,</span> <span class="n">calibs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_lh_config_writer_initialized</span> <span class="o">=</span> <span class="kc">True</span></div>
+
 
     <span class="k">def</span> <span class="nf">_on_timer_lh_pose_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">transforms</span> <span class="o">=</span> <span class="p">[]</span>
@@ -865,6 +931,7 @@
 
     <span class="k">def</span> <span class="nf">_connection_lost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">link_uri</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;connection_lost&#39;</span><span class="p">)</span></div>
+
 
 <span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 

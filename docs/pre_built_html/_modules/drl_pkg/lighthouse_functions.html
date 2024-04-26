@@ -1,22 +1,22 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>drl_pkg.lighthouse_functions &mdash; drl_swarm 1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
 
   
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -44,9 +44,7 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../overviews/start_here.html">Start Here</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../overviews/environment_setup.html">Environment Setup</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Source Code Descriptions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../drl_pkg.html"><code class="docutils literal notranslate"><span class="pre">/src/drl_pkg</span></code> Background and Explanation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../drl_pkg.html#table-of-contents-for-repository">Table of Contents for Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drl_pkg.html"><code class="docutils literal notranslate"><span class="pre">/src/drl_pkg</span></code> Explanation and Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../build_new_docs/how_to_build_new_docs.html">How to Update Documentation</a></li>
 </ul>
 
@@ -96,7 +94,9 @@
 <span class="kn">from</span> <span class="nn">cflib.utils</span> <span class="kn">import</span> <span class="n">uri_helper</span>
 
 
-<div class="viewcode-block" id="log_stab_callback"><a class="viewcode-back" href="../../src_code_docs/deprecated.html#drl_pkg.lighthouse_functions.log_stab_callback">[docs]</a><span class="k">def</span> <span class="nf">log_stab_callback</span><span class="p">(</span><span class="n">timestamp</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">logconf</span><span class="p">):</span>
+<div class="viewcode-block" id="log_stab_callback">
+<a class="viewcode-back" href="../../src_code_docs/deprecated.html#drl_pkg.lighthouse_functions.log_stab_callback">[docs]</a>
+<span class="k">def</span> <span class="nf">log_stab_callback</span><span class="p">(</span><span class="n">timestamp</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">logconf</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Callback function for logging stabilization data. Works in conjunction with the simple_log_async function.</span>
 
@@ -110,7 +110,10 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;[</span><span class="si">%d</span><span class="s1">][</span><span class="si">%s</span><span class="s1">]: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">timestamp</span><span class="p">,</span> <span class="n">logconf</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">data</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="simple_log_async"><a class="viewcode-back" href="../../src_code_docs/deprecated.html#drl_pkg.lighthouse_functions.simple_log_async">[docs]</a><span class="k">def</span> <span class="nf">simple_log_async</span><span class="p">(</span><span class="n">scf</span><span class="p">,</span> <span class="n">logconf</span><span class="p">):</span>
+
+<div class="viewcode-block" id="simple_log_async">
+<a class="viewcode-back" href="../../src_code_docs/deprecated.html#drl_pkg.lighthouse_functions.simple_log_async">[docs]</a>
+<span class="k">def</span> <span class="nf">simple_log_async</span><span class="p">(</span><span class="n">scf</span><span class="p">,</span> <span class="n">logconf</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Asynchronously logs data using the provided log configuration.</span>
 
@@ -128,7 +131,10 @@
     <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
     <span class="n">logconf</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="param_stab_est_callback"><a class="viewcode-back" href="../../src_code_docs/deprecated.html#drl_pkg.lighthouse_functions.param_stab_est_callback">[docs]</a><span class="k">def</span> <span class="nf">param_stab_est_callback</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+
+<div class="viewcode-block" id="param_stab_est_callback">
+<a class="viewcode-back" href="../../src_code_docs/deprecated.html#drl_pkg.lighthouse_functions.param_stab_est_callback">[docs]</a>
+<span class="k">def</span> <span class="nf">param_stab_est_callback</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Callback function for parameter stability estimation. We won&#39;t use this function, but it is kept in case parameters are needed</span>
 <span class="sd">    Works in conjunction with the simple_param_async function.</span>
@@ -143,7 +149,10 @@
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The crazyflie has parameter &#39;</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">&#39; set at number: &#39;</span> <span class="o">+</span> <span class="n">value</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="simple_param_async"><a class="viewcode-back" href="../../src_code_docs/deprecated.html#drl_pkg.lighthouse_functions.simple_param_async">[docs]</a><span class="k">def</span> <span class="nf">simple_param_async</span><span class="p">(</span><span class="n">scf</span><span class="p">,</span> <span class="n">groupstr</span><span class="p">,</span> <span class="n">namestr</span><span class="p">):</span>
+
+<div class="viewcode-block" id="simple_param_async">
+<a class="viewcode-back" href="../../src_code_docs/deprecated.html#drl_pkg.lighthouse_functions.simple_param_async">[docs]</a>
+<span class="k">def</span> <span class="nf">simple_param_async</span><span class="p">(</span><span class="n">scf</span><span class="p">,</span> <span class="n">groupstr</span><span class="p">,</span> <span class="n">namestr</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Asynchronously sets a parameter value in the Crazyflie firmware. </span>
 
@@ -166,7 +175,10 @@
     <span class="n">cf</span><span class="o">.</span><span class="n">param</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">full_name</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
     <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="get_only_cf_kalman_pos"><a class="viewcode-back" href="../../src_code_docs/deprecated.html#drl_pkg.lighthouse_functions.get_only_cf_kalman_pos">[docs]</a><span class="k">def</span> <span class="nf">get_only_cf_kalman_pos</span><span class="p">(</span><span class="n">radio_uri</span> <span class="o">=</span> <span class="s2">&quot;radio://0/80/2M/E7E7E7E7E7&quot;</span><span class="p">):</span>
+
+<div class="viewcode-block" id="get_only_cf_kalman_pos">
+<a class="viewcode-back" href="../../src_code_docs/deprecated.html#drl_pkg.lighthouse_functions.get_only_cf_kalman_pos">[docs]</a>
+<span class="k">def</span> <span class="nf">get_only_cf_kalman_pos</span><span class="p">(</span><span class="n">radio_uri</span> <span class="o">=</span> <span class="s2">&quot;radio://0/80/2M/E7E7E7E7E7&quot;</span><span class="p">):</span>
 
     <span class="n">uri</span> <span class="o">=</span> <span class="n">uri_helper</span><span class="o">.</span><span class="n">uri_from_env</span><span class="p">(</span><span class="n">radio_uri</span><span class="p">)</span>
     <span class="n">cflib</span><span class="o">.</span><span class="n">crtp</span><span class="o">.</span><span class="n">init_drivers</span><span class="p">()</span>   
@@ -178,7 +190,10 @@
     <span class="k">with</span> <span class="n">SyncCrazyflie</span><span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="n">cf</span><span class="o">=</span><span class="n">Crazyflie</span><span class="p">(</span><span class="n">rw_cache</span><span class="o">=</span><span class="s1">&#39;./cache&#39;</span><span class="p">))</span> <span class="k">as</span> <span class="n">scf</span><span class="p">:</span>
         <span class="n">simple_log_async</span><span class="p">(</span><span class="n">scf</span><span class="p">,</span> <span class="n">lg_pos</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="get_cf_pose_according_to_lh"><a class="viewcode-back" href="../../src_code_docs/deprecated.html#drl_pkg.lighthouse_functions.get_cf_pose_according_to_lh">[docs]</a><span class="k">def</span> <span class="nf">get_cf_pose_according_to_lh</span><span class="p">(</span><span class="n">radio_uri</span> <span class="o">=</span> <span class="s2">&quot;radio://0/80/2M/E7E7E7E7E7&quot;</span><span class="p">):</span> <span class="c1">#FIXME: Determine if this is necessary. We want position from LH, not kalman</span>
+
+<div class="viewcode-block" id="get_cf_pose_according_to_lh">
+<a class="viewcode-back" href="../../src_code_docs/deprecated.html#drl_pkg.lighthouse_functions.get_cf_pose_according_to_lh">[docs]</a>
+<span class="k">def</span> <span class="nf">get_cf_pose_according_to_lh</span><span class="p">(</span><span class="n">radio_uri</span> <span class="o">=</span> <span class="s2">&quot;radio://0/80/2M/E7E7E7E7E7&quot;</span><span class="p">):</span> <span class="c1">#FIXME: Determine if this is necessary. We want position from LH, not kalman</span>
     <span class="n">uri</span> <span class="o">=</span> <span class="n">uri_helper</span><span class="o">.</span><span class="n">uri_from_env</span><span class="p">(</span><span class="n">radio_uri</span><span class="p">)</span>
     <span class="n">cflib</span><span class="o">.</span><span class="n">crtp</span><span class="o">.</span><span class="n">init_drivers</span><span class="p">()</span>   
     <span class="n">lg_pos</span> <span class="o">=</span> <span class="n">LogConfig</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Lighthouse Position&#39;</span><span class="p">,</span> <span class="n">period_in_ms</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
@@ -195,7 +210,10 @@
     <span class="k">with</span> <span class="n">SyncCrazyflie</span><span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="n">cf</span><span class="o">=</span><span class="n">Crazyflie</span><span class="p">(</span><span class="n">rw_cache</span><span class="o">=</span><span class="s1">&#39;./cache&#39;</span><span class="p">))</span> <span class="k">as</span> <span class="n">scf</span><span class="p">:</span>
         <span class="n">simple_log_async</span><span class="p">(</span><span class="n">scf</span><span class="p">,</span> <span class="n">lg_pos</span><span class="p">)</span> </div>
 
-<div class="viewcode-block" id="compare_kalman_to_lh_pos"><a class="viewcode-back" href="../../src_code_docs/deprecated.html#drl_pkg.lighthouse_functions.compare_kalman_to_lh_pos">[docs]</a><span class="k">def</span> <span class="nf">compare_kalman_to_lh_pos</span><span class="p">(</span><span class="n">radio_uri</span> <span class="o">=</span> <span class="s2">&quot;radio://0/80/2M/E7E7E7E7E7&quot;</span><span class="p">):</span>
+
+<div class="viewcode-block" id="compare_kalman_to_lh_pos">
+<a class="viewcode-back" href="../../src_code_docs/deprecated.html#drl_pkg.lighthouse_functions.compare_kalman_to_lh_pos">[docs]</a>
+<span class="k">def</span> <span class="nf">compare_kalman_to_lh_pos</span><span class="p">(</span><span class="n">radio_uri</span> <span class="o">=</span> <span class="s2">&quot;radio://0/80/2M/E7E7E7E7E7&quot;</span><span class="p">):</span>
     <span class="n">uri</span> <span class="o">=</span> <span class="n">uri_helper</span><span class="o">.</span><span class="n">uri_from_env</span><span class="p">(</span><span class="n">radio_uri</span><span class="p">)</span>
     <span class="n">cflib</span><span class="o">.</span><span class="n">crtp</span><span class="o">.</span><span class="n">init_drivers</span><span class="p">()</span>
     <span class="n">log_config_kal_and_lh</span> <span class="o">=</span> <span class="n">LogConfig</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Stabilizer&#39;</span><span class="p">,</span> <span class="n">period_in_ms</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
@@ -209,12 +227,16 @@
     <span class="k">with</span> <span class="n">SyncCrazyflie</span><span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="n">cf</span><span class="o">=</span><span class="n">Crazyflie</span><span class="p">(</span><span class="n">rw_cache</span><span class="o">=</span><span class="s1">&#39;./cache&#39;</span><span class="p">))</span> <span class="k">as</span> <span class="n">scf</span><span class="p">:</span>
         <span class="n">simple_log_async</span><span class="p">(</span><span class="n">scf</span><span class="p">,</span> <span class="n">log_config_kal_and_lh</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="get_lh_bs_delta"><a class="viewcode-back" href="../../src_code_docs/deprecated.html#drl_pkg.lighthouse_functions.get_lh_bs_delta">[docs]</a><span class="k">def</span> <span class="nf">get_lh_bs_delta</span><span class="p">(</span><span class="n">radio_uri</span> <span class="o">=</span> <span class="s2">&quot;radio://0/80/2M/E7E7E7E7E7&quot;</span><span class="p">):</span>
+
+<div class="viewcode-block" id="get_lh_bs_delta">
+<a class="viewcode-back" href="../../src_code_docs/deprecated.html#drl_pkg.lighthouse_functions.get_lh_bs_delta">[docs]</a>
+<span class="k">def</span> <span class="nf">get_lh_bs_delta</span><span class="p">(</span><span class="n">radio_uri</span> <span class="o">=</span> <span class="s2">&quot;radio://0/80/2M/E7E7E7E7E7&quot;</span><span class="p">):</span>
     <span class="n">uri</span> <span class="o">=</span> <span class="n">uri_helper</span><span class="o">.</span><span class="n">uri_from_env</span><span class="p">(</span><span class="n">radio_uri</span><span class="p">)</span>
     <span class="n">cflib</span><span class="o">.</span><span class="n">crtp</span><span class="o">.</span><span class="n">init_drivers</span><span class="p">()</span>
     <span class="n">log_config_lh_bs_delta</span> <span class="o">=</span> <span class="n">LogConfig</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;lh_bs_delta&#39;</span><span class="p">,</span> <span class="n">period_in_ms</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
     <span class="k">with</span> <span class="n">SyncCrazyflie</span><span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="n">cf</span><span class="o">=</span><span class="n">Crazyflie</span><span class="p">(</span><span class="n">rw_cache</span><span class="o">=</span><span class="s1">&#39;./cache&#39;</span><span class="p">))</span> <span class="k">as</span> <span class="n">scf</span><span class="p">:</span>
         <span class="n">simple_log_async</span><span class="p">(</span><span class="n">scf</span><span class="p">,</span> <span class="n">log_config_lh_bs_delta</span><span class="p">)</span></div>
+
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
     <span class="n">get_only_cf_kalman_pos</span><span class="p">()</span>

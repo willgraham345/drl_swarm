@@ -1,22 +1,22 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>transforms_launch &mdash; drl_swarm 1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
 
   
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
@@ -44,9 +44,7 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../overviews/start_here.html">Start Here</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../overviews/environment_setup.html">Environment Setup</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules.html">Source Code Descriptions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../drl_pkg.html"><code class="docutils literal notranslate"><span class="pre">/src/drl_pkg</span></code> Background and Explanation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../drl_pkg.html#table-of-contents-for-repository">Table of Contents for Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drl_pkg.html"><code class="docutils literal notranslate"><span class="pre">/src/drl_pkg</span></code> Explanation and Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../build_new_docs/how_to_build_new_docs.html">How to Update Documentation</a></li>
 </ul>
 
@@ -86,12 +84,14 @@
 <span class="kn">from</span> <span class="nn">launch.actions</span> <span class="kn">import</span> <span class="n">IncludeLaunchDescription</span>
 
 
-<div class="viewcode-block" id="generate_launch_description"><a class="viewcode-back" href="../src_code_docs/launch_functions.html#transforms_launch.generate_launch_description">[docs]</a><span class="k">def</span> <span class="nf">generate_launch_description</span><span class="p">():</span>
+<div class="viewcode-block" id="generate_launch_description">
+<a class="viewcode-back" href="../src_code_docs/launch_functions.html#transforms_launch.generate_launch_description">[docs]</a>
+<span class="k">def</span> <span class="nf">generate_launch_description</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This will launch a Ros2 system that will connect with two turtlebots using the default URI, with it&#39;s initial position populated with values from the `src/drl_pkg/config/experiment_config.yaml` file. These initial position values will also be used in creating a static transformer between the &#39;world&#39; and &#39;odom&#39; frames (this is required for the turtlebots to publish correctly). It will also launch a foxglove websocket to record the data. Data is recorded and sent to a default rosbag file. A possible dependency for launching more complex systems with multiple robots.</span>
 
 <span class="sd">    Usage:</span>
-<span class="sd">        `$ ros2 launch drl_pkg transforms_launch.py`</span>
+<span class="sd">        &gt;&gt;&gt; ros2 launch drl_pkg transforms_launch.py</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        None</span>
@@ -190,6 +190,7 @@
     <span class="n">ld</span><span class="o">.</span><span class="n">add_action</span><span class="p">(</span><span class="n">foxglove_websocket</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">ld</span></div>
+
 </pre></div>
 
            </div>

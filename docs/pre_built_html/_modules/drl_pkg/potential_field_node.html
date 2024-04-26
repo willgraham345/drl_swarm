@@ -1,22 +1,22 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>drl_pkg.potential_field_node &mdash; drl_swarm 1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
 
   
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -44,9 +44,7 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../overviews/start_here.html">Start Here</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../overviews/environment_setup.html">Environment Setup</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Source Code Descriptions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../drl_pkg.html"><code class="docutils literal notranslate"><span class="pre">/src/drl_pkg</span></code> Background and Explanation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../drl_pkg.html#table-of-contents-for-repository">Table of Contents for Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drl_pkg.html"><code class="docutils literal notranslate"><span class="pre">/src/drl_pkg</span></code> Explanation and Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../build_new_docs/how_to_build_new_docs.html">How to Update Documentation</a></li>
 </ul>
 
@@ -93,14 +91,18 @@
 <span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">atan2</span><span class="p">,</span> <span class="n">pi</span><span class="p">,</span> <span class="n">sqrt</span><span class="p">,</span> <span class="n">exp</span>
 
 
-<div class="viewcode-block" id="PotentialFieldNode"><a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.potential_field_node.PotentialFieldNode">[docs]</a><span class="k">class</span> <span class="nc">PotentialFieldNode</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+<div class="viewcode-block" id="PotentialFieldNode">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.potential_field_node.PotentialFieldNode">[docs]</a>
+<span class="k">class</span> <span class="nc">PotentialFieldNode</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A class representing a potential field node. Was used in motion planning class project. This was a workaround when we weren&#39;t able to get Nav2 to work. </span>
 
 <span class="sd">    This node is responsible for controlling multiple robots using a potential field algorithm.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="PotentialFieldNode.__init__"><a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.potential_field_node.PotentialFieldNode.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="PotentialFieldNode.__init__">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.potential_field_node.PotentialFieldNode.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;potential_field&quot;</span><span class="p">)</span> <span class="c1"># MODIFY NAME</span>
         <span class="c1">#self.cf_frame = self.declare_parameter(&#39;cf_frame&#39;, &#39;cf1&#39;).get_parameter_value().string_value</span>
         <span class="c1">#self.tf_buffer = Buffer()</span>
@@ -119,22 +121,32 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">pose_tb2</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pose_cf1</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="PotentialFieldNode.tb1_odom_callback"><a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.potential_field_node.PotentialFieldNode.tb1_odom_callback">[docs]</a>    <span class="k">def</span> <span class="nf">tb1_odom_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">odom</span><span class="p">):</span> <span class="c1"># a callback is required for each subscriber</span>
+
+<div class="viewcode-block" id="PotentialFieldNode.tb1_odom_callback">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.potential_field_node.PotentialFieldNode.tb1_odom_callback">[docs]</a>
+    <span class="k">def</span> <span class="nf">tb1_odom_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">odom</span><span class="p">):</span> <span class="c1"># a callback is required for each subscriber</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">odom_tb1</span> <span class="o">=</span> <span class="n">odom</span>
         <span class="n">th</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">atan2</span><span class="p">(</span><span class="n">odom</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">orientation</span><span class="o">.</span><span class="n">z</span><span class="p">,</span><span class="n">odom</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">orientation</span><span class="o">.</span><span class="n">w</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">th</span> <span class="o">&gt;</span> <span class="n">pi</span><span class="p">:</span>
             <span class="n">th</span> <span class="o">=</span> <span class="n">th</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">pi</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pose_tb1</span> <span class="o">=</span> <span class="p">[</span><span class="n">odom</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">odom</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">th</span><span class="p">]</span></div>
-<div class="viewcode-block" id="PotentialFieldNode.tb2_odom_callback"><a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.potential_field_node.PotentialFieldNode.tb2_odom_callback">[docs]</a>    <span class="k">def</span> <span class="nf">tb2_odom_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">odom</span><span class="p">):</span>
+
+<div class="viewcode-block" id="PotentialFieldNode.tb2_odom_callback">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.potential_field_node.PotentialFieldNode.tb2_odom_callback">[docs]</a>
+    <span class="k">def</span> <span class="nf">tb2_odom_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">odom</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">odom_tb2</span> <span class="o">=</span> <span class="n">odom</span>
         <span class="n">th</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">atan2</span><span class="p">(</span><span class="n">odom</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">orientation</span><span class="o">.</span><span class="n">z</span><span class="p">,</span><span class="n">odom</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">orientation</span><span class="o">.</span><span class="n">w</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">th</span> <span class="o">&gt;</span> <span class="n">pi</span><span class="p">:</span>
             <span class="n">th</span> <span class="o">=</span> <span class="n">th</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">pi</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pose_tb2</span> <span class="o">=</span> <span class="p">[</span><span class="n">odom</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">odom</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">th</span><span class="p">]</span></div>
-<div class="viewcode-block" id="PotentialFieldNode.cf1_odom_callback"><a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.potential_field_node.PotentialFieldNode.cf1_odom_callback">[docs]</a>    <span class="k">def</span> <span class="nf">cf1_odom_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">odom</span><span class="p">):</span>
+
+<div class="viewcode-block" id="PotentialFieldNode.cf1_odom_callback">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.potential_field_node.PotentialFieldNode.cf1_odom_callback">[docs]</a>
+    <span class="k">def</span> <span class="nf">cf1_odom_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">odom</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">odom_cf1</span> <span class="o">=</span> <span class="n">odom</span>
         <span class="n">th</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">atan2</span><span class="p">(</span><span class="n">odom</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">orientation</span><span class="o">.</span><span class="n">z</span><span class="p">,</span><span class="n">odom</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">orientation</span><span class="o">.</span><span class="n">w</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pose_cf1</span> <span class="o">=</span> <span class="p">[</span><span class="n">odom</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="mf">1.5</span><span class="p">,</span> <span class="n">odom</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="mf">1.5</span><span class="p">,</span> <span class="n">th</span><span class="p">]</span></div>
+
         <span class="c1">#print(&quot;got odom cf1&quot;)</span>
 
 
@@ -145,7 +157,9 @@
     <span class="c1">#     #self.get_logger().info(&#39;MyPlugin is running&#39;)</span>
     <span class="c1">#     # self.get_logger().info(&#39;MyPlugin initialized&#39;)</span>
 
-<div class="viewcode-block" id="PotentialFieldNode.run"><a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.potential_field_node.PotentialFieldNode.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="c1">#this function runs indefinitly and is the &quot;Main()&quot; of the Node</span>
+<div class="viewcode-block" id="PotentialFieldNode.run">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.potential_field_node.PotentialFieldNode.run">[docs]</a>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="c1">#this function runs indefinitly and is the &quot;Main()&quot; of the Node</span>
         <span class="k">while</span> <span class="n">rclpy</span><span class="o">.</span><span class="n">ok</span><span class="p">():</span>
             <span class="c1">#print(&quot;running&quot;, self.odom_tb1.pose.pose.orientation.z,self.odom_tb1.pose.pose.orientation.w)</span>
             <span class="c1">#print(self.pose_tb1)</span>
@@ -170,7 +184,10 @@
 
             <span class="n">rclpy</span><span class="o">.</span><span class="n">spin_once</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="PotentialFieldNode.gradientDecent"><a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.potential_field_node.PotentialFieldNode.gradientDecent">[docs]</a>    <span class="k">def</span> <span class="nf">gradientDecent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tb1</span><span class="p">,</span> <span class="n">tb2</span><span class="p">,</span> <span class="n">cf</span><span class="p">):</span>
+
+<div class="viewcode-block" id="PotentialFieldNode.gradientDecent">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.potential_field_node.PotentialFieldNode.gradientDecent">[docs]</a>
+    <span class="k">def</span> <span class="nf">gradientDecent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tb1</span><span class="p">,</span> <span class="n">tb2</span><span class="p">,</span> <span class="n">cf</span><span class="p">):</span>
         <span class="n">epsilon</span> <span class="o">=</span> <span class="mf">5.0</span> <span class="c1"># speed constant Multiplier</span>
         <span class="n">tsig</span> <span class="o">=</span> <span class="mf">.3</span> <span class="c1"># sigma of all turtlebot gaussian distributions.</span>
         <span class="n">cGain</span> <span class="o">=</span> <span class="mi">10</span> <span class="c1"># crazyflie radial distribution multiplier to scale with number of gausians</span>
@@ -215,9 +232,12 @@
             <span class="n">twist</span><span class="o">.</span><span class="n">angular</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="c1">#printdes*180/pi,self.pose_tb1[2]*180/pi)</span>
         <span class="k">return</span> <span class="n">twist</span></div>
+
         <span class="c1">#self.dispGrad()</span>
 
-<div class="viewcode-block" id="PotentialFieldNode.dispGrad"><a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.potential_field_node.PotentialFieldNode.dispGrad">[docs]</a>    <span class="k">def</span> <span class="nf">dispGrad</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="c1">#displays the potential field hieghts to cmd line for debugging (unsused in normal use)</span>
+<div class="viewcode-block" id="PotentialFieldNode.dispGrad">
+<a class="viewcode-back" href="../../src_code_docs/classes.html#drl_pkg.potential_field_node.PotentialFieldNode.dispGrad">[docs]</a>
+    <span class="k">def</span> <span class="nf">dispGrad</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="c1">#displays the potential field hieghts to cmd line for debugging (unsused in normal use)</span>
         <span class="n">tsig</span> <span class="o">=</span> <span class="mf">.4</span>
         <span class="c1">#Gradient field movment</span>
         <span class="n">tx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pose_tb2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -236,7 +256,9 @@
                 <span class="n">y</span> <span class="o">=</span> <span class="o">-</span><span class="n">j</span><span class="o">/</span><span class="mi">4</span>
                 <span class="n">surf</span> <span class="o">=</span> <span class="mi">10</span><span class="o">*</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="o">*</span><span class="p">((</span><span class="n">x</span><span class="o">-</span><span class="n">tx</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="p">(</span><span class="n">y</span><span class="o">-</span><span class="n">ty</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="n">tsig</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">+</span><span class="n">sqrt</span><span class="p">((</span><span class="n">x</span><span class="o">-</span><span class="n">cx</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="p">(</span><span class="n">y</span><span class="o">-</span><span class="n">cy</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span><span class="nb">int</span><span class="p">(</span><span class="mi">10</span><span class="o">*</span><span class="n">surf</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; endln&quot;</span><span class="p">)</span>    </div></div>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; endln&quot;</span><span class="p">)</span>    </div>
+</div>
+
 
 <span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="n">rclpy</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>

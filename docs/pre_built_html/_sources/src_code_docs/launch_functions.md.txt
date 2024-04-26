@@ -1,4 +1,8 @@
-# Ros2 Launch Functions Defined in `/src/drl_pkg/launch`
+# Launch Functions Defined in `/src/drl_pkg/launch`
+
+**IMPORTANT**: For all `get_launch_description()` functions, we will treat them as if their function inputs are `LaunchConfiguration` objects. This is done so the documentation can be more easily read, as Sphinx does not have built-ins for `LaunchConfiguration` objects. Additionally, the return object will be a list of nodes run by the launch function. 
+
+TODO: Add a classDiagram describing the interaction between different launch argments, with launch files acting as the classes.
 
 Each of the following modules define a launch function that can be used to launch the corresponding ROS2 package. The launch functions are used in the launch files in the `launch` directory of the package.
 

@@ -39,21 +39,28 @@ def generate_launch_description():
 
 
     Usage:
-        `$ ros2 launch drl_pkg webots_world_launch.py`
+        >>> ros2 launch drl_pkg webots_world_launch.py
 
     Args:
-        LaunchConfiguration:
-            world (str): The world file to be launched. Default is 'apartment_nocf.wbt'.
-            map (str): Full path of the map file to be used for localization and planning. Default is 'maps/map.yaml'.
-            autostart (str): Whether to autostart the nav2 stack. Default is 'true'.
-            params_file (str): Full path to the ROS2 parameters file to use for all launched nodes. Default is 'params/nav2_params_nocf.yaml'.
-            use_robot_state_pub (str): Whether to use the robot state publisher. Default is 'true'.
-            rviz_config (str): Full path to the RViz config file to use. Default is 'rviz/nav2_default_view.rviz'.
-            use_rviz (str): Whether to launch RViz. Default is 'false'.
-            log_settings (str): Whether to log settings. Default is 'true'.
+        :obj:`world` (:obj:`str`): The world file to be launched. Defaults to 'apartment_nocf.wbt'.
+        :obj:`map` (:obj:`str`): Full path of the map file to be used for localization and planning. Defaults to 'maps/map.yaml'.
+        :obj:`autostart` (:obj:`str`): Whether to autostart the nav2 stack. Defaults to 'true'.
+        :obj:`params_file` (:obj:`str`): Full path to the ROS2 parameters file to use for all launched nodes. Defaults to 'params/nav2_params_nocf.yaml'.
+        :obj:`use_robot_state_pub` (:obj:`str`): Whether to use the robot state publisher. Defaults to 'true'.
+        :obj:`rviz_config` (:obj:`str`): Full path to the RViz config file to use. Defaults to 'rviz/nav2_default_view.rviz'.
+        :obj:`use_rviz` (:obj:`str`): Whether to launch RViz. Defaults to 'false'.
+        :obj:`log_settings` (:obj:`str`): Whether to log settings. Defaults to 'true'.
+        :obj:`tb1_params_file` (:obj:`str`): Full path to the ROS2 parameters file to use for tb1. Defaults to 'params/tb1_params.yaml'.
+        :obj:`tb2_params_file` (:obj:`str`): Full path to the ROS2 parameters file to use for tb2. Defaults to 'params/tb2_params.yaml'.
 
     Returns:
-        LaunchDescription: The launch description for the webots world
+        :obj:`webots_node`: The webots node that launches the webots world file specified in the launch configuration.
+        :obj:`foxglove_websocket`: An included LaunchDescription object from the foxglove_bridge package.
+        :obj:`nav_instances_cmds`: A list of GroupAction objects that launch the nav2 stack for each robot in the swarm.
+        :obj:`map_to_odom`: A static transform publisher that publishes a static transform between the map and odom frames for each robot in the swarm. This is not used in the current implementation.
+        :obj:`odom_to_base_link`: A static transform publisher that publishes a static transform between the odom and base_link frames for each robot in the swarm.
+        :obj:`bag_cmd`: An ExecuteProcess object that records all topics to a rosbag file.
+        
     """
     # Macro config
     DIR_PATH = os.path.dirname(__file__)

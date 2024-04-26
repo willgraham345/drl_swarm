@@ -15,26 +15,26 @@ from launch.actions import DeclareLaunchArgument
 def generate_launch_description():
     """
     A verbose example of launching the cf_publisher node with a variety of launch parameters set. Additionally, this will publish a static transform between the world and the base_link of the crazyflie. This also reads in starting position from the experiment configuration file and sets the initial position of the crazyflie to that value. This is useful for testing the localization of a crazyflie in use with two lighthouse basestations.
-    
+
     Usage:
-        `$ ros2 launch drl_pkg cf_publisher_launch.py`
-        `$ ros2 run drl_pkg cf_publisher --ros-args --fly:=True`
-        `$ ros2 run drl_pkg cf_publisher --ros-args --URI:=radio://0/90/2M/E7E7E7E7E8`
-    
+        >>> ros2 launch drl_pkg cf_publisher_launch.py`
+        >>> ros2 run drl_pkg cf_publisher --ros-args --fly:=True`
+        >>> ros2 run drl_pkg cf_publisher --ros-args --URI:=radio://0/90/2M/E7E7E7E7E8`
+
     Args:
-        LaunchConfiguration:
-            swarm_config_yaml_arg (str): The path to the experiment configuration file. Default is 'config/experiment_config.yaml'.
-            namespace_arg (str): The namespace to apply to the nodes. Default is ''.
-            lh0_pose_frame_arg (str): The frame ID for the first lighthouse pose. Default is 'tb1/lighthouse_pose'.
-            lh1_pose_frame_arg (str): The frame ID for the second lighthouse pose. Default is 'tb2/lighthouse_pose'.
-            fly_arg (str): Whether to start the Crazyflie in flight mode. Default is 'False'.
-            URI_arg (str): The URI of the Crazyflie. Default is 'radio://0/80/2M/E7E7E7E7E7'.
+        :obj:`swarm_config_yaml_arg` (:obj:`str`): The path to the experiment configuration file. Default is 'config/experiment_config.yaml'.
+        :obj:`namespace_arg` (:obj:`str`): The namespace to apply to the nodes. Default is ''.
+        :obj:`lh0_pose_frame_arg` (:obj:`str`): The frame ID for the first lighthouse pose. Default is 'tb1/lighthouse_pose'.
+        :obj:`lh1_pose_frame_arg` (:obj:`str`): The frame ID for the second lighthouse pose. Default is 'tb2/lighthouse_pose'.
+        :obj:`fly_arg` (:obj:`str`): Whether to start the Crazyflie in flight mode. Default is 'False'.
+        :obj:`URI_arg` (:obj:`str`): The URI of the Crazyflie. Default is 'radio://0/80/2M/E7E7E7E7E7'.
 
     Returns:
         ld (LaunchDescription): The launch description object, invoked by the Usage. 
     """
     PACKAGE_DIR = get_package_share_directory('drl_pkg')
     CONFIG_FILE_PATH = os.path.abspath(os.path.join(PACKAGE_DIR, 'config', 'experiment_config.yaml'))
+    # TODO: Change this config file path to be a parameter passed into the launch file
     swarm_config_yaml_arg = DeclareLaunchArgument(
         'swarm_config_yaml',
         default_value=str(CONFIG_FILE_PATH),
@@ -84,6 +84,7 @@ def generate_launch_description():
     # Declare and set launch arguments
 
     cf_instance_cmds = []
+    # TODO: See if I can remove this and use the config file instead.
     with open(CONFIG_FILE_PATH, 'r') as file:
         config = yaml.safe_load(file)
         try:

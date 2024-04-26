@@ -1,22 +1,22 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>nav2_launch &mdash; drl_swarm 1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
 
   
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
@@ -44,9 +44,7 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../overviews/start_here.html">Start Here</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../overviews/environment_setup.html">Environment Setup</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules.html">Source Code Descriptions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../drl_pkg.html"><code class="docutils literal notranslate"><span class="pre">/src/drl_pkg</span></code> Background and Explanation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../drl_pkg.html#table-of-contents-for-repository">Table of Contents for Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drl_pkg.html"><code class="docutils literal notranslate"><span class="pre">/src/drl_pkg</span></code> Explanation and Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../build_new_docs/how_to_build_new_docs.html">How to Update Documentation</a></li>
 </ul>
 
@@ -111,26 +109,35 @@
 <span class="kn">from</span> <span class="nn">drl_pkg.swarm_classes</span> <span class="kn">import</span> <span class="n">tb</span> 
 <span class="kn">from</span> <span class="nn">config.config_readers</span> <span class="kn">import</span> <span class="n">import_webots_swarm_config</span>
 
-<div class="viewcode-block" id="generate_launch_description"><a class="viewcode-back" href="../src_code_docs/launch_functions.html#nav2_launch.generate_launch_description">[docs]</a><span class="k">def</span> <span class="nf">generate_launch_description</span><span class="p">():</span>
+<div class="viewcode-block" id="generate_launch_description">
+<a class="viewcode-back" href="../src_code_docs/launch_functions.html#nav2_launch.generate_launch_description">[docs]</a>
+<span class="k">def</span> <span class="nf">generate_launch_description</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;This file launches a single instance of a webots_world file specified in the launch configuration. It is still in development and doesn&#39;t quite work. It is based on the example from nav2 in this link: https://github.com/arshadlab/turtlebot3_multi_robot/blob/master/launch/gazebo_multi_nav2_world.launch.py</span>
 
 
 <span class="sd">    Usage:</span>
-<span class="sd">        `$ ros2 launch drl_pkg webots_world_launch.py`</span>
+<span class="sd">        &gt;&gt;&gt; ros2 launch drl_pkg webots_world_launch.py</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        LaunchConfiguration:</span>
-<span class="sd">            world (str): The world file to be launched. Default is &#39;apartment_nocf.wbt&#39;.</span>
-<span class="sd">            map (str): Full path of the map file to be used for localization and planning. Default is &#39;maps/map.yaml&#39;.</span>
-<span class="sd">            autostart (str): Whether to autostart the nav2 stack. Default is &#39;true&#39;.</span>
-<span class="sd">            params_file (str): Full path to the ROS2 parameters file to use for all launched nodes. Default is &#39;params/nav2_params_nocf.yaml&#39;.</span>
-<span class="sd">            use_robot_state_pub (str): Whether to use the robot state publisher. Default is &#39;true&#39;.</span>
-<span class="sd">            rviz_config (str): Full path to the RViz config file to use. Default is &#39;rviz/nav2_default_view.rviz&#39;.</span>
-<span class="sd">            use_rviz (str): Whether to launch RViz. Default is &#39;false&#39;.</span>
-<span class="sd">            log_settings (str): Whether to log settings. Default is &#39;true&#39;.</span>
+<span class="sd">        :obj:`world` (:obj:`str`): The world file to be launched. Defaults to &#39;apartment_nocf.wbt&#39;.</span>
+<span class="sd">        :obj:`map` (:obj:`str`): Full path of the map file to be used for localization and planning. Defaults to &#39;maps/map.yaml&#39;.</span>
+<span class="sd">        :obj:`autostart` (:obj:`str`): Whether to autostart the nav2 stack. Defaults to &#39;true&#39;.</span>
+<span class="sd">        :obj:`params_file` (:obj:`str`): Full path to the ROS2 parameters file to use for all launched nodes. Defaults to &#39;params/nav2_params_nocf.yaml&#39;.</span>
+<span class="sd">        :obj:`use_robot_state_pub` (:obj:`str`): Whether to use the robot state publisher. Defaults to &#39;true&#39;.</span>
+<span class="sd">        :obj:`rviz_config` (:obj:`str`): Full path to the RViz config file to use. Defaults to &#39;rviz/nav2_default_view.rviz&#39;.</span>
+<span class="sd">        :obj:`use_rviz` (:obj:`str`): Whether to launch RViz. Defaults to &#39;false&#39;.</span>
+<span class="sd">        :obj:`log_settings` (:obj:`str`): Whether to log settings. Defaults to &#39;true&#39;.</span>
+<span class="sd">        :obj:`tb1_params_file` (:obj:`str`): Full path to the ROS2 parameters file to use for tb1. Defaults to &#39;params/tb1_params.yaml&#39;.</span>
+<span class="sd">        :obj:`tb2_params_file` (:obj:`str`): Full path to the ROS2 parameters file to use for tb2. Defaults to &#39;params/tb2_params.yaml&#39;.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        LaunchDescription: The launch description for the webots world</span>
+<span class="sd">        :obj:`webots_node`: The webots node that launches the webots world file specified in the launch configuration.</span>
+<span class="sd">        :obj:`foxglove_websocket`: An included LaunchDescription object from the foxglove_bridge package.</span>
+<span class="sd">        :obj:`nav_instances_cmds`: A list of GroupAction objects that launch the nav2 stack for each robot in the swarm.</span>
+<span class="sd">        :obj:`map_to_odom`: A static transform publisher that publishes a static transform between the map and odom frames for each robot in the swarm. This is not used in the current implementation.</span>
+<span class="sd">        :obj:`odom_to_base_link`: A static transform publisher that publishes a static transform between the odom and base_link frames for each robot in the swarm.</span>
+<span class="sd">        :obj:`bag_cmd`: An ExecuteProcess object that records all topics to a rosbag file.</span>
+<span class="sd">        </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Macro config</span>
     <span class="n">DIR_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
@@ -316,6 +323,7 @@
         <span class="n">ld</span><span class="o">.</span><span class="n">add_action</span><span class="p">(</span><span class="n">simulation_instance_cmd</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">ld</span></div>
+
 </pre></div>
 
            </div>

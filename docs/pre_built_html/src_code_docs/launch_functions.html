@@ -1,28 +1,28 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ros2 Launch Functions Defined in /src/drl_pkg/launch &mdash; drl_swarm 1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+  <title>Launch Functions Defined in /src/drl_pkg/launch &mdash; drl_swarm 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
 
   
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Deprecated Docs" href="deprecated.html" />
-    <link rel="prev" title="Classes and Nodes in /src/webots_pkg/webots_pkg" href="classes.html" /> 
+    <link rel="prev" title="Classes/ROS2 Nodes in /src/webots_pkg/webots_pkg" href="classes.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,11 +47,12 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../overviews/start_here.html">Start Here</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../overviews/environment_setup.html">Environment Setup</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../modules.html">Source Code Descriptions</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../drl_pkg.html"><code class="docutils literal notranslate"><span class="pre">/src/drl_pkg</span></code> Background and Explanation</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="../drl_pkg.html#table-of-contents-for-repository">Table of Contents for Repository</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="classes.html">Classes and Nodes in <code class="docutils literal notranslate"><span class="pre">/src/webots_pkg/webots_pkg</span></code></a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Ros2 Launch Functions Defined in <code class="docutils literal notranslate"><span class="pre">/src/drl_pkg/launch</span></code></a><ul>
+<li class="toctree-l1 current"><a class="reference internal" href="../drl_pkg.html"><code class="docutils literal notranslate"><span class="pre">/src/drl_pkg</span></code> Explanation and Table of Contents</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../drl_pkg.html#src-subdirectories"><code class="docutils literal notranslate"><span class="pre">src/</span></code> subdirectories</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../drl_pkg.html#drl-pkg-folder-explanation"><code class="docutils literal notranslate"><span class="pre">drl_pkg</span></code> folder explanation</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../drl_pkg.html#repository-table-of-contents">Repository Table of Contents</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="classes.html">Classes/ROS2 Nodes in <code class="docutils literal notranslate"><span class="pre">/src/webots_pkg/webots_pkg</span></code></a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Launch Functions Defined in <code class="docutils literal notranslate"><span class="pre">/src/drl_pkg/launch</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#module-cf_flight_launch"><code class="docutils literal notranslate"><span class="pre">src/drl_pkg/launch/cf_flight_launch.py</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-cf_lighthouse_vicon_test_launch"><code class="docutils literal notranslate"><span class="pre">src/drl_pkg/launch/cf_lighthouse_vicon_test_launch.py</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-cf_publisher_launch"><code class="docutils literal notranslate"><span class="pre">src/drl_pkg/launch/cf_publisher_launch.py</span></code></a></li>
@@ -63,39 +64,6 @@
 <li class="toctree-l3"><a class="reference internal" href="deprecated.html">Deprecated Docs</a></li>
 </ul>
 </li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../drl_pkg.html"><code class="docutils literal notranslate"><span class="pre">/src/drl_pkg</span></code> Background and Explanation</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../drl_pkg.html#table-of-contents-for-repository">Table of Contents for Repository</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="classes.html">Classes and Nodes in <code class="docutils literal notranslate"><span class="pre">/src/webots_pkg/webots_pkg</span></code></a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Ros2 Launch Functions Defined in <code class="docutils literal notranslate"><span class="pre">/src/drl_pkg/launch</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#module-cf_flight_launch"><code class="docutils literal notranslate"><span class="pre">src/drl_pkg/launch/cf_flight_launch.py</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#cf_flight_launch.generate_launch_description"><code class="docutils literal notranslate"><span class="pre">generate_launch_description()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#module-cf_lighthouse_vicon_test_launch"><code class="docutils literal notranslate"><span class="pre">src/drl_pkg/launch/cf_lighthouse_vicon_test_launch.py</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#cf_lighthouse_vicon_test_launch.generate_launch_description"><code class="docutils literal notranslate"><span class="pre">generate_launch_description()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#module-cf_publisher_launch"><code class="docutils literal notranslate"><span class="pre">src/drl_pkg/launch/cf_publisher_launch.py</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#cf_publisher_launch.generate_launch_description"><code class="docutils literal notranslate"><span class="pre">generate_launch_description()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#module-nav2_launch"><code class="docutils literal notranslate"><span class="pre">src/drl_pkg/launch/nav2_launch</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#nav2_launch.generate_launch_description"><code class="docutils literal notranslate"><span class="pre">generate_launch_description()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#module-transforms_launch"><code class="docutils literal notranslate"><span class="pre">src/drl_pkg/launch/transforms_launch.py</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#transforms_launch.generate_launch_description"><code class="docutils literal notranslate"><span class="pre">generate_launch_description()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#module-webots_world_launch"><code class="docutils literal notranslate"><span class="pre">src/drl_pkg/launch/webots_world_launch.py</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#webots_world_launch.generate_launch_description"><code class="docutils literal notranslate"><span class="pre">generate_launch_description()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="deprecated.html">Deprecated Docs</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../build_new_docs/how_to_build_new_docs.html">How to Update Documentation</a></li>
@@ -115,9 +83,8 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="../modules.html">Source Code Descriptions</a></li>
-          <li class="breadcrumb-item"><a href="../drl_pkg.html"><code class="docutils literal notranslate"><span class="pre">/src/drl_pkg</span></code> Background and Explanation</a></li>
-      <li class="breadcrumb-item active">Ros2 Launch Functions Defined in <code class="docutils literal notranslate"><span class="pre">/src/drl_pkg/launch</span></code></li>
+          <li class="breadcrumb-item"><a href="../drl_pkg.html"><code class="docutils literal notranslate"><span class="pre">/src/drl_pkg</span></code> Explanation and Table of Contents</a></li>
+      <li class="breadcrumb-item active">Launch Functions Defined in <code class="docutils literal notranslate"><span class="pre">/src/drl_pkg/launch</span></code></li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/src_code_docs/launch_functions.md.txt" rel="nofollow"> View page source</a>
       </li>
@@ -127,42 +94,49 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="ros2-launch-functions-defined-in-src-drl-pkg-launch">
-<h1>Ros2 Launch Functions Defined in <code class="docutils literal notranslate"><span class="pre">/src/drl_pkg/launch</span></code><a class="headerlink" href="#ros2-launch-functions-defined-in-src-drl-pkg-launch" title="Permalink to this heading"></a></h1>
+  <section id="launch-functions-defined-in-src-drl-pkg-launch">
+<h1>Launch Functions Defined in <code class="docutils literal notranslate"><span class="pre">/src/drl_pkg/launch</span></code><a class="headerlink" href="#launch-functions-defined-in-src-drl-pkg-launch" title="Link to this heading"></a></h1>
+<p><strong>IMPORTANT</strong>: For all <code class="docutils literal notranslate"><span class="pre">get_launch_description()</span></code> functions, we will treat them as if their function inputs are <code class="docutils literal notranslate"><span class="pre">LaunchConfiguration</span></code> objects. This is done so the documentation can be more easily read, as Sphinx does not have built-ins for <code class="docutils literal notranslate"><span class="pre">LaunchConfiguration</span></code> objects. Additionally, the return object will be a list of nodes run by the launch function.</p>
+<p>TODO: Add a classDiagram describing the interaction between different launch argments, with launch files acting as the classes.</p>
 <p>Each of the following modules define a launch function that can be used to launch the corresponding ROS2 package. The launch functions are used in the launch files in the <code class="docutils literal notranslate"><span class="pre">launch</span></code> directory of the package.</p>
 <section id="module-cf_flight_launch">
-<span id="src-drl-pkg-launch-cf-flight-launch-py"></span><h2><code class="docutils literal notranslate"><span class="pre">src/drl_pkg/launch/cf_flight_launch.py</span></code><a class="headerlink" href="#module-cf_flight_launch" title="Permalink to this heading"></a></h2>
+<span id="src-drl-pkg-launch-cf-flight-launch-py"></span><h2><code class="docutils literal notranslate"><span class="pre">src/drl_pkg/launch/cf_flight_launch.py</span></code><a class="headerlink" href="#module-cf_flight_launch" title="Link to this heading"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="cf_flight_launch.generate_launch_description">
-<span class="sig-prename descclassname"><span class="pre">cf_flight_launch.</span></span><span class="sig-name descname"><span class="pre">generate_launch_description</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cf_flight_launch.html#generate_launch_description"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cf_flight_launch.generate_launch_description" title="Permalink to this definition"></a></dt>
-<dd><p>Ros2 launch function to test flying a cf_publisher node with the <cite>fly</cite> node parameter set to <cite>True</cite>. This essentially runs the cf_publisher node with added visualization and control nodes.</p>
-<dl class="simple">
-<dt>Usage:</dt><dd><p><cite>$ ros2 launch drl_pkg cf_flight_launch.py</cite>
-<cite>$ ros2 run drl_pkg cf_publisher –ros-args –fly:=True</cite></p>
+<span class="sig-prename descclassname"><span class="pre">cf_flight_launch.</span></span><span class="sig-name descname"><span class="pre">generate_launch_description</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cf_flight_launch.html#generate_launch_description"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cf_flight_launch.generate_launch_description" title="Link to this definition"></a></dt>
+<dd><p>Ros2 launch function to test flying a cf_publisher node with the <cite>fly</cite> node parameter set to <cite>True</cite>. This essentially runs the <cite>drl_pkg.crazyflie_publisher.CrazyfliePublisher</cite>.</p>
+<dl>
+<dt>Usage:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ros2</span> <span class="n">launch</span> <span class="n">drl_pkg</span> <span class="n">cf_flight_launch</span><span class="o">.</span><span class="n">py</span>
+<span class="go"># With ros arguments (Parameters):</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ros2</span> <span class="n">run</span> <span class="n">drl_pkg</span> <span class="n">cf_publisher</span> <span class="o">--</span><span class="n">ros</span><span class="o">-</span><span class="n">args</span> <span class="o">--</span><span class="n">fly</span><span class="o">:=</span><span class="kc">True</span>
+</pre></div>
+</div>
 </dd>
 </dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>params_file</strong> (<em>str</em>) – The path to the experiment configuration file. Default is ‘config/experiment_config.yaml’.</p>
+<dd class="field-odd"><p><strong>params_file</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code>, optional) – The path to the experiment configuration file. Defaults to ‘config/experiment_config.yaml’.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The launch description object, invoked by the Usage.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>ld (LaunchDescription)</p>
+<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">foxglove_websocket</span></code> node
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">crazyflie_node</span></code>: Included <cite>cf_publisher_launch</cite> LaunchDescription with parameters as: Fly = True, URI = ‘radio://0/80/2M/E7E7E7E7E7’, config_file = params_file.
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">static_tf_publisher</span></code>: Publishes a static transform between the world and odom frames for the crazyflie.
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">teleop_twist_node</span></code>: Launches the teleop_twist_keyboard node for manual control.</p>
 </dd>
 </dl>
 </dd></dl>
 
 </section>
 <section id="module-cf_lighthouse_vicon_test_launch">
-<span id="src-drl-pkg-launch-cf-lighthouse-vicon-test-launch-py"></span><h2><code class="docutils literal notranslate"><span class="pre">src/drl_pkg/launch/cf_lighthouse_vicon_test_launch.py</span></code><a class="headerlink" href="#module-cf_lighthouse_vicon_test_launch" title="Permalink to this heading"></a></h2>
+<span id="src-drl-pkg-launch-cf-lighthouse-vicon-test-launch-py"></span><h2><code class="docutils literal notranslate"><span class="pre">src/drl_pkg/launch/cf_lighthouse_vicon_test_launch.py</span></code><a class="headerlink" href="#module-cf_lighthouse_vicon_test_launch" title="Link to this heading"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="cf_lighthouse_vicon_test_launch.generate_launch_description">
-<span class="sig-prename descclassname"><span class="pre">cf_lighthouse_vicon_test_launch.</span></span><span class="sig-name descname"><span class="pre">generate_launch_description</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cf_lighthouse_vicon_test_launch.html#generate_launch_description"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cf_lighthouse_vicon_test_launch.generate_launch_description" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">cf_lighthouse_vicon_test_launch.</span></span><span class="sig-name descname"><span class="pre">generate_launch_description</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cf_lighthouse_vicon_test_launch.html#generate_launch_description"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cf_lighthouse_vicon_test_launch.generate_launch_description" title="Link to this definition"></a></dt>
 <dd><p>This will launch a Ros2 system that will connect with a crazyflie using the default URI, with it’s initial position populated with values from the <cite>src/drl_pkg/config/experiment_config.yaml</cite> file. These initial position values will also be used in creating a static transformer between the ‘world’ and ‘odom’ frames (this is required for the crazyflie to publish correctly). It will also launch a foxglove websocket and vicon driver to record the data. Data is recorded and sent to a default rosbag file.</p>
-<dl class="simple">
-<dt>Usage:</dt><dd><p><cite>$ ros2 launch drl_pkg cf_lighthouse_vicon_test_launch.py</cite></p>
+<dl>
+<dt>Usage:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ros2</span> <span class="n">launch</span> <span class="n">drl_pkg</span> <span class="n">cf_lighthouse_vicon_test_launch</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
 </dd>
 </dl>
 <dl class="field-list simple">
@@ -170,85 +144,115 @@
 <dd class="field-odd"><p><strong>None</strong> – </p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The launch description object, invoked by the Usage.</p>
+<dd class="field-even"><p>An included LaunchDescription object from the mocap_vicon_driver package. This is activated by the <code class="xref py py-obj docutils literal notranslate"><span class="pre">start_vicon_publishing</span></code> action.
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">foxglove_websocket</span></code>: An included LaunchDescription object from the foxglove_bridge package.
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">crazyflie_node</span></code>: Included <cite>cf_publisher_launch</cite> LaunchDescription with parameters as: Fly = False, URI = ‘radio://0/80/2M/E7E7E7E7E7’, config_file = params_file.
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">static_tf_publisher</span></code>: Publishes a static transform between the world and odom frames for the crazyflie.
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">rviz</span></code>: Launches the rviz2 node.
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">start_vicon_publishing</span></code>: Activates the vicon driver node.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>ld (LaunchDescription)</p>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">vicon_driver_launch</span></code></p>
 </dd>
 </dl>
 </dd></dl>
 
 </section>
 <section id="module-cf_publisher_launch">
-<span id="src-drl-pkg-launch-cf-publisher-launch-py"></span><h2><code class="docutils literal notranslate"><span class="pre">src/drl_pkg/launch/cf_publisher_launch.py</span></code><a class="headerlink" href="#module-cf_publisher_launch" title="Permalink to this heading"></a></h2>
+<span id="src-drl-pkg-launch-cf-publisher-launch-py"></span><h2><code class="docutils literal notranslate"><span class="pre">src/drl_pkg/launch/cf_publisher_launch.py</span></code><a class="headerlink" href="#module-cf_publisher_launch" title="Link to this heading"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="cf_publisher_launch.generate_launch_description">
-<span class="sig-prename descclassname"><span class="pre">cf_publisher_launch.</span></span><span class="sig-name descname"><span class="pre">generate_launch_description</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cf_publisher_launch.html#generate_launch_description"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cf_publisher_launch.generate_launch_description" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">cf_publisher_launch.</span></span><span class="sig-name descname"><span class="pre">generate_launch_description</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cf_publisher_launch.html#generate_launch_description"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cf_publisher_launch.generate_launch_description" title="Link to this definition"></a></dt>
 <dd><p>A verbose example of launching the cf_publisher node with a variety of launch parameters set. Additionally, this will publish a static transform between the world and the base_link of the crazyflie. This also reads in starting position from the experiment configuration file and sets the initial position of the crazyflie to that value. This is useful for testing the localization of a crazyflie in use with two lighthouse basestations.</p>
-<dl class="simple">
-<dt>Usage:</dt><dd><p><cite>$ ros2 launch drl_pkg cf_publisher_launch.py</cite>
-<cite>$ ros2 run drl_pkg cf_publisher –ros-args –fly:=True</cite>
-<cite>$ ros2 run drl_pkg cf_publisher –ros-args –URI:=radio://0/90/2M/E7E7E7E7E8</cite></p>
+<dl>
+<dt>Usage:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; ros2 launch drl_pkg cf_publisher_launch.py`
+&gt;&gt;&gt; ros2 run drl_pkg cf_publisher --ros-args --fly:=True`
+&gt;&gt;&gt; ros2 run drl_pkg cf_publisher --ros-args --URI:=radio://0/90/2M/E7E7E7E7E8`
+</pre></div>
+</div>
 </dd>
 </dl>
+<p>:param <code class="xref py py-obj docutils literal notranslate"><span class="pre">swarm_config_yaml_arg</span></code>: The path to the experiment configuration file. Default is ‘config/experiment_config.yaml’.
+:type <code class="xref py py-obj docutils literal notranslate"><span class="pre">swarm_config_yaml_arg</span></code>: <code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code>
+:param <code class="xref py py-obj docutils literal notranslate"><span class="pre">namespace_arg</span></code>: The namespace to apply to the nodes. Default is ‘’.
+:type <code class="xref py py-obj docutils literal notranslate"><span class="pre">namespace_arg</span></code>: <code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code>
+:param <code class="xref py py-obj docutils literal notranslate"><span class="pre">lh0_pose_frame_arg</span></code>: The frame ID for the first lighthouse pose. Default is ‘tb1/lighthouse_pose’.
+:type <code class="xref py py-obj docutils literal notranslate"><span class="pre">lh0_pose_frame_arg</span></code>: <code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code>
+:param <code class="xref py py-obj docutils literal notranslate"><span class="pre">lh1_pose_frame_arg</span></code>: The frame ID for the second lighthouse pose. Default is ‘tb2/lighthouse_pose’.
+:type <code class="xref py py-obj docutils literal notranslate"><span class="pre">lh1_pose_frame_arg</span></code>: <code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code>
+:param <code class="xref py py-obj docutils literal notranslate"><span class="pre">fly_arg</span></code>: Whether to start the Crazyflie in flight mode. Default is ‘False’.
+:type <code class="xref py py-obj docutils literal notranslate"><span class="pre">fly_arg</span></code>: <code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code>
+:param <code class="xref py py-obj docutils literal notranslate"><span class="pre">URI_arg</span></code>: The URI of the Crazyflie. Default is ‘radio://0/80/2M/E7E7E7E7E7’.
+:type <code class="xref py py-obj docutils literal notranslate"><span class="pre">URI_arg</span></code>: <code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>LaunchConfiguration</strong> – swarm_config_yaml_arg (str): The path to the experiment configuration file. Default is ‘config/experiment_config.yaml’.
-namespace_arg (str): The namespace to apply to the nodes. Default is ‘’.
-lh0_pose_frame_arg (str): The frame ID for the first lighthouse pose. Default is ‘tb1/lighthouse_pose’.
-lh1_pose_frame_arg (str): The frame ID for the second lighthouse pose. Default is ‘tb2/lighthouse_pose’.
-fly_arg (str): Whether to start the Crazyflie in flight mode. Default is ‘False’.
-URI_arg (str): The URI of the Crazyflie. Default is ‘radio://0/80/2M/E7E7E7E7E7’.</p>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The launch description object, invoked by the Usage.</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The launch description object, invoked by the Usage.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>ld (LaunchDescription)</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>ld (LaunchDescription)</p>
 </dd>
 </dl>
 </dd></dl>
 
 </section>
 <section id="module-nav2_launch">
-<span id="src-drl-pkg-launch-nav2-launch"></span><h2><code class="docutils literal notranslate"><span class="pre">src/drl_pkg/launch/nav2_launch</span></code><a class="headerlink" href="#module-nav2_launch" title="Permalink to this heading"></a></h2>
+<span id="src-drl-pkg-launch-nav2-launch"></span><h2><code class="docutils literal notranslate"><span class="pre">src/drl_pkg/launch/nav2_launch</span></code><a class="headerlink" href="#module-nav2_launch" title="Link to this heading"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="nav2_launch.generate_launch_description">
-<span class="sig-prename descclassname"><span class="pre">nav2_launch.</span></span><span class="sig-name descname"><span class="pre">generate_launch_description</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nav2_launch.html#generate_launch_description"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nav2_launch.generate_launch_description" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">nav2_launch.</span></span><span class="sig-name descname"><span class="pre">generate_launch_description</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nav2_launch.html#generate_launch_description"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nav2_launch.generate_launch_description" title="Link to this definition"></a></dt>
 <dd><p>This file launches a single instance of a webots_world file specified in the launch configuration. It is still in development and doesn’t quite work. It is based on the example from nav2 in this link: <a class="reference external" href="https://github.com/arshadlab/turtlebot3_multi_robot/blob/master/launch/gazebo_multi_nav2_world.launch.py">https://github.com/arshadlab/turtlebot3_multi_robot/blob/master/launch/gazebo_multi_nav2_world.launch.py</a></p>
-<dl class="simple">
-<dt>Usage:</dt><dd><p><cite>$ ros2 launch drl_pkg webots_world_launch.py</cite></p>
+<dl>
+<dt>Usage:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ros2</span> <span class="n">launch</span> <span class="n">drl_pkg</span> <span class="n">webots_world_launch</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
 </dd>
 </dl>
+<p>:param <code class="xref py py-obj docutils literal notranslate"><span class="pre">world</span></code>: The world file to be launched. Defaults to ‘apartment_nocf.wbt’.
+:type <code class="xref py py-obj docutils literal notranslate"><span class="pre">world</span></code>: <code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code>
+:param <code class="xref py py-obj docutils literal notranslate"><span class="pre">map</span></code>: Full path of the map file to be used for localization and planning. Defaults to ‘maps/map.yaml’.
+:type <code class="xref py py-obj docutils literal notranslate"><span class="pre">map</span></code>: <code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code>
+:param <code class="xref py py-obj docutils literal notranslate"><span class="pre">autostart</span></code>: Whether to autostart the nav2 stack. Defaults to ‘true’.
+:type <code class="xref py py-obj docutils literal notranslate"><span class="pre">autostart</span></code>: <code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code>
+:param <code class="xref py py-obj docutils literal notranslate"><span class="pre">params_file</span></code>: Full path to the ROS2 parameters file to use for all launched nodes. Defaults to ‘params/nav2_params_nocf.yaml’.
+:type <code class="xref py py-obj docutils literal notranslate"><span class="pre">params_file</span></code>: <code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code>
+:param <code class="xref py py-obj docutils literal notranslate"><span class="pre">use_robot_state_pub</span></code>: Whether to use the robot state publisher. Defaults to ‘true’.
+:type <code class="xref py py-obj docutils literal notranslate"><span class="pre">use_robot_state_pub</span></code>: <code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code>
+:param <code class="xref py py-obj docutils literal notranslate"><span class="pre">rviz_config</span></code>: Full path to the RViz config file to use. Defaults to ‘rviz/nav2_default_view.rviz’.
+:type <code class="xref py py-obj docutils literal notranslate"><span class="pre">rviz_config</span></code>: <code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code>
+:param <code class="xref py py-obj docutils literal notranslate"><span class="pre">use_rviz</span></code>: Whether to launch RViz. Defaults to ‘false’.
+:type <code class="xref py py-obj docutils literal notranslate"><span class="pre">use_rviz</span></code>: <code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code>
+:param <code class="xref py py-obj docutils literal notranslate"><span class="pre">log_settings</span></code>: Whether to log settings. Defaults to ‘true’.
+:type <code class="xref py py-obj docutils literal notranslate"><span class="pre">log_settings</span></code>: <code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code>
+:param <code class="xref py py-obj docutils literal notranslate"><span class="pre">tb1_params_file</span></code>: Full path to the ROS2 parameters file to use for tb1. Defaults to ‘params/tb1_params.yaml’.
+:type <code class="xref py py-obj docutils literal notranslate"><span class="pre">tb1_params_file</span></code>: <code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code>
+:param <code class="xref py py-obj docutils literal notranslate"><span class="pre">tb2_params_file</span></code>: Full path to the ROS2 parameters file to use for tb2. Defaults to ‘params/tb2_params.yaml’.
+:type <code class="xref py py-obj docutils literal notranslate"><span class="pre">tb2_params_file</span></code>: <code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>LaunchConfiguration</strong> – world (str): The world file to be launched. Default is ‘apartment_nocf.wbt’.
-map (str): Full path of the map file to be used for localization and planning. Default is ‘maps/map.yaml’.
-autostart (str): Whether to autostart the nav2 stack. Default is ‘true’.
-params_file (str): Full path to the ROS2 parameters file to use for all launched nodes. Default is ‘params/nav2_params_nocf.yaml’.
-use_robot_state_pub (str): Whether to use the robot state publisher. Default is ‘true’.
-rviz_config (str): Full path to the RViz config file to use. Default is ‘rviz/nav2_default_view.rviz’.
-use_rviz (str): Whether to launch RViz. Default is ‘false’.
-log_settings (str): Whether to log settings. Default is ‘true’.</p>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The webots node that launches the webots world file specified in the launch configuration.
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">foxglove_websocket</span></code>: An included LaunchDescription object from the foxglove_bridge package.
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">nav_instances_cmds</span></code>: A list of GroupAction objects that launch the nav2 stack for each robot in the swarm.
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">map_to_odom</span></code>: A static transform publisher that publishes a static transform between the map and odom frames for each robot in the swarm. This is not used in the current implementation.
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">odom_to_base_link</span></code>: A static transform publisher that publishes a static transform between the odom and base_link frames for each robot in the swarm.
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">bag_cmd</span></code>: An ExecuteProcess object that records all topics to a rosbag file.</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The launch description for the webots world</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>LaunchDescription</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">webots_node</span></code></p>
 </dd>
 </dl>
 </dd></dl>
 
 </section>
 <section id="module-transforms_launch">
-<span id="src-drl-pkg-launch-transforms-launch-py"></span><h2><code class="docutils literal notranslate"><span class="pre">src/drl_pkg/launch/transforms_launch.py</span></code><a class="headerlink" href="#module-transforms_launch" title="Permalink to this heading"></a></h2>
+<span id="src-drl-pkg-launch-transforms-launch-py"></span><h2><code class="docutils literal notranslate"><span class="pre">src/drl_pkg/launch/transforms_launch.py</span></code><a class="headerlink" href="#module-transforms_launch" title="Link to this heading"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="transforms_launch.generate_launch_description">
-<span class="sig-prename descclassname"><span class="pre">transforms_launch.</span></span><span class="sig-name descname"><span class="pre">generate_launch_description</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/transforms_launch.html#generate_launch_description"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#transforms_launch.generate_launch_description" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">transforms_launch.</span></span><span class="sig-name descname"><span class="pre">generate_launch_description</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/transforms_launch.html#generate_launch_description"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#transforms_launch.generate_launch_description" title="Link to this definition"></a></dt>
 <dd><p>This will launch a Ros2 system that will connect with two turtlebots using the default URI, with it’s initial position populated with values from the <cite>src/drl_pkg/config/experiment_config.yaml</cite> file. These initial position values will also be used in creating a static transformer between the ‘world’ and ‘odom’ frames (this is required for the turtlebots to publish correctly). It will also launch a foxglove websocket to record the data. Data is recorded and sent to a default rosbag file. A possible dependency for launching more complex systems with multiple robots.</p>
-<dl class="simple">
-<dt>Usage:</dt><dd><p><cite>$ ros2 launch drl_pkg transforms_launch.py</cite></p>
+<dl>
+<dt>Usage:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ros2</span> <span class="n">launch</span> <span class="n">drl_pkg</span> <span class="n">transforms_launch</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
 </dd>
 </dl>
 <dl class="field-list simple">
@@ -272,13 +276,13 @@ log_settings (str): Whether to log settings. Default is ‘true’.</p>
 
 </section>
 <section id="module-webots_world_launch">
-<span id="src-drl-pkg-launch-webots-world-launch-py"></span><h2><code class="docutils literal notranslate"><span class="pre">src/drl_pkg/launch/webots_world_launch.py</span></code><a class="headerlink" href="#module-webots_world_launch" title="Permalink to this heading"></a></h2>
+<span id="src-drl-pkg-launch-webots-world-launch-py"></span><h2><code class="docutils literal notranslate"><span class="pre">src/drl_pkg/launch/webots_world_launch.py</span></code><a class="headerlink" href="#module-webots_world_launch" title="Link to this heading"></a></h2>
 <p>This file launches a single instance of a webots_world file specified in the launch configuration. There may be some broken dependencies as there are active branches of development. Be sure to check the launch parameters before assuming the entire file is broken.</p>
 <p>Usage: ros2 launch drl_pkg webots_world_launch.py world:=&lt;world_name&gt;</p>
 <p>Author: Will Graham</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="webots_world_launch.generate_launch_description">
-<span class="sig-prename descclassname"><span class="pre">webots_world_launch.</span></span><span class="sig-name descname"><span class="pre">generate_launch_description</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/webots_world_launch.html#generate_launch_description"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webots_world_launch.generate_launch_description" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">webots_world_launch.</span></span><span class="sig-name descname"><span class="pre">generate_launch_description</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/webots_world_launch.html#generate_launch_description"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webots_world_launch.generate_launch_description" title="Link to this definition"></a></dt>
 <dd><p>Launches a single instance of a webots world file specified in the launch configuration. This was the starting point for the multi-robot launch file attempted in the nav2_launch.py file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -300,7 +304,7 @@ log_settings (str): Whether to log settings. Default is ‘true’.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="classes.html" class="btn btn-neutral float-left" title="Classes and Nodes in /src/webots_pkg/webots_pkg" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="classes.html" class="btn btn-neutral float-left" title="Classes/ROS2 Nodes in /src/webots_pkg/webots_pkg" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="deprecated.html" class="btn btn-neutral float-right" title="Deprecated Docs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

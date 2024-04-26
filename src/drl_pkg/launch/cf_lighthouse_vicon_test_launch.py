@@ -13,13 +13,18 @@ def generate_launch_description():
     This will launch a Ros2 system that will connect with a crazyflie using the default URI, with it's initial position populated with values from the `src/drl_pkg/config/experiment_config.yaml` file. These initial position values will also be used in creating a static transformer between the 'world' and 'odom' frames (this is required for the crazyflie to publish correctly). It will also launch a foxglove websocket and vicon driver to record the data. Data is recorded and sent to a default rosbag file.
 
     Usage: 
-        `$ ros2 launch drl_pkg cf_lighthouse_vicon_test_launch.py`
+        >>> ros2 launch drl_pkg cf_lighthouse_vicon_test_launch.py
 
     Args:
         None
 
     Returns:
-        ld (LaunchDescription): The launch description object, invoked by the Usage.
+        :obj:`vicon_driver_launch`: An included LaunchDescription object from the mocap_vicon_driver package. This is activated by the :obj:`start_vicon_publishing` action.
+        :obj:`foxglove_websocket`: An included LaunchDescription object from the foxglove_bridge package.
+        :obj:`crazyflie_node`: Included `cf_publisher_launch` LaunchDescription with parameters as: Fly = False, URI = 'radio://0/80/2M/E7E7E7E7E7', config_file = params_file.
+        :obj:`static_tf_publisher`: Publishes a static transform between the world and odom frames for the crazyflie.
+        :obj:`rviz`: Launches the rviz2 node.
+        :obj:`start_vicon_publishing`: Activates the vicon driver node.
     """
 
     # MACROS used in generating the launch description

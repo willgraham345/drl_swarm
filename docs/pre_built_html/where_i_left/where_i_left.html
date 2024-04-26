@@ -1,23 +1,23 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Where I left off &mdash; drl_swarm 1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
 
   
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
@@ -45,9 +45,7 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../overviews/start_here.html">Start Here</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../overviews/environment_setup.html">Environment Setup</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules.html">Source Code Descriptions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../drl_pkg.html"><code class="docutils literal notranslate"><span class="pre">/src/drl_pkg</span></code> Background and Explanation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../drl_pkg.html#table-of-contents-for-repository">Table of Contents for Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drl_pkg.html"><code class="docutils literal notranslate"><span class="pre">/src/drl_pkg</span></code> Explanation and Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../build_new_docs/how_to_build_new_docs.html">How to Update Documentation</a></li>
 </ul>
 
@@ -76,7 +74,7 @@
            <div itemprop="articleBody">
              
   <section id="where-i-left-off">
-<h1>Where I left off<a class="headerlink" href="#where-i-left-off" title="Permalink to this heading"></a></h1>
+<h1>Where I left off<a class="headerlink" href="#where-i-left-off" title="Link to this heading"></a></h1>
 <p>Where I attempted to modify the source code: <a class="reference external" href="https://github.com/bitcraze/crazyflie-firmware/blob/9e7e697906eced761d5fd27be4f5d866654da250/src/modules/src/lighthouse/lighthouse_position_est.c#L207-L214">lighthouse-position-est source code change</a></p>
 <p>This needs to be removed for yaw estimation to correctly be performed: <a class="reference external" href="https://github.com/bitcraze/crazyflie-firmware/blob/master/src/utils/src/lighthouse/lighthouse_geometry.c#L169-L201">yaw calculation</a></p>
 <p>I wasn’t able to figure out how to get the crazyflie to fly with the inverted lighthouse sensor. I built jigs to hold the Crazyflie aboove the lighthouse basestations to make sure that I was getting the correct position calculations from the lighthouse. I tried nearly every rotation matrix, and wasn’t ever able to get the data to agree with the Vicon data. I always had one or two of the axes negative (i.e. displacements in one of the axes was negative). This typically manifested as having a correct displacement for the x and y, with a negative displacement for the z.</p>

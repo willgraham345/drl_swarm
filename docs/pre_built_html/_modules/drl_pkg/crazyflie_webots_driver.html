@@ -1,22 +1,22 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>drl_pkg.crazyflie_webots_driver &mdash; drl_swarm 1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
 
   
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -44,9 +44,7 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../overviews/start_here.html">Start Here</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../overviews/environment_setup.html">Environment Setup</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Source Code Descriptions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../drl_pkg.html"><code class="docutils literal notranslate"><span class="pre">/src/drl_pkg</span></code> Background and Explanation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../drl_pkg.html#table-of-contents-for-repository">Table of Contents for Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drl_pkg.html"><code class="docutils literal notranslate"><span class="pre">/src/drl_pkg</span></code> Explanation and Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../build_new_docs/how_to_build_new_docs.html">How to Update Documentation</a></li>
 </ul>
 
@@ -99,8 +97,12 @@
 <span class="c1"># import cffirmware</span>
 
 
-<div class="viewcode-block" id="CrazyflieWebotsDriver"><a class="viewcode-back" href="../../src_code_docs/deprecated.html#drl_pkg.crazyflie_webots_driver.CrazyflieWebotsDriver">[docs]</a><span class="k">class</span> <span class="nc">CrazyflieWebotsDriver</span><span class="p">():</span>
-<div class="viewcode-block" id="CrazyflieWebotsDriver.init"><a class="viewcode-back" href="../../src_code_docs/deprecated.html#drl_pkg.crazyflie_webots_driver.CrazyflieWebotsDriver.init">[docs]</a>    <span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">webots_node</span><span class="p">,</span> <span class="n">properties</span><span class="p">):</span>
+<div class="viewcode-block" id="CrazyflieWebotsDriver">
+<a class="viewcode-back" href="../../src_code_docs/deprecated.html#drl_pkg.crazyflie_webots_driver.CrazyflieWebotsDriver">[docs]</a>
+<span class="k">class</span> <span class="nc">CrazyflieWebotsDriver</span><span class="p">():</span>
+<div class="viewcode-block" id="CrazyflieWebotsDriver.init">
+<a class="viewcode-back" href="../../src_code_docs/deprecated.html#drl_pkg.crazyflie_webots_driver.CrazyflieWebotsDriver.init">[docs]</a>
+    <span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">webots_node</span><span class="p">,</span> <span class="n">properties</span><span class="p">):</span>
         <span class="c1"># Declare the robot name and fix the timestep</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__robot</span> <span class="o">=</span> <span class="n">webots_node</span><span class="o">.</span><span class="n">robot</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">timestep</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__robot</span><span class="o">.</span><span class="n">getBasicTimeStep</span><span class="p">())</span>
@@ -179,7 +181,10 @@
             <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Failed to create subscriber or publisher on Crazyflie&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="CrazyflieWebotsDriver.publish_laserscan_data"><a class="viewcode-back" href="../../src_code_docs/deprecated.html#drl_pkg.crazyflie_webots_driver.CrazyflieWebotsDriver.publish_laserscan_data">[docs]</a>    <span class="k">def</span> <span class="nf">publish_laserscan_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="CrazyflieWebotsDriver.publish_laserscan_data">
+<a class="viewcode-back" href="../../src_code_docs/deprecated.html#drl_pkg.crazyflie_webots_driver.CrazyflieWebotsDriver.publish_laserscan_data">[docs]</a>
+    <span class="k">def</span> <span class="nf">publish_laserscan_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
         <span class="c1"># Get range values from sensors</span>
         <span class="n">front_range</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">range_front</span><span class="o">.</span><span class="n">getValue</span><span class="p">()</span><span class="o">/</span><span class="mf">1000.0</span>
@@ -210,7 +215,10 @@
         <span class="c1"># Publish LaserScan message to ROS</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">laser_publisher</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">msg_laser</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="CrazyflieWebotsDriver.cmd_vel_callback"><a class="viewcode-back" href="../../src_code_docs/deprecated.html#drl_pkg.crazyflie_webots_driver.CrazyflieWebotsDriver.cmd_vel_callback">[docs]</a>    <span class="k">def</span> <span class="nf">cmd_vel_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">twist</span><span class="p">):</span>
+
+<div class="viewcode-block" id="CrazyflieWebotsDriver.cmd_vel_callback">
+<a class="viewcode-back" href="../../src_code_docs/deprecated.html#drl_pkg.crazyflie_webots_driver.CrazyflieWebotsDriver.cmd_vel_callback">[docs]</a>
+    <span class="k">def</span> <span class="nf">cmd_vel_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">twist</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">target_twist</span> <span class="o">=</span> <span class="n">twist</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;def publish_odometry(self, odom_msg): </span>
 <span class="sd">        #</span>
@@ -251,8 +259,11 @@
 <span class="sd">        # odom.twist.twist.angular.y = self.current_pose.angular[1]</span>
 <span class="sd">        # odom.twist.twist.angular.z = self.current_pose.angular[2]</span>
 <span class="sd">        self.odom_publisher.publish(odom_msg)&quot;&quot;&quot;</span></div>
+
     
-<div class="viewcode-block" id="CrazyflieWebotsDriver.step"><a class="viewcode-back" href="../../src_code_docs/deprecated.html#drl_pkg.crazyflie_webots_driver.CrazyflieWebotsDriver.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CrazyflieWebotsDriver.step">
+<a class="viewcode-back" href="../../src_code_docs/deprecated.html#drl_pkg.crazyflie_webots_driver.CrazyflieWebotsDriver.step">[docs]</a>
+    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">rclpy</span><span class="o">.</span><span class="n">spin_once</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__node</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span> 
             <span class="bp">self</span><span class="o">.</span><span class="n">__robot</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">timestep</span><span class="p">)</span>
@@ -386,7 +397,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">past_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__robot</span><span class="o">.</span><span class="n">getTime</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">past_x_global</span> <span class="o">=</span> <span class="n">x_global</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">past_y_global</span> <span class="o">=</span> <span class="n">y_global</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">past_z_global</span> <span class="o">=</span> <span class="n">z_global</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">past_z_global</span> <span class="o">=</span> <span class="n">z_global</span></div>
+</div>
+
 </pre></div>
 
            </div>

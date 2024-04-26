@@ -22,7 +22,11 @@ def generate_launch_description():
         params_file (:obj:`str`, optional): The path to the experiment configuration file. Defaults to 'config/experiment_config.yaml'.
 
     Returns:
-        ld (LaunchDescription): The launch description object, invoked by the Usage.
+        :obj:`foxglove_websocket` node
+        :obj:`crazyflie_node`: Included `cf_publisher_launch` LaunchDescription with parameters as: Fly = True, URI = 'radio://0/80/2M/E7E7E7E7E7', config_file = params_file.
+        :obj:`static_tf_publisher`: Publishes a static transform between the world and odom frames for the crazyflie.
+        :obj:`teleop_twist_node`: Launches the teleop_twist_keyboard node for manual control.
+
     """   
     PACKAGE_DIR = get_package_share_directory('drl_pkg')
     CONFIG_FILE_PATH = (os.path.join(PACKAGE_DIR, 'config', 'experiment_config.yaml'))

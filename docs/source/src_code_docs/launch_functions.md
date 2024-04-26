@@ -1,6 +1,6 @@
 # Launch Functions Defined in `/src/drl_pkg/launch`
 
-**IMPORTANT**: For all `get_launch_description()` functions, we will treat them as if their function inputs are `LaunchConfiguration` objects. This is done so the documentation can be more easily read, as Sphinx does not have built-ins for `LaunchConfiguration` objects. 
+**IMPORTANT**: For all `get_launch_description()` functions, we will treat them as if their function inputs are `LaunchConfiguration` objects. This is done so the documentation can be more easily read, as Sphinx does not have built-ins for `LaunchConfiguration` objects. Additionally, the return object will be a list of nodes run by the launch function. 
 
 TODO: Add a classDiagram describing the interaction between different launch argments, with launch files acting as the classes.
 
