@@ -52,16 +52,18 @@ def generate_launch_description():
         LaunchDescription: The launch description for the webots world
     """
     # Macro config
-    DIR_PATH = os.path.dirname(__file__)
-    WORLD_FILES = 'apartment.wbt'
+    dir_path = os.path.dirname(__file__)
+    world_files = 'apartment.wbt'
     package_dir = get_package_share_directory('drl_pkg')
-    robot_config_file_path = os.path.abspath(os.path.join(package_dir, 'config', 'webots_config_no_cf.yaml'))
+    robot_config_file_path = os.path.abspath(os.path.join(package_dir,
+        'config',
+        'webots_config_no_cf.yaml'))
     ########## ! "Macro" config ##########
     bringup_dir = get_package_share_directory('nav2_bringup')
     launch_dir = os.path.join(bringup_dir, 'launch')
 
     # Set configuration
-    swarm = import_webots_swarm_config(robot_config_file_path, {"turtlebots": tb})
+    swarm = import_webots_swarm_config(robot_config_file_path)
     world = LaunchConfiguration('world')
     # Full path of the map file to be used for localization and planning
     map_yaml_file = LaunchConfiguration('map')
@@ -84,7 +86,6 @@ def generate_launch_description():
         world=PathJoinSubstitution([package_dir, 'worlds', 'configured_worlds', world]),
         ros2_supervisor=True
     )
-    
     foxglove_websocket = IncludeLaunchDescription(
         XMLLaunchDescriptionSource(
             [os.path.join(get_package_share_directory('foxglove_bridge'),
@@ -247,7 +248,6 @@ def generate_launch_description():
             description="Full path to the ROS2 parameters file to use for tb2"),
     ]
     # TODO: bringup_cmd_group initialization (see the multi robot launch file)
-    
     bag_cmd = ExecuteProcess(
         cmd=['ros2', 'bag', 'record', '-a'],
         output='screen'

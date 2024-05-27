@@ -61,7 +61,7 @@ def generate_launch_description():
     launch_dir = os.path.join(bringup_dir, 'launch')
 
     # Set configuration
-    swarm = import_webots_swarm_config(robot_config_file_path, {"turtlebots": tb})
+    swarm = import_webots_swarm_config(robot_config_file_path)
     world = LaunchConfiguration('world')
     # Full path of the map file to be used for localization and planning
     map_yaml_file = LaunchConfiguration('map')
