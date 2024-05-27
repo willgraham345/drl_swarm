@@ -50,20 +50,27 @@ def generate_launch_description():
 
     """
     # Macro config
-    BASE_WORLD_FILE = 'apartment.wbt'
-    PACKAGE_DIR = get_package_share_directory('drl_pkg')
-    ROBOT_CONFIG_FILE_PATH = os.path.abspath(os.path.join(PACKAGE_DIR, 'config', 'webots_config_no_cf.yaml'))
+    base_world_file = 'apartment.wbt'
+    package_dir = get_package_share_directory('drl_pkg')
+    robot_config_file_path = os.path.abspath(
+        os.path.join(package_dir,
+        'config',
+        'webots_config_no_cf.yaml'))
     ########## ! "Macro" config ##########
     bringup_dir = get_package_share_directory('nav2_bringup')
     launch_dir = os.path.join(bringup_dir, 'launch')
 
     # Set configuration
-    swarm = import_webots_swarm_config(ROBOT_CONFIG_FILE_PATH, {"turtlebots": tb})
+    swarm = import_webots_swarm_config(robot_config_file_path, {"turtlebots": tb})
     world = LaunchConfiguration('world')
-    map_yaml_file = LaunchConfiguration('map') # Full path of the map file to be used for localization and planning
-    autostart = LaunchConfiguration('autostart') # Whether to autostart the nav2 stack
-    params_file = LaunchConfiguration('params_file') # Full path to the ROS2 parameters file to use for all launched nodes
-    use_robot_state_pub = LaunchConfiguration('use_robot_state_pub') # Whether to use the robot state publisher
+    # Full path of the map file to be used for localization and planning
+    map_yaml_file = LaunchConfiguration('map')
+    # Whether to autostart the nav2 stack
+    autostart = LaunchConfiguration('autostart')
+    # Full path to the ROS2 parameters file to use for all launched nodes
+    params_file = LaunchConfiguration('params_file')
+    # Whether to use the robot state publisher
+    use_robot_state_pub = LaunchConfiguration('use_robot_state_pub')
     rviz_config_file = LaunchConfiguration('rviz_config')
 
     # Simulation and foxglove settings
@@ -74,13 +81,14 @@ def generate_launch_description():
 
     # Definine nodes for webots and foxglove
     webots = WebotsLauncher(
-        world=PathJoinSubstitution([PACKAGE_DIR, 'worlds', 'configured_worlds', world]),
+        world=PathJoinSubstitution([package_dir, 'worlds', 'configured_worlds', world]),
         ros2_supervisor=True
     )
-    
     foxglove_websocket = IncludeLaunchDescription(
         XMLLaunchDescriptionSource(
-            [os.path.join(get_package_share_directory('foxglove_bridge'), 'launch', 'foxglove_bridge_launch.xml')]
+            [os.path.join(get_package_share_directory('foxglove_bridge'),
+                          'launch',
+                          'foxglove_bridge_launch.xml')]
         )
     )
     launch_handler = launch.actions.RegisterEventHandler(
@@ -97,7 +105,6 @@ def generate_launch_description():
             on_exit=[launch.actions.EmitEvent(event=launch.events.Shutdown())],
         )
     )
-    
 
     # Define commands for launching Nav2 instances
     robots = swarm.get_robots_dict_list() #tested and working
@@ -171,7 +178,6 @@ def generate_launch_description():
         )
 
         nav_instances_cmds.append(group)
-    
     # Add static transforms from world to odoms
     for robot in robots:
         map_to_odom = Node(
@@ -179,7 +185,10 @@ def generate_launch_description():
             executable='static_transform_publisher',
             name=f'static_transform_publisher_{robot["name"]}',
             output='screen',
-            arguments=[str(robot['x_pose']), str(robot['y_pose']), str(robot['z_pose']), '0', '0', '0', 'map', 'odom']
+            arguments=[str(robot['x_pose']),
+                       str(robot['y_pose']),
+                       str(robot['z_pose']),
+                       '0', '0', '0', 'map', 'odom']
         )
         odom_to_base_link = Node(
             package='tf2_ros',
@@ -193,23 +202,44 @@ def generate_launch_description():
 
     # Declare launch arguments
     declaration_cmds = [
-        DeclareLaunchArgument('log-level', default_value='debug', description='The log level to use'),
-        DeclareLaunchArgument('world', default_value="apartment_nocf.wbt", description='The world file to be launched'),
-        DeclareLaunchArgument('map', default_value=os.path.join(PACKAGE_DIR, 'maps', 'map.yaml'), description='Full path to map file to load'),
-        DeclareLaunchArgument('params_file', default_value=os.path.join(PACKAGE_DIR, 'params', 'nav2_params_nocf.yaml'), description='Full path to the ROS2 parameters file to use for all launched nodes'),
-        DeclareLaunchArgument('rviz_config', default_value=os.path.join(bringup_dir, 'rviz', 'nav2_default_view.rviz'), description='Full path to the RViz config file to use'),
-        DeclareLaunchArgument('use_robot_state_pub', default_value='true', description='Whether to use the robot state publisher'),
-        DeclareLaunchArgument('autostart', default_value='true', description='Whether to autostart the nav2 stack'),
-        DeclareLaunchArgument('use_rviz', default_value='false', description='Whether to launch RViz'),
-        DeclareLaunchArgument('log_settings', default_value='true', description='Whether to log settings'),
+        DeclareLaunchArgument('log-level',
+            default_value='debug',
+            description='The log level to use'),
+        DeclareLaunchArgument('world',
+            default_value="apartment_nocf.wbt",
+            description='The world file to be launched'),
+        DeclareLaunchArgument('map',
+            default_value=os.path.join(package_dir, 'maps', 'map.yaml'),
+            description='Full path to map file to load'),
+        DeclareLaunchArgument('params_file',
+            default_value=os.path.join(package_dir, 'params', 'nav2_params_nocf.yaml'),
+            description='Full path to the ROS2 parameters file to use for all launched nodes'),
+        DeclareLaunchArgument('rviz_config',
+            default_value=os.path.join(bringup_dir, 'rviz', 'nav2_default_view.rviz'),
+            description='Full path to the RViz config file to use'),
+        DeclareLaunchArgument('use_robot_state_pub',
+            default_value='true',
+            description='Whether to use the robot state publisher'),
+        DeclareLaunchArgument('autostart',
+            default_value='true',
+            description='Whether to autostart the nav2 stack'),
+        DeclareLaunchArgument('use_rviz',
+            default_value='false',
+            description='Whether to launch RViz'),
+        DeclareLaunchArgument('log_settings',
+            default_value='true',
+            description='Whether to log settings'),
     ]
 
     robot_params_declaration_cmds = [
-        DeclareLaunchArgument("tb1_params_file", default_value=os.path.join(PACKAGE_DIR, 'params', 'tb1_params.yaml'), description="Full path to the ROS2 parameters file to use for tb1"),
-        DeclareLaunchArgument("tb2_params_file", default_value=os.path.join(PACKAGE_DIR, 'params', 'tb2_params.yaml'), description="Full path to the ROS2 parameters file to use for tb2"),
+        DeclareLaunchArgument("tb1_params_file",
+            default_value=os.path.join(package_dir, 'params', 'tb1_params.yaml'),
+            description="Full path to the ROS2 parameters file to use for tb1"),
+        DeclareLaunchArgument("tb2_params_file",
+            default_value=os.path.join(package_dir, 'params', 'tb2_params.yaml'),
+            description="Full path to the ROS2 parameters file to use for tb2"),
     ]
     # TODO: bringup_cmd_group initialization (see the multi robot launch file)
-    
     bag_cmd = ExecuteProcess(
         cmd=['ros2', 'bag', 'record', '-a'],
         output='screen'
