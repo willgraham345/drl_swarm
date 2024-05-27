@@ -26,11 +26,11 @@ def generate_launch_description():
     """
 
 
-    PACKAGE_DIR = get_package_share_directory('drl_pkg')
-    CONFIG_FILE_PATH = os.path.abspath(os.path.join(PACKAGE_DIR, 'config', 'experiment_config.yaml'))
+    package_dir = get_package_share_directory('drl_pkg')
+    config_file_path = os.path.abspath(os.path.join(package_dir, 'config', 'experiment_config.yaml'))
     starting_translations = []
     starting_orientations = []
-    with open(CONFIG_FILE_PATH, 'r') as file:
+    with open(config_file_path, 'r') as file:
         config = yaml.safe_load(file)
         try:
             for tb in config['robots']['turtlebots']:
@@ -102,7 +102,9 @@ def generate_launch_description():
 
     foxglove_websocket = IncludeLaunchDescription(
         XMLLaunchDescriptionSource(
-            [os.path.join(get_package_share_directory('foxglove_bridge'), 'launch', 'foxglove_bridge_launch.xml')]
+            [os.path.join(get_package_share_directory('foxglove_bridge'),
+            'launch',
+            'foxglove_bridge_launch.xml')]
         )
     )
 

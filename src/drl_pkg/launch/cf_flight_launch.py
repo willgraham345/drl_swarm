@@ -55,7 +55,7 @@ def generate_launch_description():
         ],
     )
 
-    with open(params_file, 'r', encoding='utf-8') as file:
+    with open(params_file, 'r') as file:
         config = yaml.safe_load(file)
         for cf in config['robots']['crazyflies']:
             if cf['name'] == 'cf1':
