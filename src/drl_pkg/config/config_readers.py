@@ -10,35 +10,150 @@ dir_path = os.path.dirname(__file__)
 DESTINATION_DIR = dir_path
 CONFIG_FILE_PATH = os.path.abspath(os.path.join(dir_path, '..', 'config', 'webots_config.yaml'))
 
-def import_webots_swarm_config(config_file_path: str, ):
+def import_yaml_as_swarm(config_file_path: str):
     """
-    Import the Webots swarm configuration from a YAML file. This is a versatile function that can be used to import a variety of robots by passing in a type with the title of the robots. 
+    Import the Webots swarm configuration as a swarm object from a YAML file.
+    Will return warnings on missing fields. A successful test of this is outputting
+    the swarm object to the console, and the proto string that would be appended to
+    the world file.
 
     Parameters:
         config_file_path (str): The path to the YAML configuration file.
 
     Returns:
-        tuple: A tuple containing the following:
-            - swarm_proto_helper (SwarmProtoWriteHelper): An instance of the SwarmProtoWriteHelper class.
-            - world_file_to_write_path (str): The path to the world file to write.
-            - world_file_to_copy_path (str): The path to the world file to copy.
+        Swarm: The swarm object containing the TurtleBots and
+        Crazyflies defined in the configuration file.
     """
-    with open(config_file_path, 'r') as file:
+    with open(config_file_path, 'r', encoding="utf-8") as file:
         config = yaml.safe_load(file)
-    
+    cf_list = []
+    tb_list = []
+    try:
+        crazyflies = config['robots']['crazyflies']
+        for _, crazyflie_info in crazyflies.items():
+            name = crazyflie_info['name']
+            uri = crazyflie_info['uri']
+            translation = crazyflie_info['translation']
+            orientation = crazyflie_info['orientation']
+            crazyflie = cf(name,translation,URI_address=uri, start_orientation=orientation)
+            # cf_proto = create_cf_protos(name, translation)
+            cf_list.append(crazyflie)
+            print(f"Added Crazyflie {name} to the swarm")
+    except KeyError:
+        print("No Crazyflies found in the configuration file")
+    try:
+        turtlebots = config['robots']['turtlebots']
+        for _, turtle_info in turtlebots.items():
+            name = turtle_info['name']
+            ROS2_address = turtle_info['ROS2_address']
+            translation = turtle_info['translation']
+            orientation = turtle_info['orientation']
+            # tb_proto = create_tb_protos(name, translation)
+            turtlebot = tb(name,translation, ROS2_address = ROS2_address, start_orientation = orientation)
+            tb_list.append(turtlebot)
+            print(f"Added Turtlebot {name} to the swarm")
+    except KeyError:
+        print("No Turtlebots found in the configuration file")
+
+    swarm = Swarm(tb_list, cf_list)
+    return swarm
+
+
+def import_yaml_as_webots_config(config_file_path: str):
+
+    #FIXME: This function isn't correctly implemented, should return a WeBots swarm configuration (protos)
+
+    """
+    Import the Webots swarm configuration as a swarm object from a YAML file.
+    """
+    with open(config_file_path, 'r', encoding="utf-8") as file:
+        config = yaml.safe_load(file)
     cf_protos = []
     tb_protos = []
-    
-    for cf in config['robots']['crazyflies']:
-        cf_name = cf['name']
-        cf_translation = cf['translation']
-        cf_proto = create_cf_protos(cf_name, cf_translation)
-        cf_protos.append(cf_proto)
-    
-    for tb in config['robots']['turtlebots']:
-        tb_name = tb['name']
-        tb_translation = tb['translation']
-        tb_proto = create_tb_protos(tb_name, tb_translation)
-        tb_protos.append(tb_proto)
+    try:
+        crazyflies = config['robots']['crazyflies']
 
+        for _, crazyflie_info in crazyflies.items():
+            name = crazyflie_info['name']
+            # uri = crazyflie_info['uri']
+            translation = crazyflie_info['translation']
+            # orientation = crazyflie_info['orientation']
+            # crazyflie = cf(name,translation,URI_address=uri, start_orientation=orientation)
+            cf_proto = create_cf_protos(name, translation)
+            # cf_list.append(crazyflie)
+            print(f"Added Crazyflie {name} to the swarm")
+    except KeyError:
+        print("No Crazyflies found in the configuration file")
+    try:
+        turtlebots = config['robots']['turtlebots']
+        for _, turtle_info in turtlebots.items():
+            name = turtle_info['name']
+            # ROS2_address = turtle_info['ROS2_address']
+            translation = turtle_info['translation']
+            # orientation = turtle_info['orientation']
+            tb_proto = create_tb_protos(name, translation)
+            # turtlebot = tb(name,translation, ROS2_address = ROS2_address, start_orientation = orientation)
+            tb_protos.append(tb_proto)
+            print(f"Added Turtlebot {name} to the swarm")
+    except KeyError:
+        print("No Turtlebots found in the configuration file")
+
+    # TODO: Need to fix this back into a WeBots swarm configuration
     swarm = Swarm(cf_protos, tb_protos)
+    return swarm
+
+
+def create_cf_protos(cf_name, start_position):
+    """
+    Create a Crazyflie prototype with the given name and start position.
+
+    Parameters:
+        cf_name (str): The name of the Crazyflie prototype.
+        start_position (str): The start position of the Crazyflie prototype.
+
+    Returns:
+        str: The Crazyflie prototype template with the provided name and start position.
+    """
+    cf_template = """
+Crazyflie {{
+  translation {start_position}
+  name "{cf_name}"
+  controller "<extern>"
+}}
+    """
+    return cf_template.format(start_position=start_position, cf_name=cf_name)
+
+def create_tb_protos(tb_name, start_position):
+    """
+    Create a TurtleBot3Burger proto string with the given name and start position.
+
+    Parameters:
+        tb_name (str): The name of the TurtleBot.
+        start_position (str): The start position of the TurtleBot.
+
+    Returns:
+        str: The TurtleBot3Burger proto string.
+    """
+    tb_template = '''
+TurtleBot3Burger {{
+  translation {start_position}
+  name "{tb_name}"
+  controller "<extern>"
+  controllerArgs [
+      ""
+  ]
+  extensionSlot [
+      Solid {{
+          name "imu_link"
+      }}
+      GPS {{
+      }}
+      InertialUnit {{
+          name ""
+      }}
+      RobotisLds01 {{
+      }}
+  ]
+}}
+'''
+    return tb_template.format(start_position=start_position, tb_name=tb_name)

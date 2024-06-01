@@ -29,7 +29,7 @@ from webots_ros2_driver.webots_launcher import WebotsLauncher
 
 # MACROS
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from config.config_readers import import_webots_swarm_config
+from config.config_readers import import_yaml_as_swarm
 from drl_pkg.swarm_classes import tb
 
 
@@ -73,7 +73,7 @@ def generate_launch_description():
     launch_dir = os.path.join(bringup_dir, "launch")
 
     # Set configuration
-    swarm = import_webots_swarm_config(robot_config_file_path)
+    swarm = import_yaml_as_swarm(robot_config_file_path)
     world = LaunchConfiguration("world")
     # Full path of the map file to be used for localization and planning
     map_yaml_file = LaunchConfiguration("map")
