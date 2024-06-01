@@ -1,13 +1,14 @@
-#                     ____  _            __          __                                            
+#                     ____  _            __          _
 #    ____ ___  __  __/ / /_(_)________  / /_  ____  / /_   ______      ______ __________ ___  _____
 #   / __ `__ \/ / / / / __/ / ___/ __ \/ __ \/ __ \/ __/  / ___/ | /| / / __ `/ ___/ __ `__ \/ ___/
-#  / / / / / / /_/ / / /_/ / /  / /_/ / /_/ / /_/ / /_   (__  )| |/ |/ / /_/ / /  / / / / / (__  ) 
-# /_/ /_/ /_/\__,_/_/\__/_/_/   \____/_.___/\____/\__/  /____/ |__/|__/\__,_/_/  /_/ /_/ /_/____/  
+#  / / / / / / /_/ / / /_/ / /  / /_/ / /_/ / /_/ / /_   (__  )| |/ |/ / /_/ / /  / / / / / (__  )
+# /_/ /_/ /_/\__,_/_/\__/_/_/   \____/_.___/\____/\__/  /____/ |__/|__/\__,_/_/  /_/ /_/ /_/____/
 
 """
 This script is used to test the Crazyflie's hover function. Invoked from command line (see Usage)
 
-Make sure that the initial position of the crazyflie is roughly 1/2 a meter down on x axis from lighthouses.
+Make sure that the initial position of the crazyflie is roughly 1/2 a meter down on x axis from
+lighthouses.
 
 Usage: pytest -v test_cf_hover.py
 Author: Will Graham
