@@ -1,37 +1,42 @@
+"""
+The file that defines the cf_publisher executable within the ROS 2 system.
+Responsible for all crazyflie communication, control, and publishing into Ros2. Acts as
+a wrapper for each individual Crazyflie within ROS 2. 
+"""
 from threading import Event
-import yaml
+import time
+import math
+from math import pi
 import rclpy
 from rclpy.node import Node
 from rcl_interfaces.msg import ParameterDescriptor
-import time
-from std_msgs.msg import String
 import tf_transformations
-from tf2_ros import TransformException 
 from tf2_ros.transform_broadcaster import TransformBroadcaster
 from tf2_ros.transform_listener import TransformListener
 from tf2_ros.buffer import Buffer
-from tf2_ros.static_transform_broadcaster import StaticTransformBroadcaster
-from geometry_msgs.msg import TransformStamped
 from sensor_msgs.msg import Range
 from sensor_msgs.msg import LaserScan
 from nav_msgs.msg import Odometry
-from geometry_msgs.msg import Twist, Pose, Point, Quaternion
+from geometry_msgs.msg import (
+    Twist,
+    Pose,
+    TransformStamped,
+    Point,
+    Quaternion,
+    )
 
 import cflib.crtp
 from cflib.crazyflie import Crazyflie
 from cflib.crazyflie.log import LogConfig
-from cflib.utils import uri_helper
 from cflib.crazyflie.mem import LighthouseMemHelper
 from cflib.crazyflie.mem import LighthouseBsGeometry, LighthouseBsCalibration
-from cflib.crazyflie.syncCrazyflie import SyncCrazyflie
-from cflib.positioning.motion_commander import MotionCommander
-from cflib.localization.lighthouse_types import LhCfPoseSample
 
-import math
 
-from math import pi
 
-def radians(degrees):  
+def radians(degrees):
+    """
+    simple conversion between degrees and radians
+    """
     return degrees * math.pi / 180.0
 
 ROTATION_MATRIX_90_PITCH = [
@@ -96,82 +101,22 @@ ZEROS = [
     [0.0, 0.0, 0.0],
 ]
 
-INPUT_ROTATION_MATRIX = [ZEROS, ZEROS]    
-# calib0 = LighthouseBsCalibration()
-# calib0.sweeps[0].tilt = -0.049844
-# calib0.sweeps[0].phase = 0.000000
-# calib0.sweeps[0].curve = -0.477082
-# calib0.sweeps[0].gibphase = 1.870844
-# calib0.sweeps[0].gibmag = -0.006574
-# calib0.sweeps[0].ogeephase = 1.916343
-# calib0.sweeps[0].ogeemag = 0.110889
-# calib0.sweeps[1].tilt = 0.048504
-# calib0.sweeps[1].phase = 0.004812
-# calib0.sweeps[1].curve = 0.545917
-# calib0.sweeps[1].gibphase = 2.412284
-# calib0.sweeps[1].gibmag = -0.006277
-# calib0.sweeps[1].ogeephase = 3.063375
-# calib0.sweeps[1].ogeemag = 0.202656
-# calib0.uid = 0x2C0DCDCD
-# calib0.valid = True
-
-# calib1 = LighthouseBsCalibration()
-# calib1.sweeps[0].tilt = -0.048398
-# calib1.sweeps[0].phase = 0.000000
-# calib1.sweeps[0].curve = 0.155712
-# calib1.sweeps[0].gibphase = 1.315732
-# calib1.sweeps[0].gibmag = -0.002849
-# calib1.sweeps[0].ogeephase = 1.291309
-# calib1.sweeps[0].ogeemag = -0.108465
-# calib1.sweeps[1].tilt = 0.047573
-# calib1.sweeps[1].phase = -0.005821
-# calib1.sweeps[1].curve = 0.246296
-# calib1.sweeps[1].gibphase = 1.344470
-# calib1.sweeps[1].gibmag = -0.005334
-# calib1.sweeps[1].ogeephase = 1.408694
-# calib1.sweeps[1].ogeemag = 0.039339
-# calib1.uid = 0xE72CEE73
-# calib1.valid = True
-
-
-# * Lab Calib results
-# calib0 = LighthouseBsCalibration()
-# calib0.sweeps[0].curve = -0.0113677978515625
-# calib0.sweeps[0].gibmag = -0.0039215087890625
-# calib0.sweeps[0].gibphase = 0.4111328125
-# calib0.sweeps[0].ogeemag = -0.2215576171875
-# calib0.sweeps[0].ogeephase = 2.173828125
-# calib0.sweeps[0].phase = 0.0
-# calib0.sweeps[0].tilt = -0.05035400390625
-# calib0.sweeps[1].curve= 0.2939453125
-# calib0.sweeps[1].gibmag= -0.005096435546875
-# calib0.sweeps[1].gibphase= 1.09375
-# calib0.sweeps[1].ogeemag= -0.08184814453125
-# calib0.sweeps[1].ogeephase= 2.353515625
-# calib0.sweeps[1].phase= -0.00424957275390625
-# calib0.sweeps[1].tilt= 0.04296875
-# calib0.uid = 1043017066
-# calib0.valid = True
-
-# calib1 = LighthouseBsCalibration()
-# calib1.sweeps[0].curve = 0.055908203125
-# calib1.sweeps[0].gibmag = 0.0010480880737304688
-# calib1.sweeps[0].gibphase = 1.150390625
-# calib1.sweeps[0].ogeemag = -0.31884765625
-# calib1.sweeps[0].ogeephase = 1.3759765625
-# calib1.sweeps[0].phase = 0.0
-# calib1.sweeps[0].tilt = -0.049285888671875
-# calib1.sweeps[1].curve = 0.194091796875
-# calib1.sweeps[1].gibmag = -0.0020427703857421875
-# calib1.sweeps[1].gibphase = 0.232177734375
-# calib1.sweeps[1].ogeemag = -0.2666015625
-# calib1.sweeps[1].ogeephase = 2.095703125
-# calib1.sweeps[1].phase = -0.00547027587890625
-# calib1.sweeps[1].tilt = 0.04638671875
-# calib1.uid = 3821474937
-# calib1.valid = True
+INPUT_ROTATION_MATRIX = [ZEROS, ZEROS]
 
 def dict_to_lh_config(geos: dict, rotation_matrices: list[list[list[float]]]):
+    """
+    Convert a dictionary of geometries and rotation matrices to a lighthouse configuration.
+
+    Args:
+        geos (dict): A dictionary of geometries, where the keys are the base stations and the
+        values are the origins.  rotation_matrices (list[list[list[float]]]): A list of rotation
+        matrices for each base station.
+
+    Returns:
+        dict: A dictionary representing the lighthouse configuration, where the keys are the base
+        stations and the values are the corresponding geometries.
+
+    """
     print(rotation_matrices)
     lh_config = {}
     for bs, origin in geos.items():
@@ -186,6 +131,10 @@ class LighthouseData:
     """
     Initializes a new instance of the LighthousePoses class.
 
+    Attributes:
+        lh_frames (dict): A dictionary of lighthouse frames.
+        lh_poses (dict): A dictionary of lighthouse poses.
+
     Args:
         basestation_tf2: dict with keys as tf2 frame IDs, and basestation n0 as value
         lh_poses (list[Pose]): A list of lighthouse poses.
@@ -197,23 +146,83 @@ class LighthouseData:
         )
     """
 
-    def __init__(self, LH_TF2_FRAMES: list[str]):
-        for frame in LH_TF2_FRAMES:
-            if not isinstance(frame, str):
-                raise ValueError("lh_tf2_frames must be a list of strings")
-
+    def __init__(self, lh_tf2_frames: list[str]):
+        self.check_lh_frames(lh_tf2_frames)
         self.lh_frames = {}
         self.lh_poses = {}
-        for i in range(len(LH_TF2_FRAMES)):
-            self.lh_frames[i] = LH_TF2_FRAMES[i]
-            self.lh_poses[i] = Pose(position = Point(x=0.0, y=0.0, z=0.0),
-                                    orientation = Quaternion(x = 0.0, y = 0.0, z = 0.0, w = 1.0))
+        self.populate_frames_and_poses(lh_tf2_frames)
 
+    def populate_frames_and_poses(self, lh_tf2_frames):
+        """
+        Populates the local arrays `lh_frames` and `lh_poses` with the given `lh_tf2_frames`.
+
+        Args:
+            lh_tf2_frames (list): A list of tf2 frames.
+
+        Returns:
+            None
+        """
+        for i, frame in enumerate(lh_tf2_frames):
+            self.lh_frames[i] = frame
+            self.lh_poses[i] = Pose(position=Point(x=0.0, y=0.0, z=0.0),
+                                    orientation=Quaternion(x=0.0, y=0.0, z=0.0, w=1.0))
+
+    def check_lh_frames(self, lh_tf2_frames):
+        """
+        Check the validity of the input list of tf2 frames.
+
+        Args:
+            lh_tf2_frames (list): A list of strings representing tf2 frames.
+
+        Raises:
+            ValueError: If lh_tf2_frames is not a list of strings or if it contains
+            duplicate strings.
+
+        """
+        for frame in lh_tf2_frames:
+            if not isinstance(frame, str):
+                raise ValueError("lh_tf2_frames must be a list of strings")
+            if lh_tf2_frames.count(frame) > 1:
+                raise ValueError("lh_tf2_frames must contain unique strings")
+
+    def check_pose_inputs(self, input_pose):
+        """
+        Check the validity of the input pose.
+
+        Args:
+            input_pose (dict): A dictionary mapping base station IDs to Pose objects.
+
+        Raises:
+            ValueError: If input_pose is not a dictionary or if it contains invalid keys.
+
+        """
+        if not isinstance(input_pose, dict):
+            raise ValueError("input_pose must be a dictionary")
+        if not set(input_pose.keys()).issubset(set(self.lh_frames.keys())):
+            raise ValueError("input_pose contains invalid keys")
     def set_pose(self, input_pose: dict[int, Pose]):
+        """
+        Sets the pose for each base station.
+
+        Args:
+            input_pose (dict[int, Pose]): A dictionary mapping base station IDs to Pose objects.
+
+        Returns:
+            None
+        """
+        self.check_pose_inputs(input_pose)
         for bs, pose in input_pose.items():
             self.lh_poses[bs] = pose
-    
+
     def get_lh_config(self):
+        """
+        Returns the configuration of the Lighthouse base stations.
+
+        Returns:
+            dict: A dictionary containing the configuration of each base station.
+                The keys are the base station IDs and the values are instances of
+                LighthouseBsGeometry.
+        """
         lh_config = {}
         for bs, pose in self.lh_poses.items():
             bs_geo = LighthouseBsGeometry()
@@ -230,22 +239,74 @@ class LighthouseData:
         return lh_config
 
 class LighthouseConfigWriter:
-    def __init__(self, cf: Crazyflie, calibs: dict[int, LighthouseBsCalibration]):
+    """
+    Class that writes lighthouse configurations to crazyflie memory. Can be updated with new
+    rotation matrices as needed.
+
+    Attributes:
+        _calibs_on_cf (bool): A flag indicating if the calibrations are on the crazyflie.
+        cf (Crazyflie): The crazyflie instance to write to.
+        calibs (dict[int, LighthouseBsCalibration]): A dictionary of calibration data for each
+            base station.
+        lh_helper (LighthouseMemHelper): A helper class from Bitcraze designed to reading and writing lighthouse data.
+        lh_rotation_matrices (list[list[list[float]]]): A list of rotation matrices for each base
+            station.
+        _read_write_event (Event): An event to signal when reading and writing is complete.
+
+    Args:
+        crayzflie_instance (Crazyflie): The crazyflie instance to write to.
+        calibs (dict[int, LighthouseBsCalibration]): A dictionary of calibration data for each
+            base station.
+    
+    Methods:
+        __init__(): Initializes a new instance of the LighthouseConfigWriter class.
+        check_lh_frames(lh_tf2_frames): Check the validity of the input list of tf2 frames.
+        check_pose_inputs(input_pose): Checks the validity of the input pose.
+        dict_to_lh_config(geos: dict, rotation_matrices: list[list[list[float]]]): Converts
+            a dictionary of geometries and rotation matrices to a lighthouse configuration.
+        get_lh_config(): Returns the configuration of the Lighthouse base stations.
+        _lh_geo_read_callback(geo_data): Callback function for reading lighthouse geometries
+            from memory.
+        _lh_calib_read_callback(calib_data): Callback function for reading lighthouse
+            calibrations from memory.
+        _lh_geo_data_written_callback(success): Callback function for writing lighthouse
+            geometries to memory.
+        _lh_calib_data_written_callback(success): Callback function for writing lighthouse
+            calibrations to memory.
+        populate_frames_and_poses(lh_tf2_frames): Populates the local arrays `lh_frames` and
+            `lh_poses` with the given `lh_tf2_frames`.
+        read_lh_geos_from_memory(): Reads lighthouse geometries from memory.
+        read_lh_calibs_from_memory(): Reads lighthouse calibrations from memory.
+        set_pose(input_pose: dict[int, Pose]): Sets the pose for each base station.
+        update_rotation_matrices(rotation_matrices): Updates the rotation matrices for
+            lighthouse configurations.
+        write_lh_geos_to_memory(lh_config): Writes lighthouse geometries to memory.
+        write_lh_calibs_to_memory(): Writes lighthouse calibrations to memory.
+
+    """
+
+    def __init__(self, crayzflie_instance: Crazyflie, calibs: dict[int, LighthouseBsCalibration]):
         # TODO: Refactor the lh0_rotation matrix so we can pass in both rotation matrices
-        print(); print();
+        print()
+        print()
         print('Configuring lighthouse')
-        print(); print()
-        self._CF = cf
+        print()
+        print()
+        self._calibs_on_cf = []
+        self.cf = crayzflie_instance
         self._calibs = calibs
         self._read_write_event = Event()
-        self.LH_HELPER = LighthouseMemHelper(self._CF)
+        self.lh_helper = LighthouseMemHelper(self.cf)
+        self.lh_rotation_matrices = []
         self._read_write_event.clear()
 
+        # * Old code that I'm worried to throw away until it passes tests and runs experimentally.
 
-        # * Write lighthouse geometries to memory, output results to console.
+        #  Write lighthouse geometries to memory, output results to console.
         # self.write_lh_geos_to_memory()
         # self.read_lh_geos_from_memory()
-        # # * Check if calibs have been written to memory. If not, write them. If they are there, read them out
+        # #  Check if calibs have been written to memory. If not, write them.
+        # If they are there, read them out
         # try:
         #     self.read_lh_calibs_from_memory()
         # except:
@@ -255,10 +316,15 @@ class LighthouseConfigWriter:
         # print('Lighthouse configuration complete')
         # print(); print()
 
-
     def write_lh_geos_to_memory(self, lh_config):
+        """
+        Writes lighthouse geometries to memory.
+
+        Args:
+            lh_config: The lighthouse configuration to write.
+        """
         try:
-            self.LH_HELPER.write_geos(lh_config, self._lh_geo_data_written_callback)
+            self.lh_helper.write_geos(lh_config, self._lh_geo_data_written_callback)
             self._read_write_event.wait()
             self._read_write_event.clear()
 
@@ -266,26 +332,38 @@ class LighthouseConfigWriter:
             print(f"Error writing lighthouse data to memory: {e}")
 
     def write_lh_calibs_to_memory(self):
+        """
+        Writes lighthouse calibrations to memory.
+        """
         try:
-            self.LH_HELPER.write_calibs(self._calibs, self._lh_calib_data_written_callback)
+            self.lh_helper.write_calibs(self._calibs, self._lh_calib_data_written_callback)
             self._read_write_event.wait()
             self._read_write_event.clear()
         except Exception as e:
             print(f"Error writing lighthouse calibration to memory: {e}")
 
     def read_lh_geos_from_memory(self):
+        """
+        Reads lighthouse geometries from memory.
+        """
         print("Reading lighthouse data from memory")
-        self.LH_HELPER.read_all_geos(self._lh_geo_read_callback)
+        self.lh_helper.read_all_geos(self._lh_geo_read_callback)
         self._read_write_event.wait()
         self._read_write_event.clear()
-    
+
     def read_lh_calibs_from_memory(self):
+        """
+        Reads lighthouse calibrations from memory.
+        """
         print("Reading lighthouse calibration from memory")
-        self.LH_HELPER.read_all_calibs(self._lh_calib_read_callback)
+        self.lh_helper.read_all_calibs(self._lh_calib_read_callback)
         self._read_write_event.wait()
         self._read_write_event.clear()
 
     def _lh_geo_read_callback(self, geo_data):
+        """
+        Callback function for reading lighthouse geometries from memory.
+        """
         print("Lighthouse data read")
         self._calibs_on_cf = True
         for id, data in geo_data.items():
@@ -294,23 +372,31 @@ class LighthouseConfigWriter:
             print()
         # print(geo_data)
         self._read_write_event.set()
-    
+
     def _lh_calib_read_callback(self, calib_data):
+        """
+        Callback function for reading lighthouse calibrations from memory.
+        """
         for id, data in calib_data.items():
             print('---- Calibration data for base station', id + 1)
             data.dump()
             print()
         self._read_write_event.set()
 
-
     def _lh_geo_data_written_callback(self, success):
+        """
+        Callback function for writing lighthouse geometries to memory.
+        """
         if success:
             print('Lighthouse data correctly written to crazyflie')
         else:
             print('Writing crazyflie lighthouse data failed')
         self._read_write_event.set()
-    
+
     def _lh_calib_data_written_callback(self, success):
+        """
+        Callback function for writing lighthouse calibrations to memory.
+        """
         if success:
             print('Lighthouse calibration data correctly written to crazyflie')
         else:
@@ -318,11 +404,17 @@ class LighthouseConfigWriter:
         self._read_write_event.set()
 
     def update_rotation_matrices(self, rotation_matrices: list[list[list[float]]]):
-        self.lh_rotation_matrices = []
+        """
+        Updates the rotation matrices for lighthouse configurations. Calls read and write functions
+        to update the crazyflie memory.
+
+        Args:
+            rotation_matrices: The new rotation matrices to update.
+        """
         self._read_write_event.clear()
         self.lh_rotation_matrices = rotation_matrices
         self.read_lh_geos_from_memory()
-        self.write_lh_geos_to_memory()
+        self.write_lh_geos_to_memory() #FIXME: This has issues with the callback
         self.read_lh_geos_from_memory()
 
 class CrazyfliePublisher(Node):
@@ -330,21 +422,84 @@ class CrazyfliePublisher(Node):
     """drl_pkg.crazyflie_publisher.crazyfliepublisher
     Publisher node for controlling the Crazyflie drone.
 
-    This node initializes the necessary publishers, subscribers, and timers for controlling the Crazyflie drone.
-    It also handles the connection to the Crazyflie and sends flight commands if in flight mode.
+    This node initializes the necessary publishers, subscribers, and timers for controlling the
+    Crazyflie drone. It also handles the connection to the Crazyflie and sends flight commands if
+    in flight mode.
 
-    Parameters:
-        - URI (str): The URI of the Crazyflie.
-        - fly (bool): Determines if the Crazyflie is in testing mode.
+    Attributes:
+        - _cf (Crazyflie): The Crazyflie instance.
+        - _fly (bool): Determines if the Crazyflie is in testing mode.
+        - _initial_orientation_quaternion (list): The initial orientation quaternion.
+        - _initial_translation (list): The initial translation.
+        - _lh1_ros2_pose_frame (str): The frame ID for the pose of the first lighthouse.
+        - _lh2_ros2_pose_frame (str): The frame ID for the pose of the second lighthouse.
+        - _lh_config_writer_initialized (bool): Determines if the lighthouse configuration writer is
+            initialized.
+        - _read_config_data (bool): Determines if the configuration data has been read.
+        - _robot_config (dict): The configuration data for the robot.
+        - _timer_lh_pose_update (Timer): The timer for updating the lighthouse pose.
+        - laser_publisher (Publisher): The publisher for the laser scan data.
+        - lh_pose_data (LighthouseData): The lighthouse pose data.
+        - lh0_pose_listener (TransformListener): The listener for the pose of the first lighthouse.
+        - lh1_pose_listener (TransformListener): The listener for the pose of the second lighthouse.
+        - odom_publisher (Publisher): The publisher for the odometry data.
+        - range_publisher (Publisher): The publisher for the range data.
+        - ranges (list): The range data.
+        - target_twist (Twist): The target twist.
+        - tf_buffers (dict): The tf2 buffers.
+        - tfbr (TransformBroadcaster): The tf2 broadcaster.
+    
+    Methods:
+        - __init__(): Initializes a new instance of the CrazyfliePublisher class.
+        - _connected(): Callback for initial connection with the Crazyflie.
+        - sendHoverCommand(): Sends hover command to the Crazyflie.
+        - cmd_vel_callback(twist: Twist): Callback for the command velocity.
+        - publish_laserscan_data(): Publishes the laser scan data.
+        - _range_log_error(logconf, msg): Callback for the log API when an error occurs.
+        - _range_log_data(timestamp, data, logconf): Callback for the log API when data arrives.
+        - _stab_log_error(logconf, msg): Callback for the log API when an error occurs.
+        - _stab_log_data(timestamp, data, logconf): Callback for the log API when data arrives.
+        - _lh_log_error(logconf, msg): Callback for the log API when an error occurs.
+        - _lh_log_data(timestamp, data, logconf): Callback for the log API when data arrives.
+        - _lh_geo_read_callback(geo_data): Callback function for reading lighthouse geometries
+            from memory.
+        - _lh_calib_read_callback(calib_data): Callback function for reading lighthouse
+            calibrations from memory.
+        - _lh_geo_data_written_callback(success): Callback function for writing lighthouse
+            geometries to memory.
+        - _lh_calib_data_written_callback(success): Callback function for writing lighthouse
+            calibrations to memory.
+        - write_lh_geos_to_memory(lh_config): Writes lighthouse geometries to memory.
+        - write_lh_calibs_to_memory(): Writes lighthouse calibrations to memory.
+        - read_lh_geos_from_memory(): Reads lighthouse geometries from memory.
+        - read_lh_calibs_from_memory(): Reads lighthouse calibrations from memory.
+        - update_rotation_matrices(rotation_matrices): Updates the rotation matrices for
+            lighthouse configurations.
+        - dict_to_lh_config(geos: dict, rotation_matrices: list[list[list[float]]]): Converts
+        a dictionary of geometries and rotation matrices to a lighthouse configuration.
+        - check_lh_frames(lh_tf2_frames): Checks the validity of the input list of tf2 frames.
+        - check_pose_inputs(input_pose): Checks the validity of the input pose.
+        - set_pose(input_pose: dict[int, Pose]): Sets the pose for each base station.
+        - get_lh_config(): Returns the configuration of the Lighthouse base stations.
+        - populate_frames_and_poses(lh_tf2_frames): Populates the local arrays `lh_frames` and
+            `lh_poses` with the given `lh_tf2_frames`.
+        - check_lh_frames(lh_tf2_frames): Check the validity of the input list of tf2 frames.
+        
+
+    Other Parameters:
         - config_file (str): The path to the configuration file.
-        - lh0_pose_frame (str): The frame ID for the pose of the first lighthouse.
-        - lh1_pose_frame (str): The frame ID for the pose of the second lighthouse.
+        - fly (bool): Determines if the Crazyflie is in testing mode.
+        - lh1_pose_frame (str): The frame ID for the pose of the first lighthouse.
+        - lh2_pose_frame (str): The frame ID for the pose of the second lighthouse.
+        - URI (str): The URI of the Crazyflie.
+    Raises:
+        Exception: If an error occurs while getting the parameters.
     """
 
     def __init__(self):
 
         # ! Name node
-        super().__init__("crazyflie_publisher") 
+        super().__init__("crazyflie_publisher")
         self.get_logger().debug("Initializing CrazyfliePublisher")
 
         # ! Declare and getparameters
@@ -366,27 +521,27 @@ class CrazyfliePublisher(Node):
             name = 'initial_orientation_quaternion',
             value = [0.0, 0.0, 0.0, 1.0]
         )
-        try: 
+        try:
             self._fly = self.get_parameter('fly').value
             self.get_logger().info("Got fly parameter")
             self._link_uri = self.get_parameter('URI').value
             self.get_logger().info("Got URI parameter")
-            self.LH0_POSE_FRAME = self.get_parameter('lh0_pose_frame').value
+            self.lh1_ros2_pose_frame = self.get_parameter('lh0_pose_frame').value
             self.get_logger().info("Got lh0_pose_frame parameter")
-            self.LH1_POSE_FRAME = self.get_parameter('lh1_pose_frame').value
+            self.lh2_ros2_pose_frame = self.get_parameter('lh1_pose_frame').value
             self.get_logger().info("Got lh1_pose_frame parameter")
             self._initial_translation = self.get_parameter('initial_translation').value
             self.get_logger().info("Got initial_translation parameter")
-            self._initial_orientation_quaternion = self.get_parameter('initial_orientation_quaternion').value
+            self._initial_orientation_quaternion =self.get_parameter(
+                'initial_orientation_quaternion').value
             self.get_logger().info("Got initial_orientation_quaternion parameter")
         except Exception as e:
             self.get_logger().fatal(f"Error getting paramater value: {e}")
-        
 
         # ! Initialize class members, subscribers, and publishers
         self.ranges= [0.0, 0.0, 0.0, 0.0, 0.0]
         self.tf_buffers = {0: Buffer(), 1: Buffer()}
-        self.lh_pose_data = LighthouseData([self.LH0_POSE_FRAME, self.LH1_POSE_FRAME])
+        self.lh_pose_data = LighthouseData([self.lh1_ros2_pose_frame, self.lh2_ros2_pose_frame])
         self._read_config_data = False
         self._robot_config = None
         self._lh_config_writer_initialized = False
@@ -397,12 +552,11 @@ class CrazyfliePublisher(Node):
         self.laser_publisher = self.create_publisher(LaserScan, "/scan", 10)
         self.odom_publisher = self.create_publisher(Odometry,  "/odom", 10)
         self.tfbr = TransformBroadcaster(self)
-    
+
         # Create subscribers and listeners
         self.create_subscription(Twist,  "/cmd_vel", self.cmd_vel_callback, 1)
         self.lh0_pose_listener = TransformListener(self.tf_buffers[0], self)
         self.lh1_pose_listener = TransformListener(self.tf_buffers[1], self)
-        
 
         # Handle crazyflie connection
         self._cf = Crazyflie(rw_cache='./cache')
@@ -411,15 +565,13 @@ class CrazyfliePublisher(Node):
         self._cf.connection_failed.add_callback(self._connection_failed)
         self._cf.connection_lost.add_callback(self._connection_lost)
 
-        # self._scf = SyncCrazyflie(self._link_uri, cf=self._cf)
 
-        
         # ! Start workflow
         self._cf.open_link(self._link_uri)
         self._set_initial_position()
         self.create_timer(1.0/30.0, self.publish_laserscan_data)
-        self._timer_lh_pose_update = self.create_timer(2.5, self._on_timer_lh_pose_callback)
         # Create timer for pose listener
+        self._timer_lh_pose_update = self.create_timer(2.5, self._on_timer_lh_pose_callback)
         self._init_lh_config_writer()
 
 
@@ -428,19 +580,16 @@ class CrazyfliePublisher(Node):
         if self._fly == True:
             timer_period = 0.1  # seconds
             self.create_timer(timer_period, self.sendHoverCommand)
-
-
             self.hover = {'x': 0.0, 'y': 0.0, 'z': 0.0, 'yaw': 0.0, 'height': 0.3}
-
-
             self._cf.commander.send_hover_setpoint(
                 self.hover['x'], self.hover['y'], self.hover['yaw'],
                 self.hover['height'])
-        
         self._cf.param.request_update_of_all_params()
-        
 
-    def _connected(self, link_uri:str):
+    def _connected(self):
+        """
+        Callback for initial connection with the crazyflie. Sets the loggging configurations, logging callbacks, the TOC, and starts loggers if successful.
+        """
         self._lg_stab = LogConfig(name='Stabilizer', period_in_ms=100)
         self._lg_stab.add_variable('stateEstimate.x', 'float')
         self._lg_stab.add_variable('stateEstimate.y', 'float')
@@ -455,7 +604,7 @@ class CrazyfliePublisher(Node):
         self._lg_range.add_variable('range.right', 'uint16_t')
         self._lg_range.add_variable('range.left', 'uint16_t')
         self._lg_range.add_variable('range.back', 'uint16_t')
-    
+
         self._lh_pose = LogConfig(name='Lighthouse', period_in_ms=100)
         self._lh_pose.add_variable('lighthouse.x', 'float')
         self._lh_pose.add_variable('lighthouse.y', 'float')
@@ -474,7 +623,6 @@ class CrazyfliePublisher(Node):
             self._lh_pose.data_received_cb.add_callback(self._lh_log_data)
             self._lh_pose.error_cb.add_callback(self._lh_log_error)
             self._lh_pose.start()
-        
 
         except KeyError as e:
             self.get_logger.fatal('Could not start log configuration,'
@@ -524,7 +672,6 @@ class CrazyfliePublisher(Node):
 
     def _range_log_data(self, timestamp, data, logconf):
         """Callback from a the log API when data arrives"""
-        
         print(data)
 
         try:
@@ -587,7 +734,7 @@ class CrazyfliePublisher(Node):
             roll = radians(data.get('stabilizer.roll'))
             pitch = radians(-1.0 * data.get('stabilizer.pitch'))
             yaw = radians(data.get('stabilizer.yaw'))
-            
+
             # Create odometry message and publish to ROS2
             odom_msg = Odometry()
             odom_msg.pose.pose.position.x = x
@@ -623,7 +770,7 @@ class CrazyfliePublisher(Node):
 
         # Publish t_cf to tf2
         try:
-            # Create t_cf message, assigned values from the crazyflie stability logger 
+            # Create t_cf message, assigned values from the crazyflie stability logger
             t_cf = TransformStamped()
             q_cf = tf_transformations.quaternion_from_euler(roll, pitch, 0)
             t_cf.header.stamp = self.get_clock().now().to_msg()
@@ -643,7 +790,7 @@ class CrazyfliePublisher(Node):
     def _lh_log_error(self, logconf, msg):
         """Callback from the log API when an error occurs"""
         print('Error when logging %s: %s' % (logconf.name, msg))
-    
+
     def _lh_log_data(self, timestamp, data, logconf):
         """Callback from a the log API when LH data arrives"""
         # print to console
@@ -674,10 +821,11 @@ class CrazyfliePublisher(Node):
             self.get_logger().warning("Error in LH log data, not published to tf2")
             self.get_logger().warning("May need to recalibrate kalman filter values for lighthouse")
             print("Error in LH log data, not published to tf2")
-    
+
     def _init_lh_config_writer(self):
         """
-        Initializes the LighthouseConfigWriter class with the necessary data. Reads from self.lh_pose_data
+        Initializes the LighthouseConfigWriter class with the necessary data. Reads from
+        self.lh_pose_data
 
         Members:
         - self.lh_config_writer
@@ -781,6 +929,8 @@ class CrazyfliePublisher(Node):
         self._cf.param.set_value('kalman.resetEstimation', '0')
 
     def _disconnected():
+        """
+        Callback to print that the crazyflie has been disconnected."""
         print('disconnected')
 
     def _connection_failed(self, link_uri, msg):
@@ -790,14 +940,12 @@ class CrazyfliePublisher(Node):
         print('connection_lost')
 
 def main(args=None):
-
     cflib.crtp.init_drivers()
     rclpy.init(args=args)
     crazyflie_publisher = CrazyfliePublisher()
     rclpy.spin(crazyflie_publisher)
     crazyflie_publisher.destroy_node()
-    rclpy.shutdown()
-    
+    rclpy.shutdown
 
 
 
