@@ -6,6 +6,7 @@
 
 """
 This test ensures that the modified cffirmware has been written to the cf and that the cf is correctly configured to use our lighthouse system. Outputs lighthouse confiugration to command line.
+This test has also been deprecated, as configuration is not saved after reboot. Instead, configuration is dynamically loaded using the CrazyfliePublisher ROS2 node
 
 Usage: pytest -v test_pre_launch_cf_lighthouse_configuration.py
 
