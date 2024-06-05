@@ -856,7 +856,7 @@ class CrazyfliePublisher(Node):
             ros2 run tf2_ros static_transform_publisher --x x --y y --z z --yaw yaw --pitch pitch --roll roll --frame-id frame_id --child-frame-id child_frame_id
             """
             return
-        
+
         # Update lighthouse data with new pose
         for i in range(len(transforms)):
             self.lh_pose_data.lh_poses[i].position = Point(
