@@ -32,12 +32,20 @@ def generate_launch_description():
     Returns:
         ld (LaunchDescription): The launch description object, invoked by the Usage. 
     """
-    PACKAGE_DIR = get_package_share_directory('drl_pkg')
-    CONFIG_FILE_PATH = os.path.abspath(os.path.join(PACKAGE_DIR, 'config', 'experiment_config.yaml'))
-    # TODO: Change this config file path to be a parameter passed into the launch file
+    pkg_dir = get_package_share_directory('drl_pkg')
+    default_swarm_config_file_path = os.path.abspath(os.path.join(
+        pkg_dir,
+        'config',
+        'experiment_config.yaml')
+        )
+    default_lighthouse_config_file_path = os.path.abspath(os.path.join(pkg_dir,
+        'config',
+        'lighthouse_config.yaml')
+        )
+
     swarm_config_yaml_arg = DeclareLaunchArgument(
         'swarm_config_yaml',
-        default_value=str(CONFIG_FILE_PATH),
+        default_value=str(default_swarm_config_file_path),
         description='Full path to the experiment configuration file to use'
     )
     namespace_arg = DeclareLaunchArgument(
@@ -65,13 +73,19 @@ def generate_launch_description():
         default_value='radio://0/80/2M/E7E7E7E7E7',
         description='URI of the Crazyflie'
     )
+    lighthouse_config_file_arg = DeclareLaunchArgument(
+        'lighthouse_config_file',
+        default_value = default_lighthouse_config_file_path,
+        description = 'Full path to the lighthouse configuration file to use'
+    )
     declare_cmds = [
         swarm_config_yaml_arg,
         namespace_arg,
         lh0_pose_frame_arg,
         lh1_pose_frame_arg,
         fly_arg,
-        URI_arg
+        URI_arg,
+        lighthouse_config_file_arg
     ]
     swarm_config_yaml = LaunchConfiguration('swarm_config_yaml')
     namespace = LaunchConfiguration('namespace')
@@ -79,13 +93,14 @@ def generate_launch_description():
     lh1_pose_frame = LaunchConfiguration('lh1_pose_frame')
     fly = LaunchConfiguration('fly')
     URI = LaunchConfiguration('URI')
+    lighthouse_config_file = LaunchConfiguration('lighthouse_config_file')
     print(f"swarm_config_yaml: {swarm_config_yaml}")
     print(f"namespace: {namespace}")
     # Declare and set launch arguments
 
     cf_instance_cmds = []
     # TODO: See if I can remove this and use the config file instead.
-    with open(CONFIG_FILE_PATH, 'r') as file:
+    with open(default_swarm_config_file_path, 'r') as file:
         config = yaml.safe_load(file)
         try:
             for cf in config['robots']['crazyflies']:
@@ -137,12 +152,14 @@ def generate_launch_description():
         ],
     )
     cf_instance_cmds.append(crazyflie_node)
-   
 
     record_cmds = []
     foxglove_websocket = IncludeLaunchDescription(
         XMLLaunchDescriptionSource(
-            [os.path.join(get_package_share_directory('foxglove_bridge'), 'launch', 'foxglove_bridge_launch.xml')]
+            [os.path.join(
+                get_package_share_directory('foxglove_bridge'),
+                'launch',
+                'foxglove_bridge_launch.xml')]
         )
     )
     record_cmds.append(foxglove_websocket)

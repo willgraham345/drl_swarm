@@ -96,13 +96,10 @@ class WriteMem:
         self._event.set()
 
 
-# Create lighthouse config file path
-lighthouse_config_file = os.path.join(
-    os.path.dirname(__file__), "..", "config", "lighthouse_config.yaml"
-)
 
 
-def read_lighthouse_config():
+
+def read_lighthouse_config(lighthouse_config_file):
     """
     Reads the lighthouse configuration file and returns the data as a dictionary.
 
@@ -115,11 +112,6 @@ def read_lighthouse_config():
     bs2geo = LighthouseBsGeometry()
     bs1calib = LighthouseBsCalibration()
     bs2calib = LighthouseBsCalibration()
-
-
-
-
-
     bs1geo.origin = lighthouse_config["geos"][0]["origin"]
     bs1geo.rotation_matrix = lighthouse_config["geos"][0]["rotation"]
     bs1geo.valid = True
@@ -220,6 +212,13 @@ def read_lighthouse_config():
 
 
 if __name__ == "__main__":
+    # Create lighthouse config file path
+    lighthouse_config_file_path = os.path.join(
+        os.path.dirname(__file__), "..", "config", "lighthouse_config.yaml"
+    )
+    test_config_path = os.path.join(
+        os.path.dirname(__file__), "software", "testing_lighthouse_config.yaml"
+    )
     print("STARTING SCRIPT...")
     # URI to the Crazyflie to connect to
     print("Reading crazyflie memory...")
@@ -233,7 +232,7 @@ if __name__ == "__main__":
 
     print("Writing configuration...")
     # Read saved configuration
-    geo_dict, calib_dict = read_lighthouse_config()
+    geo_dict, calib_dict = read_lighthouse_config(lighthouse_config_file_path)
 
     # Write to memory
     WriteMem(uri, geo_dict, calib_dict)
