@@ -411,6 +411,12 @@ class LighthouseConfigManager:
         self.read_mem()
 
     def read_mem(self):
+        """
+        Reads memory from lighthouse configuration memory.
+
+        Has threading waits to ensure that the data is read before proceeding.
+        """
+        print("------ Reading lighthouse config memory ------")
         self.helper.read_all_geos(self._geo_read_ready)
         self._event.wait()
 
@@ -434,7 +440,19 @@ class LighthouseConfigManager:
         self._event.set()
 
     def write_mem(self):
+        """
+        Writes the lighthouse configuration memory.
 
+        This method writes the geos and calibs dictionaries to the lighthouse configuration
+        memory. It waits for the write operation to complete before proceeding.
+
+        Parameters:
+            None
+
+        Returns:
+            None
+        """
+        print("------ Writing lighthouse config memory ------")
         self.helper.write_geos(self.geo_dict, self._data_written)
         self._event.wait()
 
@@ -604,8 +622,7 @@ class CrazyfliePublisher(Node):
 
 
         # Start setting up the pose reading for each lighthouse
-        # FIXME: Uncomment next line
-        # self.lh_tf2_frames = {self.lh1_ros2_pose_frame: 0, self.lh2_ros2_pose_frame: 1}
+        self.lh_tf2_frames = {0: self.lh1_ros2_pose_frame, 1: self.lh2_ros2_pose_frame}
         self.lh_poses = {}
         self.tf_buffers = {0: Buffer(), 1: Buffer()}
         self.lh_listeners = {}
@@ -625,9 +642,9 @@ class CrazyfliePublisher(Node):
 
         # ! Crazyflie connection, inits, and timers
         self._cf.open_link(self._link_uri)
-        self.scf = SyncCrazyflie(self._link_uri, cf=self._cf) #Needed for LighthouseConfigManager
+        self._scf = SyncCrazyflie(self._link_uri, cf=self._cf) #Needed for LighthouseConfigManager
         self._set_initial_position()
-        self.create_timer(1.0 / 30.0, self.publish_laserscan_data)
+        self.create_timer(1.0 / 30.0, self._publish_laserscan_data)
 
         #FIXME: Lighthouse stuff that should be double checked and fixed
         # Read in lighthouse geometries and calibrations from file
@@ -652,7 +669,8 @@ class CrazyfliePublisher(Node):
 
     def _connected(self, link_uri):
         """
-        Callback for initial connection with the crazyflie. Sets the loggging configurations, logging callbacks, the TOC, and starts loggers if successful.
+        Callback for initial connection with the crazyflie. Sets the loggging configurations,
+        logging callbacks, the TOC, and starts loggers if successful.
         """
         self._lg_stab = LogConfig(name="Stabilizer", period_in_ms=100)
         self._lg_stab.add_variable("stateEstimate.x", "float")
@@ -731,7 +749,7 @@ class CrazyfliePublisher(Node):
         self.hover["z"] = twist.linear.z
         self.hover["yaw"] = -1 * math.degrees(twist.angular.z)
 
-    def publish_laserscan_data(self):
+    def _publish_laserscan_data(self):
         """
         Publishes laserscan data from Crazyflie to Ros2. Called at a fixed rate.
         """
@@ -922,28 +940,22 @@ class CrazyfliePublisher(Node):
         - self.lh_config_writer
 
         TODO: Start here for work
-
+            1. Create LH config manager
+            2. Read memory to see if there is a configuration values on cf
+            3. If there is, save those as the configs
+            4. Set initialization flag to true
+            5. Read/handle lighthouse poses (could be done with the _on_tier_lh_pose_callback)
         """
 
-        for frame in self.lh_tf2_frames:
+        for _, frame in self.lh_tf2_frames.items():
             if not isinstance(frame, str):
                 raise ValueError("lh_tf2_frames must be a list of strings")
-            if self.lh_tf2_frames[0] == self.lh_tf2_frames[1]:
-                raise ValueError("lh_tf2_frames must contain unique strings")
-
-        # ! Workflow
-        """
-        1. Create LH config manager
-        2. Read memory to see if there is a configuration values on cf
-        3. If there is, save those as the configs
-        4. Set initialization flag to true
-        5. Read/handle lighthouse poses (could be done with the _on_tier_lh_pose_callback)
-        """
-
+        if self.lh_tf2_frames[0] == self.lh_tf2_frames[1]:
+            raise ValueError("lh_tf2_frames must contain unique strings")
 
         geo_dict, calib_dict = read_lighthouse_config(self._lighthouse_config_file)
         self.lh_config_manager = LighthouseConfigManager(
-            self._cf,
+            self._scf,
             self._link_uri,
             geo_dict,
             calib_dict
