@@ -573,7 +573,8 @@ class CrazyfliePublisher(Node):
             name="initial_orientation_quaternion", value=[0.0, 0.0, 0.0, 1.0]
         )
         self.declare_parameter(
-            name="lighthouse_config_file",
+            "lighthouse_config_file",
+            rclpy.Parameter.Type.STRING,
             descriptor = ParameterDescriptor(
                 description = "Path to the lighthouse configuration file"
             ),
@@ -597,20 +598,19 @@ class CrazyfliePublisher(Node):
             print("Parameters loaded correctly :)")
         except Exception as e:
             self.get_logger().fatal(f"Error getting paramater value: {e}")
-            # print("Error getting paramater value: ", e)
-            # """
-            if VS_CODE_DEBUGGING:
-                # Here for debugging purposes
-                print("Handled error for debugging")
-                self._fly = False
-                self._link_uri = 'radio://0/80/2M/E7E7E7E7E7'
-                self.lh1_ros2_pose_frame = "tb1/lighthouse_pose"
-                self.lh2_ros2_pose_frame = "tb2/lighthouse_pose"
-                self._initial_translation = [0.0, 0.0, 0.0]
-                self._initial_orientation_quaternion = [0.0, 0.0, 0.0, 1.0]
-                self._lighthouse_config_file = lighthouse_config_file_for_debugging
-                print("Got parameters from debugging stuff")
-                # """
+            print("Error getting paramater value: ", e)
+            """
+            # Here for debugging purposes
+            print("Handled error for debugging")
+            self._fly = False
+            self._link_uri = 'radio://0/80/2M/E7E7E7E7E7'
+            self.lh1_ros2_pose_frame = "tb1/lighthouse_pose"
+            self.lh2_ros2_pose_frame = "tb2/lighthouse_pose"
+            self._initial_translation = [0.0, 0.0, 0.0]
+            self._initial_orientation_quaternion = [0.0, 0.0, 0.0, 1.0]
+            self._lighthouse_config_file = lighthouse_config_file_for_debugging
+            print("Got parameters from debugging stuff")
+            """
 
         # ! Class Members
         # Initialize publishers and tf2 broadcasters
@@ -1069,6 +1069,9 @@ class CrazyfliePublisher(Node):
 
 
 def main(args=None):
+    """
+    Entry point for CrazyfliePublisher as defined in the drl_pkg/setup.py file.
+    """
     cflib.crtp.init_drivers()
     rclpy.init(args=args)
     crazyflie_publisher = CrazyfliePublisher()
@@ -1091,7 +1094,7 @@ def main():
 
 if __name__ == '__main__':
     # Set debugging variables to true if working in vscode rather than Ros2
-    VS_CODE_DEBUGGING = True
+    # VS_CODE_DEBUGGING = True
     lighthouse_config_file_for_debugging = os.path.abspath(os.path.join(
         os.path.dirname(__file__), "..", "config", "lighthouse_config.yaml"
     ))
