@@ -4,6 +4,7 @@ Responsible for all crazyflie communication, control, and publishing into Ros2. 
 a wrapper for each individual Crazyflie within ROS 2.
 """
 
+import os
 from threading import Event
 import time
 import math
@@ -13,7 +14,6 @@ import rclpy
 from rclpy.node import Node
 from rcl_interfaces.msg import ParameterDescriptor
 import tf_transformations
-from tf2 import TransformException
 from tf2_ros.transform_broadcaster import TransformBroadcaster
 from tf2_ros.transform_listener import TransformListener
 from tf2_ros.buffer import Buffer
@@ -106,6 +106,8 @@ ZEROS = [
 ]
 
 INPUT_ROTATION_MATRIX = [ZEROS, ZEROS]
+
+
 
 def dict_to_lh_config(geos: dict, rotation_matrices: list[list[list[float]]]):
     """
@@ -244,7 +246,7 @@ def read_lighthouse_config(lighthouse_config_file):
     return geo_dict, calib_dict
 
 
-class LighthousePoseReader(Node):
+class LighthousePoseReader():
     """
     Ros2 node that reads the pose of lighthouses, and formats origin and rotation matrices as
     LighthouseBsGeometry objects. Related classes include the LighthouseConfigManager,
@@ -354,7 +356,6 @@ class LighthousePoseReader(Node):
     #         self.lh_poses[bs] = pose
 
     def get_lh_geo_data(self):
-        # TODO: needs testing
         """
         Returns the configuration of the Lighthouse base stations.
 
@@ -362,6 +363,8 @@ class LighthousePoseReader(Node):
             dict: A dictionary containing the configuration of each base station.
                 The keys are the base station IDs and the values are instances of
                 LighthouseBsGeometry.
+        
+        TODO: Needs testing
         """
         lh_geo = {}
         for bs, pose in self.lh_poses.items():
@@ -405,7 +408,7 @@ class LighthouseConfigManager:
         self.calib_dict = calibs
         self.geo_dict = geos
 
-        self.readmem()
+        self.read_mem()
 
     def read_mem(self):
         self.helper.read_all_geos(self._geo_read_ready)
@@ -553,6 +556,9 @@ class CrazyfliePublisher(Node):
         )
         self.declare_parameter(
             name="lighthouse_config_file",
+            descriptor = ParameterDescriptor(
+                description = "Path to the lighthouse configuration file"
+            ),
         )
         try:
             self._fly = self.get_parameter("fly").value
@@ -570,8 +576,23 @@ class CrazyfliePublisher(Node):
             ).value
             self._lighthouse_config_file = self.get_parameter("lighthouse_config_file").value
             self.get_logger().info("Got initial_orientation_quaternion parameter")
+            print("Parameters loaded correctly :)")
         except Exception as e:
             self.get_logger().fatal(f"Error getting paramater value: {e}")
+            # print("Error getting paramater value: ", e)
+            # """
+            if VS_CODE_DEBUGGING:
+                # Here for debugging purposes
+                print("Handled error for debugging")
+                self._fly = False
+                self._link_uri = 'radio://0/80/2M/E7E7E7E7E7'
+                self.lh1_ros2_pose_frame = "tb1/lighthouse_pose"
+                self.lh2_ros2_pose_frame = "tb2/lighthouse_pose"
+                self._initial_translation = [0.0, 0.0, 0.0]
+                self._initial_orientation_quaternion = [0.0, 0.0, 0.0, 1.0]
+                self._lighthouse_config_file = lighthouse_config_file_for_debugging
+                print("Got parameters from debugging stuff")
+                # """
 
         # ! Class Members
         # Initialize publishers and tf2 broadcasters
@@ -583,7 +604,8 @@ class CrazyfliePublisher(Node):
 
 
         # Start setting up the pose reading for each lighthouse
-        self.lh_tf2_frames = {self.lh1_ros2_pose_frame: 0, self.lh2_ros2_pose_frame: 1}
+        # FIXME: Uncomment next line
+        # self.lh_tf2_frames = {self.lh1_ros2_pose_frame: 0, self.lh2_ros2_pose_frame: 1}
         self.lh_poses = {}
         self.tf_buffers = {0: Buffer(), 1: Buffer()}
         self.lh_listeners = {}
@@ -595,15 +617,15 @@ class CrazyfliePublisher(Node):
         self._read_config_data = False
         self._robot_config = None
         self.lh_config_initialized = False
-        self._cf = Crazyflie(rw_cache="./cache")
+        self._cf = Crazyflie(rw_cache='./cache')
         self._cf.connected.add_callback(self._connected)
         self._cf.disconnected.add_callback(self._disconnected)
         self._cf.connection_failed.add_callback(self._connection_failed)
         self._cf.connection_lost.add_callback(self._connection_lost)
-        self.scf = SyncCrazyflie(self._link_uri, cf=self._cf) #Needed for LighthouseConfigManager
 
         # ! Crazyflie connection, inits, and timers
         self._cf.open_link(self._link_uri)
+        self.scf = SyncCrazyflie(self._link_uri, cf=self._cf) #Needed for LighthouseConfigManager
         self._set_initial_position()
         self.create_timer(1.0 / 30.0, self.publish_laserscan_data)
 
@@ -619,16 +641,16 @@ class CrazyfliePublisher(Node):
         if self._fly == True:
             timer_period = 0.1  # seconds
             self.create_timer(timer_period, self.send_crazyflie_hover_setpoint_commands)
-            self.hover = {"x": 0.0, "y": 0.0, "z": 0.0, "yaw": 0.0, "height": 0.3}
+            self.hover = {'x': 0.0, 'y': 0.0, 'z': 0.0, 'yaw': 0.0, 'height': 0.3}
             self._cf.commander.send_hover_setpoint(
-                self.hover["x"],
-                self.hover["y"],
-                self.hover["yaw"],
-                self.hover["height"],
+                self.hover['x'],
+                self.hover['y'],
+                self.hover['yaw'],
+                self.hover['height'],
             )
         self._cf.param.request_update_of_all_params()
 
-    def _connected(self):
+    def _connected(self, link_uri):
         """
         Callback for initial connection with the crazyflie. Sets the loggging configurations, logging callbacks, the TOC, and starts loggers if successful.
         """
@@ -899,7 +921,8 @@ class CrazyfliePublisher(Node):
         Members:
         - self.lh_config_writer
 
-        # FIXME: Not implemented
+        TODO: Start here for work
+
         """
 
         for frame in self.lh_tf2_frames:
@@ -909,7 +932,6 @@ class CrazyfliePublisher(Node):
                 raise ValueError("lh_tf2_frames must contain unique strings")
 
         # ! Workflow
-        #TODO: Start here for work
         """
         1. Create LH config manager
         2. Read memory to see if there is a configuration values on cf
@@ -939,7 +961,7 @@ class CrazyfliePublisher(Node):
                 now = rclpy.time.Time()
                 trans = buffer.lookup_transform(des_frame, global_frame, now)
                 transforms.append(trans)
-        except TransformException as ex:
+        except Exception as ex:
             self.get_logger().warning(
                 f"Could not transform {des_frame} to {global_frame}: {ex}"
             )
@@ -1043,8 +1065,6 @@ def main(args=None):
     rclpy.shutdown
 
 
-if __name__ == "__main__":
-    main()
 
 
 # For debugging as a normal python file
@@ -1055,7 +1075,12 @@ def main():
     ls.include_launch_description(ld)
     return ls.run()
 
+"""
 
 if __name__ == '__main__':
+    # Set debugging variables to true if working in vscode rather than Ros2
+    VS_CODE_DEBUGGING = True
+    lighthouse_config_file_for_debugging = os.path.abspath(os.path.join(
+        os.path.dirname(__file__), "..", "config", "lighthouse_config.yaml"
+    ))
     main()
-"""
