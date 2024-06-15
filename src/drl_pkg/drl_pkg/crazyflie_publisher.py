@@ -407,6 +407,7 @@ class LighthouseConfigManager:
         self._initial_geos = geos
         self.calib_dict = calibs
         self.geo_dict = geos
+        self.lh_poses = {}
 
         self.read_mem()
 
@@ -439,7 +440,7 @@ class LighthouseConfigManager:
             print()
         self._event.set()
 
-    def write_mem(self):
+    def _write_mem(self):
         """
         Writes the lighthouse configuration memory.
 
@@ -468,7 +469,38 @@ class LighthouseConfigManager:
             print("Write failed")
 
         self._event.set()
+    def write_mem_from_pose(self, lh_poses):
+        """
+        Parses the lighthouse poses from the LighthousePoseReader object.
 
+        Args:
+            lh_poses (LighthousePoseReader): The LighthousePoseReader object.
+
+        Returns:
+            None
+        """
+        self.lh_poses = lh_poses
+
+        print("Creating LighthouseBsGeometry objects")
+        geos = {0: LighthouseBsGeometry(), 1: LighthouseBsGeometry()}
+
+        for i, geo in enumerate(geos):
+            x = self.lh_poses[i].transform.translation.x
+            y = self.lh_poses[i].transform.translation.y
+            z = self.lh_poses[i].transform.translation.z
+            qx0 = self.lh_poses[i].transform.rotation.x
+            qy0 = self.lh_poses[i].transform.rotation.y
+            qz0 = self.lh_poses[i].transform.rotation.z
+            qw0 = self.lh_poses[i].transform.rotation.w
+
+            temp_matrix = tf_transformations.quaternion_matrix([qx0, qy0, qz0, qw0])
+            print(f"Origin = [{x}, {y}, {z}]")
+            print(f"Rotation matrix {i}: {temp_matrix}")
+            geo.origin = [x, y, z]
+            geo.rotation_matrix = temp_matrix
+            geo.valid = True
+        self.geo_dict = geos
+        self._write_mem()
 
 
 class CrazyfliePublisher(Node):
@@ -545,6 +577,10 @@ class CrazyfliePublisher(Node):
         - URI (str): The URI of the Crazyflie.
     Raises:
         Exception: If an error occurs while getting the parameters.
+
+    TODO:
+        Lighthouse stuff that should be double checked and fixed
+
     """
 
     def __init__(self):
@@ -623,6 +659,7 @@ class CrazyfliePublisher(Node):
 
         # Start setting up the pose reading for each lighthouse
         self.lh_tf2_frames = {0: self.lh1_ros2_pose_frame, 1: self.lh2_ros2_pose_frame}
+        self.lh_tf2_poses = {0: [], 1: []}
         self.lh_poses = {}
         self.tf_buffers = {0: Buffer(), 1: Buffer()}
         self.lh_listeners = {}
@@ -646,7 +683,6 @@ class CrazyfliePublisher(Node):
         self._set_initial_position()
         self.create_timer(1.0 / 30.0, self._publish_laserscan_data)
 
-        #FIXME: Lighthouse stuff that should be double checked and fixed
         # Read in lighthouse geometries and calibrations from file
         self._init_lh_config_manager()
         self._timer_lh_pose_update = self.create_timer(
@@ -963,83 +999,49 @@ class CrazyfliePublisher(Node):
         self.lh_config_initialized = True
 
     def _on_timer_lh_pose_callback(self):
-        # FIXME: Not implemented, or tested
-        transforms = []
+        """
+        Callback function to update and write the new lighthouse configuration to memory. 
+        Works by first reading tf2 frames into transforms variable, and setting
+        self.lh_tf2_poses to read point/rotation. It then updates the lighthouse configuration
+        using LighthouseConfigManager's parse_poses and write_mem functions.
+
+        Run this with the following being published:
+        Old way of doing things:
+        ros2 run tf2_ros static_transform_publisher
+            --x x --y y --z z --yaw yaw
+            --pitch pitch --roll roll
+            --frame-id frame_id
+            --child-frame-id child_frame_id
+        """
+        transforms = {}
         try:
-            i = 0
-            for _, buffer in self.tf_buffers.items():
+            for i, buffer in self.tf_buffers.items():
                 global_frame = "map"
-                des_frame = self.lh_tf2_frames.lh_frames[i]
+                des_frame = self.lh_tf2_frames[i]
                 now = rclpy.time.Time()
-                trans = buffer.lookup_transform(des_frame, global_frame, now)
-                transforms.append(trans)
+                transforms[i] = buffer.lookup_transform(des_frame, global_frame, now)
         except Exception as ex:
             self.get_logger().warning(
                 f"Could not transform {des_frame} to {global_frame}: {ex}"
             )
-            # TODO: Run this with the following being published:
-            """
-            ros2 run tf2_ros static_transform_publisher --x x --y y --z z --yaw yaw --pitch pitch --roll roll --frame-id frame_id --child-frame-id child_frame_id
-            """
             return
 
         # Update lighthouse data with new pose
-        for i in range(len(transforms)):
-            self.lh_pose_reader.lh_poses[i].position = Point(
-                x=transforms[i].transform.translation.x,
-                y=transforms[i].transform.translation.y,
-                z=transforms[i].transform.translation.z,
+        for i, transform in range(transforms):
+            self.lh_tf2_poses[i].position = Point(
+                x = transform.translation.x,
+                y = transform.translation.y,
+                z = transform.translation.z,
             )
-            self.lh_pose_reader.lh_poses[i].orientation = Quaternion(
-                x=transforms[i].transform.rotation.x,
-                y=transforms[i].transform.rotation.y,
-                z=transforms[i].transform.rotation.z,
-                w=transforms[i].transform.rotation.w,
+            self.lh_tf2_poses[i].orientation = Quaternion(
+                x = transform.rotation.x,
+                y = transform.rotation.y,
+                z = transform.rotation.z,
+                w = transform.rotation.w,
             )
 
-        print(f"lh_pose_data: {self.lh_pose_reader.lh_poses}")
-        # Update lighthouse data in memory
-        lh_config = self.lh_pose_reader.get_lh_geo_data()
-        self.lh_config_manager.write_lh_geos_to_memory(lh_config)
-        self.lh_config_manager.read_lh_geos_from_memory()
-
-        # if self._lh_initialized is True:
-        #     try:
-        #         lh0_pose = self._lh0_buffer.lookup_transform(
-        #             self._lh0_pose_frame,
-        #             'map',
-        #             rclpy.time.Time())
-        #         lh1_pose = self._lh1_buffer.lookup_transform(
-        #             self._lh1_pose_frame,
-        #             'map',
-        #             rclpy.time.Time())
-        #     except Exception as e:
-        #         self.get_logger().warning(f"Error in lh0_pose_listener_callback: {e}")
-        #         return
-        #     x0 = lh0_pose.transform.translation.x
-        #     y0 = lh0_pose.transform.translation.y
-        #     z0 = lh0_pose.transform.translation.z
-        #     x1 = lh1_pose.transform.translation.x
-        #     y1 = lh1_pose.transform.translation.y
-        #     z1 = lh1_pose.transform.translation.z
-        #     qx0 = lh0_pose.transform.rotation.x
-        #     qy0 = lh0_pose.transform.rotation.y
-        #     qz0 = lh0_pose.transform.rotation.z
-        #     qw0 = lh0_pose.transform.rotation.w
-        #     qx1 = lh1_pose.transform.rotation.x
-        #     qy1 = lh1_pose.transform.rotation.y
-        #     qz1 = lh1_pose.transform.rotation.z
-        #     qw1 = lh1_pose.transform.rotation.w
-        #     temp_matrix_0= tf_transformations.quaternion_matrix([qx0, qy0, qz0, qw0])
-        #     temp_matrix_1 = tf_transformations.quaternion_matrix([qx1, qy1, qz1, qw1])
-        #     print(f"Temp matrix 0: {temp_matrix_0}")
-        #     rotation_matrices = [
-        #         temp_matrix_0[:3, :3],
-        #         temp_matrix_1[:3, :3]]
-        #     print(f"Rotation matrices: {rotation_matrices}")
-        #     self.lh_config_writer.update_rotation_matrices(rotation_matrices)
-        #     print();
-        #     # Update lighthouse pose
+        print(f"lh_pose_data read: {self.lh_tf2_poses}")
+        self.lh_config_manager.write_mem_from_pose(self.lh_tf2_poses)
 
     # ! These are fine
     def _set_initial_position(self):
